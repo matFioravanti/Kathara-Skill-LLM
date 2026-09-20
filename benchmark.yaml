@@ -1,0 +1,29 @@
+benchmark:
+  repetitions: 1
+  continue_on_error: true
+  timeout_seconds: 900
+
+aut:
+  agent: codex
+  model: gpt-5.6-terra # verificato con la CLI locale 0.146.0 e login ChatGPT
+  reasoning_effort: low
+  version: "0.146.0"
+  dns_skill: skills/dns/SKILL.md
+
+correction_generator:
+  agent: codex
+  model: null # eredita il modello AUT
+  reasoning_effort: null # eredita aut.reasoning_effort
+  version: "0.146.0"
+  skill: skills/lab_checker/SKILL.md
+  schema: skills/lab_checker/config-schema.md
+
+sandbox:
+  image: python:3.14.6-bookworm
+
+checker:
+  no_cache: true
+  report_type: csv
+
+results:
+  directory: results
