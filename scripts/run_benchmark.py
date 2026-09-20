@@ -53,7 +53,7 @@ def main() -> int:
             for repetition in range(1, repetitions + 1):
                 try:
                     run = run_one(config, scenario, agent, repetition)
-                    metadata = json.loads((run / "metadata.json").read_text())
+                    metadata = json.loads((run / "manifest.json").read_text())
                     run_failed = metadata["pipeline_state"] != "COMPLETED"
                 except Exception as exc:
                     print(f"Errore preparazione run {scenario.scenario_id}: {exc}", file=sys.stderr)

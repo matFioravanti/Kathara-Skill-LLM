@@ -50,7 +50,7 @@ def copy_lab(source: Path, target: Path) -> None:
     # Nessun link può far leggere/scrivere file esterni durante la copia o il checker.
     if any(entry["kind"] == "link" for entry in manifest(source).values()):
         raise ValueError(f"Link simbolici non supportati nel laboratorio: {source}")
-    shutil.copytree(source, target, symlinks=True)
+    shutil.copytree(source, target, symlinks=True, dirs_exist_ok=True)
 
 
 def component_versions() -> dict:
@@ -61,7 +61,12 @@ def component_versions() -> dict:
 def create_workspace(runs: Path, scenario, agent: str, repetition: int) -> Path:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     run = runs / f"{scenario.scenario_id}__{agent}__r{repetition:03d}__{stamp}_{uuid.uuid4().hex[:8]}"
-    for folder in ("workspace", "codex/aut", "diff", "checker/generator_logs", "checker/reports"):
+    for folder in ("input", "lab", "logs/aut", "logs/generator", "results"):
         (run / folder).mkdir(parents=True, exist_ok=False)
-    copy_lab(scenario.lab, run / "workspace/lab")
+    # input/lab: copia immutabile del baseline originale
+    copy_lab(scenario.lab, run / "input/lab")
+    # input/prompt.md: prompt originale per riferimento
+    (run / "input/prompt.md").write_text(scenario.prompt, encoding="utf-8")
+    # lab/: unica copia modificabile — l'AUT lavora qui
+    copy_lab(scenario.lab, run / "lab")
     return run

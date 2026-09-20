@@ -4,11 +4,11 @@ Benchmark riproducibile per Codex CLI che configura DNS e servizi web opzionali 
 
 ## Architettura
 
-Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna ripetizione il runner crea una copia isolata in `runs/<run_id>/workspace/lab` e avvia l'Agent Under Test (AUT) sul Mac host con `codex exec`. Il workspace è la working directory della CLI e Codex usa il proprio sandbox `workspace-write`.
+Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna ripetizione il runner conserva il baseline in `runs/<run_id>/input/lab`, crea la copia modificabile in `runs/<run_id>/lab` e avvia l'Agent Under Test (AUT) sul Mac host con `codex exec`. `run/lab` è la working directory della CLI e Codex usa il proprio sandbox `workspace-write`.
 
-Terminata la prima esecuzione, il runner salva gli eventi JSONL nativi di Codex, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Una seconda esecuzione Codex, con log separati, riceve il prompt originale, una copia del laboratorio finale, la skill del checker e lo schema. Questa chiamata produce `correction.yaml`; le sue metriche non entrano mai nei risultati AUT.
+Terminata la prima esecuzione, il runner salva gli eventi JSONL nativi di Codex, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Una seconda esecuzione Codex, con log separati, legge il laboratorio finale protetto, il prompt originale, la skill del checker e lo schema. Questa chiamata produce `correction.yaml`; le sue metriche non entrano mai nei risultati AUT.
 
-Prima e dopo la seconda chiamata viene calcolato l'hash ricorsivo del laboratorio. Un cambiamento causa `CORRECTION_GENERATION_FAILED` e il ripristino della copia protetta. Dopo una generazione valida, il laboratorio finale viene copiato in `checker/input/lab`: `kathara-lab-checker` opera soltanto su questa copia, perché scrive i report nella directory del laboratorio.
+Prima e dopo la seconda chiamata viene calcolato l'hash ricorsivo del laboratorio. Un cambiamento causa `CORRECTION_GENERATION_FAILED` e il ripristino dalla copia temporanea protetta. `kathara-lab-checker` opera su un'altra copia temporanea del laboratorio finale, perché scrive i report nella directory del laboratorio; la copia viene eliminata anche in caso di errore e soltanto i report sono conservati in `run/results/`.
 
 Il risultato finale deriva esclusivamente dal checker. Un'esecuzione Codex riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
 
@@ -102,24 +102,28 @@ Ogni run usa un ID leggibile e univoco, per esempio `example_dns_001__codex__r00
 
 ```text
 runs/<run_id>/
-├── metadata.json
-├── workspace/lab/
-├── codex/aut/
-│   ├── events.jsonl
-│   ├── stderr.log
-│   ├── invocation.json
-│   └── result.json
-├── diff/summary.json
-└── checker/
-    ├── correction.yaml
-    ├── generator_logs/
-    ├── input/lab/
-    └── reports/
+├── manifest.json
+├── input/
+│   ├── lab/          # baseline originale immutabile
+│   └── prompt.md
+├── lab/              # unica copia modificabile — before → after AUT
+├── correction.yaml
+├── results/          # report CSV del checker
+└── logs/
+    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt
+    ├── generator/    # log Codex del correction generator
+    ├── generator_output/  # correction.yaml candidata prima della validazione
+    ├── diff.json
+    ├── lab_integrity.json
+    ├── checker_invocation.json
+    ├── checker_execution.json
+    ├── checker_stdout.log
+    └── checker_stderr.log
 ```
 
-`metadata.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Registra inoltre `execution_backend: codex_cli`, `authentication: local_chatgpt_login` e `api_key_used: false`. Gli stati sono `PENDING`, `AUT_RUNNING`, `AUT_FAILED`, `AUT_COMPLETED`, `CORRECTION_GENERATION_FAILED`, `CHECKER_FAILED` e `COMPLETED`.
+`manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Registra inoltre `execution_backend: codex_cli`, `authentication: local_chatgpt_login` e `api_key_used: false`. Gli stati sono `PENDING`, `AUT_RUNNING`, `AUT_FAILED`, `AUT_COMPLETED`, `CORRECTION_GENERATION_FAILED`, `CHECKER_FAILED` e `COMPLETED`.
 
-`runs/` è la fonte persistente: contiene eventi Codex AUT, lab finale, diff, correction e report grezzi. `results/` contiene soltanto CSV derivati e può essere ricostruita in qualunque momento.
+`runs/` è la fonte persistente: contiene log Codex AUT, lab finale (`lab/`), baseline (`input/lab/`), diff, correction e report. `results/` contiene soltanto CSV derivati e può essere ricostruita in qualunque momento. Per ogni run esistono persistentemente solo due versioni del laboratorio: `input/lab` (before) e `lab` (after).
 
 ## Aggregazione e analisi
 
@@ -130,7 +134,7 @@ python scripts/analyze_results.py
 
 `benchmark_results.csv` contiene una riga per run e unisce stati, risultato del checker, pass rate per categoria ricostruibile, metriche Codex AUT e diff. `benchmark_detailed.csv` contiene una riga per check usando le colonne reali di kathara-lab-checker 0.1.14: `Test Description`, `Passed` e `Reason`.
 
-Gli eventi `codex exec --json` sono conservati in `codex/aut/events.jsonl`. Il parser legge `turn.completed.usage` quando disponibile, il messaggio finale, turni e tool nativi. Il costo API e le metriche che Codex non emette restano nulli: non vengono inventati né calcolati costi. Le metriche della seconda esecuzione non vengono lette dall'aggregatore.
+Gli eventi `codex exec --json` sono conservati in `logs/aut/events.jsonl`. Il parser legge `turn.completed.usage` quando disponibile, il messaggio finale, turni e tool nativi. Il costo API e le metriche che Codex non emette restano nulli: non vengono inventati né calcolati costi. Le metriche della seconda esecuzione non vengono lette dall'aggregatore.
 
 L'analisi produce `analysis_summary.csv`, con una riga globale e righe per esperimento (scenario, agent, modello e hash della skill). Riporta denominatori, success rate, medie, mediane e deviazioni standard quando sono disponibili più osservazioni.
 

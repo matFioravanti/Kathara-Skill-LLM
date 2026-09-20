@@ -24,7 +24,7 @@ DETAIL_COLUMNS = ["run_id", "scenario_id", "repetition", "agent", *REPORT_COLUMN
 
 def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     summary, details = [], []
-    for metadata_path in sorted(runs.glob("*/metadata.json")):
+    for metadata_path in sorted(runs.glob("*/manifest.json")):
         run = metadata_path.parent
         row = dict.fromkeys(RUN_COLUMNS)
         row["run_id"] = run.name
@@ -38,13 +38,13 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         row.update({k: v for k, v in metadata.items() if k in row})
         row["component_versions"] = json.dumps(metadata.get("component_versions", {}), sort_keys=True)
         try:
-            metrics = extract_metrics(run / "codex/aut")
+            metrics = extract_metrics(run / "logs/aut")
             # In assenza di log conserva il modello richiesto nei metadata.
             row.update({k: v for k, v in metrics.items() if v is not None})
         except Exception as exc:
             row["metrics_error"] = f"{type(exc).__name__}: {exc}"
             errors.append(row["metrics_error"])
-        diff = run / "diff/summary.json"
+        diff = run / "logs/diff.json"
         if diff.exists():
             try:
                 row.update({k: v for k, v in json.loads(diff.read_text()).items() if k in row})
@@ -54,10 +54,10 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         row["task_success"] = None
         if metadata.get("checker_execution_success") is True and metadata.get("correction_generation_success") is True:
             try:
-                execution = json.loads((run / "checker/execution.json").read_text())
+                execution = json.loads((run / "logs/checker_execution.json").read_text())
                 if execution["returncode"] != 0 or execution["timed_out"]:
                     raise ValueError("Esecuzione checker non riuscita.")
-                checker, check_rows = parse_reports(run / "checker/reports")
+                checker, check_rows = parse_reports(run / "results")
                 row.update(checker)
                 identity = {k: row[k] for k in DETAIL_COLUMNS if k not in REPORT_COLUMNS}
                 details.extend({**identity, **check} for check in check_rows)

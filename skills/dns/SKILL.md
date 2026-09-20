@@ -62,7 +62,7 @@ Rules:
 1. Do not ask questions during automated execution.
 2. Fully analyze the lab and check feasibility before the first modification.
 3. If indispensable data is missing or requirements conflict, do not modify the lab and return a concise error.
-4. If configuration is feasible, directly create or modify the required persistent files.
+4. If configuration is feasible, directly create or modify only the persistent files required by the roles actually assigned to each device.
 5. Do not modify topology, addresses, forwarding, or routes.
 6. Do not create `dns-plan.yaml`, intermediate JSON, planning files, or test files.
 7. At the end, return only a concise summary of the applied changes or the blocking error.
@@ -92,6 +92,7 @@ With BIND 9.11 use compatible syntax: `type master`, `type slave`, and `masters`
 - Use root hints for the artificial hierarchy, not public-Internet root hints.
 - For an intentionally unsigned artificial root, disable DNSSEC validation unless DNSSEC is explicitly required.
 - Apply the smallest coherent change and preserve unrelated content, comments, and configuration.
+- Treat every `<device>/` directory as a sparse persistent filesystem overlay: create only the paths required by the roles actually assigned to that device, and never create role-specific directories merely for symmetry.
 - Use `systemctl` to start services from startup scripts.
 - Do not claim runtime results that were not observed.
 
@@ -274,33 +275,68 @@ Do not use IP addresses as NS targets, do not use a CNAME as an NS target, and d
 
 Adapt generation to the layout already used by the lab. Do not impose `named.conf.local`, a `zones/` directory, or `root.hints` when the lab uses another structure.
 
-A pattern observed in Kathara labs compatible with BIND 9.11 is:
+A Kathara device directory is a **sparse persistent overlay** of that device's root filesystem. For example:
+
+```text
+pc1/etc/bind/named.conf
+```
+
+becomes:
+
+```text
+/etc/bind/named.conf
+```
+
+inside `pc1`.
+
+The persistent directory tree must be driven by the roles actually assigned to each device. Do **not** create the same directory structure on every host.
+
+Use this role-to-path mapping:
+
+| Device role | Persistent path normally required |
+|---|---|
+| Root authoritative DNS | `<device>/etc/bind/` |
+| Non-root authoritative DNS | `<device>/etc/bind/` |
+| Recursive/local DNS | `<device>/etc/bind/` |
+| Stub DNS client | `<device>/etc/resolv.conf` |
+| Web server | `<device>/var/www/html/` |
+| Pure router/transit node | no DNS/web persistent path unless explicitly required |
+
+If one device performs multiple roles, create the **union** of the paths required by those roles.
+
+A minimal role-based layout may therefore look like:
 
 ```text
 lab/
 ├── lab.conf
+│
 ├── ldns.startup
 ├── ldns/
 │   └── etc/bind/
 │       ├── named.conf
 │       ├── named.conf.options
 │       └── db.root
+│
 ├── root.startup
 ├── root/
 │   └── etc/bind/
 │       ├── named.conf
 │       ├── named.conf.options
 │       └── db.root
+│
 ├── auth.startup
 ├── auth/
 │   └── etc/bind/
 │       ├── named.conf
 │       ├── named.conf.options
 │       └── db.<zone>
+│
 ├── client/
 │   └── etc/resolv.conf
+│
 └── web/
-    └── var/www/html/index.html
+    └── var/www/html/
+        └── index.html
 ```
 
 Interpretation:
@@ -309,9 +345,41 @@ Interpretation:
 - on the root name server, `db.root` may be the authoritative file for zone `.`;
 - the role is determined by the `zone` declaration in `named.conf`, not by the filename;
 - authoritative zone files may live directly under `/etc/bind/` when that is the lab convention;
-- a client's resolver may be persisted directly with `<client>/etc/resolv.conf`.
+- a stub client's resolver configuration may be persisted directly with `<client>/etc/resolv.conf`.
 
-Create only required files and directories. Prefer safe local edits to existing files and do not delete files unless explicitly necessary.
+#### Sparse-layout rules
+
+Apply all of the following:
+
+1. Create `<device>/etc/bind/` only when that device actually runs BIND as an authoritative server, recursive resolver, secondary, or another explicitly requested DNS-server role.
+2. Create `<device>/etc/resolv.conf` only when that device is required to behave as a **stub DNS client** through the selected local resolver.
+3. Do not create `resolv.conf` merely because a device:
+   - has IPv4 or IPv6 connectivity;
+   - runs BIND;
+   - is authoritative for a zone;
+   - is the recursive resolver;
+   - hosts a web service.
+4. A recursive resolver does **not** need a `resolv.conf` pointing to itself unless the specification explicitly requires the host itself to perform stub resolution through that resolver.
+5. An authoritative DNS server does **not** automatically need `resolv.conf`.
+6. A web server does **not** automatically need `resolv.conf`; add it only if that same device is also a required DNS client.
+7. Do not create `/etc/bind/` on pure clients or pure web servers.
+8. Do not create `/var/www/html/` on devices that do not host a web service.
+9. Do not create empty role directories.
+10. Do not create placeholder copies of BIND files on devices that do not load those files.
+11. Preserve existing unrelated persistent files and directories.
+12. Prefer safe local edits to existing files and do not delete files unless explicitly necessary.
+
+Before writing files, derive an internal role-to-filesystem map such as:
+
+```text
+root1 -> DNS authoritative -> etc/bind/
+auth1 -> DNS authoritative -> etc/bind/
+ldns1 -> recursive resolver -> etc/bind/
+pc3   -> DNS client         -> etc/resolv.conf
+web1  -> web server         -> var/www/html/
+```
+
+Use that map to decide which directories and files are legal to create. The final persistent structure should be the smallest structure that fully implements the requested roles.
 
 ### 6) Configure Authoritative BIND Servers
 
@@ -473,21 +541,41 @@ Do not break a delegation merely to manufacture failure.
 
 ### 10) Configure Client Resolvers
 
+Configure `resolv.conf` **only** on devices that the requirement analysis has classified as DNS stub clients.
+
+Do not infer the `dns-client` role merely because a device has an IP address or participates in the lab. Running an authoritative server, recursive resolver, or web server does not implicitly make that host a DNS client.
+
 When the lab uses persistent per-device filesystems, prefer:
 
 ```text
 <client>/etc/resolv.conf
 ```
 
-Minimal content:
+Minimal IPv4 content:
 
 ```text
 nameserver <LOCAL_DNS_IPV4>
 ```
 
-Add an IPv6 nameserver only when the resolver actually owns that address and must be used over IPv6. Use `search` only when short-name resolution is required.
+Minimal IPv6 content when the client must reach the resolver over IPv6:
 
-If `resolv.conf` is already persistent, modify it directly. Generate it from startup only when that is already the lab convention or a persistent file is unavailable.
+```text
+nameserver <LOCAL_DNS_IPV6>
+```
+
+If both address families are explicitly required for the same stub client, include only the resolver addresses that are actually configured and reachable from that client.
+
+Rules:
+
+- add an IPv6 nameserver only when the resolver actually owns that IPv6 address and the client must use it over IPv6;
+- use `search` only when short-name resolution is required;
+- do not add public resolvers;
+- do not add authoritative-server addresses directly to client `resolv.conf` unless that server is also explicitly assigned the recursive/local-resolver role;
+- do not generate `resolv.conf` for root or authoritative servers merely because they run BIND;
+- do not generate `resolv.conf` for the recursive resolver merely to point it to itself;
+- do not generate `resolv.conf` for a web server unless that device is also a required DNS client.
+
+If `resolv.conf` is already persistent on a device that must be a DNS client, modify it directly and preserve unrelated compatible content. Generate it from startup only when that is already the lab convention or a persistent file is unavailable.
 
 ### 11) Configure Service Startup
 
@@ -513,6 +601,7 @@ Do not duplicate `start`/`restart`, do not start BIND with `named -g &`, do not 
 - IPv4 and IPv6 web servers may be different devices.
 - Configure a virtual host only when required by names, ports, or `ServerName`.
 - Preserve any existing Apache commands in startup scripts.
+- A pure web server requires only its web-service files and startup changes; do not create `/etc/bind/` or `/etc/resolv.conf` unless that device also has the corresponding DNS-server or DNS-client role.
 
 ## Direct Application and Final Result
 
@@ -558,5 +647,6 @@ Before terminating, ensure only that:
 - topology, addressing, forwarding, and routing remain unchanged;
 - roles, delegations, glue, records, and client resolvers are coherent;
 - every required change is persistent in the lab files;
+- each device directory contains only role-required persistent paths, with no unnecessary `etc/bind`, `resolv.conf`, web directories, or placeholder files;
 - unrelated content has been preserved;
 - the final summary reports only operations actually performed.

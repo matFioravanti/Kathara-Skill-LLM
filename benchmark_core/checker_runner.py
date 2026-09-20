@@ -1,11 +1,13 @@
 """CLI e parser del formato reale kathara-lab-checker 0.1.14."""
 from pathlib import Path
 import csv
+import json
 import os
 import shutil
 import signal
 import subprocess
 import sys
+import tempfile
 
 from .workspace import copy_lab, write_json
 
@@ -78,43 +80,60 @@ def parse_reports(reports: Path) -> tuple[dict, list[dict]]:
 
 
 def run_checker(config, run: Path) -> dict:
-    checker = run / "checker"
-    labs, reports = checker / "input", checker / "reports"
-    copy_lab(run / "workspace/lab", labs / "lab")
-    # Elimina solo eventuali report iniettati nell'input copiato dall'AUT.
-    for name in ("lab_result_all.csv", "lab_result_failed.csv", "lab_result_summary.csv", "lab_result.xlsx"):
-        (labs / "lab" / name).unlink(missing_ok=True)
-    command = [sys.executable, "-m", "kathara_lab_checker", "--config", str(checker / "correction.yaml"),
-               "--labs", str(labs), "--report-type", "csv"]
-    if config.data["checker"]["no_cache"]:
-        command.append("--no-cache")
-    write_json(checker / "invocation.json", {"command": command})
-    code = None
-    timed_out = False
-    with (checker / "stdout.log").open("w") as stdout, (checker / "stderr.log").open("w") as stderr:
-        process = subprocess.Popen(command, stdout=stdout, stderr=stderr, start_new_session=True)
-        try:
-            code = process.wait(timeout=config.data["benchmark"]["timeout_seconds"])
-        except (subprocess.TimeoutExpired, KeyboardInterrupt) as exc:
-            timed_out = True
-            # SIGINT richiama la pulizia del laboratorio corrente prevista dal checker.
-            os.killpg(process.pid, signal.SIGINT)
+    lab = run / "lab"
+    results = run / "results"
+    correction = run / "correction.yaml"
+
+    # Il checker scrive CSV dentro la sua labs_path e dentro labs_path/<lab_name>/,
+    # quindi serve una directory temporanea per evitare che inquini run/lab/.
+    # La tempdir viene rimossa automaticamente al termine.
+    # Non collocare la tempdir dentro la run: anche un arresto non intercettabile del
+    # processo Python non deve lasciare una terza copia persistente tra gli artefatti.
+    with tempfile.TemporaryDirectory(prefix=f"kathara-checker-{run.name}-") as tmp_str:
+        tmp = Path(tmp_str)
+        tmp_labs = tmp / "labs"
+        tmp_labs.mkdir()
+        copy_lab(lab, tmp_labs / "lab")
+        # Rimuovi eventuali report iniettati dall'AUT nella copia temporanea.
+        for name in ("lab_result_all.csv", "lab_result_failed.csv", "lab_result_summary.csv", "lab_result.xlsx"):
+            (tmp_labs / "lab" / name).unlink(missing_ok=True)
+        command = [sys.executable, "-m", "kathara_lab_checker", "--config", str(correction),
+                   "--labs", str(tmp_labs), "--report-type", "csv"]
+        if config.data["checker"]["no_cache"]:
+            command.append("--no-cache")
+        write_json(run / "logs" / "checker_invocation.json", {"command": command})
+        code = None
+        timed_out = False
+        with (run / "logs" / "checker_stdout.log").open("w") as stdout, \
+             (run / "logs" / "checker_stderr.log").open("w") as stderr:
+            process = subprocess.Popen(command, stdout=stdout, stderr=stderr, start_new_session=True)
             try:
-                code = process.wait(timeout=30)
-            except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
-                code = process.wait()
-            if isinstance(exc, KeyboardInterrupt):
-                raise
-        finally:
-            for relative in ("results.csv", "lab/lab_result_all.csv", "lab/lab_result_failed.csv", "lab/lab_result_summary.csv"):
-                source = labs / relative
-                if source.is_file() and not source.is_symlink():
-                    target = reports / relative
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(source, target)
-            write_json(checker / "execution.json", {"returncode": code, "timed_out": timed_out})
+                code = process.wait(timeout=config.data["benchmark"]["timeout_seconds"])
+            except (subprocess.TimeoutExpired, KeyboardInterrupt) as exc:
+                timed_out = True
+                # SIGINT richiama la pulizia del laboratorio corrente prevista dal checker.
+                os.killpg(process.pid, signal.SIGINT)
+                try:
+                    code = process.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    os.killpg(process.pid, signal.SIGKILL)
+                    code = process.wait()
+                if isinstance(exc, KeyboardInterrupt):
+                    raise
+            finally:
+                # Copia i report dalla tempdir a results/ prima che la tempdir venga rimossa.
+                for relative in ("results.csv", "lab/lab_result_all.csv",
+                                 "lab/lab_result_failed.csv", "lab/lab_result_summary.csv"):
+                    source = tmp_labs / relative
+                    if source.is_file() and not source.is_symlink():
+                        target = results / relative
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(source, target)
+                write_json(run / "logs" / "checker_execution.json",
+                           {"returncode": code, "timed_out": timed_out})
+        # tempdir rimossa automaticamente all'uscita del with
+
     if timed_out or code != 0:
-        raise RuntimeError(f"Checker fallito: returncode={code}, timeout={timed_out}; vedere stderr.log.")
-    result, _ = parse_reports(reports)
+        raise RuntimeError(f"Checker fallito: returncode={code}, timeout={timed_out}; vedere checker_stderr.log.")
+    result, _ = parse_reports(results)
     return result

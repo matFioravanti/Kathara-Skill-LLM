@@ -46,7 +46,7 @@ def main():
         scenario = next(iter(scenarios.values()))
         before = tree_hash(scenario.lab)
         run = create_workspace(tmp / "runs", scenario, "codex", 1)
-        lab = run / "workspace/lab"
+        lab = run / "lab"
         assert tree_hash(lab) == before
         (lab / "smoke.txt").write_text("one\ntwo\n")
         diff = compute_diff(scenario.lab, lab)
@@ -61,8 +61,8 @@ def main():
         from kathara_lab_checker.model.SuccessfulCheck import SuccessfulCheck
         from kathara_lab_checker.model.FailedCheck import FailedCheck
         from kathara_lab_checker.model.TestCollector import TestCollector
-        reports = run / "checker/reports"
-        (reports / "lab").mkdir()
+        reports = run / "results"
+        (reports / "lab").mkdir(parents=True, exist_ok=True)
         checks = [SuccessfulCheck("Checking correctness of DNS records"),
                   FailedCheck("HTTP check 'http://example.test' on client status", "Expected 200, got 404")]
         collector = TestCollector()
@@ -71,11 +71,11 @@ def main():
         write_final_results_to_csv(collector, str(reports))
         checker, rows = parse_reports(reports)
         assert checker["task_success"] is False and checker["check_pass_rate"] == 0.5 and len(rows) == 2
-        write_json(run / "metadata.json", {"run_id": run.name, "scenario_id": scenario.scenario_id,
+        write_json(run / "manifest.json", {"run_id": run.name, "scenario_id": scenario.scenario_id,
                    "repetition": 1, "agent": "codex", "pipeline_state": "COMPLETED",
                    "aut_execution_success": True, "correction_generation_success": True,
                    "checker_execution_success": True, "task_success": True})
-        write_json(run / "checker/execution.json", {"returncode": 0, "timed_out": False})
+        write_json(run / "logs/checker_execution.json", {"returncode": 0, "timed_out": False})
         summary, details = aggregate(tmp / "runs", tmp / "results")
         assert not bool(summary.iloc[0]["task_success"]) and len(details) == 2
         assert analyze(tmp / "results").iloc[0]["task_success_rate"] == 0

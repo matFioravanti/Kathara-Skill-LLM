@@ -19,7 +19,7 @@ def preflight(config, agent: str) -> None:
     for command in ([codex, "--version"], [codex, "login", "status"],
                     ["docker", "info"], ["docker", "compose", "version"],
                     [sys.executable, "-m", "kathara_lab_checker", "--version"],
-                    [str(Path(sys.executable).parent / "kathara"), "--version"]):
+                    [sys.executable, "-m", "kathara", "--version"]):
         result = subprocess.run(command, capture_output=True, text=True, timeout=30, env=environment)
         if result.returncode:
             if command[1:] == ["login", "status"]:

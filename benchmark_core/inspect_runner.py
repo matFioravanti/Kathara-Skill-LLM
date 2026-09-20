@@ -7,7 +7,7 @@ from .codex_cli_runner import run_codex
 
 def run_aut(config, scenario, run: Path, agent: str) -> Path:
     validate_agent(agent)
-    lab = run / "workspace/lab"
+    lab = run / "lab"
     skill = config.path(config.data["aut"]["dns_skill"])
     prompt = (
         f"Configura direttamente i file del laboratorio nella directory corrente {lab}. "
@@ -16,7 +16,7 @@ def run_aut(config, scenario, run: Path, agent: str) -> Path:
         "il laboratorio sarà avviato dal checker dopo questa chiamata.\n\n"
         "REQUISITI ORIGINALI:\n" + scenario.prompt
     )
-    run_codex(prompt=prompt, workspace=lab, logs=run / "codex/aut",
+    run_codex(prompt=prompt, workspace=lab, logs=run / "logs/aut",
               timeout=config.data["benchmark"]["timeout_seconds"], model=config.model(),
               reasoning_effort=config.reasoning_effort(), variant="aut")
-    return run / "codex/aut/events.jsonl"
+    return run / "logs/aut/events.jsonl"
