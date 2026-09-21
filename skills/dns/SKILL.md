@@ -381,6 +381,17 @@ web1  -> web server         -> var/www/html/
 
 Use that map to decide which directories and files are legal to create. The final persistent structure should be the smallest structure that fully implements the requested roles.
 
+#### BIND File Separation
+
+If the lab has no existing BIND configuration, use this structure:
+
+- `named.conf`: only `include` and `zone` declarations.
+- `named.conf.options`: global options, ACLs, recursion, `allow-recursion`, `listen-on`, and DNSSEC settings.
+- `db.root`: root hints on the resolver or the authoritative root zone on the root server.
+- `db.<zone>`: records for the corresponding authoritative zone.
+
+Do not place ACLs or `options` blocks directly inside `named.conf`.
+
 ### 6) Configure Authoritative BIND Servers
 
 Adapt syntax to the detected BIND version.

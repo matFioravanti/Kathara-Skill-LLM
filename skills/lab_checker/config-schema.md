@@ -25,7 +25,6 @@ test:
   protocols: {...}
   applications: {...}
   reachability: {...}
-  custom_commands: {...}
 ```
 
 > **JSON note**: replace `lab_inline` with a separate `structure` file and set
@@ -313,25 +312,6 @@ For fully-meshed scenarios, list every IP in the address plan for each device.
 
 ---
 
-### `custom_commands`
-
-Arbitrary commands executed inside a device. At least one of `regex_match`, `output`, or
-`exit_code` is required per entry.
-
-```yaml
-test:
-  custom_commands:
-    router1:
-      - command: sysctl net.ipv4.ip_forward
-        regex_match: "net\\.ipv4\\.ip_forward = 1"
-      - command: cat /etc/frr/frr.conf
-        output: "router bgp 65001\n"
-      - command: ping -c 1 8.8.8.8
-        exit_code: 0
-```
-
----
-
 ## Full YAML example (simple RIP lab)
 
 ```yaml
@@ -441,14 +421,13 @@ test:
 | 1000–1999 | Protocol checks (BGP, OSPF, RIP, EVPN, SCION) |
 | 2000–2999 | Routing table / data-plane (`kernel_routes`) |
 | 3000–3999 | Application checks (DNS, HTTP) |
-| 4000–4999 | Custom commands |
 
 Specific priorities: `DeviceExistenceCheck`=0, `CollisionDomainCheck`=10,
 `StartupExistenceCheck`=20, `InterfaceIPCheck`=50, `ReachabilityCheck`=70,
 `DaemonCheck`=80, `BGPNeighborCheck`=1010, `BGPRoutesCheck`=1020,
 `AnnouncedNetworkCheck`=1110, `ProtocolRedistributionCheck`=1120,
 `KernelRouteCheck`=2000, `DNSAuthorityCheck`=3010, `LocalNSCheck`=3020,
-`DNSRecordCheck`=3030, `HTTPCheck`=3040, `CustomCommandCheck`=4010.
+`DNSRecordCheck`=3030, `HTTPCheck`=3040.
 
 ---
 

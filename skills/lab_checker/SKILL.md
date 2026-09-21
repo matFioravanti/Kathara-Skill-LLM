@@ -81,7 +81,6 @@ See `references/config-schema.md` for the complete schema. Quick reference:
 - `protocols.<proto>.injections` — protocols redistributed into (or excluded from) another
 - `applications.dns` — DNS authority, local-NS, and record checks
 - `reachability` — per-device list of IPs or DNS names that must be ping-reachable
-- `custom_commands` — arbitrary commands with `regex_match`, `output`, or `exit_code` assertions
 
 ## Workflow
 
@@ -206,30 +205,6 @@ declarations. Images go in `default_image` at the top level.
 **`convergence_time`**: 10 s for static-only labs; 60 s for IGP; 90 s for BGP or
 mixed BGP+IGP.
 
----
-
-### Step 6 — Ask about custom checks
-
-After configuring all selected standard checks, ask:
-
-> "Are there any additional custom checks (`custom_commands`) you want to add?
-> These can assert arbitrary command output, regex matches, or exit codes inside
-> any device."
-
-If the user answers **yes**, collect each custom check interactively, one at a time:
-
-For each custom check ask:
-1. **Device**: which device should the command run on?
-2. **Command**: what command to execute?
-3. **Assertion**: should it match a regex, produce exact output, or return a specific
-   exit code? (collect the expected value)
-
-Repeat until the user says there are no more custom checks.
-
-If the user answers **no**, skip this step.
-
----
-
 ### Step 7 — Write and present the file
 
 Output the complete `correction.yaml`. Use YAML block style for readability. Add inline
@@ -270,10 +245,18 @@ A checker configuration is complete when:
 4. Routing protocol daemons are in `daemons` for every router that runs them (if selected).
 5. `kernel_routes` lists all routes expected after convergence (if selected).
 6. The topology is declared via `lab_inline` with topology-only content (no image declarations).
-7. Custom checks have been fully specified with device, command, and assertion (if any).
-8. The config file is syntactically valid YAML.
+7. The config file is syntactically valid YAML.
 
 ## Reference files
 
 - `references/config-schema.md` — Full annotated schema for every field and check type,
   with YAML-first examples.
+
+**Multiple IPs on the same interface**: `ip_mapping` keys must always be real
+numeric interface numbers (`"0"`, `"1"`, `"2"`, ...), corresponding to
+`eth0`, `eth1`, `eth2`, etc.
+
+Never create synthetic keys such as `"0_v6"`, `"0_ipv6"`, `"eth0_v6"`, or similar.
+
+If the same interface has multiple IP addresses, keep one address in
+`ip_mapping`.
