@@ -273,8 +273,18 @@ test:
 ```
 
 - `authoritative`: zone → list of authoritative server IPs.
-- `local_ns`: resolver IP → list of device names that must have it in `/etc/resolv.conf`.
-- `records`: record type → DNS name → expected value(s).
+- `local_ns`: resolver IP → list of **device names that must actually use that resolver**
+  (i.e. devices for which the original prompt requires the use of that nameserver in
+  `/etc/resolv.conf`). Do **not** list every device on the network: only those explicitly
+  required by the assignment to use this resolver.
+  > **Checker constraint (0.1.14)**: Every IP address used as a key in `local_ns` **must**
+  > appear in `ip_mapping`. The checker's `DNSAuthorityCheck` looks up each resolver IP in
+  > `ip_mapping` to determine which device owns it. If the IP is absent from `ip_mapping`,
+  > the checker crashes. For dual-stack devices where the IPv6 resolver IP cannot be placed
+  > in `ip_mapping` (single-address-per-interface limitation), omit that IP from `local_ns`.
+- `records`: record type → DNS name → expected value(s). Names and expected values must
+  be derived from the requirements stated in the original prompt, not automatically from
+  Kathara device names. Only enforce DNS names that the prompt explicitly prescribes.
 
 #### HTTP
 

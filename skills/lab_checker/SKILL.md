@@ -50,6 +50,33 @@ If no structured prompt is available, extract the same information from:
 - a natural-language lab description
 - a PDF/docx assignment sheet
 
+---
+
+## Fundamental principle: the prompt is the normative source
+
+**The original lab prompt (assignment) is the normative source of requirements.**
+
+Every requirement, expected value, check, and constraint in `correction.yaml` must be
+traceable to a statement in the original prompt.
+
+The generated candidate lab may be inspected to understand the implementation produced by
+the student (or AUT), and to obtain concrete values such as IP addresses, interface numbers,
+daemon names, and file paths. However:
+
+- Implementation choices observed in the candidate lab must **not** be promoted to mandatory
+  expected values unless they follow directly from the original prompt.
+- Do **not** invent hidden requirements that are absent from the original assignment.
+- Do **not** use the candidate lab as a second specification.
+- A requirement stated in the prompt must be checked even if the candidate lab does not
+  implement it (the check must fail for an incorrect submission).
+- A detail that is not required by the prompt must not be enforced simply because the
+  candidate lab happens to implement it.
+
+This principle applies uniformly to all domains: DNS, routing, reachability, HTTP,
+applications, and any other check type.
+
+---
+
 ## Configuration file format
 
 **Use YAML by default** (`correction.yaml`). YAML is more readable, supports comments, and
@@ -60,7 +87,7 @@ semantics.
 ### Top-level fields
 
 | Field              | Type    | Purpose |
-|--------------------|---------|---------|
+|--------------------|---------|---------| 
 | `lab_inline`       | string  | Topology-only inline content (YAML only): device-to-collision-domain mappings, no image declarations — use instead of a separate `structure` file |
 | `labs_path`        | string  | Path to the directory of student labs (can be omitted if passed via CLI) |
 | `convergence_time` | int     | Seconds to wait for routing convergence before running checks |
@@ -104,6 +131,10 @@ If the user has provided a path to an existing lab directory, read:
 
 Use this information to make the check derivation in step 3 more accurate. If no lab
 files are provided, proceed with the prompt alone.
+
+**Important**: use the lab files only to extract concrete implementation values. Do not
+turn any observed implementation choice into a mandatory requirement unless it is required
+by the prompt.
 
 ---
 
@@ -193,8 +224,7 @@ interface; the checker does not count these, so listing them causes false failur
 **`protocols.<ripd|ospfd>.injections`**: redistributed protocols. Prefix `!` for
 protocols that must not be redistributed.
 
-**`applications.dns`**: `authoritative` (zone → server IPs), `local_ns` (resolver IP →
-device names), `records` (type → name → value).
+**`applications.dns`**: see the dedicated DNS section below.
 
 **`reachability`**: for a fully-connected scenario, all IPs in the address plan per
 device. For partial scenarios, only IPs that device should reach.
@@ -235,6 +265,85 @@ python3 -m kathara_lab_checker \
   --report-type excel
 ```
 
+---
+
+## DNS check derivation rules
+
+This section defines how to derive `applications.dns` checks from the prompt. All rules
+below apply the fundamental principle: requirements come from the prompt, not from the
+candidate lab.
+
+### authoritative
+
+`authoritative` maps a DNS zone to the list of IP addresses that must be authoritative
+for that zone. Derive zones and their expected server IPs only from explicit statements
+in the prompt (e.g. "pc1 is the root nameserver", "pc2 is authoritative for test.").
+
+Use the concrete IP addresses found in the candidate lab or in the IP plan for the
+relevant devices.
+
+### local_ns: do not invent DNS clients
+
+`local_ns` maps a resolver IP to the list of **device names that must actually use that
+resolver** in `/etc/resolv.conf`.
+
+**Only include a device in `local_ns` if the original prompt explicitly requires it to
+use that resolver.**
+
+Do not infer that every IPv4 or IPv6 device is a DNS client simply because it has network
+connectivity. Roles such as web server, authoritative DNS server, router, or other service
+role do **not** by themselves imply that the device must use the local recursive resolver.
+
+Examples:
+- A prompt that says "pc5 hosts a web server" does NOT imply that pc5 must have
+  `nameserver <resolver>` in `/etc/resolv.conf`, unless the prompt explicitly requires it.
+- A prompt that says "IPv4 clients must use 100.0.0.2 as nameserver" should lead to
+  including only the devices explicitly identified as IPv4 clients, not all devices with
+  an IPv4 address.
+- A prompt that says "pc6, being IPv6-only and directly connected to pc3, must use
+  2001:8::2 as nameserver" should include exactly pc6 under the 2001:8::2 resolver entry.
+
+#### Checker constraint: local_ns IPs must appear in ip_mapping
+
+**This is a technical requirement of kathara-lab-checker 0.1.14, not an invented rule.**
+
+The checker's `DNSAuthorityCheck` uses `ip_mapping` to resolve each resolver IP (the keys
+of `local_ns`) back to the device that owns that IP. If a resolver IP does not appear in
+any `ip_mapping` entry, the checker crashes with:
+
+```
+Exception: Something is missing/wrong in the ip_mapping configuration!
+```
+
+**Correct approach for dual-stack resolver**:
+1. Put only one address (typically the IPv4) in `ip_mapping` for that interface.
+2. Put only that one address as the `local_ns` key (for IPv4 clients that use it).
+3. Document the omitted `local_ns` entry with a YAML comment explaining the limitation.
+
+
+### records: do not invent DNS names
+
+DNS names in `records` must be derived from the original prompt, not from Kathara device
+names.
+
+**Do not derive mandatory DNS names from Kathara device names.**
+
+If the prompt states that a DNS service is hosted on a device but does not explicitly
+require a DNS name matching that device's Kathara name, do not impose that name.
+
+Examples:
+- A prompt that says "pc1 must be the authoritative nameserver for the root zone" does NOT
+  require the NS record to be `pc1.` — a valid solution with `. NS ns.root.` and
+  `ns.root. A <IP of pc1>` satisfies the requirement and must be accepted.
+- A prompt that says "pc2 must be authoritative for test." does NOT require `test. NS pc2.`
+  — a valid solution with `test. NS ns.test.` is equally correct if the prompt does not
+  prescribe the nameserver hostname.
+
+Check only what the prompt actually requires: the authority over the zone, the correct
+delegation, the correct IP addresses behind A/AAAA records, and any explicitly named
+DNS records (like `www.test. A 100.0.8.2`).
+
+
 ## Completion criteria
 
 A checker configuration is complete when:
@@ -251,12 +360,3 @@ A checker configuration is complete when:
 
 - `references/config-schema.md` — Full annotated schema for every field and check type,
   with YAML-first examples.
-
-**Multiple IPs on the same interface**: `ip_mapping` keys must always be real
-numeric interface numbers (`"0"`, `"1"`, `"2"`, ...), corresponding to
-`eth0`, `eth1`, `eth2`, etc.
-
-Never create synthetic keys such as `"0_v6"`, `"0_ipv6"`, `"eth0_v6"`, or similar.
-
-If the same interface has multiple IP addresses, keep one address in
-`ip_mapping`.

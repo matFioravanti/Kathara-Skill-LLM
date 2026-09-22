@@ -1,0 +1,118 @@
+Aggiungi al laboratorio esistente un’infrastruttura DNS completa composta da una root DNS artificiale, un server autoritativo per la zona `test.`, un resolver locale e un servizio web.
+
+Non modificare la topologia, gli indirizzi IP o il routing già presenti nel laboratorio.
+
+Distribuisci i ruoli nel seguente modo:
+
+* pc5 → Root DNS autoritativo `.`
+* pc1 → Authoritative Name Server `test.`
+* pc3 → Local DNS / Recursive Resolver
+* pc4 → Web Server `www.test.`
+
+Indirizzi:
+
+* pc5: `100.0.8.2`
+* pc1: `200.0.1.2`
+* pc3 IPv4: `100.0.0.2`
+* pc3 IPv6: `2001:8::2`
+* pc4: `200.0.6.2`
+
+### Root DNS – pc5
+
+pc5 deve ospitare il server DNS autoritativo della root artificiale:
+
+`.`
+
+Configura una zona root valida.
+
+La root deve delegare:
+
+`test.`
+
+al Name Server presente su pc1.
+
+La delega deve essere realizzata mediante record NS corretti e deve includere il glue record quando richiesto.
+
+La root deve essere completamente indipendente dal DNS pubblico.
+
+pc5 non deve fornire un servizio di recursive resolution aperto.
+
+### Authoritative DNS – pc1
+
+pc1 deve essere configurato come Name Server autoritativo della zona:
+
+`test.`
+
+Configura correttamente il file di zona includendo:
+
+* SOA
+* NS
+* record A del Name Server
+* record A del servizio web
+
+Il servizio web deve essere pubblicato con:
+
+`www.test. -> 200.0.6.2`
+
+La configurazione deve essere coerente con la delega presente sulla root pc5.
+
+pc1 deve rispondere autoritativamente per `test.` e non deve funzionare come resolver ricorsivo aperto.
+
+### Web Server – pc4
+
+pc4 deve ospitare un semplice server HTTP all'indirizzo:
+
+`200.0.6.2`
+
+Il servizio deve essere raggiungibile utilizzando:
+
+`www.test.`
+
+La pagina restituita può essere minimale ma deve permettere di verificare che la risoluzione DNS e la successiva connessione HTTP funzionino correttamente.
+
+### Recursive Resolver – pc3
+
+pc3 deve svolgere esclusivamente il ruolo di Local DNS / Recursive Resolver per i client.
+
+Indirizzi disponibili:
+
+* IPv4: `100.0.0.2`
+* IPv6: `2001:8::2`
+
+I client IPv4 devono utilizzare come nameserver:
+
+`100.0.0.2`
+
+pc6 è IPv6-only e deve utilizzare come nameserver:
+
+`2001:8::2`
+
+Configura pc3 affinché la risoluzione DNS parta dalla root artificiale ospitata su:
+
+`pc5 - 100.0.8.2`
+
+pc3 deve quindi interrogare la root, ricevere la delega per `test.`, contattare il server autoritativo pc1 e infine ottenere il record di `www.test.`.
+
+La sequenza attesa è:
+
+`Client -> pc3 Resolver -> pc5 Root . -> pc1 Authoritative test. -> www.test. = 200.0.6.2 -> pc4`
+
+Non utilizzare DNS pubblici o forwarder esterni.
+
+Installa BIND9 sulle macchine DNS interessate e configura il server web su pc4.
+
+Tutte le modifiche devono essere persistenti nel laboratorio Kathara. Modifica i file `.startup` e crea nelle directory dei device i file richiesti sotto `/etc/bind/` e quelli relativi alla configurazione del servizio web.
+
+Configura inoltre i nameserver dei client affinché utilizzino pc3.
+
+Poiché la root artificiale non è firmata, disabilita la validazione DNSSEC dove necessario.
+
+La verifica finale deve dimostrare che una richiesta DNS per:
+
+`www.test.`
+
+inviata al resolver pc3 restituisce:
+
+`200.0.6.2`
+
+e che il servizio HTTP presente su pc4 è raggiungibile utilizzando il nome DNS.

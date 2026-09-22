@@ -1,0 +1,120 @@
+Aggiungi al laboratorio esistente un’infrastruttura DNS gerarchica e un semplice servizio web.
+
+Utilizza esclusivamente le macchine, la topologia e gli indirizzi IP già presenti nel lab. Non modificare la struttura della rete né il routing esistente. L’obiettivo principale dell’esercizio è la configurazione e il corretto funzionamento del DNS.
+
+La struttura DNS deve essere la seguente:
+
+* pc4 deve essere il Root DNS Server autoritativo per la root artificiale `.`
+* pc5 deve essere il Name Server autoritativo per la zona `test.`
+* pc3 deve essere il Local DNS / Recursive Resolver
+* pc2 deve ospitare il Web Server associato a `www.test.`
+
+### Root DNS – pc4
+
+pc4, con indirizzo IPv4 `200.0.6.2`, deve essere configurato come server DNS autoritativo per la root artificiale `.` del laboratorio.
+
+La root deve delegare la zona:
+
+`test.`
+
+al name server autoritativo ospitato su pc5.
+
+Configura correttamente i record `NS` della delega e gli eventuali glue record necessari affinché il resolver possa raggiungere il server autoritativo della zona `test.` senza utilizzare DNS esterni.
+
+pc4 deve svolgere esclusivamente il ruolo di server autoritativo e non deve essere configurato come resolver ricorsivo aperto.
+
+### Authoritative DNS – pc5
+
+pc5, con indirizzo IPv4 `100.0.8.2`, deve essere il server DNS autoritativo per la zona:
+
+`test.`
+
+Crea e configura correttamente la zona DNS `test.`, inclusi i record `SOA`, `NS` e gli altri record necessari.
+
+La zona deve contenere il record:
+
+`www.test. -> 100.0.6.2`
+
+Il name server autoritativo della zona deve essere ospitato direttamente su pc5.
+
+pc5 non deve essere configurato come resolver ricorsivo aperto.
+
+### Web Server – pc2
+
+pc2, con indirizzo IPv4:
+
+`100.0.6.2`
+
+deve ospitare un semplice server web HTTP.
+
+Il servizio deve essere raggiungibile attraverso il nome:
+
+`www.test.`
+
+La risoluzione di `www.test.` deve avvenire esclusivamente attraverso l'infrastruttura DNS artificiale configurata nel laboratorio.
+
+### Local DNS / Recursive Resolver – pc3
+
+pc3 deve essere configurato come Local DNS e recursive resolver del laboratorio.
+
+Gli indirizzi del resolver sono:
+
+* IPv4: `100.0.0.2`
+* IPv6: `2001:8::2`
+
+I client IPv4 devono utilizzare:
+
+`100.0.0.2`
+
+come nameserver.
+
+pc6 è IPv6-only ed è direttamente collegato alla stessa rete di pc3. Deve quindi utilizzare:
+
+`2001:8::2`
+
+come nameserver.
+
+Il resolver pc3 deve eseguire la risoluzione DNS iterativa partendo dalla root artificiale ospitata su pc4.
+
+La catena di risoluzione attesa è quindi:
+
+`Client -> pc3 Local Resolver -> pc4 Root DNS -> pc5 Authoritative test. -> www.test.`
+
+pc3 non deve utilizzare root server pubblici, DNS pubblici, forwarder esterni o servizi DNS di Internet per risolvere la zona `test.`.
+
+Configura opportunamente il resolver affinché conosca la root artificiale del laboratorio e inizi da essa la risoluzione.
+
+### Configurazione dei servizi
+
+Installa e configura BIND9 esclusivamente sulle macchine che svolgono funzioni DNS:
+
+* pc4: Root DNS autoritativo
+* pc5: Authoritative DNS per `test.`
+* pc3: Local DNS / Recursive Resolver
+
+Installa e configura su pc2 il software necessario per fornire un semplice servizio HTTP.
+
+La configurazione deve essere persistente all'interno del laboratorio Kathara.
+
+Modifica quindi i file `.startup` interessati e crea nelle directory Kathara dei rispettivi device tutti i file persistenti necessari, ad esempio:
+
+* configurazioni BIND9;
+* file delle zone DNS;
+* configurazione della root artificiale;
+* configurazione/root hints necessari al resolver locale;
+* configurazione del web server;
+* configurazione dei nameserver dei client.
+
+Non affidarti a modifiche manuali eseguite dopo l'avvio del laboratorio: tutto ciò che è necessario al funzionamento dell'esercizio deve essere rappresentato nei file del lab.
+
+Poiché la root artificiale del laboratorio non è firmata, disabilita la validazione DNSSEC dove necessario.
+
+Al termine della configurazione deve essere possibile, da un client del laboratorio, interrogare il Local DNS pc3 per `www.test.` e ottenere:
+
+`www.test. -> 100.0.6.2`
+
+seguendo realmente la gerarchia DNS:
+
+`.` su pc4 → `test.` su pc5 → record `www.test.`
+
+Il servizio HTTP su pc2 deve infine essere raggiungibile utilizzando il nome `www.test.`.
