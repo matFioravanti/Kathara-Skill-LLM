@@ -25,6 +25,4 @@ Installa e configura BIND9 su pc2, pc3 e pc5 e il servizio HTTP su pc1. Rendi pe
 
 Non modificare routing, indirizzi o topologia per far funzionare il DNS.
 
-Disabilita la validazione DNSSEC sul resolver dove necessario, poiché la root artificiale non è firmata.
-
 Il risultato finale deve permettere ai client di risolvere `www.test.` tramite pc3 e raggiungere il servizio web su pc1 attraversando realmente la gerarchia DNS configurata.

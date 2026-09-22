@@ -176,9 +176,9 @@ runs/<run_id>/
 `manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Include `execution_backend` (`codex_cli` o `antigravity_cli`), `authentication` (`local_chatgpt_login` o `local_google_login`), `correction_agent` e `correction_backend`.
 
 `runs/` è la fonte persistente. `results/` contiene i report derivati ricostruibili in qualunque momento:
-* `results/benchmark_report.xlsx` — report principale Excel con fogli formattati `Runs`, `Telemetry`, `Checks`, `Analysis` (header in grassetto, freeze pane, filtri automatici, percentuali e conditional formatting PASS/FAIL)
+* `results/benchmark_report.xlsx` — report principale Excel con fogli formattati `Runs` (inclusa telemetria Inspect), `Telemetry` e `Analysis` (header in grassetto, freeze pane, filtri automatici, percentuali e conditional formatting PASS/FAIL)
 * `results/benchmark_results.csv` — panoramica CSV per run
-* `results/benchmark_detailed.csv` — dettaglio CSV di tutti i singoli check
+* `results/benchmark_detailed.csv` — dettaglio CSV e Reason testuale di tutti i singoli check
 * `results/analysis_summary.csv` — statistiche aggregate
 
 ## Aggregazione e analisi

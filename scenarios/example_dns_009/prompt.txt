@@ -1,0 +1,24 @@
+Configura nel laboratorio esistente una gerarchia DNS privata e un semplice servizio web usando solo le macchine e la rete già disponibili. Non aggiungere indirizzi, collegamenti o nuove rotte.
+
+La struttura deve essere:
+
+pc2 → Root DNS autoritativo per `.`
+pc1 → Name Server autoritativo per `test.`
+pc3 → Local DNS / Recursive Resolver
+pc4 → Web Server per `www.test.`
+
+pc2 deve rappresentare esclusivamente la root artificiale e delegare `test.` a pc1 tramite NS e glue record appropriati. Non deve conoscere direttamente `www.test.` e non deve risolvere richieste ricorsive dei client.
+
+pc1 deve essere autoritativo per `test.`, con record SOA, NS e record A di `www.test.` verso pc4. Non deve essere configurato come root o resolver locale.
+
+pc4 deve ospitare il servizio HTTP e non deve essere un nameserver.
+
+pc3 deve essere l’unico resolver utilizzato dai client e partire dalla root pc2. Non deve interrogare DNS pubblici, usare forwarder esterni o bypassare la gerarchia configurata.
+
+pc6 deve usare pc3 tramite IPv6; gli altri client devono usare pc3 come DNS locale.
+
+La risoluzione richiesta è:
+
+`Client -> pc3 -> pc2 Root . -> pc1 Authoritative test. -> pc4 Web Server`
+
+Configura BIND9 e il server HTTP rendendo persistenti le modifiche tramite `.startup` e gli altri file Kathara necessari.

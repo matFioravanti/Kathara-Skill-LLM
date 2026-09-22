@@ -3,7 +3,6 @@
 Crea i fogli:
 - Runs: panoramica delle run e punteggi Kathara Lab Checker
 - Telemetry: telemetria dettagliata Inspect AI (token, cache, durata, tool calls, errori)
-- Checks: dettaglio granulare di ciascun check eseguito dal checker
 - Analysis: statistiche aggregate generali e per esperimento
 """
 from pathlib import Path
@@ -83,6 +82,16 @@ def _build_runs_sheet(ws, summary_frame: pd.DataFrame):
         ("lines_added", "Lines Added"),
         ("lines_deleted", "Lines Deleted"),
         ("pipeline_state", "Pipeline State"),
+        ("inspect_status", "Inspect Status"),
+        ("input_tokens", "Input Tokens"),
+        ("output_tokens", "Output Tokens"),
+        ("reasoning_tokens", "Reasoning Tokens"),
+        ("input_tokens_cache_read", "Cache Read Tokens"),
+        ("total_tokens", "Total Tokens"),
+        ("total_time", "Duration (s)"),
+        ("tool_calls", "Tool Calls"),
+        ("tool_errors", "Tool Errors"),
+        ("turn_count", "Turns"),
     ]
 
     headers = [label for _, label in runs_columns]
@@ -90,12 +99,22 @@ def _build_runs_sheet(ws, summary_frame: pd.DataFrame):
 
     rate_col_indices = []
     task_success_col = None
+    integer_cols = []
+    float_cols = []
+    status_col = None
 
     for col_idx, (key, _) in enumerate(runs_columns, start=1):
         if "rate" in key:
             rate_col_indices.append(col_idx)
         if key == "task_success":
             task_success_col = col_idx
+        if key in ("input_tokens", "output_tokens", "reasoning_tokens", "input_tokens_cache_read",
+                   "total_tokens", "tool_calls", "tool_errors", "turn_count"):
+            integer_cols.append(col_idx)
+        if key == "total_time":
+            float_cols.append(col_idx)
+        if key == "inspect_status":
+            status_col = col_idx
 
     for _, row in summary_frame.iterrows():
         row_vals = []
@@ -114,9 +133,16 @@ def _build_runs_sheet(ws, summary_frame: pd.DataFrame):
                 else:
                     row_vals.append(None)
             elif key in ("checks_passed", "checks_failed", "checks_total", "files_changed",
-                         "files_created", "files_modified", "lines_added", "lines_deleted", "repetition"):
+                         "files_created", "files_modified", "lines_added", "lines_deleted", "repetition",
+                         "input_tokens", "output_tokens", "reasoning_tokens", "input_tokens_cache_read",
+                         "total_tokens", "tool_calls", "tool_errors", "turn_count"):
                 try:
                     row_vals.append(int(val))
+                except (ValueError, TypeError):
+                    row_vals.append(val)
+            elif key == "total_time":
+                try:
+                    row_vals.append(float(val))
                 except (ValueError, TypeError):
                     row_vals.append(val)
             elif "rate" in key:
@@ -136,6 +162,10 @@ def _build_runs_sheet(ws, summary_frame: pd.DataFrame):
             cell.border = BORDER_THIN
             if col_idx in rate_col_indices and isinstance(cell.value, (int, float)):
                 cell.number_format = "0.0%"
+            elif col_idx in integer_cols and isinstance(cell.value, (int, float)):
+                cell.number_format = "#,##0"
+            elif col_idx in float_cols and isinstance(cell.value, (int, float)):
+                cell.number_format = "#,##0.00"
             elif col_idx == task_success_col:
                 cell.alignment = Alignment(horizontal="center")
 
@@ -152,6 +182,18 @@ def _build_runs_sheet(ws, summary_frame: pd.DataFrame):
         ws.conditional_formatting.add(
             range_ref,
             CellIsRule(operator="equal", formula=['"FAIL"'], fill=RED_FILL, font=RED_FONT)
+        )
+
+    if status_col and ws.max_row > 1:
+        col_letter = get_column_letter(status_col)
+        range_ref = f"{col_letter}2:{col_letter}{ws.max_row}"
+        ws.conditional_formatting.add(
+            range_ref,
+            CellIsRule(operator="equal", formula=['"success"'], fill=GREEN_FILL, font=GREEN_FONT)
+        )
+        ws.conditional_formatting.add(
+            range_ref,
+            CellIsRule(operator="equal", formula=['"error"'], fill=RED_FILL, font=RED_FONT)
         )
 
     _autofit_columns(ws)
@@ -251,75 +293,6 @@ def _build_telemetry_sheet(ws, summary_frame: pd.DataFrame):
         ws.conditional_formatting.add(
             range_ref,
             CellIsRule(operator="equal", formula=['"error"'], fill=RED_FILL, font=RED_FONT)
-        )
-
-    _autofit_columns(ws)
-
-
-def _build_checks_sheet(ws, detail_frame: pd.DataFrame):
-    checks_columns = [
-        ("run_id", "Run ID"),
-        ("scenario_id", "Scenario"),
-        ("repetition", "Repetition"),
-        ("agent", "Agent"),
-        ("Test Description", "Test Description"),
-        ("Passed", "Passed"),
-        ("Reason", "Reason / Output"),
-    ]
-
-    headers = [label for _, label in checks_columns]
-    ws.append(headers)
-
-    passed_col = None
-    for col_idx, (key, _) in enumerate(checks_columns, start=1):
-        if key == "Passed":
-            passed_col = col_idx
-
-    for _, row in detail_frame.iterrows():
-        row_vals = []
-        for key, _ in checks_columns:
-            val = row.get(key)
-            if pd.isna(val):
-                row_vals.append(None)
-            elif key == "Passed":
-                if isinstance(val, bool):
-                    row_vals.append("PASS" if val else "FAIL")
-                elif str(val).lower() in ("true", "pass"):
-                    row_vals.append("PASS")
-                elif str(val).lower() in ("false", "fail"):
-                    row_vals.append("FAIL")
-                else:
-                    row_vals.append(str(val))
-            elif key == "repetition":
-                try:
-                    row_vals.append(int(val))
-                except (ValueError, TypeError):
-                    row_vals.append(val)
-            else:
-                row_vals.append(val)
-        ws.append(row_vals)
-
-    for row_idx in range(2, ws.max_row + 1):
-        ws.row_dimensions[row_idx].height = 19
-        for col_idx in range(1, ws.max_column + 1):
-            cell = ws.cell(row=row_idx, column=col_idx)
-            cell.border = BORDER_THIN
-            if col_idx == passed_col:
-                cell.alignment = Alignment(horizontal="center")
-
-    _style_headers_and_filters(ws)
-
-    # Conditional formatting on Passed
-    if passed_col and ws.max_row > 1:
-        col_letter = get_column_letter(passed_col)
-        range_ref = f"{col_letter}2:{col_letter}{ws.max_row}"
-        ws.conditional_formatting.add(
-            range_ref,
-            CellIsRule(operator="equal", formula=['"PASS"'], fill=GREEN_FILL, font=GREEN_FONT)
-        )
-        ws.conditional_formatting.add(
-            range_ref,
-            CellIsRule(operator="equal", formula=['"FAIL"'], fill=RED_FILL, font=RED_FONT)
         )
 
     _autofit_columns(ws)
@@ -427,15 +400,13 @@ def _build_analysis_sheet(ws, summary_frame: pd.DataFrame):
 
 
 def generate_excel_report(results: Path) -> Path:
-    """Genera results/benchmark_report.xlsx aggregando Runs, Telemetry, Checks e Analysis dai file CSV."""
+    """Genera results/benchmark_report.xlsx aggregando Runs, Telemetry e Analysis dai file CSV."""
     summary_csv = results / "benchmark_results.csv"
-    detail_csv = results / "benchmark_detailed.csv"
     
-    if not summary_csv.exists() or not detail_csv.exists():
+    if not summary_csv.exists():
         return None
         
     summary_frame = pd.read_csv(summary_csv)
-    detail_frame = pd.read_csv(detail_csv)
     
     results.mkdir(parents=True, exist_ok=True)
     report_path = results / "benchmark_report.xlsx"
@@ -451,11 +422,7 @@ def generate_excel_report(results: Path) -> Path:
     ws_telemetry = wb.create_sheet(title="Telemetry")
     _build_telemetry_sheet(ws_telemetry, summary_frame)
 
-    # 3. Checks Sheet
-    ws_checks = wb.create_sheet(title="Checks")
-    _build_checks_sheet(ws_checks, detail_frame)
-
-    # 4. Analysis Sheet
+    # 3. Analysis Sheet
     ws_analysis = wb.create_sheet(title="Analysis")
     _build_analysis_sheet(ws_analysis, summary_frame)
 
