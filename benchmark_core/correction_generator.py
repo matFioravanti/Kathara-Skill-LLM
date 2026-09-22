@@ -5,7 +5,9 @@ import tempfile
 
 import yaml
 
+from .agent_factory import validate_agent
 from .codex_cli_runner import run_codex
+from .antigravity_cli_runner import run_antigravity
 from .workspace import copy_lab, tree_hash, write_json
 
 
@@ -44,7 +46,16 @@ def validate_correction(path: Path) -> None:
         Path(structure).unlink(missing_ok=True)
 
 
-def generate_correction(config, scenario, run: Path) -> Path:
+def _run_agent(agent: str, **kwargs):
+    """Dispatch della chiamata al runner corretto in base all'active agent."""
+    validate_agent(agent)
+    if agent == "codex":
+        return run_codex(**kwargs)
+    elif agent == "antigravity":
+        return run_antigravity(**kwargs)
+
+
+def generate_correction(config, scenario, run: Path, agent: str) -> Path:
     lab = run / "lab"
     logs = run / "logs" / "generator"
     logs.mkdir(parents=True, exist_ok=True)
@@ -101,11 +112,11 @@ correctness against the schema before finishing.
         backup = Path(tmp_str) / "lab"
         copy_lab(lab, backup)
         try:
-            run_codex(prompt=prompt, workspace=output_dir, logs=logs,
-                      timeout=config.data["benchmark"]["timeout_seconds"],
-                      model=config.model("correction_generator"),
-                      reasoning_effort=config.reasoning_effort("correction_generator"),
-                      variant="correction_generator")
+            _run_agent(agent, prompt=prompt, workspace=output_dir, logs=logs,
+                       timeout=config.data["benchmark"]["timeout_seconds"],
+                       model=config.model("correction_generator"),
+                       reasoning_effort=config.reasoning_effort("correction_generator"),
+                       variant="correction_generator")
         finally:
             try:
                 after = tree_hash(lab)

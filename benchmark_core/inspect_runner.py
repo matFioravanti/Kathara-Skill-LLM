@@ -3,6 +3,7 @@ from pathlib import Path
 
 from .agent_factory import validate_agent
 from .codex_cli_runner import run_codex
+from .antigravity_cli_runner import run_antigravity
 
 
 def run_aut(config, scenario, run: Path, agent: str) -> Path:
@@ -16,7 +17,12 @@ def run_aut(config, scenario, run: Path, agent: str) -> Path:
         "il laboratorio sarà avviato dal checker dopo questa chiamata.\n\n"
         "REQUISITI ORIGINALI:\n" + scenario.prompt
     )
-    run_codex(prompt=prompt, workspace=lab, logs=run / "logs/aut",
-              timeout=config.data["benchmark"]["timeout_seconds"], model=config.model(),
-              reasoning_effort=config.reasoning_effort(), variant="aut")
+    if agent == "codex":
+        run_codex(prompt=prompt, workspace=lab, logs=run / "logs/aut",
+                  timeout=config.data["benchmark"]["timeout_seconds"], model=config.model(),
+                  reasoning_effort=config.reasoning_effort(), variant="aut")
+    elif agent == "antigravity":
+        run_antigravity(prompt=prompt, workspace=lab, logs=run / "logs/aut",
+                        timeout=config.data["benchmark"]["timeout_seconds"], model=config.model(),
+                        reasoning_effort=config.reasoning_effort(), variant="aut")
     return run / "logs/aut/events.jsonl"

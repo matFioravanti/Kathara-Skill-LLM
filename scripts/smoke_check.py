@@ -19,6 +19,7 @@ def main():
     from benchmark_core.checker_runner import parse_reports
     from benchmark_core.config import load_config, skill_paths
     from benchmark_core.codex_cli_runner import command_for
+    from benchmark_core.correction_generator import _run_agent
     from benchmark_core.diff_metrics import compute_diff
     from benchmark_core.scenario_loader import discover_scenarios
     from benchmark_core.workspace import component_versions, create_workspace, tree_hash, write_json
@@ -30,10 +31,47 @@ def main():
     scenarios = discover_scenarios(ROOT / "scenarios")
     assert scenarios, "Serve almeno uno scenario per lo smoke"
     print("OK configurazione e discovery:", ", ".join(scenarios))
-    assert AGENTS == {"codex": "codex_cli"}
+    assert AGENTS == {"codex": "codex_cli", "antigravity": "antigravity_cli"}
     validate_agent("codex")
-    print("OK backend Codex CLI locale")
+    validate_agent("antigravity")
+    print("OK backend supportati")
+
+    # Verifica dispatch: _run_agent accetta entrambi gli agenti.
+    # Non eseguiamo realmente, ma verifichiamo che la funzione non rifiuti l'agente.
+    for agent_name in ("codex", "antigravity"):
+        try:
+            validate_agent(agent_name)
+        except ValueError:
+            raise AssertionError(f"validate_agent rifiuta '{agent_name}'")
+    print("OK dispatch AUT + correction generator per entrambi gli agenti")
+
     subprocess.run([sys.executable, "-m", "kathara_lab_checker", "--version"], check=True)
+
+    # Verifica che --agent cross-provider venga rifiutato.
+    cross_provider = subprocess.run(
+        [sys.executable, "scripts/run_benchmark.py",
+         "--config", "benchmark.yaml", "--agent", "antigravity", "--preflight"],
+        capture_output=True, text=True, cwd=str(ROOT)
+    )
+    assert cross_provider.returncode != 0, "--agent antigravity con benchmark.yaml (codex) dovrebbe fallire"
+    assert "non è compatibile" in cross_provider.stderr
+    cross_provider_inv = subprocess.run(
+        [sys.executable, "scripts/run_benchmark.py",
+         "--config", "benchmark_antigravity.yaml", "--agent", "codex", "--preflight"],
+        capture_output=True, text=True, cwd=str(ROOT)
+    )
+    assert cross_provider_inv.returncode != 0, "--agent codex con benchmark_antigravity.yaml dovrebbe fallire"
+    assert "non è compatibile" in cross_provider_inv.stderr
+    # Verifica che --agent uguale al config venga accettato (fallirà su Docker, ma non sulla validazione).
+    same_provider = subprocess.run(
+        [sys.executable, "scripts/run_benchmark.py",
+         "--config", "benchmark.yaml", "--agent", "codex", "--preflight"],
+        capture_output=True, text=True, cwd=str(ROOT)
+    )
+    # Può fallire su Docker, ma NON deve fallire sulla validazione dell'agente.
+    assert "non è compatibile" not in same_provider.stderr
+    print("OK validazione cross-provider --agent")
+
     for directory in (ROOT / "benchmark_core", ROOT / "scripts"):
         for path in directory.glob("*.py"):
             ast.parse(path.read_text(), filename=str(path))
@@ -54,6 +92,14 @@ def main():
         assert tree_hash(scenario.lab) == before
         command = command_for(workspace=lab, model=None, reasoning_effort=None)
         assert command[1:3] == ("exec", "--json") and command[-1] == "-"
+
+        from benchmark_core.antigravity_cli_runner import command_for as agy_command_for
+        agy_command = agy_command_for(workspace=lab, model="gemini", reasoning_effort="high", prompt="test")
+        assert "--dangerously-skip-permissions" in agy_command
+        assert "--model" in agy_command and "gemini" in agy_command
+        assert "--effort" in agy_command and "high" in agy_command
+        assert "--output-format" in agy_command and "stream-json" in agy_command
+
         print("OK workspace isolato, diff e aggregazione/analisi vuote")
 
         # Usa i writer REALI del checker, senza emulare il formato CSV.

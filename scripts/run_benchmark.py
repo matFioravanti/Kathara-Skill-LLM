@@ -31,7 +31,13 @@ def main() -> int:
         for name, path in verify_skills(config).items():
             print(f"OK {name}: {path}")
         return 0
-    agent = args.agent or config.data["aut"]["agent"]
+    agent = config.data["aut"]["agent"]
+    if args.agent and args.agent != agent:
+        parser.error(
+            f"--agent {args.agent} non è compatibile con la configurazione "
+            f"in {args.config} (aut.agent: {agent}). "
+            f"Usa il file di configurazione corretto per l'agente desiderato."
+        )
     repetitions = args.repetitions if args.repetitions is not None else config.data["benchmark"]["repetitions"]
     if repetitions < 1:
         parser.error("--repetitions deve essere positivo")

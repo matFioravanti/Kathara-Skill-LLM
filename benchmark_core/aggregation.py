@@ -38,7 +38,11 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         row.update({k: v for k, v in metadata.items() if k in row})
         row["component_versions"] = json.dumps(metadata.get("component_versions", {}), sort_keys=True)
         try:
-            metrics = extract_metrics(run / "logs/aut")
+            if metadata.get("agent") == "antigravity":
+                from .antigravity_metrics import extract_metrics as antigravity_extract
+                metrics = antigravity_extract(run / "logs/aut")
+            else:
+                metrics = extract_metrics(run / "logs/aut")
             # In assenza di log conserva il modello richiesto nei metadata.
             row.update({k: v for k, v in metrics.items() if v is not None})
         except Exception as exc:

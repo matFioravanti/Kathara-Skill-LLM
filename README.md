@@ -1,22 +1,24 @@
 # Kathara Skill LLM Benchmark
 
-Benchmark riproducibile per Codex CLI che configura DNS e servizi web opzionali in laboratori Kathara. Ogni generazione viene eseguita dall'eseguibile `codex` installato sul Mac host e riutilizza esclusivamente il login ChatGPT già presente nella CLI.
+Benchmark riproducibile per valutare agenti LLM CLI che configurano DNS e servizi web in laboratori Kathara. Gli agenti supportati sono **Codex CLI** e **Antigravity CLI (agy)**, ciascuno con autenticazione rigorosamente locale.
 
 ## Architettura
 
-Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna ripetizione il runner conserva il baseline in `runs/<run_id>/input/lab`, crea la copia modificabile in `runs/<run_id>/lab` e avvia l'Agent Under Test (AUT) sul Mac host con `codex exec`. `run/lab` è la working directory della CLI e Codex usa il proprio sandbox `workspace-write`.
+Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna ripetizione il runner conserva il baseline in `runs/<run_id>/input/lab`, crea la copia modificabile in `runs/<run_id>/lab` e avvia l'Agent Under Test (AUT) sul Mac host.
 
-Terminata la prima esecuzione, il runner salva gli eventi JSONL nativi di Codex, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Una seconda esecuzione Codex, con log separati, legge il laboratorio finale protetto, il prompt originale, la skill del checker e lo schema. Questa chiamata produce `correction.yaml`; le sue metriche non entrano mai nei risultati AUT.
+L'**active agent** di una run è unico: lo stesso agente viene utilizzato sia come AUT sia come Correction Generator. Non è possibile combinare agenti diversi nella stessa run.
+
+Terminata la prima esecuzione, il runner salva gli eventi JSONL nativi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Una seconda esecuzione dello stesso agente, con log separati, legge il laboratorio finale protetto, il prompt originale, la skill del checker e lo schema. Questa chiamata produce `correction.yaml`; le sue metriche non entrano mai nei risultati AUT.
 
 Prima e dopo la seconda chiamata viene calcolato l'hash ricorsivo del laboratorio. Un cambiamento causa `CORRECTION_GENERATION_FAILED` e il ripristino dalla copia temporanea protetta. `kathara-lab-checker` opera su un'altra copia temporanea del laboratorio finale, perché scrive i report nella directory del laboratorio; la copia viene eliminata anche in caso di errore e soltanto i report sono conservati in `run/results/`.
 
-Il risultato finale deriva esclusivamente dal checker. Un'esecuzione Codex riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
+Il risultato finale deriva esclusivamente dal checker. Un'esecuzione AUT riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
 
 ```text
-scenario -> copia lab -> Codex CLI AUT -> eventi JSONL + diff
+scenario -> copia lab -> Active Agent AUT -> eventi JSONL + diff
                                         |
                                         v
-                     Codex CLI correction generator
+                     Active Agent correction generator
                                         |
                                         v
                     correction.yaml -> copia lab -> checker
@@ -25,11 +27,24 @@ scenario -> copia lab -> Codex CLI AUT -> eventi JSONL + diff
                               runs/ (grezzi) -> results/ (derivati)
 ```
 
-`codex exec --json --ephemeral --sandbox workspace-write --skip-git-repo-check -C <workspace> -` esegue Codex senza API key, passa il prompt via stdin e conserva tutti gli eventi JSONL. Kathara Lab Checker avvia il laboratorio e determina il superamento dei check senza un LLM judge. Inspect AI e Inspect SWE rimangono tra le dipendenze dell'ambiente per compatibilità e validazione delle skill, ma non sono coinvolti nell'esecuzione, nel provider o nell'autenticazione di Codex.
+### Backend Codex
+
+`codex exec --json --ephemeral --sandbox workspace-write --skip-git-repo-check -C <workspace> -` esegue Codex senza API key, passa il prompt via stdin e conserva tutti gli eventi JSONL.
+
+### Backend Antigravity
+
+`agy --add-dir <workspace> --dangerously-skip-permissions --output-format stream-json --model <model> --effort <effort> --print <prompt>` esegue Antigravity con autenticazione locale Google.
+
+Kathara Lab Checker avvia il laboratorio e determina il superamento dei check senza un LLM judge. Inspect AI e Inspect SWE rimangono tra le dipendenze dell'ambiente per compatibilità e validazione delle skill, ma non sono coinvolti nell'esecuzione.
 
 ## Requisiti e installazione
 
-Servono Python 3.11 o successivo, Docker con daemon attivo, Kathara e Codex CLI installata e autenticata con ChatGPT. L'ambiente verificato durante la creazione usa Python 3.14.6.
+Servono Python 3.11 o successivo, Docker con daemon attivo e Kathara. In aggiunta, in base all'agente scelto:
+
+* **Codex**: Codex CLI installata e autenticata con ChatGPT (`codex --version`, `codex login status`).
+* **Antigravity**: Antigravity CLI installata con autenticazione locale Google (`agy --version`).
+
+Non è necessario avere entrambi installati: il preflight verifica solo i prerequisiti dell'agente configurato.
 
 ```bash
 python3 -m venv .venv
@@ -39,9 +54,18 @@ python -m pip install -r requirements.txt
 
 `requirements.txt` è il freeze dell'ambiente risolto. Le versioni centrali sono Inspect AI 0.3.266, Inspect SWE 0.2.71, kathara-lab-checker 0.1.14, Kathara 3.8.3, pandas 3.0.6 e PyYAML 6.0.3.
 
-Non impostare `OPENAI_API_KEY`, `CODEX_API_KEY` o `INSPECT_EVAL_MODEL`: il runner le rimuove soltanto dalla copia dell'environment passata al subprocess, senza modificare l'ambiente dell'utente. Se `CODEX_HOME` è già presente viene preservato; altrimenti Codex usa la configurazione standard, incluso il login ChatGPT locale.
+Non impostare `OPENAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY` o `INSPECT_EVAL_MODEL`: il runner le rimuove soltanto dalla copia dell'environment passata al subprocess, senza modificare l'ambiente dell'utente.
 
-La configurazione predefinita seleziona `gpt-5.6-terra` con reasoning effort `low`, una combinazione verificata con la CLI locale installata. `correction_generator.model` e `reasoning_effort` a `null` ereditano gli stessi valori dell'AUT. Un valore `null` per `aut.model` usa il modello predefinito dell'account Codex; il runner passa `-c model_reasoning_effort="…"` solo se configurato. La versione di Codex installata viene verificata dal preflight.
+## Configurazione
+
+Ogni agente ha il proprio file di configurazione dedicato:
+
+* `benchmark.yaml` — configurazione **Codex** (`gpt-5.6-terra`, reasoning effort `low`)
+* `benchmark_antigravity.yaml` — configurazione **Antigravity** (`gemini-3.8-flash`, reasoning effort `low`)
+
+L'agente è determinato dal campo `aut.agent` nel file di configurazione. Il flag `--agent` sulla CLI serve esclusivamente come verifica di coerenza: deve coincidere con `aut.agent` nel YAML, altrimenti il comando viene rifiutato. L'override cross-provider non è supportato.
+
+Il Correction Generator utilizza sempre lo stesso agente dell'AUT. Se `correction_generator.agent` è specificato nel YAML, deve coincidere con `aut.agent`.
 
 ## Skill richieste
 
@@ -72,33 +96,41 @@ scenarios/<scenario_id>/
     └── lab.conf
 ```
 
-Non aggiungere `scenario.yaml` o `correction.yaml`. Il prompt è la fonte normativa; `lab/` è copiato per ogni run e non viene modificato. `example_dns_001` è uno scenario strutturale pronto per l'esecuzione dopo l'aggiunta delle skill.
+Non aggiungere `scenario.yaml` o `correction.yaml`. Il prompt è la fonte normativa; `lab/` è copiato per ogni run e non viene modificato.
 
 ## Esecuzione
 
-Il preflight controlla skill, `which codex`, `codex --version`, `codex login status`, Docker, Compose, Kathara e checker senza fare chiamate al modello:
+Il preflight controlla skill, dipendenze dell'agente configurato, Docker, Compose, Kathara e checker senza fare chiamate al modello. Verifica solo l'agente specificato nel file di configurazione:
 
 ```bash
-python scripts/run_benchmark.py --preflight --agent codex
+# Preflight Codex (non richiede agy)
+python scripts/run_benchmark.py --config benchmark.yaml --preflight
+
+# Preflight Antigravity (non richiede codex)
+python scripts/run_benchmark.py --config benchmark_antigravity.yaml --preflight
 ```
 
 Eseguire uno scenario:
 
 ```bash
-python scripts/run_benchmark.py --scenario example_dns_001 --agent codex
+# Con Codex
+python scripts/run_benchmark.py --config benchmark.yaml --scenario example_dns_001
+
+# Con Antigravity
+python scripts/run_benchmark.py --config benchmark_antigravity.yaml --scenario example_dns_001
 ```
 
 Eseguire cinque ripetizioni di tutti gli scenari:
 
 ```bash
-python scripts/run_benchmark.py --all --agent codex --repetitions 5
+python scripts/run_benchmark.py --config benchmark.yaml --all --repetitions 5
 ```
 
 `benchmark.continue_on_error` decide se continuare dopo una run infrastrutturalmente fallita. Una soluzione AUT valutata e bocciata dal checker è una run completata, non un errore del comando.
 
 ## Artefatti e stati
 
-Ogni run usa un ID leggibile e univoco, per esempio `example_dns_001__codex__r001__20260920T131500000000Z_ab12cd34`, e conserva:
+Ogni run usa un ID leggibile e univoco, per esempio `example_dns_001__antigravity__r001__20260922T151828726332Z_77f85f8d`, e conserva:
 
 ```text
 runs/<run_id>/
@@ -111,7 +143,7 @@ runs/<run_id>/
 ├── results/          # report CSV del checker
 └── logs/
     ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt
-    ├── generator/    # log Codex del correction generator
+    ├── generator/    # log dell'active agent per il correction generator
     ├── generator_output/  # correction.yaml candidata prima della validazione
     ├── diff.json
     ├── lab_integrity.json
@@ -121,9 +153,9 @@ runs/<run_id>/
     └── checker_stderr.log
 ```
 
-`manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Registra inoltre `execution_backend: codex_cli`, `authentication: local_chatgpt_login` e `api_key_used: false`. Gli stati sono `PENDING`, `AUT_RUNNING`, `AUT_FAILED`, `AUT_COMPLETED`, `CORRECTION_GENERATION_FAILED`, `CHECKER_FAILED` e `COMPLETED`.
+`manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Include `execution_backend` (`codex_cli` o `antigravity_cli`), `authentication` (`local_chatgpt_login` o `local_google_login`), `correction_agent` e `correction_backend`.
 
-`runs/` è la fonte persistente: contiene log Codex AUT, lab finale (`lab/`), baseline (`input/lab/`), diff, correction e report. `results/` contiene soltanto CSV derivati e può essere ricostruita in qualunque momento. Per ogni run esistono persistentemente solo due versioni del laboratorio: `input/lab` (before) e `lab` (after).
+`runs/` è la fonte persistente. `results/` contiene soltanto CSV derivati e può essere ricostruita in qualunque momento.
 
 ## Aggregazione e analisi
 
@@ -132,11 +164,7 @@ python scripts/aggregate_results.py
 python scripts/analyze_results.py
 ```
 
-`benchmark_results.csv` contiene una riga per run e unisce stati, risultato del checker, pass rate per categoria ricostruibile, metriche Codex AUT e diff. `benchmark_detailed.csv` contiene una riga per check usando le colonne reali di kathara-lab-checker 0.1.14: `Test Description`, `Passed` e `Reason`.
-
-Gli eventi `codex exec --json` sono conservati in `logs/aut/events.jsonl`. Il parser legge `turn.completed.usage` quando disponibile, il messaggio finale, turni e tool nativi. Il costo API e le metriche che Codex non emette restano nulli: non vengono inventati né calcolati costi. Le metriche della seconda esecuzione non vengono lette dall'aggregatore.
-
-L'analisi produce `analysis_summary.csv`, con una riga globale e righe per esperimento (scenario, agent, modello e hash della skill). Riporta denominatori, success rate, medie, mediane e deviazioni standard quando sono disponibili più osservazioni.
+L'aggregatore unisce metriche e stati. Distingue automaticamente tra i formati JSONL di Codex e Antigravity in base al campo `agent` nel manifest.
 
 ## Smoke check
 
@@ -144,8 +172,13 @@ L'analisi produce `analysis_summary.csv`, con una riga globale e righe per esper
 python scripts/smoke_check.py
 ```
 
-Lo smoke check importa i package, carica la configurazione, scopre gli scenari, risolve `codex_cli()`, valida la sintassi Python, crea un workspace temporaneo, verifica diff e immutabilità, aggrega una directory vuota e usa i writer reali del checker per controllare il parser dei report. Non avvia Docker, Kathara o chiamate LLM; elimina automaticamente gli artefatti temporanei.
+Lo smoke check convalida staticamente entrambi gli agent (`codex` e `antigravity`), verifica il dispatch per AUT e correction generator, testa il rifiuto dell'override cross-provider (`--agent antigravity` con `benchmark.yaml` e viceversa), e simula aggregazione e diff senza interagire con gli LLM.
 
-## Altri agent
+## Agent supportati
 
-Questo benchmark supporta intenzionalmente soltanto Codex CLI locale. Non usa fallback automatici verso OpenAI API, Inspect model provider, Anthropic, Gemini o altri provider. Un eventuale backend aggiuntivo deve essere una scelta esplicita e non può essere usato come fallback.
+| Agent | CLI | Config file | Modello verificato | Auth |
+|-------|-----|-------------|-------------------|------|
+| Codex | `codex` | `benchmark.yaml` | `gpt-5.6-terra` | ChatGPT login locale |
+| Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Google login locale |
+
+Entrambi gli agenti condividono la stessa architettura: l'agente altera i file del laboratorio invocato su linea di comando, genera la correction, e il Kathara Lab Checker determina il risultato finale senza alcun coinvolgimento dell'LLM nella valutazione.

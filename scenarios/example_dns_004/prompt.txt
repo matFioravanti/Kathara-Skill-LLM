@@ -1,6 +1,8 @@
 Aggiungi al laboratorio esistente un’infrastruttura DNS gerarchica e un semplice servizio web.
 
-Utilizza esclusivamente le macchine, la topologia e gli indirizzi IP già presenti nel lab. Non modificare la struttura della rete né il routing esistente. L’obiettivo principale dell’esercizio è la configurazione e il corretto funzionamento del DNS.
+Utilizza esclusivamente le macchine, la topologia e gli indirizzi IP già presenti nel lab.
+Non modificare la struttura della rete né il routing esistente.
+L’obiettivo principale dell’esercizio è la configurazione e il corretto funzionamento del DNS.
 
 La struttura deve essere:
 

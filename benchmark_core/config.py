@@ -14,7 +14,10 @@ class Config:
         return (self.root / value).resolve()
 
     def model(self, section: str = "aut") -> str | None:
-        """Modello Codex facoltativo: null mantiene il default dell'account locale."""
+        """Modello facoltativo: null mantiene il default dell'account locale.
+
+        Il correction_generator eredita da aut perché l'active agent è sempre lo stesso.
+        """
         return self.data[section].get("model") or self.data["aut"].get("model")
 
     def reasoning_effort(self, section: str = "aut") -> str | None:
@@ -38,8 +41,13 @@ def load_config(path: Path) -> Config:
             raise ValueError(f"{section}.{key} deve essere booleano.")
     if data["checker"].get("report_type") != "csv":
         raise ValueError("Questa integrazione richiede checker.report_type: csv.")
-    if data["correction_generator"].get("agent") != "codex":
-        raise ValueError("Il correction generator di questa iterazione deve essere codex.")
+    # Se correction_generator.agent è specificato, deve coincidere con aut.agent.
+    cg_agent = data["correction_generator"].get("agent")
+    if cg_agent is not None and cg_agent != data["aut"]["agent"]:
+        raise ValueError(
+            f"correction_generator.agent ({cg_agent}) deve coincidere con aut.agent "
+            f"({data['aut']['agent']}). L'active agent della run è unico."
+        )
     for section, keys in {
         "aut": ("agent", "version", "dns_skill"),
         "correction_generator": ("version", "skill", "schema"),

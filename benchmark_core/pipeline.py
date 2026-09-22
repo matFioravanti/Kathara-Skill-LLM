@@ -18,9 +18,13 @@ def run_one(config, scenario, agent: str, repetition: int) -> Path:
         "run_id": run.name, "scenario_id": scenario.scenario_id, "repetition": repetition,
         "agent": agent, "agent_version": config.data["aut"]["version"], "model": config.model(),
         "reasoning_effort": config.reasoning_effort(),
-        "execution_backend": "codex_cli", "authentication": "local_chatgpt_login", "api_key_used": False,
+        "execution_backend": f"{agent}_cli",
+        "authentication": "local_chatgpt_login" if agent == "codex" else "local_google_login",
+        "api_key_used": False,
         "correction_model": config.model("correction_generator"),
+        "correction_agent": agent,
         "correction_agent_version": config.data["correction_generator"]["version"],
+        "correction_backend": f"{agent}_cli",
         "started_at": utc_now(), "completed_at": None,
         "component_versions": component_versions(), "pipeline_state": "PENDING", "state_history": [],
         "aut_execution_success": None, "correction_generation_success": None,
@@ -73,7 +77,7 @@ def run_one(config, scenario, agent: str, repetition: int) -> Path:
         manifest["final_lab_sha256"] = tree_hash(run / "lab")
         state("AUT_COMPLETED")
         stage = "CORRECTION"
-        generate_correction(config, scenario, run)
+        generate_correction(config, scenario, run, agent)
         manifest["correction_generation_success"] = True
         write_json(run / "manifest.json", manifest)
         stage = "CHECKER"
