@@ -1,4 +1,4 @@
-"""Metriche esclusivamente dai log ufficiali della prima evaluation."""
+"""Metriche esclusivamente dai log ufficiali .eval di Inspect AI."""
 from pathlib import Path
 import json
 
@@ -6,7 +6,8 @@ from inspect_ai.log import read_eval_log
 
 METRIC_COLUMNS = [
     "inspect_status", "model", "provider", "input_tokens", "output_tokens", "reasoning_tokens",
-    "cached_tokens", "cache_write_tokens", "total_tokens", "cost", "total_time", "working_time",
+    "input_tokens_cache_read", "input_tokens_cache_write", "cached_tokens", "cache_write_tokens",
+    "total_tokens", "cost", "total_time", "working_time",
     "turn_count", "model_calls", "tool_calls", "tool_errors", "retries", "sample_retries",
     "termination_error", "termination_limit", "inspect_log", "metrics_error",
 ]
@@ -36,8 +37,10 @@ def extract_metrics(logs: Path) -> dict:
     usage = list(log.stats.model_usage.values())
     for column, field in {
         "input_tokens": "input_tokens", "output_tokens": "output_tokens", "total_tokens": "total_tokens",
-        "reasoning_tokens": "reasoning_tokens", "cached_tokens": "input_tokens_cache_read",
-        "cache_write_tokens": "input_tokens_cache_write", "cost": "total_cost",
+        "reasoning_tokens": "reasoning_tokens", "input_tokens_cache_read": "input_tokens_cache_read",
+        "cached_tokens": "input_tokens_cache_read",
+        "input_tokens_cache_write": "input_tokens_cache_write", "cache_write_tokens": "input_tokens_cache_write",
+        "cost": "total_cost",
     }.items():
         metrics[column] = available_sum(getattr(item, field) for item in usage)
     samples = log.samples or []
@@ -63,8 +66,6 @@ def extract_metrics(logs: Path) -> dict:
         metrics["model_calls"] = len(model_events)
         all_tools = requested | tool_events.keys()
         metrics["tool_calls"] = len(all_tools)
-        # SWE strumenti interni: il bridge registra le richieste nel ModelEvent,
-        # ma spesso non emette ToolEvent. Non inferire errori dal testo libero.
         if all_tools and all_tools <= tool_events.keys():
             metrics["tool_errors"] = sum(bool(e.error or e.failed) for e in tool_events.values())
         elif not all_tools:

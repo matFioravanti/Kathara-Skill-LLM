@@ -42,6 +42,7 @@ def run_one(config, scenario, agent: str, repetition: int) -> Path:
             "input_lab": "input/lab",
             "lab": "lab",
             "aut_logs": "logs/aut",
+            "inspect_eval_log": f"logs/aut/{run.name}.eval",
             "correction": "correction.yaml",
             "generator_logs": "logs/generator",
             "results": "results",

@@ -5,7 +5,8 @@ import json
 import pandas as pd
 
 from .checker_runner import CATEGORIES, REPORT_COLUMNS, parse_reports
-from .codex_metrics import METRIC_COLUMNS, extract_metrics
+from .inspect_adapter import create_inspect_eval_log
+from .inspect_metrics import METRIC_COLUMNS, extract_metrics
 
 RUN_COLUMNS = [
     "run_id", "scenario_id", "repetition", "agent", "model", "provider", "agent_version",
@@ -37,12 +38,29 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
             continue
         row.update({k: v for k, v in metadata.items() if k in row})
         row["component_versions"] = json.dumps(metadata.get("component_versions", {}), sort_keys=True)
+        aut_logs = run / "logs/aut"
         try:
-            if metadata.get("agent") == "antigravity":
+            # Assicura presenza del log nativo Inspect AI (.eval)
+            eval_files = list(aut_logs.glob("*.eval"))
+            if not eval_files and (aut_logs / "result.json").exists():
+                create_inspect_eval_log(
+                    logs=aut_logs,
+                    run_id=run.name,
+                    prompt="",
+                    agent=metadata.get("agent", "codex"),
+                    model=metadata.get("model"),
+                )
+                eval_files = list(aut_logs.glob("*.eval"))
+
+            if eval_files:
+                metrics = extract_metrics(aut_logs)
+            elif metadata.get("agent") == "antigravity":
                 from .antigravity_metrics import extract_metrics as antigravity_extract
-                metrics = antigravity_extract(run / "logs/aut")
+                metrics = antigravity_extract(aut_logs)
             else:
-                metrics = extract_metrics(run / "logs/aut")
+                from .codex_metrics import extract_metrics as codex_extract
+                metrics = codex_extract(aut_logs)
+
             # In assenza di log conserva il modello richiesto nei metadata.
             row.update({k: v for k, v in metrics.items() if v is not None})
         except Exception as exc:

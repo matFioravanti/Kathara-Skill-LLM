@@ -15,16 +15,32 @@ Prima e dopo la seconda chiamata viene calcolato l'hash ricorsivo del laboratori
 Il risultato finale deriva esclusivamente dal checker. Un'esecuzione AUT riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
 
 ```text
-scenario -> copia lab -> Active Agent AUT -> eventi JSONL + diff
-                                        |
-                                        v
-                     Active Agent correction generator
-                                        |
-                                        v
-                    correction.yaml -> copia lab -> checker
-                                                      |
-                                                      v
-                              runs/ (grezzi) -> results/ (derivati)
+Prompt + Skill
+      │
+      ▼
+Codex / Antigravity CLI
+      │
+      ├── result.json
+      └── events.jsonl
+              │
+              ▼
+        Inspect Adapter
+              │
+              └── run_id.eval
+
+Laboratorio generato
+      │
+      ▼
+generate_correction()
+      │
+      ▼
+Kathara Lab Checker
+      │
+      └── checker results
+
+run_id.eval ───────┐
+                   ├── aggregation ──► benchmark_results.csv
+checker results ───┘
 ```
 
 ### Backend Codex
@@ -35,7 +51,11 @@ scenario -> copia lab -> Active Agent AUT -> eventi JSONL + diff
 
 `agy --add-dir <workspace> --dangerously-skip-permissions --output-format stream-json --model <model> --effort <effort> --print <prompt>` esegue Antigravity con autenticazione locale Google.
 
-Kathara Lab Checker avvia il laboratorio e determina il superamento dei check senza un LLM judge. Inspect AI e Inspect SWE rimangono tra le dipendenze dell'ambiente per compatibilità e validazione delle skill, ma non sono coinvolti nell'esecuzione.
+### Telemetria Inspect AI
+
+Al termine dell'AUT, un adapter dedicato legge `result.json` ed `events.jsonl` e costruisce un file di log nativo Inspect AI (`runs/<run_id>/logs/aut/<run_id>.eval`). Il log registra input/output tokens, reasoning tokens, `input_tokens_cache_read`, durata, tool calls, errori e metadata della run. Il file è ispezionabile con `inspect log dump` o `read_eval_log`.
+
+Inspect AI opera esclusivamente come sistema di telemetria: non avvolge la CLI dell'AUT, non legge, genera o influenza `correction.yaml`, e non partecipa alla valutazione del laboratorio. Kathara Lab Checker determina il superamento dei check in modo totalmente deterministico. I due sistemi rimangono separati e vengono associati solo in fase di aggregazione tramite l'identificatore univoco `run_id`.
 
 ## Requisiti e installazione
 
@@ -142,7 +162,7 @@ runs/<run_id>/
 ├── correction.yaml
 ├── results/          # report CSV del checker
 └── logs/
-    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt
+    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt, <run_id>.eval
     ├── generator/    # log dell'active agent per il correction generator
     ├── generator_output/  # correction.yaml candidata prima della validazione
     ├── diff.json
