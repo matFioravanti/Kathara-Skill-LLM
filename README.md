@@ -175,7 +175,11 @@ runs/<run_id>/
 
 `manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Include `execution_backend` (`codex_cli` o `antigravity_cli`), `authentication` (`local_chatgpt_login` o `local_google_login`), `correction_agent` e `correction_backend`.
 
-`runs/` è la fonte persistente. `results/` contiene soltanto CSV derivati e può essere ricostruita in qualunque momento.
+`runs/` è la fonte persistente. `results/` contiene i report derivati ricostruibili in qualunque momento:
+* `results/benchmark_report.xlsx` — report principale Excel con fogli formattati `Runs`, `Telemetry`, `Checks`, `Analysis` (header in grassetto, freeze pane, filtri automatici, percentuali e conditional formatting PASS/FAIL)
+* `results/benchmark_results.csv` — panoramica CSV per run
+* `results/benchmark_detailed.csv` — dettaglio CSV di tutti i singoli check
+* `results/analysis_summary.csv` — statistiche aggregate
 
 ## Aggregazione e analisi
 
@@ -184,7 +188,7 @@ python scripts/aggregate_results.py
 python scripts/analyze_results.py
 ```
 
-L'aggregatore unisce metriche e stati. Distingue automaticamente tra i formati JSONL di Codex e Antigravity in base al campo `agent` nel manifest.
+L'aggregatore unisce metriche e stati generando sia i CSV sia il report Excel `results/benchmark_report.xlsx`. Distingue automaticamente tra i formati di telemetria di Codex e Antigravity, convertendoli in log nativi Inspect AI `.eval` e associandoli ai report del Kathara Lab Checker tramite `run_id`.
 
 ## Smoke check
 

@@ -164,6 +164,14 @@ def main():
         assert summary.iloc[0]["run_id"] == run.name
         assert summary.iloc[0]["input_tokens_cache_read"] == 800
         assert summary.iloc[0]["inspect_status"] == "success"
+        excel_path = tmp / "results/benchmark_report.xlsx"
+        assert excel_path.is_file(), "File benchmark_report.xlsx non generato"
+        import openpyxl
+        wb_smoke = openpyxl.load_workbook(excel_path)
+        assert set(wb_smoke.sheetnames) == {"Runs", "Telemetry", "Checks", "Analysis"}
+        assert wb_smoke["Runs"].max_row == 2
+        assert wb_smoke["Checks"].max_row == 3
+        print("OK generazione e validazione fogli Excel benchmark_report.xlsx")
         assert analyze(tmp / "results").iloc[0]["task_success_rate"] == 0
         print("OK report checker reali, task_success derivato dal checker, telemetria Inspect e associazione via run_id")
     missing = [str(p.relative_to(ROOT)) for p in skill_paths(config).values() if not p.is_file()]

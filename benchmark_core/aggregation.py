@@ -97,4 +97,6 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         temporary = results / f"{filename}.tmp"
         frame.to_csv(temporary, index=False, na_rep="")
         temporary.replace(results / filename)
+    from .excel_report import generate_excel_report
+    generate_excel_report(results)
     return summary_frame, detail_frame
