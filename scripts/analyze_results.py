@@ -17,9 +17,7 @@ def main():
     config = load_config(args.config)
     results = args.results or config.path(config.data["results"]["directory"])
     output = analyze(results)
-    for key, value in output.iloc[0].items():
-        print(f"{key}: {value}")
-    print(f"Dettaglio per esperimento: {results / 'analysis_summary.csv'}")
+    print(output.to_string(index=False))
 
 
 if __name__ == "__main__":

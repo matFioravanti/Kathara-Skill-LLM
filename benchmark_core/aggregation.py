@@ -1,102 +1,170 @@
-"""Rigenera integralmente entrambi i CSV usando solo gli artefatti in runs/."""
+"""Materializza tre CSV atomici dai metrics.json e dai report raw del checker."""
 from pathlib import Path
 import json
 
 import pandas as pd
 
-from .checker_runner import CATEGORIES, REPORT_COLUMNS, parse_reports
-from .inspect_adapter import create_inspect_eval_log
-from .inspect_metrics import METRIC_COLUMNS, extract_metrics
+from .checker_runner import checker_test_rows
 
 RUN_COLUMNS = [
-    "run_id", "scenario_id", "repetition", "agent", "model", "provider", "agent_version",
-    "execution_backend", "authentication", "api_key_used",
-    "dns_skill_sha256", "dns_skill_bundle_sha256", "checker_skill_sha256", "checker_schema_sha256",
-    "component_versions", "pipeline_state", "aut_execution_success", "correction_generation_success",
-    "checker_execution_success", "task_success", "checks_passed", "checks_failed", "checks_total",
-    "check_pass_rate", *[f"{c}_pass_rate" for c in CATEGORIES],
-    *[x for x in METRIC_COLUMNS if x not in ("model", "provider")],
-    "files_created", "files_modified", "files_deleted", "files_changed", "lines_added", "lines_deleted",
-    "started_at", "completed_at", "pipeline_error", "checker_problems", "detailed_report_available",
-    "aggregation_error",
+    "scenario", "skill_mode", "run_number", "run_id", "agent", "model", "reasoning_effort",
+    "available_skills", "forced_skills", "selected_skills", "status",
+    "agent_seconds", "checker_seconds", "total_seconds",
+    "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
+    "tests_passed", "tests_failed", "tests_total", "pass_rate", "correction_sha256",
 ]
-DETAIL_COLUMNS = ["run_id", "scenario_id", "repetition", "agent", *REPORT_COLUMNS]
+CHECK_COLUMNS = [
+    "scenario", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
+]
+SUMMARY_COLUMNS = [
+    "scenario", "skill_mode", "runs", "successful_runs", "failed_runs",
+    "mean_pass_rate", "min_pass_rate", "max_pass_rate",
+    "mean_agent_seconds", "mean_total_seconds",
+    "mean_input_tokens", "mean_output_tokens", "mean_total_tokens", "skill_selection_rate",
+]
+def _list_cell(value):
+    if value is None:
+        return None
+    if isinstance(value, (list, tuple)):
+        return ";".join(str(item) for item in value)
+    return value
 
 
-def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
-    summary, details = [], []
-    for metadata_path in sorted(runs.glob("*/manifest.json")):
-        run = metadata_path.parent
-        row = dict.fromkeys(RUN_COLUMNS)
-        row["run_id"] = run.name
-        errors = []
+def _number(value):
+    return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+
+
+def _read_json(path: Path) -> dict:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError("Il documento deve essere un oggetto JSON.")
+    return value
+
+
+def _row_from_metrics(metrics: dict) -> dict:
+    timing = metrics.get("timing") or {}
+    tokens = metrics.get("tokens") or {}
+    checker = metrics.get("checker") or {}
+    return {
+        "scenario": metrics.get("scenario"),
+        "skill_mode": metrics.get("skill_mode"),
+        "run_number": metrics.get("run_number"),
+        "run_id": metrics.get("run_id"),
+        "agent": metrics.get("agent"),
+        "model": metrics.get("model"),
+        "reasoning_effort": metrics.get("reasoning_effort"),
+        "available_skills": _list_cell(metrics.get("available_skills")),
+        "forced_skills": _list_cell(metrics.get("forced_skills")),
+        "selected_skills": _list_cell(metrics.get("selected_skills")),
+        "status": metrics.get("status"),
+        "agent_seconds": _number(timing.get("agent_seconds")),
+        "checker_seconds": _number(timing.get("checker_seconds")),
+        "total_seconds": _number(timing.get("total_seconds")),
+        "input_tokens": _number(tokens.get("input")),
+        "cached_input_tokens": _number(tokens.get("cached_input")),
+        "output_tokens": _number(tokens.get("output")),
+        "reasoning_tokens": _number(tokens.get("reasoning")),
+        "total_tokens": _number(tokens.get("total")),
+        "tests_passed": _number(checker.get("passed")),
+        "tests_failed": _number(checker.get("failed")),
+        "tests_total": _number(checker.get("total")),
+        "pass_rate": _number(checker.get("pass_rate")),
+        "correction_sha256": metrics.get("correction_sha256"),
+    }
+
+
+def _run_sort_key(row: dict):
+    try:
+        number = int(row.get("run_number"))
+    except (TypeError, ValueError):
+        number = -1
+    return (str(row.get("scenario") or ""), str(row.get("skill_mode") or ""), number,
+            str(row.get("run_id") or ""))
+
+
+def _mean(values):
+    usable = [_number(value) for value in values]
+    usable = [value for value in usable if value is not None]
+    return sum(usable) / len(usable) if usable else None
+
+
+def _summary_rows(metrics_rows: list[dict]) -> list[dict]:
+    groups = {}
+    for metrics in metrics_rows:
+        key = (metrics.get("scenario"), metrics.get("skill_mode"))
+        groups.setdefault(key, []).append(metrics)
+    result = []
+    for (scenario, skill_mode), group in sorted(
+        groups.items(), key=lambda item: (str(item[0][0] or ""), str(item[0][1] or ""))
+    ):
+        pass_rates = [_number((row.get("checker") or {}).get("pass_rate")) for row in group]
+        pass_rates = [value for value in pass_rates if value is not None]
+        successful = sum(row.get("status") == "COMPLETED" for row in group)
+        selection_rate = None
+        if skill_mode == "auto":
+            valid = [row for row in group if row.get("agent_success") is True
+                     and row.get("skill_trace_available") is True
+                     and isinstance(row.get("selected_skills"), list)]
+            selection_rate = (sum(bool(row["selected_skills"]) for row in valid) / len(valid)
+                              if valid else None)
+        result.append({
+            "scenario": scenario, "skill_mode": skill_mode, "runs": len(group),
+            "successful_runs": successful, "failed_runs": len(group) - successful,
+            "mean_pass_rate": _mean(pass_rates),
+            "min_pass_rate": min(pass_rates) if pass_rates else None,
+            "max_pass_rate": max(pass_rates) if pass_rates else None,
+            "mean_agent_seconds": _mean((row.get("timing") or {}).get("agent_seconds") for row in group),
+            "mean_total_seconds": _mean((row.get("timing") or {}).get("total_seconds") for row in group),
+            "mean_input_tokens": _mean((row.get("tokens") or {}).get("input") for row in group),
+            "mean_output_tokens": _mean((row.get("tokens") or {}).get("output") for row in group),
+            "mean_total_tokens": _mean((row.get("tokens") or {}).get("total") for row in group),
+            "skill_selection_rate": selection_rate,
+        })
+    return result
+
+
+def _atomic_csv(path: Path, frame: pd.DataFrame) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    frame.to_csv(temporary, index=False, na_rep="")
+    temporary.replace(path)
+
+
+def _saved_check_rows(run: Path) -> list[dict]:
+    try:
+        return checker_test_rows(run / "results")
+    except (OSError, ValueError, UnicodeError):
+        return []
+
+
+def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Idempotently rebuild runs.csv, checks.csv, and summary.csv from saved artifacts."""
+    metrics_rows = []
+    run_rows = []
+    check_rows = []
+    for metrics_path in sorted(runs.rglob("metrics.json")):
         try:
-            metadata = json.loads(metadata_path.read_text())
-        except (ValueError, OSError) as exc:
-            row["aggregation_error"] = str(exc)
-            summary.append(row)
+            relative_parts = metrics_path.relative_to(runs).parts
+        except ValueError:
             continue
-        row.update({k: v for k, v in metadata.items() if k in row})
-        row["component_versions"] = json.dumps(metadata.get("component_versions", {}), sort_keys=True)
-        aut_logs = run / "logs/aut"
-        try:
-            # Assicura presenza del log nativo Inspect AI (.eval)
-            eval_files = list(aut_logs.glob("*.eval"))
-            if not eval_files and (aut_logs / "result.json").exists():
-                create_inspect_eval_log(
-                    logs=aut_logs,
-                    run_id=run.name,
-                    prompt="",
-                    agent=metadata.get("agent", "codex"),
-                    model=metadata.get("model"),
-                )
-                eval_files = list(aut_logs.glob("*.eval"))
+        if (len(relative_parts) != 5 or relative_parts[3:] != ("evaluation", "metrics.json")
+                or not relative_parts[2].startswith("r")
+                or not relative_parts[2][1:].isdigit()):
+            continue
+        run = metrics_path.parent.parent
+        metrics = _read_json(metrics_path)
+        metrics_rows.append(metrics)
+        run_rows.append(_row_from_metrics(metrics))
+        identity = {key: metrics.get(key) for key in ("scenario", "skill_mode", "run_number", "run_id")}
+        check_rows.extend({**identity, **check} for check in _saved_check_rows(run))
 
-            if eval_files:
-                metrics = extract_metrics(aut_logs)
-            elif metadata.get("agent") == "antigravity":
-                from .antigravity_metrics import extract_metrics as antigravity_extract
-                metrics = antigravity_extract(aut_logs)
-            else:
-                from .codex_metrics import extract_metrics as codex_extract
-                metrics = codex_extract(aut_logs)
+    run_rows.sort(key=_run_sort_key)
+    check_rows.sort(key=lambda row: (*_run_sort_key(row), str(row.get("test_description") or "")))
+    runs_frame = pd.DataFrame(run_rows, columns=RUN_COLUMNS)
+    checks_frame = pd.DataFrame(check_rows, columns=CHECK_COLUMNS)
+    summary_frame = pd.DataFrame(_summary_rows(metrics_rows), columns=SUMMARY_COLUMNS)
 
-            # In assenza di log conserva il modello richiesto nei metadata.
-            row.update({k: v for k, v in metrics.items() if v is not None})
-        except Exception as exc:
-            row["metrics_error"] = f"{type(exc).__name__}: {exc}"
-            errors.append(row["metrics_error"])
-        diff = run / "logs/diff.json"
-        if diff.exists():
-            try:
-                row.update({k: v for k, v in json.loads(diff.read_text()).items() if k in row})
-            except (ValueError, OSError) as exc:
-                errors.append(f"Diff: {exc}")
-        # Mai recuperare task_success da metadati, da un LLM o dall'esito AUT.
-        row["task_success"] = None
-        if metadata.get("checker_execution_success") is True and metadata.get("correction_generation_success") is True:
-            try:
-                execution = json.loads((run / "logs/checker_execution.json").read_text())
-                if execution["returncode"] != 0 or execution["timed_out"]:
-                    raise ValueError("Esecuzione checker non riuscita.")
-                checker, check_rows = parse_reports(run / "results")
-                row.update(checker)
-                identity = {k: row[k] for k in DETAIL_COLUMNS if k not in REPORT_COLUMNS}
-                details.extend({**identity, **check} for check in check_rows)
-            except Exception as exc:
-                row["checker_execution_success"] = False
-                row["task_success"] = None
-                row["pipeline_state"] = "CHECKER_FAILED"
-                errors.append(f"Report checker: {type(exc).__name__}: {exc}")
-        row["aggregation_error"] = "\n".join(errors) or None
-        summary.append(row)
-    summary_frame = pd.DataFrame(summary, columns=RUN_COLUMNS)
-    detail_frame = pd.DataFrame(details, columns=DETAIL_COLUMNS)
     results.mkdir(parents=True, exist_ok=True)
-    for filename, frame in (("benchmark_results.csv", summary_frame), ("benchmark_detailed.csv", detail_frame)):
-        temporary = results / f"{filename}.tmp"
-        frame.to_csv(temporary, index=False, na_rep="")
-        temporary.replace(results / filename)
-    from .excel_report import generate_excel_report
-    generate_excel_report(results)
-    return summary_frame, detail_frame
+    _atomic_csv(results / "runs.csv", runs_frame)
+    _atomic_csv(results / "checks.csv", checks_frame)
+    _atomic_csv(results / "summary.csv", summary_frame)
+    return runs_frame, checks_frame, summary_frame

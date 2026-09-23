@@ -19,10 +19,9 @@ def main():
     from benchmark_core.checker_runner import parse_reports
     from benchmark_core.config import load_config, skill_paths
     from benchmark_core.codex_cli_runner import command_for
-    from benchmark_core.correction_generator import _run_agent
     from benchmark_core.diff_metrics import compute_diff
     from benchmark_core.scenario_loader import discover_scenarios
-    from benchmark_core.workspace import component_versions, create_workspace, tree_hash, write_json
+    from benchmark_core.workspace import component_versions, create_workspace, logical_run_id, tree_hash, write_json
 
     for module in ("kathara_lab_checker", "pandas", "yaml"):
         importlib.import_module(module)
@@ -36,14 +35,7 @@ def main():
     validate_agent("antigravity")
     print("OK backend supportati")
 
-    # Verifica dispatch: _run_agent accetta entrambi gli agenti.
-    # Non eseguiamo realmente, ma verifichiamo che la funzione non rifiuti l'agente.
-    for agent_name in ("codex", "antigravity"):
-        try:
-            validate_agent(agent_name)
-        except ValueError:
-            raise AssertionError(f"validate_agent rifiuta '{agent_name}'")
-    print("OK dispatch AUT + correction generator per entrambi gli agenti")
+    print("OK dispatch AUT per entrambi gli agenti")
 
     subprocess.run([sys.executable, "-m", "kathara_lab_checker", "--version"], check=True)
 
@@ -78,12 +70,15 @@ def main():
     print("OK sintassi Python")
     with tempfile.TemporaryDirectory(prefix="kathara-benchmark-smoke-") as temporary:
         tmp = Path(temporary)
-        summary, details = aggregate(tmp / "empty", tmp / "results")
-        assert summary.empty and details.empty
-        assert analyze(tmp / "results").iloc[0]["runs"] == 0
+        runs_frame, checks_frame, summary_frame = aggregate(tmp / "empty", tmp / "results")
+        assert runs_frame.empty and checks_frame.empty and summary_frame.empty
+        assert analyze(tmp / "results").empty
+        assert {path.name for path in (tmp / "results").glob("*.csv")} == {"runs.csv", "checks.csv", "summary.csv"}
         scenario = next(iter(scenarios.values()))
         before = tree_hash(scenario.lab)
-        run = create_workspace(tmp / "runs", scenario, "codex", 1)
+        run = create_workspace(tmp / "runs", scenario, "dns_only")
+        run_id = logical_run_id(scenario.scenario_id, "dns_only", 1)
+        assert run.relative_to(tmp / "runs").as_posix() == f"{scenario.scenario_id}/dns_only/r001"
         lab = run / "lab"
         assert tree_hash(lab) == before
         (lab / "smoke.txt").write_text("one\ntwo\n")
@@ -131,11 +126,11 @@ def main():
             json.dumps({"type": "turn.completed", "usage": {"input_tokens": 1000, "output_tokens": 200}}) + "\n"
             + json.dumps({"item": {"id": "tool_1", "type": "command_execution", "status": "completed", "command": "ls", "exit_code": 0}}) + "\n"
         )
-        eval_path = create_inspect_eval_log(aut_logs, run.name, prompt="Smoke prompt", agent="codex", model="gpt-5.6-terra")
+        eval_path = create_inspect_eval_log(aut_logs, run_id, prompt="Smoke prompt", agent="codex", model="gpt-5.6-terra")
         assert eval_path and eval_path.is_file(), "File .eval non generato"
         log_obj = read_eval_log(str(eval_path))
         assert log_obj.status == "success"
-        assert log_obj.eval.run_id == run.name
+        assert log_obj.eval.run_id == run_id
         usage_obj = next(iter(log_obj.stats.model_usage.values()))
         assert usage_obj.input_tokens_cache_read == 800
         assert usage_obj.reasoning_tokens == 50
@@ -154,27 +149,28 @@ def main():
         assert extracted["tool_errors"] == 0
         print("OK Inspect Adapter: .eval generato, convalidato da read_eval_log e inspect log dump")
 
-        write_json(run / "manifest.json", {"run_id": run.name, "scenario_id": scenario.scenario_id,
-                   "repetition": 1, "agent": "codex", "pipeline_state": "COMPLETED",
-                   "aut_execution_success": True, "correction_generation_success": True,
-                   "checker_execution_success": True, "task_success": True})
+        from benchmark_core.run_metrics import make_metrics
+        metadata = {
+            "run_id": run_id, "run_number": 1, "skill_mode": "dns_only",
+            "scenario_id": scenario.scenario_id, "agent": "codex", "model": "smoke",
+            "reasoning_effort": "low", "available_skills": ["kathara-dns"],
+            "forced_skills": ["kathara-dns"], "pipeline_state": "COMPLETED",
+            "aut_execution_success": True,
+        }
+        write_json(run / "evaluation/metrics.json", make_metrics(
+            run, metadata, total_seconds=45.0, checker_seconds=2.5, checker_outcome=checker,
+        ))
         write_json(run / "logs/checker_execution.json", {"returncode": 0, "timed_out": False})
-        summary, details = aggregate(tmp / "runs", tmp / "results")
-        assert not bool(summary.iloc[0]["task_success"]) and len(details) == 2
-        assert summary.iloc[0]["run_id"] == run.name
-        assert summary.iloc[0]["input_tokens_cache_read"] == 800
-        assert summary.iloc[0]["inspect_status"] == "success"
-        excel_path = tmp / "results/benchmark_report.xlsx"
-        assert excel_path.is_file(), "File benchmark_report.xlsx non generato"
-        import openpyxl
-        wb_smoke = openpyxl.load_workbook(excel_path)
-        assert set(wb_smoke.sheetnames) == {"Runs", "Telemetry", "Analysis"}
-        assert wb_smoke["Runs"].max_row == 2
-        print("OK generazione e validazione fogli Excel benchmark_report.xlsx")
-        assert analyze(tmp / "results").iloc[0]["task_success_rate"] == 0
-        print("OK report checker reali, task_success derivato dal checker, telemetria Inspect e associazione via run_id")
+        runs_frame, checks_frame, summary_frame = aggregate(tmp / "runs", tmp / "results")
+        assert len(runs_frame) == 1 and len(checks_frame) == 2 and len(summary_frame) == 1
+        assert runs_frame.iloc[0]["run_id"] == run_id
+        assert checks_frame.iloc[0]["run_id"] == run_id
+        assert summary_frame.iloc[0]["runs"] == 1
+        assert len(analyze(tmp / "results")) == 1
+        assert {path.name for path in (tmp / "results").glob("*.csv")} == {"runs.csv", "checks.csv", "summary.csv"}
+        print("OK checker rows, metriche normalizzate, aggregazione e CSV nuovi")
     missing = [str(p.relative_to(ROOT)) for p in skill_paths(config).values() if not p.is_file()]
-    print("Skill esterne mancanti:", ", ".join(missing) if missing else "nessuna")
+    print("Skill AUT mancanti:", ", ".join(missing) if missing else "nessuna")
     print("SMOKE OK; nessuna chiamata LLM/Docker eseguita, artefatti temporanei rimossi.")
 
 

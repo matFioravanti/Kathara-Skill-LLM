@@ -17,11 +17,8 @@ def main():
     args = parser.parse_args()
     config = load_config(args.config)
     results = args.output or config.path(config.data["results"]["directory"])
-    summary, detailed = aggregate(args.runs or config.root / "runs", results)
-    print(f"{len(summary)} run, {len(detailed)} check: {results.resolve()}")
-    if not summary.empty and summary["aggregation_error"].notna().any():
-        print("Artefatti non interpretabili: vedere aggregation_error nel CSV.", file=sys.stderr)
-        return 1
+    runs, checks, summary = aggregate(args.runs or config.root / "runs", results)
+    print(f"{len(runs)} run, {len(checks)} check, {len(summary)} gruppi: {results.resolve()}")
     return 0
 
 

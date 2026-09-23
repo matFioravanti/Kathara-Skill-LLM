@@ -4,11 +4,11 @@ Benchmark riproducibile per valutare agenti LLM CLI che configurano DNS e serviz
 
 ## Architettura
 
-Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna ripetizione il runner conserva il baseline in `runs/<run_id>/input/lab`, crea la copia modificabile in `runs/<run_id>/lab` e avvia l'Agent Under Test (AUT) sul Mac host.
+Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna modalità Skill il runner alloca una run in `runs/<scenario>/<skill_mode>/rNNN`, conserva il baseline in `input/lab`, crea la copia modificabile in `lab` e avvia l'Agent Under Test (AUT) sul Mac host. I numeri delle run avanzano indipendentemente per scenario e modalità.
 
 L'**active agent** di una run è unico: lo stesso agente viene utilizzato sia come AUT sia come Correction Generator. Non è possibile combinare agenti diversi nella stessa run.
 
-Terminata la prima esecuzione, il runner salva gli eventi JSONL nativi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Una seconda esecuzione dello stesso agente, con log separati, legge il laboratorio finale protetto, il prompt originale, la skill del checker e lo schema. Questa chiamata produce `correction.yaml`; le sue metriche non entrano mai nei risultati AUT.
+Terminata l'esecuzione AUT, il runner salva gli eventi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Il Kathara Lab Checker valuta poi il `lab/` di quella run usando la correction manuale canonica `corrections/<scenario>/correction.yaml`. Una copia byte per byte viene salvata in `evaluation/correction.yaml` per riprodurre la valutazione.
 
 Il risultato finale deriva esclusivamente dal checker. Un'esecuzione AUT riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
 
@@ -29,15 +29,15 @@ Codex / Antigravity CLI
 Laboratorio generato
       │
       ▼
-generate_correction()
+corrections/<scenario>/correction.yaml
       │
       ▼
-Kathara Lab Checker
+evaluation/correction.yaml → Kathara Lab Checker
       │
       └── checker results
 
 run_id.eval ───────┐
-                   ├── aggregation ──► benchmark_results.csv
+                   ├── aggregation ──► runs.csv / checks.csv / summary.csv
 checker results ───┘
 ```
 
@@ -51,7 +51,7 @@ checker results ───┘
 
 ### Telemetria Inspect AI
 
-Al termine dell'AUT, un adapter dedicato legge `result.json` ed `events.jsonl` e costruisce un file di log nativo Inspect AI (`runs/<run_id>/logs/aut/<run_id>.eval`). Il log registra input/output tokens, reasoning tokens, `input_tokens_cache_read`, durata, tool calls, errori e metadata della run. Il file è ispezionabile con `inspect log dump` o `read_eval_log`.
+Al termine dell'AUT, un adapter dedicato legge `result.json` ed `events.jsonl` e costruisce un file di log nativo Inspect AI (`runs/<scenario>/<skill_mode>/rNNN/logs/aut/<scenario>__<skill_mode>__rNNN.eval`). Il log registra input/output tokens, reasoning tokens, `input_tokens_cache_read`, durata, tool calls, errori e metadata della run. Il file è ispezionabile con `inspect log dump` o `read_eval_log`.
 
 Inspect AI opera esclusivamente come sistema di telemetria: non avvolge la CLI dell'AUT, non legge, genera o influenza `correction.yaml`, e non partecipa alla valutazione del laboratorio. Kathara Lab Checker determina il superamento dei check in modo totalmente deterministico. I due sistemi rimangono separati e vengono associati solo in fase di aggregazione tramite l'identificatore univoco `run_id`.
 
@@ -83,25 +83,45 @@ Ogni agente ha il proprio file di configurazione dedicato:
 
 L'agente è determinato dal campo `aut.agent` nel file di configurazione. Il flag `--agent` sulla CLI serve esclusivamente come verifica di coerenza: deve coincidere con `aut.agent` nel YAML, altrimenti il comando viene rifiutato. L'override cross-provider non è supportato.
 
-Il Correction Generator utilizza sempre lo stesso agente dell'AUT. Se `correction_generator.agent` è specificato nel YAML, deve coincidere con `aut.agent`.
+Ogni scenario ha una correction manuale in `corrections/<scenario>/correction.yaml`, condivisa da tutti gli agenti, le modalità Skill e le ripetizioni dello scenario. Il preflight ne verifica presenza e validità prima di qualsiasi run modello; l'AUT non può leggerla. Il checker riceve esplicitamente il `lab/` della run e lo snapshot della correction.
 
 ## Skill richieste
 
-Il repository predispone le directory ma non inventa il contenuto delle skill, che deve essere fornito dall'esperimento:
+Il repository predispone le directory ma non inventa il contenuto delle Skill o delle correction, che deve essere fornito dall'esperimento:
 
 ```text
+skills/kathara-creation/SKILL.md
 skills/dns/SKILL.md
 skills/lab_checker/SKILL.md
 skills/lab_checker/config-schema.md
+corrections/<scenario>/correction.yaml
 ```
 
-Le due skill devono avere frontmatter compatibile con la specifica Agent Skills (`name` e `description`). La prima è visibile soltanto all'AUT. La seconda è visibile soltanto al correction generator; lo schema viene montato separatamente in sola lettura. Per verificare presenza e validità:
+La Creation Skill deve dichiarare `name: kathara-creation` e la DNS Skill `name: kathara-dns`; entrambe richiedono il campo `description`. Il contenuto della Creation Skill è fornito dall'esperimento. La skill checker e lo schema possono essere usati per scrivere le correction, ma il benchmark non esegue più un agente per generarle. Per verificare la DNS Skill:
 
 ```bash
 python scripts/run_benchmark.py --check-skills
 ```
 
-L'assenza di uno di questi file produce un errore esplicito prima di qualsiasi chiamata modello.
+L'assenza delle Skill runtime o della correction di uno scenario produce un errore esplicito prima di qualsiasi chiamata modello.
+
+Gli esperimenti Codex selezionano una modalità Skill con `--skill-mode`:
+
+| Modalità | Disponibili a Codex | Richieste esplicitamente |
+|----------|---------------------|-------------------------|
+| `no_skill` | nessuna | nessuna |
+| `creation_only` | Creation | Creation |
+| `dns_only` | DNS | DNS |
+| `both_forced` | Creation e DNS | entrambe |
+| `auto` | Creation e DNS | nessuna |
+
+La modalità predefinita è `dns_only`, come nel comportamento Codex precedente. Ogni run riceve solo le skill selezionate sotto `lab/.codex/skills/`. Copie omonime nello scope utente o nei parent interrompono il preflight per evitare run contaminate. Le modalità che includono Creation richiedono il file canonico `skills/kathara-creation/SKILL.md`.
+
+`--skill-mode all` orchestra in sequenza le cinque modalità sopra. Prima verifica tutte le skill necessarie, poi crea una run indipendente per ogni modalità nell'ordine indicato. Il manifest di ogni run riporta la modalità effettiva.
+
+```bash
+python scripts/run_benchmark.py --scenario example_dns_001 --agent codex --skill-mode auto
+```
 
 ## Scenari
 
@@ -114,7 +134,7 @@ scenarios/<scenario_id>/
     └── lab.conf
 ```
 
-Non aggiungere `scenario.yaml` o `correction.yaml`. Il prompt è la fonte normativa; `lab/` è copiato per ogni run e non viene modificato.
+Non aggiungere `scenario.yaml` né una correction dentro lo scenario. Il prompt è la fonte normativa; `lab/` è copiato per ogni run e non viene modificato. La correction manuale va in `corrections/<scenario>/correction.yaml`.
 
 ## Esecuzione
 
@@ -158,36 +178,39 @@ python scripts/run_benchmark.py --config benchmark_antigravity.yaml --all --repe
 
 ## Artefatti e stati
 
-Ogni run usa un ID leggibile e univoco, per esempio `example_dns_001__antigravity__r001__20260922T151828726332Z_77f85f8d`, e conserva:
+Ogni run usa un ID logico leggibile, per esempio `example_dns_001__dns_only__r001`, e conserva:
 
 ```text
-runs/<run_id>/
+runs/<scenario>/<skill_mode>/rNNN/
 ├── manifest.json
 ├── input/
 │   ├── lab/          # baseline originale immutabile
 │   └── prompt.md
 ├── lab/              # unica copia modificabile — before → after AUT
-├── correction.yaml
+├── evaluation/
+│   ├── correction.yaml  # snapshot dell'input di valutazione canonico
+│   └── metrics.json     # metriche elaborate e normalizzate della run
 ├── results/          # report CSV del checker
 └── logs/
-    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt, <run_id>.eval
-    ├── generator/    # log dell'active agent per il correction generator
-    ├── generator_output/  # correction.yaml candidata prima della validazione
+    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt, <scenario>__<skill_mode>__rNNN.eval
     ├── diff.json
-    ├── lab_integrity.json
     ├── checker_invocation.json
     ├── checker_execution.json
     ├── checker_stdout.log
     └── checker_stderr.log
 ```
 
-`manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Include `execution_backend` (`codex_cli` o `antigravity_cli`), `authentication` (`local_chatgpt_login` o `local_google_login`), `correction_agent` e `correction_backend`.
+`manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Registra la correction canonica, il suo digest SHA-256 e il percorso dello snapshot fornito al checker.
 
-`runs/` è la fonte persistente. `results/` contiene i report derivati ricostruibili in qualunque momento:
-* `results/benchmark_report.xlsx` — report principale Excel con fogli formattati `Runs` (inclusa telemetria Inspect), `Telemetry` e `Analysis` (header in grassetto, freeze pane, filtri automatici, percentuali e conditional formatting PASS/FAIL)
-* `results/benchmark_results.csv` — panoramica CSV per run
-* `results/benchmark_detailed.csv` — dettaglio CSV e Reason testuale di tutti i singoli check
-* `results/analysis_summary.csv` — statistiche aggregate
+`runs/` è la fonte persistente. Ogni run conserva i dati elaborati in `evaluation/metrics.json`, insieme alla trace originale dell'agente e ai report del checker. `results/` contiene esattamente tre CSV derivati:
+
+* `runs.csv` — una riga per run con skill selezionate, stato, tempi, token, conteggi checker e digest della correction.
+* `checks.csv` — una riga per ogni test individuale del Kathara Lab Checker.
+* `summary.csv` — statistiche descrittive raggruppate per scenario e modalità Skill.
+
+I token provengono dall'ultimo evento Codex `turn.completed` che contiene `usage` in `logs/aut/events.jsonl`. La trace corrente espone `input_tokens`, `cached_input_tokens`, `cache_write_input_tokens`, `output_tokens` e `reasoning_output_tokens`; `total_tokens` resta null se assente. Gli usage dei turni precedenti non vengono sommati. `selected_skills` contiene soltanto Skill disponibili il cui `SKILL.md` compare in un comando di lettura `command_execution` tracciato; il dato resta distinto dalle Skill forzate.
+
+`agent_seconds` viene dalla durata del subprocess misurata dal runner AUT. `checker_seconds` misura `run_checker`, inclusi preparazione e parsing dei report. `total_seconds` misura il tempo da subito prima dell'allocazione del workspace fino al completamento delle fasi della run; esclude preflight e serializzazione finale delle metriche. In `summary.csv`, `skill_selection_rate` è valorizzato solo per `auto`: il denominatore include le run AUT completate con trace leggibile e il numeratore quelle che hanno selezionato almeno una Skill disponibile.
 
 ## Aggregazione e analisi
 
@@ -196,7 +219,7 @@ python scripts/aggregate_results.py
 python scripts/analyze_results.py
 ```
 
-L'aggregatore unisce metriche e stati generando sia i CSV sia il report Excel `results/benchmark_report.xlsx`. Distingue automaticamente tra i formati di telemetria di Codex e Antigravity, convertendoli in log nativi Inspect AI `.eval` e associandoli ai report del Kathara Lab Checker tramite `run_id`.
+L'aggregatore legge soltanto le run nel formato `scenario/skill_mode/rNNN/evaluation/metrics.json` e i report checker già salvati. Non avvia Codex, Docker, Kathara o il checker e può essere rilanciato con `python scripts/aggregate_results.py`. Scrive `runs.csv`, `checks.csv` e `summary.csv` senza eliminare altri file in `results/`.
 
 ## Smoke check
 
@@ -204,7 +227,7 @@ L'aggregatore unisce metriche e stati generando sia i CSV sia il report Excel `r
 python scripts/smoke_check.py
 ```
 
-Lo smoke check convalida staticamente entrambi gli agent (`codex` e `antigravity`), verifica il dispatch per AUT e correction generator, testa il rifiuto dell'override cross-provider (`--agent antigravity` con `benchmark.yaml` e viceversa), e simula aggregazione e diff senza interagire con gli LLM.
+Lo smoke check convalida staticamente entrambi gli agent (`codex` e `antigravity`), verifica il dispatch AUT, testa il rifiuto dell'override cross-provider (`--agent antigravity` con `benchmark.yaml` e viceversa), e simula aggregazione e diff senza interagire con gli LLM.
 
 ## Agent supportati
 

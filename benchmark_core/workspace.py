@@ -5,9 +5,9 @@ import hashlib
 import importlib.metadata
 import json
 import os
+import re
 import shutil
 import stat
-import uuid
 
 
 def utc_now() -> str:
@@ -58,9 +58,31 @@ def component_versions() -> dict:
             ("inspect-ai", "inspect-swe", "kathara-lab-checker", "kathara", "pandas", "PyYAML", "openai")}
 
 
-def create_workspace(runs: Path, scenario, agent: str, repetition: int) -> Path:
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    run = runs / f"{scenario.scenario_id}__{agent}__r{repetition:03d}__{stamp}_{uuid.uuid4().hex[:8]}"
+def allocate_run_directory(runs: Path, scenario_id: str, skill_mode: str) -> tuple[Path, int]:
+    """Alloca atomicamente il prossimo rNNN per scenario e modalità."""
+    mode_root = runs / scenario_id / skill_mode
+    mode_root.mkdir(parents=True, exist_ok=True)
+    existing = [
+        int(match.group(1))
+        for path in mode_root.iterdir()
+        if path.is_dir() and (match := re.fullmatch(r"r(\d{3,})", path.name))
+    ]
+    run_number = max(existing, default=0) + 1
+    while True:
+        run = mode_root / f"r{run_number:03d}"
+        try:
+            run.mkdir(exist_ok=False)
+            return run, run_number
+        except FileExistsError:
+            run_number += 1
+
+
+def logical_run_id(scenario_id: str, skill_mode: str, run_number: int) -> str:
+    return f"{scenario_id}__{skill_mode}__r{run_number:03d}"
+
+
+def create_workspace(runs: Path, scenario, skill_mode: str) -> Path:
+    run, _ = allocate_run_directory(runs, scenario.scenario_id, skill_mode)
     for folder in ("input", "lab", "logs/aut", "logs/generator", "results"):
         (run / folder).mkdir(parents=True, exist_ok=False)
     # input/lab: copia immutabile del baseline originale

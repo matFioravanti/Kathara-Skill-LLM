@@ -13,6 +13,7 @@ from benchmark_core.config import load_config, verify_skills
 from benchmark_core.pipeline import run_one
 from benchmark_core.preflight import preflight
 from benchmark_core.scenario_loader import discover_scenarios
+from benchmark_core.skill_modes import SKILL_MODE_CHOICES, execute_skill_modes, mode_details
 
 
 def main() -> int:
@@ -24,6 +25,8 @@ def main() -> int:
     group.add_argument("--check-skills", action="store_true")
     group.add_argument("--preflight", action="store_true")
     parser.add_argument("--agent", choices=list(AGENTS))
+    parser.add_argument("--skill-mode", choices=SKILL_MODE_CHOICES, default=None,
+                        help="Modalità Skill Codex; `all` esegue in serie le cinque modalità (default: dns_only)")
     parser.add_argument("--repetitions", type=int)
     args = parser.parse_args()
     config = load_config(args.config)
@@ -32,6 +35,8 @@ def main() -> int:
             print(f"OK {name}: {path}")
         return 0
     agent = config.data["aut"]["agent"]
+    if args.skill_mode is not None and agent != "codex":
+        parser.error("--skill-mode è supportato solo con --agent codex.")
     if args.agent and args.agent != agent:
         parser.error(
             f"--agent {args.agent} non è compatibile con la configurazione "
@@ -48,25 +53,46 @@ def main() -> int:
         parser.error(f"Scenario non trovato: {args.scenario}; disponibili: {', '.join(scenarios)}")
     if not scenarios:
         raise ValueError("Nessuno scenario trovato.")
-    preflight(config, agent)
+    skill_mode = (args.skill_mode or "dns_only") if agent == "codex" else None
+    if skill_mode and skill_mode != "all":
+        selection = mode_details(skill_mode)
+        print(f"Skill mode: {skill_mode}", flush=True)
+        print(f"Available skills: {', '.join(selection.available_skills) or 'none'}", flush=True)
+        print(f"Forced skills: {', '.join(selection.forced_skills) or 'none'}", flush=True)
+    elif skill_mode == "all":
+        print("Skill mode batch: all (5 independent runs)", flush=True)
+    selected = [scenarios[args.scenario]] if args.scenario else list(scenarios.values())
+    preflight(config, agent, skill_mode=skill_mode,
+              scenario_ids=[scenario.scenario_id for scenario in selected])
     if args.preflight:
         print("Prerequisiti disponibili; nessuna chiamata modello eseguita.")
         return 0
-    selected = [scenarios[args.scenario]] if args.scenario else list(scenarios.values())
     failed = False
     try:
         for scenario in selected:
             for repetition in range(1, repetitions + 1):
-                try:
-                    run = run_one(config, scenario, agent, repetition)
-                    metadata = json.loads((run / "manifest.json").read_text())
-                    run_failed = metadata["pipeline_state"] != "COMPLETED"
-                except Exception as exc:
-                    print(f"Errore preparazione run {scenario.scenario_id}: {exc}", file=sys.stderr)
-                    run_failed = True
-                failed |= run_failed
-                if run_failed and not config.data["benchmark"]["continue_on_error"]:
-                    return 1
+                selected_mode = skill_mode or ("dns_only" if agent == "codex" else "no_skill")
+
+                def execute_mode(mode: str, index: int, total: int) -> bool:
+                    if selected_mode == "all":
+                        print(f"[{index}/{total}] Skill mode: {mode}", flush=True)
+                    if agent == "codex" and selected_mode == "all":
+                        selection = mode_details(mode)
+                        print(f"Available skills: {', '.join(selection.available_skills) or 'none'}", flush=True)
+                        print(f"Forced skills: {', '.join(selection.forced_skills) or 'none'}", flush=True)
+                    try:
+                        effective_mode = mode if agent == "codex" else None
+                        run = run_one(config, scenario, agent, skill_mode=effective_mode)
+                        metadata = json.loads((run / "manifest.json").read_text())
+                        return metadata["pipeline_state"] != "COMPLETED"
+                    except Exception as exc:
+                        print(f"Errore preparazione run {scenario.scenario_id} ({mode}): {exc}", file=sys.stderr)
+                        return True
+
+                for mode, _, _, run_failed in execute_skill_modes(selected_mode, execute_mode):
+                    failed |= run_failed
+                    if run_failed and not config.data["benchmark"]["continue_on_error"]:
+                        return 1
     finally:
         aggregate(config.root / "runs", config.path(config.data["results"]["directory"]))
     # Un task scorretto con checker completato è un risultato valido, non un errore CLI.

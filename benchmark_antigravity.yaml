@@ -10,14 +10,6 @@ aut:
   version: "1.2.8"
   dns_skill: skills/dns/SKILL.md
 
-correction_generator:
-  agent: antigravity
-  model: gemini-3.8-flash
-  reasoning_effort: low
-  version: "1.2.8"
-  skill: skills/lab_checker/SKILL.md
-  schema: skills/lab_checker/config-schema.md
-
 sandbox:
   image: python:3.14.6-bookworm
 

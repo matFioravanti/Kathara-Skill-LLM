@@ -1,5 +1,5 @@
 ---
-name: kathara-dns-configuration
+name: kathara-dns
 description: "Analyze an existing Kathara lab and directly configure DNS and optional web services from positive and negative constraints. Preserve existing topology, addressing, and routing; assign DNS roles, build zones and delegations, and directly modify the persistent lab files."
 argument-hint: "lab_path, natural-language DNS/web requirements, and optional operating options"
 user-invocable: true

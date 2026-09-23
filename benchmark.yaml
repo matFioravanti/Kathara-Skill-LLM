@@ -9,14 +9,7 @@ aut:
   reasoning_effort: low
   version: "0.146.0"
   dns_skill: skills/dns/SKILL.md
-
-correction_generator:
-  agent: codex
-  model: null # eredita il modello AUT
-  reasoning_effort: null # eredita aut.reasoning_effort
-  version: "0.146.0"
-  skill: skills/lab_checker/SKILL.md
-  schema: skills/lab_checker/config-schema.md
+  creation_skill: skills/kathara-creation/SKILL.md
 
 sandbox:
   image: python:3.14.6-bookworm

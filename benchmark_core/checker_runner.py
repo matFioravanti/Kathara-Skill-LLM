@@ -79,10 +79,24 @@ def parse_reports(reports: Path) -> tuple[dict, list[dict]]:
     return result, rows
 
 
-def run_checker(config, run: Path) -> dict:
+def checker_test_rows(reports: Path) -> list[dict]:
+    """Read only real per-test rows, including partial reports from failed checks."""
+    path = reports / "lab/lab_result_all.csv"
+    if not path.is_file():
+        return []
+    rows = read_csv(path, REPORT_COLUMNS)
+    return [{
+        "test_description": row["Test Description"],
+        "passed": row["Passed"] == "True",
+        "reason": row["Reason"],
+    } for row in rows if row["Passed"] in ("True", "False")]
+
+
+def run_checker(config, run: Path, correction: Path) -> dict:
     lab = run / "lab"
     results = run / "results"
-    correction = run / "correction.yaml"
+    if not correction.is_file():
+        raise FileNotFoundError(f"Correction snapshot mancante: {correction}")
 
     # Il checker scrive CSV dentro la sua labs_path e dentro labs_path/<lab_name>/,
     # quindi serve una directory temporanea per evitare che inquini run/lab/.
