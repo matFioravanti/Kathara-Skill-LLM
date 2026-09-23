@@ -12,12 +12,6 @@ from .workspace import copy_lab, tree_hash, write_json
 
 
 def validate_correction(path: Path) -> None:
-    """Validazione esclusivamente strutturale: non impone regole semantiche inventate dal benchmark.
-
-    Verifica solo le proprietà strutturali e sintattiche indispensabili per evitare output
-    palesemente inutilizzabili prima di consegnarlo alla pipeline. La correttezza funzionale
-    e le dipendenze semantiche tra i check rimangono di responsabilità del checker reale.
-    """
     from kathara_lab_checker.__main__ import load_config_and_lab
     from Kathara.parser.netkit.LabParser import LabParser
 

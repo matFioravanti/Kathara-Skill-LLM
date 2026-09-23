@@ -1,3 +1,7 @@
 source .venv/bin/activate
 python scripts/run_benchmark.py --config benchmark_antigravity.yaml --preflight --agent antigravity
 python scripts/run_benchmark.py --config benchmark_antigravity.yaml --scenario example_dns_001 --agent antigravity
+
+
+python scripts/run_benchmark.py --preflight --agent codex
+python scripts/run_benchmark.py --scenario example_dns_001 --agent codex
