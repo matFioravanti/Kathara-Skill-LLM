@@ -1,3 +1,0 @@
-ip address add 200.0.6.2/24 dev eth0
-ip route add default via 200.0.6.1 dev eth0
-

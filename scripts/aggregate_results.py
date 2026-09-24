@@ -18,7 +18,7 @@ def main():
     config = load_config(args.config)
     results = args.output or config.path(config.data["results"]["directory"])
     runs, checks, summary = aggregate(args.runs or config.root / "runs", results)
-    print(f"{len(runs)} run, {len(checks)} check, {len(summary)} gruppi: {results.resolve()}")
+    print(f"{len(runs)} run, {len(checks)} check, {len(summary)} gruppi; CSV e benchmark.xlsx: {results.resolve()}")
     return 0
 
 

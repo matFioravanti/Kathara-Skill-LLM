@@ -1,0 +1,296 @@
+lab_inline: 'r1[0]="A1"
+
+  r1[1]="B12"
+
+  r1[2]="B14"
+
+  r2[0]="A2"
+
+  r2[1]="B23"
+
+  r2[2]="B25"
+
+  r2[3]="B24"
+
+  r2[4]="B12"
+
+  r3[0]="A3"
+
+  r3[1]="B35"
+
+  r3[2]="B23"
+
+  r4[0]="A4"
+
+  r4[1]="B14"
+
+  r4[2]="B24"
+
+  r4[3]="B45"
+
+  r5[0]="A5"
+
+  r5[1]="B45"
+
+  r5[2]="B25"
+
+  r5[3]="B35"
+
+  pc1[0]="A1"
+
+  pc2[0]="A2"
+
+  pc3[0]="A3"
+
+  pc4[0]="A4"
+
+  pc5[0]="A5"
+
+  pc6[0]="A3"
+
+  '
+convergence_time: 10
+default_image: kathara/base
+test:
+  requiring_startup:
+  - r1
+  - r2
+  - r3
+  - r4
+  - r5
+  - pc1
+  - pc2
+  - pc3
+  - pc4
+  - pc5
+  - pc6
+  ip_mapping:
+    r1:
+      '0': 200.0.1.1/24
+      '1': 10.0.8.1/30
+      '2': 10.0.7.1/30
+    r2:
+      '0': 100.0.6.1/24
+      '1': 10.0.3.1/30
+      '2': 10.0.6.1/30
+      '3': 10.0.0.1/30
+      '4': 10.0.8.2/30
+    r3:
+      '0': 100.0.0.1/24
+      '1': 10.0.5.1/30
+      '2': 10.0.3.2/30
+    r4:
+      '0': 200.0.6.1/24
+      '1': 10.0.7.2/30
+      '2': 10.0.0.2/30
+      '3': 10.0.10.1/30
+    r5:
+      '0': 100.0.8.1/24
+      '1': 10.0.10.2/30
+      '2': 10.0.6.2/30
+      '3': 10.0.5.2/30
+    pc1:
+      '0': 200.0.1.2/24
+    pc2:
+      '0': 100.0.6.2/24
+    pc3:
+      '0': 100.0.0.2/24
+      eth0: 2001:8::2/64
+    pc4:
+      '0': 200.0.6.2/24
+    pc5:
+      '0': 100.0.8.2/24
+    pc6:
+      '0': 2001:8::1/64
+  daemons:
+    r1:
+    - '!named'
+    r2:
+    - '!named'
+    r3:
+    - '!named'
+    r4:
+    - '!named'
+    r5:
+    - '!named'
+    pc1:
+    - '!named'
+    pc2:
+    - named
+    pc3:
+    - named
+    pc4:
+    - '!named'
+    pc5:
+    - named
+    pc6:
+    - '!named'
+  kernel_routes:
+    r1:
+    - 100.0.6.0/24
+    - 10.0.3.0/30
+    - 10.0.6.0/30
+    - 10.0.0.0/30
+    - 100.0.0.0/24
+    - 10.0.5.0/30
+    - 200.0.6.0/24
+    - 10.0.10.0/30
+    - 100.0.8.0/24
+    r2:
+    - 200.0.1.0/24
+    - 10.0.7.0/30
+    - 100.0.0.0/24
+    - 10.0.5.0/30
+    - 200.0.6.0/24
+    - 10.0.10.0/30
+    - 100.0.8.0/24
+    r3:
+    - 200.0.1.0/24
+    - 10.0.8.0/30
+    - 10.0.7.0/30
+    - 100.0.6.0/24
+    - 10.0.6.0/30
+    - 10.0.0.0/30
+    - 200.0.6.0/24
+    - 10.0.10.0/30
+    - 100.0.8.0/24
+    r4:
+    - 200.0.1.0/24
+    - 10.0.8.0/30
+    - 100.0.6.0/24
+    - 10.0.3.0/30
+    - 10.0.6.0/30
+    - 100.0.0.0/24
+    - 10.0.5.0/30
+    - 100.0.8.0/24
+    r5:
+    - 200.0.1.0/24
+    - 10.0.8.0/30
+    - 10.0.7.0/30
+    - 100.0.6.0/24
+    - 10.0.3.0/30
+    - 10.0.0.0/30
+    - 100.0.0.0/24
+    - 200.0.6.0/24
+    pc1:
+    - 0.0.0.0/0
+    pc2:
+    - 0.0.0.0/0
+    pc3:
+    - 0.0.0.0/0
+    pc4:
+    - 0.0.0.0/0
+    pc5:
+    - 0.0.0.0/0
+  applications:
+    dns:
+      authoritative:
+        .:
+        - 100.0.6.2
+        test:
+        - 100.0.8.2
+      local_ns:
+        100.0.0.2:
+        - pc4
+        2001:8::2:
+        - pc6
+      records:
+        A:
+          www.test.:
+          - 200.0.1.2
+    http:
+      pc1:
+      - url: http://200.0.1.2/
+        expected_status: 200
+  reachability:
+    pc2:
+    - 100.0.8.2
+    - 100.0.0.2
+    pc3:
+    - 100.0.6.2
+    - 100.0.8.2
+    - 200.0.1.2
+    pc4:
+    - 100.0.0.2
+    - 200.0.1.2
+    pc6:
+    - 2001:8::2
+  custom_commands:
+    pc2:
+    - command: sh -c 'dig @100.0.6.2 . SOA +norecurse +comments +answer +noquestion
+        +nostats | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.6.2 test. NS +norecurse +noall +authority +additional
+        | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+.*[[:space:]]A[[:space:]]+100\.0\.8\.2'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.6.2 test. SOA +norecurse +comments +noquestion +nostats
+        | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]aa[[:space:];]'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.6.2 www.test. A +recurse +comments +noquestion +nostats
+        | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]ra[[:space:];]'"'"''
+      exit_code: 0
+    pc5:
+    - command: sh -c 'dig @100.0.8.2 test. SOA +norecurse +comments +answer +noquestion
+        +nostats | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.8.2 test. NS +norecurse +noall +answer | grep -Eq
+        '"'"'^test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+\.?$'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.8.2 www.test. A +norecurse +short | grep -qx '"'"'200.0.1.2'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.8.2 . SOA +norecurse +comments +noquestion +nostats
+        | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]aa[[:space:];]'"'"'
+        && dig @100.0.8.2 www.test. A +recurse +comments +noquestion +nostats | grep
+        '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]ra[[:space:];]'"'"''
+      exit_code: 0
+    pc3:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq '"'"'[[:space:]]2001:8::2/64[[:space:]]'"'"''
+      exit_code: 0
+    - command: sh -c 'dig @100.0.0.2 www.test. A +recurse +comments +answer +noquestion
+        +nostats | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'flags:.*[[:space:]]ra[[:space:];].*www\.test\..*[[:space:]]A[[:space:]]+200\.0\.1\.2'"'"''
+      exit_code: 0
+    - command: "sh -c 'for z in . test.; do\n  if dig @100.0.0.2 \"$z\" SOA +recurse\
+        \ +comments +noquestion +nostats |\n     grep '\"'\"'flags:'\"'\"' |\n   \
+        \  grep -qE '\"'\"'flags:.*[[:space:]]aa[[:space:];]'\"'\"'; then\n    exit\
+        \ 1;\n  fi;\ndone; exit 0'"
+      exit_code: 0
+    - command: sh -c '! grep -R -E '"'"'^[[:space:]]*forwarders[[:space:]]*\{'"'"'
+        /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'
+      exit_code: 0
+    - command: sh -c 'grep -R -E '"'"'^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;'"'"'
+        /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'
+      exit_code: 0
+    - command: "sh -c 'conf=\"$(named-checkconf -p 2>/dev/null)\" && printf '\"'\"\
+        '%s\\n'\"'\"' \"$conf\" | awk '\"'\"'/zone \"\\.\"/{z=1} z && /type[[:space:]]+hint;/{ok=1}\
+        \ z && /^};/{z=0} END{exit !ok}'\"'\"' && f=\"$(printf '\"'\"'%s\\n'\"'\"\
+        ' \"$conf\" |\n     awk '\"'\"'/zone \"\\.\"/{z=1} z && $1==\"file\"{gsub(/[\"\
+        ;]/,\"\",$2); print $2; exit} z && /^};/{z=0}'\"'\"')\" &&\ntest -n \"$f\"\
+        \ && if [ \"${f#/}\" = \"$f\" ]; then\n  d=\"$(printf '\"'\"'%s\\n'\"'\"'\
+        \ \"$conf\" |\n       awk '\"'\"'$1==\"directory\"{gsub(/[\";]/,\"\",$2);\
+        \ print $2; exit}'\"'\"')\";\n  f=\"${d:-/etc/bind}/$f\";\nfi && test -r \"\
+        $f\" && awk '\"'\"'\n  /^[[:space:]]*($|;)/ {next}\n  {\n    for (i=1; i<=NF;\
+        \ i++) {\n      if ($i==\"A\" && i<NF) {seen=1; if ($(i+1)!=\"100.0.6.2\"\
+        ) bad=1}\n      if ($i==\"AAAA\") bad=1\n    }\n  }\n  END {exit !(seen &&\
+        \ !bad)}\n'\"'\"' \"$f\"'"
+      exit_code: 0
+    pc4:
+    - command: sh -c 'test "$(awk '"'"'$1=="nameserver"{print $2}'"'"' /etc/resolv.conf
+        | wc -l)" -eq 1 && grep -Eq '"'"'^nameserver[[:space:]]+100\.0\.0\.2([[:space:]]|$)'"'"'
+        /etc/resolv.conf'
+      exit_code: 0
+    - command: sh -c 'dig www.test. A +short | grep -qx '"'"'200.0.1.2'"'"''
+      exit_code: 0
+    - command: sh -c '! grep -Eq '"'"'(^|[[:space:]])www\.test\.?([[:space:]]|$)'"'"'
+        /etc/hosts && getent ahostsv4 www.test. | awk '"'"'$1=="200.0.1.2"{ok=1} END{exit
+        !ok}'"'"''
+      exit_code: 0
+    pc6:
+    - command: sh -c 'test "$(awk '"'"'$1=="nameserver"{print $2}'"'"' /etc/resolv.conf
+        | wc -l)" -eq 1 && grep -Eq '"'"'^nameserver[[:space:]]+2001:8::2([[:space:]]|$)'"'"'
+        /etc/resolv.conf'
+      exit_code: 0
+    - command: sh -c 'dig www.test. A +short | grep -qx '"'"'200.0.1.2'"'"''
+      exit_code: 0
+    - command: sh -c '! grep -Eq '"'"'(^|[[:space:]])www\.test\.?([[:space:]]|$)'"'"'
+        /etc/hosts && ! ip -6 route show | grep -q '"'"'^default[[:space:]]'"'"''
+      exit_code: 0

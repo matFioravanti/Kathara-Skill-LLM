@@ -219,7 +219,7 @@ python scripts/aggregate_results.py
 python scripts/analyze_results.py
 ```
 
-L'aggregatore legge soltanto le run nel formato `scenario/skill_mode/rNNN/evaluation/metrics.json` e i report checker già salvati. Non avvia Codex, Docker, Kathara o il checker e può essere rilanciato con `python scripts/aggregate_results.py`. Scrive `runs.csv`, `checks.csv` e `summary.csv` senza eliminare altri file in `results/`.
+L'aggregatore legge soltanto le run nel formato `scenario/skill_mode/rNNN/evaluation/metrics.json` e i report checker già salvati. Non avvia Codex, Docker, Kathara o il checker e può essere rilanciato con `python scripts/aggregate_results.py`. Scrive `runs.csv`, `checks.csv` e `summary.csv`, più `benchmark.xlsx` con i fogli `Runs`, `Checks` e `Summary`. Il workbook raggruppa le righe per scenario con linee di separazione, intestazioni formattate, filtri e larghezze colonna adatte ai contenuti; gli altri file in `results/` restano intatti.
 
 ## Smoke check
 

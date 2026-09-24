@@ -113,15 +113,16 @@ class ResultCollectionTest(unittest.TestCase):
 
     def _write_metrics_run(self, root: Path, run_number: int, *, status: str,
                            selected: list[str] | None, pass_rate: float | None,
-                           input_tokens: int | None, output_tokens: int | None):
-        run = root / f"example_dns_001/auto/r{run_number:03d}"
+                           input_tokens: int | None, output_tokens: int | None,
+                           scenario: str = "example_dns_001"):
+        run = root / f"{scenario}/auto/r{run_number:03d}"
         evaluation = run / "evaluation"
         evaluation.mkdir(parents=True)
         logs = run / "logs/aut"
         logs.mkdir(parents=True)
         metrics = {
-            "scenario": "example_dns_001", "skill_mode": "auto", "run_number": run_number,
-            "run_id": f"example_dns_001__auto__r{run_number:03d}", "agent": "codex",
+            "scenario": scenario, "skill_mode": "auto", "run_number": run_number,
+            "run_id": f"{scenario}__auto__r{run_number:03d}", "agent": "codex",
             "model": "codex-local", "reasoning_effort": "low",
             "available_skills": ["kathara-creation", "kathara-dns"], "forced_skills": [],
             "selected_skills": selected, "skill_trace_available": True,
@@ -179,6 +180,12 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertAlmostEqual(summary_frame.iloc[0]["skill_selection_rate"], 0.5)
             self.assertEqual({path.name for path in output.glob("*.csv")},
                              {"runs.csv", "checks.csv", "summary.csv"})
+            with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
+                self.assertEqual(workbook.sheet_names, ["Runs", "Checks", "Summary"])
+                self.assertEqual(pd.read_excel(workbook, sheet_name="Runs").loc[0, "run_id"],
+                                 "example_dns_001__auto__r001")
+                self.assertEqual(pd.read_excel(workbook, sheet_name="Checks").shape[0], 2)
+                self.assertEqual(pd.read_excel(workbook, sheet_name="Summary").loc[0, "runs"], 3)
 
     def test_aggregation_is_idempotent_for_metrics_runs(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -216,8 +223,36 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertTrue(checks_frame.empty)
             self.assertTrue(summary_frame.empty)
             self.assertEqual(set(path.name for path in output.iterdir()),
-                             {"runs.csv", "checks.csv", "summary.csv"})
+                             {"runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx"})
             self.assertEqual(list(pd.read_csv(output / "runs.csv").columns), run_frame.columns.tolist())
+            with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
+                self.assertEqual(workbook.sheet_names, ["Runs", "Checks", "Summary"])
+                self.assertTrue(pd.read_excel(workbook, sheet_name="Runs").empty)
+
+    def test_single_workbook_separates_all_scenario_blocks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            runs = root / "runs"
+            self._write_metrics_run(runs, 1, status="COMPLETED", selected=[], pass_rate=1.0,
+                                    input_tokens=10, output_tokens=5, scenario="example_dns_001")
+            self._write_metrics_run(runs, 1, status="COMPLETED", selected=[], pass_rate=0.5,
+                                    input_tokens=20, output_tokens=8, scenario="example_dns_002")
+            output = root / "results"
+            aggregate(runs, output)
+
+            from openpyxl import load_workbook
+            workbook = load_workbook(output / "benchmark.xlsx", data_only=True)
+            self.assertEqual(workbook.sheetnames, ["Runs", "Checks", "Summary"])
+            runs_sheet = workbook["Runs"]
+            self.assertEqual(runs_sheet["A2"].value, "example_dns_001")
+            self.assertIsNone(runs_sheet["A3"].value)
+            self.assertEqual(runs_sheet["A4"].value, "example_dns_002")
+            run_id_column = [cell.value for cell in runs_sheet[1]].index("run_id") + 1
+            self.assertEqual(runs_sheet.cell(2, run_id_column).value, "example_dns_001__auto__r001")
+            self.assertEqual(runs_sheet.cell(4, run_id_column).value, "example_dns_002__auto__r001")
+            self.assertEqual(runs_sheet["A2"].border.bottom.style, "medium")
+            self.assertEqual(runs_sheet["A1"].fill.fgColor.rgb[-6:], "17365D")
+            self.assertEqual(runs_sheet.freeze_panes, "A2")
 
 
 if __name__ == "__main__":

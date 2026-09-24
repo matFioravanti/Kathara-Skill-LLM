@@ -73,7 +73,9 @@ def main():
         runs_frame, checks_frame, summary_frame = aggregate(tmp / "empty", tmp / "results")
         assert runs_frame.empty and checks_frame.empty and summary_frame.empty
         assert analyze(tmp / "results").empty
-        assert {path.name for path in (tmp / "results").glob("*.csv")} == {"runs.csv", "checks.csv", "summary.csv"}
+        assert {path.name for path in (tmp / "results").iterdir()} == {
+            "runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx",
+        }
         scenario = next(iter(scenarios.values()))
         before = tree_hash(scenario.lab)
         run = create_workspace(tmp / "runs", scenario, "dns_only")
@@ -167,7 +169,9 @@ def main():
         assert checks_frame.iloc[0]["run_id"] == run_id
         assert summary_frame.iloc[0]["runs"] == 1
         assert len(analyze(tmp / "results")) == 1
-        assert {path.name for path in (tmp / "results").glob("*.csv")} == {"runs.csv", "checks.csv", "summary.csv"}
+        assert {path.name for path in (tmp / "results").iterdir()} == {
+            "runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx",
+        }
         print("OK checker rows, metriche normalizzate, aggregazione e CSV nuovi")
     missing = [str(p.relative_to(ROOT)) for p in skill_paths(config).values() if not p.is_file()]
     print("Skill AUT mancanti:", ", ".join(missing) if missing else "nessuna")

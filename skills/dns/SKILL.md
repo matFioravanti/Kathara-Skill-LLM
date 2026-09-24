@@ -1,5 +1,5 @@
 ---
-name: kathara-dns-config
+name: kathara-dns
 description: "Configure DNS (BIND9 authoritative servers, artificial root, TLD/child zones, delegations, glue, recursive resolvers, client resolv.conf) inside an EXISTING Kathara lab from a natural-language request. Use whenever a task asks to add, fix or change DNS/BIND/named/root server/resolver/zone/delegation behavior in a Kathara lab, even if not phrased as 'DNS skill'. Not for creating labs from scratch or configuring routing."
 argument-hint: "Lab path + DNS request (zones, roles, host records, IP families)"
 user-invocable: true

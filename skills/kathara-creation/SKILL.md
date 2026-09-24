@@ -1,5 +1,5 @@
 ---
-name: kathara-lab-creation
+name: kathara-creation
 description: "Create and configure Kathara labs with consistent folder structure, lab.conf, and startup files. Use when designing new teaching labs, exercises, or exam scenarios in Kathara repositories."
 argument-hint: "Topic/category, lab name, devices, links, addressing, and validation goal"
 user-invocable: true
