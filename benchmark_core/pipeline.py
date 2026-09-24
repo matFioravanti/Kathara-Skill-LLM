@@ -1,6 +1,8 @@
 """Orchestrazione sequenziale; la finestra AUT termina prima del generatore."""
 from pathlib import Path
 import hashlib
+import json
+import shutil
 import time
 import traceback
 
@@ -146,3 +148,97 @@ def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path
         write_json(evaluation / "metrics.json", metrics)
         print_run_summary(metrics)
     return run
+
+
+def reevaluate_run(config, run: Path) -> Path:
+    """Riesegue solo checker/evaluation su una run AUT completata, in-place."""
+    from .correction_input import InvalidCorrectionError, MissingCorrectionError
+
+    manifest_path = run / "manifest.json"
+    if not manifest_path.is_file() or not (run / "lab").is_dir() or not (run / "input/lab").is_dir():
+        raise ValueError(f"Run incompleta: attesi manifest.json, lab/ e input/lab/: {run}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("aut_execution_success") is not True or manifest.get("pipeline_state") not in (
+        "AUT_COMPLETED", "COMPLETED", "CHECKER_FAILED", "CORRECTION_MISSING", "CORRECTION_INVALID"
+    ):
+        raise ValueError(f"AUT non completato; run non rivalutata: {run}")
+
+    scenario_id = manifest.get("scenario_id")
+    source = correction_path(config.root, scenario_id)
+    # read_correction valida prima che qualunque snapshot/report esistente venga toccato.
+    content, digest = read_correction(source)
+    previous_total_seconds = _metric_total_seconds(run)
+    source_lab_hash = tree_hash(run / "lab")
+    input_lab_hash = tree_hash(run / "input/lab")
+    evaluation = run / "evaluation"
+    evaluation.mkdir(parents=True, exist_ok=True)
+    snapshot = evaluation / "correction.yaml"
+    snapshot.write_bytes(content)
+    if validate_correction(snapshot) != digest:
+        raise InvalidCorrectionError(f"Invalid correction snapshot: {snapshot}")
+
+    manifest["correction_source"] = source.relative_to(config.root).as_posix()
+    manifest["correction_snapshot"] = "evaluation/correction.yaml"
+    manifest["correction_sha256"] = digest
+    manifest["checker_execution_success"] = None
+    manifest["task_success"] = None
+    manifest.pop("pipeline_error", None)
+    results = run / "results"
+    # Elimina solo report checker noti, senza toccare altri artefatti della run.
+    for relative in ("results.csv", "lab/lab_result_all.csv", "lab/lab_result_failed.csv",
+                     "lab/lab_result_summary.csv", "lab/lab_result.xlsx"):
+        (results / relative).unlink(missing_ok=True)
+    (results / "lab").mkdir(parents=True, exist_ok=True)
+    if results.exists():
+        (results / "lab" / "results.csv").unlink(missing_ok=True)
+
+    for name in ("checker_invocation.json", "checker_execution.json", "checker_stdout.log", "checker_stderr.log"):
+        (run / "logs" / name).unlink(missing_ok=True)
+    started = time.monotonic()
+    outcome = None
+    try:
+        outcome = run_checker(config, run, snapshot)
+        manifest["checker_execution_success"] = True
+        manifest["task_success"] = outcome["task_success"]
+        manifest["pipeline_state"] = "COMPLETED"
+        manifest.setdefault("state_history", []).append({"state": "COMPLETED", "timestamp": utc_now()})
+    except Exception as exc:
+        if isinstance(exc, MissingCorrectionError):
+            state = "CORRECTION_MISSING"
+        elif isinstance(exc, InvalidCorrectionError):
+            state = "CORRECTION_INVALID"
+        else:
+            state = "CHECKER_FAILED"
+        manifest["checker_execution_success"] = False
+        manifest["task_success"] = None
+        manifest["pipeline_state"] = state
+        manifest["pipeline_error"] = f"{type(exc).__name__}: {exc}"
+        manifest.setdefault("state_history", []).append({"state": state, "timestamp": utc_now()})
+        (run / "logs").mkdir(parents=True, exist_ok=True)
+        (run / "logs/pipeline_error.log").write_text(traceback.format_exc())
+    checker_seconds = time.monotonic() - started
+    if tree_hash(run / "lab") != source_lab_hash or tree_hash(run / "input/lab") != input_lab_hash:
+        raise RuntimeError("Il checker ha alterato lab/ o input/lab/.")
+    manifest["completed_at"] = utc_now()
+    write_json(manifest_path, manifest)
+    metrics = make_metrics(run, manifest,
+                           total_seconds=previous_total_seconds,
+                           checker_seconds=checker_seconds,
+                           checker_outcome=outcome)
+    # Nessun report valido dopo un errore tecnico: non recuperare conteggi da artefatti parziali.
+    if outcome is None:
+        metrics["checker"] = {"passed": None, "failed": None, "total": None, "pass_rate": None}
+    write_json(evaluation / "metrics.json", metrics)
+    print_run_summary(metrics)
+    return run
+
+
+def _metric_total_seconds(run: Path):
+    """Conserva il tempo AUT/complessivo storico leggendo le metriche precedenti."""
+    import json
+    try:
+        metrics = json.loads((run / "evaluation/metrics.json").read_text(encoding="utf-8"))
+        value = (metrics.get("timing") or {}).get("total_seconds")
+        return value if isinstance(value, (int, float)) else None
+    except (OSError, ValueError, AttributeError):
+        return None

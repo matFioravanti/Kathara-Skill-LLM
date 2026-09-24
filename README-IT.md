@@ -119,6 +119,14 @@ La modalità predefinita è `dns_only`, come nel comportamento Codex precedente.
 
 `--skill-mode all` orchestra in sequenza le cinque modalità sopra. Prima verifica tutte le skill necessarie, poi crea una run indipendente per ogni modalità nell'ordine indicato. Il manifest di ogni run riporta la modalità effettiva.
 
+Per rivalutare in-place le run esistenti usando la correction canonica aggiornata, senza chiamate modello e senza consumare nuovi token LLM:
+
+```bash
+python scripts/run_benchmark.py --scenario example_dns_001 --skill-mode all --rerun-correction
+```
+
+Con `--all` vengono rivalutati tutti gli scenari esistenti. Una modalità `--skill-mode` specifica limita la rivalutazione a quella modalità; omettendola vengono selezionate tutte e cinque. Sono elaborate in ordine tutte le directory `rNNN` esistenti. In questa modalità `--repetitions` non è accettato.
+
 ```bash
 python scripts/run_benchmark.py --scenario example_dns_001 --agent codex --skill-mode auto
 ```

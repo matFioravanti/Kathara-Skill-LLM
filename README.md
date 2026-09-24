@@ -119,6 +119,14 @@ The default is `dns_only`, preserving the previous Codex run behavior. Each run 
 
 `--skill-mode all` is a sequential orchestrator for the five modes above. It validates every required skill before starting, then creates one independent run per mode in the listed order. Each run saves its actual mode in its manifest.
 
+Reevaluate existing runs in place with the updated canonical correction, without model calls or new LLM tokens:
+
+```bash
+python scripts/run_benchmark.py --scenario example_dns_001 --skill-mode all --rerun-correction
+```
+
+With `--all`, every existing scenario is reevaluated. A specific `--skill-mode` limits reevaluation to that mode; omitting it selects all five. All existing `rNNN` directories are processed in order. `--repetitions` is not accepted in this mode.
+
 ```bash
 python scripts/run_benchmark.py --scenario example_dns_001 --agent codex --skill-mode auto
 ```
