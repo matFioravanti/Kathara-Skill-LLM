@@ -14,13 +14,14 @@ class InvalidCorrectionError(ValueError):
 
 
 def correction_path(root: Path, scenario_id: str) -> Path:
-    return root / "corrections" / scenario_id / "correction.yaml"
+    """Percorso canonico sotto scenarios/<id>; nessun fallback legacy."""
+    return root / "scenarios" / scenario_id / "correction.yaml"
 
 
 def _display_path(path: Path) -> str:
     parts = path.parts
-    if "corrections" in parts:
-        index = len(parts) - 1 - tuple(reversed(parts)).index("corrections")
+    if "scenarios" in parts:
+        index = len(parts) - 1 - tuple(reversed(parts)).index("scenarios")
         return Path(*parts[index:]).as_posix()
     return path.as_posix()
 

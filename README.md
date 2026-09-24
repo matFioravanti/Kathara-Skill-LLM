@@ -4,11 +4,11 @@ Reproducible benchmark for evaluating CLI LLM agents that configure DNS and web 
 
 ## Architecture
 
-Each scenario contains only a prompt and an immutable initial lab. For each skill mode, the runner allocates a fresh run at `runs/<scenario>/<skill_mode>/rNNN`, preserves the baseline in `input/lab`, creates the editable copy in `lab`, and launches the Agent Under Test (AUT) on the host Mac. Run numbers increase independently for each scenario and mode.
+Each scenario contains a prompt, a manual correction, and an immutable initial lab. For each skill mode, the runner allocates a fresh run at `runs/<scenario>/<skill_mode>/rNNN`, preserves the baseline in `input/lab`, creates the editable copy in `lab`, and launches the Agent Under Test (AUT) on the host Mac. Run numbers increase independently for each scenario and mode.
 
 The **active agent** of a run is unique: the same agent is used both as the AUT and as the Correction Generator. It is not possible to combine different agents within the same run.
 
-After the AUT finishes, the runner saves its events, closes the measurement window, and computes the diff against the original lab. The Kathara Lab Checker then evaluates that run's lab against the manually maintained canonical correction at `corrections/<scenario>/correction.yaml`. A byte-for-byte snapshot is stored at `evaluation/correction.yaml` for reproducibility.
+After the AUT finishes, the runner saves its events, closes the measurement window, and computes the diff against the original lab. The Kathara Lab Checker evaluates that run's lab against the manual canonical correction at `scenarios/<scenario>/correction.yaml`. A byte-for-byte snapshot is stored at `evaluation/correction.yaml` for reproducibility. The correction stays outside `lab/` and is not provided to the AUT.
 
 The final result is derived exclusively from the checker. A successful AUT execution can therefore have `aut_execution_success=true`, `checker_execution_success=true`, and `task_success=false`. If the correction or the checker fails because of an infrastructure issue, `task_success` remains null.
 
@@ -29,7 +29,7 @@ Codex / Antigravity CLI
 Laboratorio generato
       │
       ▼
-corrections/<scenario>/correction.yaml
+scenarios/<scenario>/correction.yaml
       │
       ▼
 evaluation/correction.yaml → Kathara Lab Checker
@@ -83,7 +83,7 @@ Each agent has its own dedicated configuration file:
 
 The agent is determined by the `aut.agent` field in the configuration file. The `--agent` flag on the CLI is used exclusively as a consistency check: it must match `aut.agent` in the YAML, otherwise the command is rejected. Cross-provider override is not supported.
 
-Each scenario has one manual checker correction at `corrections/<scenario>/correction.yaml`. It is shared by every agent, Skill mode, and repetition for that scenario. The preflight checks that it exists and is valid before any model run; the AUT cannot read it. The checker receives the run's `lab/` and the correction snapshot explicitly.
+Each scenario has one manual checker correction at `scenarios/<scenario>/correction.yaml`. It is shared by every agent, Skill mode, and repetition for that scenario. The preflight checks that it exists and is valid before any model run; it is not copied into `lab/` and is not provided to the AUT. The checker receives the run's `lab/` and the correction snapshot explicitly. `--rerun-correction` uses the current scenario correction and replaces each selected run's evaluation snapshot.
 
 ## Required Skills
 
@@ -94,7 +94,7 @@ skills/kathara-creation/SKILL.md
 skills/dns/SKILL.md
 skills/lab_checker/SKILL.md
 skills/lab_checker/config-schema.md
-corrections/<scenario>/correction.yaml
+scenarios/<scenario>/correction.yaml
 ```
 
 The Creation Skill must declare `name: kathara-creation`, and the DNS Skill `name: kathara-dns`; both need `description` frontmatter. The Creation Skill content is supplied by the experiment. The checker schema and Skill can be used while authoring corrections, but the benchmark does not run an agent to generate them. To verify the DNS Skill:
@@ -138,11 +138,12 @@ Scenarios are discovered automatically under `scenarios/` and are valid when the
 ```text
 scenarios/<scenario_id>/
 ├── prompt.txt
+├── correction.yaml
 └── lab/
     └── lab.conf
 ```
 
-Do not add `scenario.yaml` or a correction inside the scenario directory. The prompt is the normative source; `lab/` is copied for each run and is not modified. Add the manual correction under `corrections/<scenario>/correction.yaml`.
+Each scenario must contain `prompt.txt`, `correction.yaml`, and `lab/lab.conf`. The correction is manual and shared across agents, Skill modes, and repetitions. Keep it at the scenario root, outside `lab/`; it is never included in the AUT workspace. The prompt is normative, and the lab is copied for each run.
 
 ## Execution
 

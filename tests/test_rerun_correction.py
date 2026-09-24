@@ -36,7 +36,7 @@ class RerunCorrectionTest(unittest.TestCase):
                        "checker": {"passed": 9, "failed": 0, "total": 9, "pass_rate": 1.0},
                        "correction_sha256": "old"}
         (run / "evaluation/metrics.json").write_text(json.dumps(old_metrics))
-        canonical = root / "corrections/example_dns_001/correction.yaml"
+        canonical = root / "scenarios/example_dns_001/correction.yaml"
         canonical.parent.mkdir(parents=True, exist_ok=True)
         canonical.write_bytes(b"new correction bytes\n")
         return run, canonical

@@ -76,7 +76,7 @@ class RunLayoutTest(unittest.TestCase):
             (scenario_dir / "lab/lab.conf").write_text("client[0]=h1\n")
             (scenario_dir / "prompt.txt").write_text("Configure DNS")
             scenario = Scenario("example_dns_001", scenario_dir)
-            for rel in ("skills/dns/SKILL.md", "corrections/example_dns_001/correction.yaml"):
+            for rel in ("skills/dns/SKILL.md", "scenarios/example_dns_001/correction.yaml"):
                 path = root / rel
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("canonical correction")
@@ -100,7 +100,7 @@ class RunLayoutTest(unittest.TestCase):
                              [run / "evaluation/correction.yaml" for run in runs])
             self.assertTrue(all((run / "evaluation/correction.yaml").read_bytes() == b"canonical correction"
                                 for run in runs))
-            self.assertEqual((root / "corrections/example_dns_001/correction.yaml").read_text(),
+            self.assertEqual((root / "scenarios/example_dns_001/correction.yaml").read_text(),
                              "canonical correction")
             run = runs[2]
             manifest = json.loads((run / "manifest.json").read_text())
@@ -110,9 +110,11 @@ class RunLayoutTest(unittest.TestCase):
             self.assertEqual(manifest["run_directory"], "example_dns_001/dns_only/r001")
             self.assertEqual(manifest["run_number"], 1)
             self.assertNotIn("all", manifest["run_id"])
-            self.assertEqual(manifest["correction_source"], "corrections/example_dns_001/correction.yaml")
+            self.assertEqual(manifest["correction_source"], "scenarios/example_dns_001/correction.yaml")
             self.assertEqual(manifest["correction_snapshot"], "evaluation/correction.yaml")
             self.assertEqual((run / "evaluation/correction.yaml").read_bytes(), b"canonical correction")
+            self.assertFalse((run / "lab/correction.yaml").exists())
+            self.assertFalse((run / "input/lab/correction.yaml").exists())
             self.assertEqual([call.args[2] for call in checker.call_args_list],
                              [run / "evaluation/correction.yaml" for run in runs])
             self.assertNotIn("CORRECTION_GENERATION", str(manifest["state_history"]))

@@ -13,6 +13,10 @@ class Scenario:
         return self.directory / "lab"
 
     @property
+    def correction(self) -> Path:
+        return self.directory / "correction.yaml"
+
+    @property
     def prompt(self) -> str:
         return (self.directory / "prompt.txt").read_text(encoding="utf-8")
 
@@ -26,15 +30,13 @@ def discover_scenarios(directory: Path) -> dict[str, Scenario]:
             continue
         if not re.fullmatch(r"[A-Za-z0-9_-]+", path.name):
             raise ValueError(f"Scenario ID non valido: {path.name}")
-        for required in (path / "prompt.txt", path / "lab/lab.conf"):
+        for required in (path / "prompt.txt", path / "correction.yaml", path / "lab/lab.conf"):
             if not required.is_file():
                 raise ValueError(f"Scenario incompleto: manca {required}")
-        if path.is_symlink() or (path / "lab").is_symlink():
+        if path.is_symlink() or (path / "lab").is_symlink() or (path / "correction.yaml").is_symlink():
             raise ValueError(f"Scenario con directory simboliche non supportato: {path}")
         scenario = Scenario(path.name, path.resolve())
         if not scenario.prompt.strip():
             raise ValueError(f"Prompt vuoto: {path}")
-        if (scenario.lab / "correction.yaml").exists():
-            raise ValueError(f"correction.yaml non deve essere nello scenario: {path}")
         scenarios[path.name] = scenario
     return scenarios

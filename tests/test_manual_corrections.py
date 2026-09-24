@@ -65,14 +65,30 @@ class ManualCorrectionsTest(unittest.TestCase):
             }
             self.assertEqual(paths, {canonical})
             self.assertEqual(canonical.relative_to(root).as_posix(),
-                             "corrections/example_dns_001/correction.yaml")
+                             "scenarios/example_dns_001/correction.yaml")
+
+    def test_discovery_requires_root_correction_and_does_not_include_it_in_lab(self):
+        from benchmark_core.scenario_loader import discover_scenarios
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "scenarios"
+            scenario_dir = root / "example_dns_001"
+            (scenario_dir / "lab").mkdir(parents=True)
+            (scenario_dir / "prompt.txt").write_text("Configure DNS")
+            (scenario_dir / "lab/lab.conf").write_text("client[0]=h1\n")
+            with self.assertRaisesRegex(ValueError, "correction.yaml"):
+                discover_scenarios(root)
+            correction = scenario_dir / "correction.yaml"
+            correction.write_bytes(b"manual correction\n")
+            scenario = discover_scenarios(root)["example_dns_001"]
+            self.assertEqual(scenario.correction, correction.resolve())
+            self.assertEqual([p.name for p in scenario.lab.iterdir()], ["lab.conf"])
 
     def test_missing_correction_fails_preflight_before_any_runtime_command(self):
         with tempfile.TemporaryDirectory() as temporary:
             config = Config(Path(temporary), {})
             with patch("benchmark_core.preflight.subprocess.run") as command:
                 with self.assertRaisesRegex(MissingCorrectionError,
-                                            "Missing correction file: corrections/example_dns_001/correction.yaml"):
+                                            "Missing correction file: scenarios/example_dns_001/correction.yaml"):
                     preflight(config, "codex", skill_mode="all", scenario_ids=["example_dns_001"])
             command.assert_not_called()
 
@@ -91,7 +107,7 @@ class ManualCorrectionsTest(unittest.TestCase):
                 "results": {"directory": "results"},
             })
             error = MissingCorrectionError(
-                "Missing correction file: corrections/example_dns_001/correction.yaml\nNo model run was started."
+                "Missing correction file: scenarios/example_dns_001/correction.yaml\nNo model run was started."
             )
             with patch("sys.argv", ["run_benchmark.py", "--all", "--skill-mode", "all"]), \
                  patch.object(run_benchmark, "load_config", return_value=config), \
@@ -117,7 +133,7 @@ class ManualCorrectionsTest(unittest.TestCase):
 
     def test_read_correction_preserves_exact_bytes_and_distinguishes_missing(self):
         with tempfile.TemporaryDirectory() as temporary:
-            path = Path(temporary) / "corrections/example_dns_001/correction.yaml"
+            path = Path(temporary) / "scenarios/example_dns_001/correction.yaml"
             with self.assertRaises(MissingCorrectionError):
                 read_correction(path)
             path.parent.mkdir(parents=True)

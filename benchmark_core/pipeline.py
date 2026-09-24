@@ -19,7 +19,8 @@ from .workspace import component_versions, create_workspace, logical_run_id, tre
 def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path:
     skill_mode = skill_mode or "dns_only"
     skill_selection = mode_details(skill_mode)
-    correction_source = correction_path(config.root, scenario.scenario_id)
+    correction_source = scenario.correction
+    correction_source_relative = correction_path(config.root, scenario.scenario_id).relative_to(config.root).as_posix()
     correction_content, correction_sha256 = read_correction(correction_source)
     total_started = time.monotonic()
     run = create_workspace(config.root / "runs", scenario, skill_mode)
@@ -47,7 +48,7 @@ def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path
         "prompt_sha256": hashlib.sha256(scenario.prompt.encode()).hexdigest(),
         "dns_skill_sha256": hashlib.sha256(paths["dns"].read_bytes()).hexdigest(),
         "dns_skill_bundle_sha256": tree_hash(paths["dns"].parent),
-        "correction_source": correction_source.relative_to(config.root).as_posix(),
+        "correction_source": correction_source_relative,
         "correction_sha256": correction_sha256,
         "sandbox_image": config.data["sandbox"]["image"],
         "timeout_seconds": config.data["benchmark"]["timeout_seconds"],

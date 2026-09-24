@@ -8,7 +8,7 @@ Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. 
 
 L'**active agent** di una run è unico: lo stesso agente viene utilizzato sia come AUT sia come Correction Generator. Non è possibile combinare agenti diversi nella stessa run.
 
-Terminata l'esecuzione AUT, il runner salva gli eventi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Il Kathara Lab Checker valuta poi il `lab/` di quella run usando la correction manuale canonica `corrections/<scenario>/correction.yaml`. Una copia byte per byte viene salvata in `evaluation/correction.yaml` per riprodurre la valutazione.
+Terminata l'esecuzione AUT, il runner salva gli eventi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Il Kathara Lab Checker valuta poi il `lab/` della run usando la correction manuale canonica `scenarios/<scenario>/correction.yaml`. Una copia byte per byte viene salvata in `evaluation/correction.yaml` per riprodurre la valutazione. La correction resta fuori da `lab/` e non viene fornita all'AUT.
 
 Il risultato finale deriva esclusivamente dal checker. Un'esecuzione AUT riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
 
@@ -29,7 +29,7 @@ Codex / Antigravity CLI
 Laboratorio generato
       │
       ▼
-corrections/<scenario>/correction.yaml
+scenarios/<scenario>/correction.yaml
       │
       ▼
 evaluation/correction.yaml → Kathara Lab Checker
@@ -83,7 +83,7 @@ Ogni agente ha il proprio file di configurazione dedicato:
 
 L'agente è determinato dal campo `aut.agent` nel file di configurazione. Il flag `--agent` sulla CLI serve esclusivamente come verifica di coerenza: deve coincidere con `aut.agent` nel YAML, altrimenti il comando viene rifiutato. L'override cross-provider non è supportato.
 
-Ogni scenario ha una correction manuale in `corrections/<scenario>/correction.yaml`, condivisa da tutti gli agenti, le modalità Skill e le ripetizioni dello scenario. Il preflight ne verifica presenza e validità prima di qualsiasi run modello; l'AUT non può leggerla. Il checker riceve esplicitamente il `lab/` della run e lo snapshot della correction.
+Ogni scenario ha una correction manuale in `scenarios/<scenario>/correction.yaml`, condivisa da tutti gli agenti, le modalità Skill e le ripetizioni dello scenario. Il preflight ne verifica presenza e validità prima di qualsiasi run modello; non viene copiata in `lab/` né fornita all'AUT. Il checker riceve esplicitamente il `lab/` della run e lo snapshot della correction. `--rerun-correction` usa la versione corrente nello scenario e sostituisce lo snapshot di ogni run selezionata.
 
 ## Skill richieste
 
@@ -94,7 +94,7 @@ skills/kathara-creation/SKILL.md
 skills/dns/SKILL.md
 skills/lab_checker/SKILL.md
 skills/lab_checker/config-schema.md
-corrections/<scenario>/correction.yaml
+scenarios/<scenario>/correction.yaml
 ```
 
 La Creation Skill deve dichiarare `name: kathara-creation` e la DNS Skill `name: kathara-dns`; entrambe richiedono il campo `description`. Il contenuto della Creation Skill è fornito dall'esperimento. La skill checker e lo schema possono essere usati per scrivere le correction, ma il benchmark non esegue più un agente per generarle. Per verificare la DNS Skill:
@@ -138,11 +138,12 @@ Gli scenari vengono scoperti automaticamente sotto `scenarios/` e sono validi qu
 ```text
 scenarios/<scenario_id>/
 ├── prompt.txt
+├── correction.yaml
 └── lab/
     └── lab.conf
 ```
 
-Non aggiungere `scenario.yaml` né una correction dentro lo scenario. Il prompt è la fonte normativa; `lab/` è copiato per ogni run e non viene modificato. La correction manuale va in `corrections/<scenario>/correction.yaml`.
+Ogni scenario deve contenere `prompt.txt`, `correction.yaml` e `lab/lab.conf`. La correction è manuale e condivisa tra agenti, modalità Skill e ripetizioni; resta nella root dello scenario, fuori da `lab/`, e non entra mai nel workspace AUT. Il prompt è la fonte normativa e il laboratorio viene copiato per ogni run.
 
 ## Esecuzione
 
