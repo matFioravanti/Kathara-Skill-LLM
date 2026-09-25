@@ -1,3 +1,7 @@
+# correction.yaml — static-routing-5routers
+# Derived only from the supplied lab.conf and .startup files.
+# Static routing only: no dynamic-protocol convergence is needed.
+# lab_inline contains topology mappings only, as required by the schema.
 lab_inline: |
   r1[0]="LAN1"
   r1[1]="R12"
@@ -30,588 +34,590 @@ lab_inline: |
   pc5v6[0]="LAN5"
   pc5dual[0]="LAN5"
 
-# Static-only routing lab: 10 seconds is the value recommended by the checker skill.
 convergence_time: 10
 default_image: kathara/core
-
 test:
   requiring_startup:
-    - r1
-    - r2
-    - r3
-    - r4
-    - r5
-    - pc1v4
-    - pc1v6
-    - pc1dual
-    - pc2v4
-    - pc2v6
-    - pc2dual
-    - pc3v4
-    - pc3v6
-    - pc3dual
-    - pc4v4
-    - pc4v6
-    - pc4dual
-    - pc5v4
-    - pc5v6
-    - pc5dual
-
-  # The schema maps one expected address to each interface entry. IPv4 is used
-  # for routers/dual-stack hosts; the second IPv6 address is asserted below by
-  # custom commands. IPv6-only hosts use their IPv6 address directly here.
+  - r1
+  - r2
+  - r3
+  - r4
+  - r5
+  - pc1v4
+  - pc1v6
+  - pc1dual
+  - pc2v4
+  - pc2v6
+  - pc2dual
+  - pc3v4
+  - pc3v6
+  - pc3dual
+  - pc4v4
+  - pc4v6
+  - pc4dual
+  - pc5v4
+  - pc5v6
+  - pc5dual
+  # One primary IP per interface is checked here; IPv6 secondary addresses on dual-stack
+  # interfaces are checked below with custom_commands.
   ip_mapping:
     r1:
-      "0": 10.1.0.1/24
-      "1": 10.255.12.1/30
-      "2": 10.255.51.2/30
+      '0': 10.1.0.1/24
+      '1': 10.255.12.1/30
+      '2': 10.255.51.2/30
     r2:
-      "0": 10.2.0.1/24
-      "1": 10.255.12.2/30
-      "2": 10.255.23.1/30
+      '0': 10.2.0.1/24
+      '1': 10.255.12.2/30
+      '2': 10.255.23.1/30
     r3:
-      "0": 10.3.0.1/24
-      "1": 10.255.23.2/30
-      "2": 10.255.34.1/30
+      '0': 10.3.0.1/24
+      '1': 10.255.23.2/30
+      '2': 10.255.34.1/30
     r4:
-      "0": 10.4.0.1/24
-      "1": 10.255.34.2/30
-      "2": 10.255.45.1/30
+      '0': 10.4.0.1/24
+      '1': 10.255.34.2/30
+      '2': 10.255.45.1/30
     r5:
-      "0": 10.5.0.1/24
-      "1": 10.255.45.2/30
-      "2": 10.255.51.1/30
-
+      '0': 10.5.0.1/24
+      '1': 10.255.45.2/30
+      '2': 10.255.51.1/30
     pc1v4:
-      "0": 10.1.0.10/24
+      '0': 10.1.0.10/24
     pc1v6:
-      "0": fd00:1::20/64
+      '0': fd00:1::20/64
     pc1dual:
-      "0": 10.1.0.30/24
-
+      '0': 10.1.0.30/24
     pc2v4:
-      "0": 10.2.0.10/24
+      '0': 10.2.0.10/24
     pc2v6:
-      "0": fd00:2::20/64
+      '0': fd00:2::20/64
     pc2dual:
-      "0": 10.2.0.30/24
-
+      '0': 10.2.0.30/24
     pc3v4:
-      "0": 10.3.0.10/24
+      '0': 10.3.0.10/24
     pc3v6:
-      "0": fd00:3::20/64
+      '0': fd00:3::20/64
     pc3dual:
-      "0": 10.3.0.30/24
-
+      '0': 10.3.0.30/24
     pc4v4:
-      "0": 10.4.0.10/24
+      '0': 10.4.0.10/24
     pc4v6:
-      "0": fd00:4::20/64
+      '0': fd00:4::20/64
     pc4dual:
-      "0": 10.4.0.30/24
-
+      '0': 10.4.0.30/24
     pc5v4:
-      "0": 10.5.0.10/24
+      '0': 10.5.0.10/24
     pc5v6:
-      "0": fd00:5::20/64
+      '0': fd00:5::20/64
     pc5dual:
-      "0": 10.5.0.30/24
-
-  # Only the three requested DNS machines may run BIND/named.
+      '0': 10.5.0.30/24
   daemons:
-    r1: ["!named"]
-    r2: ["!named"]
-    r3: ["!named"]
-    r4: ["!named"]
-    r5: ["!named"]
-
-    pc1v4: ["!named"]
-    pc1v6: ["!named"]
-    pc1dual: ["!named", "!dnsmasq"]
-
-    pc2v4: ["!named"]
-    pc2v6: ["!named"]
-    pc2dual: [named]
-
-    pc3v4: ["!named"]
-    pc3v6: ["!named"]
-    pc3dual: [named]
-
-    pc4v4: ["!named"]
-    pc4v6: ["!named"]
-    pc4dual: ["!named"]
-
-    pc5v4: ["!named"]
-    pc5v6: ["!named"]
-    pc5dual: [named]
-
-  # Only manually installed IPv4 routes are listed. Directly connected routes
-  # are intentionally excluded as required by the checker schema.
+    r1:
+    - '!bgpd'
+    - '!ripd'
+    - '!ospfd'
+    - '!ospf6d'
+    - '!zebra'
+    - '!watchfrr'
+    - '!named'
+    r2:
+    - '!bgpd'
+    - '!ripd'
+    - '!ospfd'
+    - '!ospf6d'
+    - '!zebra'
+    - '!watchfrr'
+    - '!named'
+    r3:
+    - '!bgpd'
+    - '!ripd'
+    - '!ospfd'
+    - '!ospf6d'
+    - '!zebra'
+    - '!watchfrr'
+    - '!named'
+    r4:
+    - '!bgpd'
+    - '!ripd'
+    - '!ospfd'
+    - '!ospf6d'
+    - '!zebra'
+    - '!watchfrr'
+    - '!named'
+    r5:
+    - '!bgpd'
+    - '!ripd'
+    - '!ospfd'
+    - '!ospf6d'
+    - '!zebra'
+    - '!watchfrr'
+    - '!named'
+    pc1v4:
+    - '!named'
+    pc1v6:
+    - '!named'
+    pc1dual:
+    - '!named'
+    pc2v4:
+    - '!named'
+    pc2v6:
+    - '!named'
+    pc2dual:
+    - named
+    pc3v4:
+    - '!named'
+    pc3v6:
+    - '!named'
+    pc3dual:
+    - named
+    pc4v4:
+    - '!named'
+    pc4v6:
+    - '!named'
+    pc4dual:
+    - '!named'
+    pc5v4:
+    - '!named'
+    pc5v6:
+    - '!named'
+    pc5dual:
+    - named
+  # Only explicitly installed IPv4 static/default routes are listed here; directly connected
+  # subnets are intentionally excluded. IPv6 routes are checked with `ip -6 route`.
   kernel_routes:
     r1:
-      - ["10.2.0.0/24", ["10.255.12.2", "eth1"]]
-      - ["10.3.0.0/24", ["10.255.12.2", "eth1"]]
-      - ["10.4.0.0/24", ["10.255.51.1", "eth2"]]
-      - ["10.5.0.0/24", ["10.255.51.1", "eth2"]]
+    - - 10.2.0.0/24
+      - - 10.255.12.2
+        - eth1
+    - - 10.3.0.0/24
+      - - 10.255.12.2
+        - eth1
+    - - 10.4.0.0/24
+      - - 10.255.51.1
+        - eth2
+    - - 10.5.0.0/24
+      - - 10.255.51.1
+        - eth2
     r2:
-      - ["10.1.0.0/24", ["10.255.12.1", "eth1"]]
-      - ["10.3.0.0/24", ["10.255.23.2", "eth2"]]
-      - ["10.4.0.0/24", ["10.255.23.2", "eth2"]]
-      - ["10.5.0.0/24", ["10.255.12.1", "eth1"]]
+    - - 10.1.0.0/24
+      - - 10.255.12.1
+        - eth1
+    - - 10.3.0.0/24
+      - - 10.255.23.2
+        - eth2
+    - - 10.4.0.0/24
+      - - 10.255.23.2
+        - eth2
+    - - 10.5.0.0/24
+      - - 10.255.12.1
+        - eth1
     r3:
-      - ["10.1.0.0/24", ["10.255.23.1", "eth1"]]
-      - ["10.2.0.0/24", ["10.255.23.1", "eth1"]]
-      - ["10.4.0.0/24", ["10.255.34.2", "eth2"]]
-      - ["10.5.0.0/24", ["10.255.34.2", "eth2"]]
+    - - 10.1.0.0/24
+      - - 10.255.23.1
+        - eth1
+    - - 10.2.0.0/24
+      - - 10.255.23.1
+        - eth1
+    - - 10.4.0.0/24
+      - - 10.255.34.2
+        - eth2
+    - - 10.5.0.0/24
+      - - 10.255.34.2
+        - eth2
     r4:
-      - ["10.1.0.0/24", ["10.255.45.2", "eth2"]]
-      - ["10.2.0.0/24", ["10.255.34.1", "eth1"]]
-      - ["10.3.0.0/24", ["10.255.34.1", "eth1"]]
-      - ["10.5.0.0/24", ["10.255.45.2", "eth2"]]
+    - - 10.1.0.0/24
+      - - 10.255.45.2
+        - eth2
+    - - 10.2.0.0/24
+      - - 10.255.34.1
+        - eth1
+    - - 10.3.0.0/24
+      - - 10.255.34.1
+        - eth1
+    - - 10.5.0.0/24
+      - - 10.255.45.2
+        - eth2
     r5:
-      - ["10.1.0.0/24", ["10.255.51.2", "eth2"]]
-      - ["10.2.0.0/24", ["10.255.51.2", "eth2"]]
-      - ["10.3.0.0/24", ["10.255.45.1", "eth1"]]
-      - ["10.4.0.0/24", ["10.255.45.1", "eth1"]]
-
+    - - 10.1.0.0/24
+      - - 10.255.51.2
+        - eth2
+    - - 10.2.0.0/24
+      - - 10.255.51.2
+        - eth2
+    - - 10.3.0.0/24
+      - - 10.255.45.1
+        - eth1
+    - - 10.4.0.0/24
+      - - 10.255.45.1
+        - eth1
     pc1v4:
-      - ["0.0.0.0/0", ["10.1.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.1.0.1
+        - eth0
     pc1dual:
-      - ["0.0.0.0/0", ["10.1.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.1.0.1
+        - eth0
     pc2v4:
-      - ["0.0.0.0/0", ["10.2.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.2.0.1
+        - eth0
     pc2dual:
-      - ["0.0.0.0/0", ["10.2.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.2.0.1
+        - eth0
     pc3v4:
-      - ["0.0.0.0/0", ["10.3.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.3.0.1
+        - eth0
     pc3dual:
-      - ["0.0.0.0/0", ["10.3.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.3.0.1
+        - eth0
     pc4v4:
-      - ["0.0.0.0/0", ["10.4.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.4.0.1
+        - eth0
     pc4dual:
-      - ["0.0.0.0/0", ["10.4.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.4.0.1
+        - eth0
     pc5v4:
-      - ["0.0.0.0/0", ["10.5.0.1", "eth0"]]
+    - - 0.0.0.0/0
+      - - 10.5.0.1
+        - eth0
     pc5dual:
-      - ["0.0.0.0/0", ["10.5.0.1", "eth0"]]
-
+    - - 0.0.0.0/0
+      - - 10.5.0.1
+        - eth0
+  # The base lab exposes resolver assignments but no authoritative zones/records, so only
+  # local_ns is asserted and no DNS data is invented.
   applications:
     dns:
-      authoritative:
-        ".":
-          - 10.2.0.30
-          - fd00:2::30
-        test:
-          - 10.5.0.30
-          - fd00:5::30
-
-      # Unambiguous client classes are checked here. pc4dual can legally use
-      # either the IPv4 or IPv6 address of pc3dual, so it is handled below.
       local_ns:
-        "10.3.0.30":
-          - pc1v4
-          - pc2v4
-          - pc3v4
-          - pc4v4
-          - pc5v4
-        "fd00:3::30":
-          - pc1v6
-          - pc2v6
-          - pc3v6
-          - pc4v6
-          - pc5v6
-
-      records:
-        A:
-          "www.test.":
-            - 10.1.0.30
-        AAAA:
-          "www.test.":
-            - fd00:1::30
-
-    http:
-      pc1dual:
-        - url: http://10.1.0.30/
-          expected_status: 200
-        - url: "http://[fd00:1::30]/"
-          expected_status: 200
-
-  # Reachability focuses on the DNS chain, resolver and web service. Static
-  # route correctness itself is checked above (IPv4) and below (IPv6).
+        10.3.0.30:
+        - pc1v4
+        - pc1dual
+        - pc2v4
+        - pc3v4
+        - pc4v4
+        - pc4dual
+        - pc5v4
+        fd00:3::30:
+        - pc1v6
+        - pc1dual
+        - pc2v6
+        - pc3v6
+        - pc4v6
+        - pc4dual
+        - pc5v6
+  # Family-aware end-to-end reachability: one host endpoint per LAN for each supported family.
   reachability:
-    pc2dual:
-      - 10.5.0.30
-      - fd00:5::30
-    pc5dual:
-      - 10.2.0.30
-      - fd00:2::30
-    pc3dual:
-      - 10.2.0.30
-      - fd00:2::30
-      - 10.5.0.30
-      - fd00:5::30
-      - 10.1.0.30
-      - fd00:1::30
-
-    pc1v4: [10.3.0.30, 10.1.0.30]
-    pc2v4: [10.3.0.30, 10.1.0.30]
-    pc3v4: [10.3.0.30, 10.1.0.30]
-    pc4v4: [10.3.0.30, 10.1.0.30]
-    pc5v4: [10.3.0.30, 10.1.0.30]
-
-    pc1v6: ["fd00:3::30", "fd00:1::30"]
-    pc2v6: ["fd00:3::30", "fd00:1::30"]
-    pc3v6: ["fd00:3::30", "fd00:1::30"]
-    pc4v6: ["fd00:3::30", "fd00:1::30"]
-    pc5v6: ["fd00:3::30", "fd00:1::30"]
-
-    pc4dual:
-      - 10.3.0.30
-      - fd00:3::30
-      - 10.1.0.30
-      - fd00:1::30
-
-  custom_commands:
-    # -----------------------------------------------------------------------
-    # Preserve the original dual-stack addressing and IPv6 static routing.
-    # -----------------------------------------------------------------------
     r1:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:1::1/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth1 scope global | grep -Ec "[[:space:]]fd00:ff:12::1/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth2 scope global | grep -Ec "[[:space:]]fd00:ff:51::2/64[[:space:]]")" -eq 1'
-        exit_code: 0
-      - command: >-
-          sh -c 'test "$(ip -6 route show | grep -c " via ")" -eq 4 &&
-          ip -6 route show exact fd00:2::/64 | grep -Eq "^fd00:2::/64 via fd00:ff:12::2 dev eth1" &&
-          ip -6 route show exact fd00:3::/64 | grep -Eq "^fd00:3::/64 via fd00:ff:12::2 dev eth1" &&
-          ip -6 route show exact fd00:4::/64 | grep -Eq "^fd00:4::/64 via fd00:ff:51::1 dev eth2" &&
-          ip -6 route show exact fd00:5::/64 | grep -Eq "^fd00:5::/64 via fd00:ff:51::1 dev eth2"'
-        exit_code: 0
-
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
     r2:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:2::1/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth1 scope global | grep -Ec "[[:space:]]fd00:ff:12::2/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth2 scope global | grep -Ec "[[:space:]]fd00:ff:23::1/64[[:space:]]")" -eq 1'
-        exit_code: 0
-      - command: >-
-          sh -c 'test "$(ip -6 route show | grep -c " via ")" -eq 4 &&
-          ip -6 route show exact fd00:1::/64 | grep -Eq "^fd00:1::/64 via fd00:ff:12::1 dev eth1" &&
-          ip -6 route show exact fd00:3::/64 | grep -Eq "^fd00:3::/64 via fd00:ff:23::2 dev eth2" &&
-          ip -6 route show exact fd00:4::/64 | grep -Eq "^fd00:4::/64 via fd00:ff:23::2 dev eth2" &&
-          ip -6 route show exact fd00:5::/64 | grep -Eq "^fd00:5::/64 via fd00:ff:12::1 dev eth1"'
-        exit_code: 0
-
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
     r3:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:3::1/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth1 scope global | grep -Ec "[[:space:]]fd00:ff:23::2/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth2 scope global | grep -Ec "[[:space:]]fd00:ff:34::1/64[[:space:]]")" -eq 1'
-        exit_code: 0
-      - command: >-
-          sh -c 'test "$(ip -6 route show | grep -c " via ")" -eq 4 &&
-          ip -6 route show exact fd00:1::/64 | grep -Eq "^fd00:1::/64 via fd00:ff:23::1 dev eth1" &&
-          ip -6 route show exact fd00:2::/64 | grep -Eq "^fd00:2::/64 via fd00:ff:23::1 dev eth1" &&
-          ip -6 route show exact fd00:4::/64 | grep -Eq "^fd00:4::/64 via fd00:ff:34::2 dev eth2" &&
-          ip -6 route show exact fd00:5::/64 | grep -Eq "^fd00:5::/64 via fd00:ff:34::2 dev eth2"'
-        exit_code: 0
-
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
     r4:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:4::1/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth1 scope global | grep -Ec "[[:space:]]fd00:ff:34::2/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth2 scope global | grep -Ec "[[:space:]]fd00:ff:45::1/64[[:space:]]")" -eq 1'
-        exit_code: 0
-      - command: >-
-          sh -c 'test "$(ip -6 route show | grep -c " via ")" -eq 4 &&
-          ip -6 route show exact fd00:1::/64 | grep -Eq "^fd00:1::/64 via fd00:ff:45::2 dev eth2" &&
-          ip -6 route show exact fd00:2::/64 | grep -Eq "^fd00:2::/64 via fd00:ff:34::1 dev eth1" &&
-          ip -6 route show exact fd00:3::/64 | grep -Eq "^fd00:3::/64 via fd00:ff:34::1 dev eth1" &&
-          ip -6 route show exact fd00:5::/64 | grep -Eq "^fd00:5::/64 via fd00:ff:45::2 dev eth2"'
-        exit_code: 0
-
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
     r5:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:5::1/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth1 scope global | grep -Ec "[[:space:]]fd00:ff:45::2/64[[:space:]]")" -eq 1 &&
-          test "$(ip -6 -o addr show dev eth2 scope global | grep -Ec "[[:space:]]fd00:ff:51::1/64[[:space:]]")" -eq 1'
-        exit_code: 0
-      - command: >-
-          sh -c 'test "$(ip -6 route show | grep -c " via ")" -eq 4 &&
-          ip -6 route show exact fd00:1::/64 | grep -Eq "^fd00:1::/64 via fd00:ff:51::2 dev eth2" &&
-          ip -6 route show exact fd00:2::/64 | grep -Eq "^fd00:2::/64 via fd00:ff:51::2 dev eth2" &&
-          ip -6 route show exact fd00:3::/64 | grep -Eq "^fd00:3::/64 via fd00:ff:45::1 dev eth1" &&
-          ip -6 route show exact fd00:4::/64 | grep -Eq "^fd00:4::/64 via fd00:ff:45::1 dev eth1"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # Root DNS on pc2dual: authoritative only for '.', delegates test., and
-    # does not offer recursion to clients.
-    # -----------------------------------------------------------------------
-    pc2dual:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:2::30/64[[:space:]]")" -eq 1 &&
-          ip -6 route show default | grep -Eq "^default via fd00:2::1 dev eth0"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.2.0.30 . SOA +norecurse +comments +answer +noquestion +nostats |
-          tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @fd00:2::30 . SOA +norecurse +comments +answer +noquestion +nostats |
-          tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
-        exit_code: 0
-      - command: >-
-          sh -c 'out="$(dig @10.2.0.30 test. NS +norecurse +noall +authority +additional)" &&
-          printf "%s\n" "$out" | grep -Eq "^test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+\.?$" &&
-          printf "%s\n" "$out" | grep -Eq "[[:space:]]A[[:space:]]+10\.5\.0\.30$" &&
-          printf "%s\n" "$out" | grep -Eq "[[:space:]]AAAA[[:space:]]+fd00:5::30$"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.2.0.30 test. SOA +norecurse +comments +noquestion +nostats |
-          grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.2.0.30 www.test. A +recurse +comments +noquestion +nostats |
-          grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # Authoritative server for test. on pc5dual: authoritative for test. only,
-    # with both A and AAAA records, and no recursive resolver role.
-    # -----------------------------------------------------------------------
-    pc5dual:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:5::30/64[[:space:]]")" -eq 1 &&
-          ip -6 route show default | grep -Eq "^default via fd00:5::1 dev eth0"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.5.0.30 test. SOA +norecurse +comments +answer +noquestion +nostats |
-          tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @fd00:5::30 test. SOA +norecurse +comments +answer +noquestion +nostats |
-          tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.5.0.30 test. NS +norecurse +noall +answer | grep -Eq "^test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+\.?$"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.5.0.30 www.test. A +norecurse +short | grep -qx "10.1.0.30" &&
-          dig @10.5.0.30 www.test. AAAA +norecurse +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.5.0.30 . SOA +norecurse +comments +noquestion +nostats |
-          grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]" &&
-          dig @10.5.0.30 www.test. A +recurse +comments +noquestion +nostats |
-          grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # Recursive resolver on pc3dual: recursive but non-authoritative, no
-    # forwarders, no test. shortcut zone, and root hints restricted to pc2dual.
-    # -----------------------------------------------------------------------
-    pc3dual:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:3::30/64[[:space:]]")" -eq 1 &&
-          ip -6 route show default | grep -Eq "^default via fd00:3::1 dev eth0"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @10.3.0.30 www.test. A +recurse +comments +answer +noquestion +nostats |
-          tr "\n" " " | grep -Eq "flags:.*[[:space:]]ra[[:space:];].*www\.test\..*[[:space:]]A[[:space:]]+10\.1\.0\.30"'
-        exit_code: 0
-      - command: >-
-          sh -c 'dig @fd00:3::30 www.test. AAAA +recurse +comments +answer +noquestion +nostats |
-          tr "\n" " " | grep -Eiq "flags:.*[[:space:]]ra[[:space:];].*www\.test\..*[[:space:]]AAAA[[:space:]]+fd00:1::30"'
-        exit_code: 0
-      - command: >-
-          sh -c 'for z in . test.; do
-          if dig @10.3.0.30 "$z" SOA +recurse +comments +noquestion +nostats |
-          grep "flags:" | grep -qE "flags:.*[[:space:]]aa[[:space:];]"; then exit 1; fi;
-          done; exit 0'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -R -E "^[[:space:]]*forwarders[[:space:]]*\{" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'
-        exit_code: 0
-      - command: >-
-          sh -c 'conf="$(named-checkconf -p 2>/dev/null)" &&
-          printf "%s\n" "$conf" | awk "/zone \"\\.\"/{z=1} z && /type[[:space:]]+hint;/{ok=1} z && /^};/{z=0} END{exit !ok}" &&
-          ! printf "%s\n" "$conf" | grep -Eq "^[[:space:]]*zone[[:space:]]+\"test\\.?\""'
-        exit_code: 0
-      - command: >-
-          sh -c 'conf="$(named-checkconf -p 2>/dev/null)" &&
-          f="$(printf "%s\n" "$conf" | awk "/zone \"\\.\"/{z=1} z && \$1==\"file\"{gsub(/[\";]/,\"\",\$2); print \$2; exit} z && /^};/{z=0}")" &&
-          test -n "$f" &&
-          if [ "${f#/}" = "$f" ]; then
-            d="$(printf "%s\n" "$conf" | awk "\$1==\"directory\"{gsub(/[\";]/,\"\",\$2); print \$2; exit}")";
-            f="${d:-/etc/bind}/$f";
-          fi &&
-          test -r "$f" &&
-          test "$(grep -Evc "^[[:space:]]*($|;)" "$f")" -gt 0 &&
-          grep -Eq "[[:space:]]A[[:space:]]+10\.2\.0\.30([[:space:]]|$)" "$f" &&
-          grep -Eiq "[[:space:]]AAAA[[:space:]]+fd00:2::30([[:space:]]|$)" "$f" &&
-          ! grep -E "[[:space:]]A[[:space:]]+|[[:space:]]AAAA[[:space:]]+" "$f" |
-            grep -Eiv "10\.2\.0\.30|fd00:2::30"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # Web server: preserve dual-stack addressing/default route and forbid DNS
-    # role. HTTP itself is checked through applications.http above.
-    # -----------------------------------------------------------------------
-    pc1dual:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:1::30/64[[:space:]]")" -eq 1 &&
-          ip -6 route show default | grep -Eq "^default via fd00:1::1 dev eth0"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # Non-role dual-stack client. Either pc3dual address is valid as resolver.
-    # -----------------------------------------------------------------------
-    pc4dual:
-      - command: >-
-          sh -c 'test "$(ip -6 -o addr show dev eth0 scope global | grep -Ec "[[:space:]]fd00:4::30/64[[:space:]]")" -eq 1 &&
-          ip -6 route show default | grep -Eq "^default via fd00:4::1 dev eth0"'
-        exit_code: 0
-      - command: >-
-          sh -c 'test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+(10\.3\.0\.30|fd00:3::30)([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. A +short | grep -qx "10.1.0.30" &&
-          dig www.test. AAAA +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # IPv4-only clients: original stack preserved, only pc3dual is configured
-    # as nameserver, and www.test. is obtained through DNS rather than hosts.
-    # -----------------------------------------------------------------------
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
     pc1v4:
-      - command: >-
-          sh -c 'test -z "$(ip -6 -o addr show dev eth0 scope global)" &&
-          ! ip -6 route show | grep -q "^default[[:space:]]" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+10\.3\.0\.30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. A +short | grep -qx "10.1.0.30"'
-        exit_code: 0
-
-    pc2v4:
-      - command: >-
-          sh -c 'test -z "$(ip -6 -o addr show dev eth0 scope global)" &&
-          ! ip -6 route show | grep -q "^default[[:space:]]" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+10\.3\.0\.30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. A +short | grep -qx "10.1.0.30"'
-        exit_code: 0
-
-    pc3v4:
-      - command: >-
-          sh -c 'test -z "$(ip -6 -o addr show dev eth0 scope global)" &&
-          ! ip -6 route show | grep -q "^default[[:space:]]" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+10\.3\.0\.30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. A +short | grep -qx "10.1.0.30"'
-        exit_code: 0
-
-    pc4v4:
-      - command: >-
-          sh -c 'test -z "$(ip -6 -o addr show dev eth0 scope global)" &&
-          ! ip -6 route show | grep -q "^default[[:space:]]" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+10\.3\.0\.30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. A +short | grep -qx "10.1.0.30"'
-        exit_code: 0
-
-    pc5v4:
-      - command: >-
-          sh -c 'test -z "$(ip -6 -o addr show dev eth0 scope global)" &&
-          ! ip -6 route show | grep -q "^default[[:space:]]" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+10\.3\.0\.30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. A +short | grep -qx "10.1.0.30"'
-        exit_code: 0
-
-    # -----------------------------------------------------------------------
-    # IPv6-only clients: no IPv4 address, IPv6 default gateway preserved,
-    # resolver exclusively fd00:3::30, and AAAA resolution via DNS.
-    # -----------------------------------------------------------------------
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
     pc1v6:
-      - command: >-
-          sh -c 'test -z "$(ip -4 -o addr show dev eth0 scope global)" &&
-          ! ip -4 route show | grep -q "^default[[:space:]]" &&
-          ip -6 route show default | grep -Eq "^default via fd00:1::1 dev eth0" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+fd00:3::30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. AAAA +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
-
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc1dual:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc2v4:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
     pc2v6:
-      - command: >-
-          sh -c 'test -z "$(ip -4 -o addr show dev eth0 scope global)" &&
-          ! ip -4 route show | grep -q "^default[[:space:]]" &&
-          ip -6 route show default | grep -Eq "^default via fd00:2::1 dev eth0" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+fd00:3::30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. AAAA +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
-
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc2dual:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc3v4:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
     pc3v6:
-      - command: >-
-          sh -c 'test -z "$(ip -4 -o addr show dev eth0 scope global)" &&
-          ! ip -4 route show | grep -q "^default[[:space:]]" &&
-          ip -6 route show default | grep -Eq "^default via fd00:3::1 dev eth0" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+fd00:3::30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. AAAA +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
-
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc3dual:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc4v4:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
     pc4v6:
-      - command: >-
-          sh -c 'test -z "$(ip -4 -o addr show dev eth0 scope global)" &&
-          ! ip -4 route show | grep -q "^default[[:space:]]" &&
-          ip -6 route show default | grep -Eq "^default via fd00:4::1 dev eth0" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+fd00:3::30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. AAAA +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
-
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc4dual:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc5v4:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
     pc5v6:
-      - command: >-
-          sh -c 'test -z "$(ip -4 -o addr show dev eth0 scope global)" &&
-          ! ip -4 route show | grep -q "^default[[:space:]]" &&
-          ip -6 route show default | grep -Eq "^default via fd00:5::1 dev eth0" &&
-          test "$(grep -Ec "^[[:space:]]*nameserver[[:space:]]+" /etc/resolv.conf)" -eq 1 &&
-          grep -Eq "^[[:space:]]*nameserver[[:space:]]+fd00:3::30([[:space:]]|$)" /etc/resolv.conf'
-        exit_code: 0
-      - command: >-
-          sh -c '! grep -Eq "(^|[[:space:]])www\.test\.?([[:space:]]|$)" /etc/hosts &&
-          dig www.test. AAAA +short | grep -Eiq "^fd00:1::30$"'
-        exit_code: 0
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+    pc5dual:
+    - 10.1.0.10
+    - 10.2.0.10
+    - 10.3.0.10
+    - 10.4.0.10
+    - 10.5.0.10
+    - fd00:1::20
+    - fd00:2::20
+    - fd00:3::20
+    - fd00:4::20
+    - fd00:5::20
+  # IPv6 secondary addresses, IPv6 static/default routes and router forwarding. Commands
+  # containing pipes are explicitly wrapped in `sh -c`.
+  custom_commands:
+    r1:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:1::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth1 | grep -Fq 'inet6 fd00:ff:12::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth2 | grep -Fq 'inet6 fd00:ff:51::2/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:2::/64 | grep -Fq 'fd00:2::/64 via fd00:ff:12::2 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:3::/64 | grep -Fq 'fd00:3::/64 via fd00:ff:12::2 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:4::/64 | grep -Fq 'fd00:4::/64 via fd00:ff:51::1 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:5::/64 | grep -Fq 'fd00:5::/64 via fd00:ff:51::1 dev eth2'"
+      exit_code: 0
+    - command: sysctl -n net.ipv4.ip_forward
+      regex_match: ^1\s*$
+    - command: sysctl -n net.ipv6.conf.all.forwarding
+      regex_match: ^1\s*$
+    r2:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:2::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth1 | grep -Fq 'inet6 fd00:ff:12::2/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth2 | grep -Fq 'inet6 fd00:ff:23::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:1::/64 | grep -Fq 'fd00:1::/64 via fd00:ff:12::1 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:3::/64 | grep -Fq 'fd00:3::/64 via fd00:ff:23::2 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:4::/64 | grep -Fq 'fd00:4::/64 via fd00:ff:23::2 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:5::/64 | grep -Fq 'fd00:5::/64 via fd00:ff:12::1 dev eth1'"
+      exit_code: 0
+    - command: sysctl -n net.ipv4.ip_forward
+      regex_match: ^1\s*$
+    - command: sysctl -n net.ipv6.conf.all.forwarding
+      regex_match: ^1\s*$
+    r3:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:3::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth1 | grep -Fq 'inet6 fd00:ff:23::2/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth2 | grep -Fq 'inet6 fd00:ff:34::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:1::/64 | grep -Fq 'fd00:1::/64 via fd00:ff:23::1 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:2::/64 | grep -Fq 'fd00:2::/64 via fd00:ff:23::1 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:4::/64 | grep -Fq 'fd00:4::/64 via fd00:ff:34::2 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:5::/64 | grep -Fq 'fd00:5::/64 via fd00:ff:34::2 dev eth2'"
+      exit_code: 0
+    - command: sysctl -n net.ipv4.ip_forward
+      regex_match: ^1\s*$
+    - command: sysctl -n net.ipv6.conf.all.forwarding
+      regex_match: ^1\s*$
+    r4:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:4::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth1 | grep -Fq 'inet6 fd00:ff:34::2/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth2 | grep -Fq 'inet6 fd00:ff:45::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:1::/64 | grep -Fq 'fd00:1::/64 via fd00:ff:45::2 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:2::/64 | grep -Fq 'fd00:2::/64 via fd00:ff:34::1 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:3::/64 | grep -Fq 'fd00:3::/64 via fd00:ff:34::1 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:5::/64 | grep -Fq 'fd00:5::/64 via fd00:ff:45::2 dev eth2'"
+      exit_code: 0
+    - command: sysctl -n net.ipv4.ip_forward
+      regex_match: ^1\s*$
+    - command: sysctl -n net.ipv6.conf.all.forwarding
+      regex_match: ^1\s*$
+    r5:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:5::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth1 | grep -Fq 'inet6 fd00:ff:45::2/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 -o addr show dev eth2 | grep -Fq 'inet6 fd00:ff:51::1/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:1::/64 | grep -Fq 'fd00:1::/64 via fd00:ff:51::2 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:2::/64 | grep -Fq 'fd00:2::/64 via fd00:ff:51::2 dev eth2'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:3::/64 | grep -Fq 'fd00:3::/64 via fd00:ff:45::1 dev eth1'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show fd00:4::/64 | grep -Fq 'fd00:4::/64 via fd00:ff:45::1 dev eth1'"
+      exit_code: 0
+    - command: sysctl -n net.ipv4.ip_forward
+      regex_match: ^1\s*$
+    - command: sysctl -n net.ipv6.conf.all.forwarding
+      regex_match: ^1\s*$
+    pc1v6:
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:1::1 dev eth0'"
+      exit_code: 0
+    pc1dual:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:1::30/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:1::1 dev eth0'"
+      exit_code: 0
+    pc2v6:
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:2::1 dev eth0'"
+      exit_code: 0
+    pc2dual:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:2::30/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:2::1 dev eth0'"
+      exit_code: 0
+    pc3v6:
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:3::1 dev eth0'"
+      exit_code: 0
+    pc3dual:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:3::30/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:3::1 dev eth0'"
+      exit_code: 0
+    pc4v6:
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:4::1 dev eth0'"
+      exit_code: 0
+    pc4dual:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:4::30/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:4::1 dev eth0'"
+      exit_code: 0
+    pc5v6:
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:5::1 dev eth0'"
+      exit_code: 0
+    pc5dual:
+    - command: sh -c "ip -6 -o addr show dev eth0 | grep -Fq 'inet6 fd00:5::30/64'"
+      exit_code: 0
+    - command: sh -c "ip -6 route show default | grep -Fq 'default via fd00:5::1 dev eth0'"
+      exit_code: 0

@@ -16,6 +16,7 @@ from benchmark_core.preflight import preflight
 from benchmark_core.scenario_loader import discover_scenarios
 from benchmark_core.prompts import PROMPT_TYPES, missing_prompts
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, execute_skill_modes, mode_details
+from benchmark_core import terminal_ui
 
 
 def main() -> int:
@@ -106,38 +107,37 @@ def main() -> int:
             aggregate(runs_root, config.path(config.data["results"]["directory"]))
         return 1 if failed else 0
     skill_mode = ("all" if args.all_skill_modes else (args.skill_mode or "dns_only")) if agent == "codex" else None
-    if skill_mode and skill_mode != "all":
-        selection = mode_details(skill_mode)
-        print(f"Skill mode: {skill_mode}", flush=True)
-        print(f"Available skills: {', '.join(selection.available_skills) or 'none'}", flush=True)
-        print(f"Forced skills: {', '.join(selection.forced_skills) or 'none'}", flush=True)
-    elif skill_mode == "all":
-        print("Skill mode batch: all (5 independent runs)", flush=True)
     preflight(config, agent, skill_mode=skill_mode,
               scenario_ids=[scenario.scenario_id for scenario in selected])
     if args.preflight:
         print("Prerequisiti disponibili; nessuna chiamata modello eseguita.")
         return 0
     failed = False
+    result_rows = []
     try:
-        for scenario in selected:
+        for scenario_index, scenario in enumerate(selected, start=1):
+            if args.all:
+                terminal_ui.scenario_header(scenario_index, len(selected), scenario.scenario_id, args.prompt_type)
             for repetition in range(1, repetitions + 1):
                 selected_mode = skill_mode or ("dns_only" if agent == "codex" else "no_skill")
 
                 def execute_mode(mode: str, index: int, total: int) -> bool:
-                    if selected_mode == "all":
-                        print(f"[{index}/{total}] Skill mode: {mode}", flush=True)
-                    if agent == "codex" and selected_mode == "all":
-                        selection = mode_details(mode)
-                        print(f"Available skills: {', '.join(selection.available_skills) or 'none'}", flush=True)
-                        print(f"Forced skills: {', '.join(selection.forced_skills) or 'none'}", flush=True)
                     try:
                         effective_mode = mode if agent == "codex" else None
-                        run = run_one(config, scenario, agent, args.prompt_type, skill_mode=effective_mode)
+                        selection = mode_details(mode) if agent == "codex" else None
+                        context = {"run_index": index, "run_total": total} if selected_mode == "all" else {}
+                        if selection:
+                            context.update({"available_skills": list(selection.available_skills),
+                                            "forced_skills": list(selection.forced_skills)})
+                        run = run_one(
+                            config, scenario, agent, args.prompt_type, skill_mode=effective_mode,
+                            ui_context=context, event_callback=terminal_ui.render_run_event,
+                        )
                         metadata = json.loads((run / "manifest.json").read_text())
+                        result_rows.append({"run": run, "metrics": json.loads((run / "evaluation/metrics.json").read_text())})
                         return metadata["pipeline_state"] != "COMPLETED"
                     except Exception as exc:
-                        print(f"Errore preparazione run {scenario.scenario_id} ({mode}): {exc}", file=sys.stderr)
+                        terminal_ui.pipeline_state("PREPARATION_FAILED", error=str(exc))
                         return True
 
                 for mode, _, _, run_failed in execute_skill_modes(selected_mode, execute_mode):
@@ -146,6 +146,8 @@ def main() -> int:
                         return 1
     finally:
         aggregate(config.root / "runs", config.path(config.data["results"]["directory"]))
+        terminal_ui.pipeline_event("Results aggregated")
+        terminal_ui.result_table(result_rows, multiple_scenarios=bool(args.all))
     # Un task scorretto con checker completato è un risultato valido, non un errore CLI.
     return 1 if failed else 0
 

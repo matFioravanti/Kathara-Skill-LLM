@@ -178,22 +178,5 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
 
 
 def print_run_summary(metrics: dict) -> None:
-    checker = metrics["checker"]
-    if checker["passed"] is None or checker["total"] is None:
-        checker_text = "n/a"
-    else:
-        checker_text = f"{checker['passed']}/{checker['total']}"
-        if checker["pass_rate"] is not None:
-            checker_text += f" ({checker['pass_rate']:.2%})"
-    total_tokens = metrics["tokens"].get("total")
-    selected = metrics.get("selected_skills")
-    elapsed = metrics["timing"].get("total_seconds")
-    elapsed_text = f"{elapsed:.1f} s" if elapsed is not None else "n/a"
-    print(
-        f"Scenario: {metrics.get('scenario')} | Mode: {metrics.get('skill_mode')} | "
-        f"Run: r{metrics.get('run_number') or 0:03d} | Status: {metrics.get('status')} | "
-        f"Checker: {checker_text} | Time: {elapsed_text} | "
-        f"Tokens: {total_tokens if total_tokens is not None else 'n/a'} | "
-        f"Skills selected: {';'.join(selected) if selected else ('none' if selected == [] else 'n/a')}",
-        flush=True,
-    )
+    from .terminal_ui import result
+    result(metrics)

@@ -16,7 +16,8 @@ from .run_metrics import make_metrics, print_run_summary
 from .workspace import component_versions, create_workspace, logical_run_id, tree_hash, utc_now, write_json
 
 
-def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None) -> Path:
+def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
+            ui_context: dict | None = None, event_callback=None) -> Path:
     skill_mode = skill_mode or "dns_only"
     skill_selection = mode_details(skill_mode)
     correction_source = scenario.correction
@@ -30,6 +31,13 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
     run_number = int(run.name[1:])
     run_id = logical_run_id(scenario.scenario_id, prompt_type, skill_mode, run_number)
     paths = skill_paths(config)
+    context = ui_context or {}
+    if event_callback:
+        event_callback(
+            "run_started", scenario_id=scenario.scenario_id, prompt_type=prompt_type,
+            agent=agent, skill_mode=skill_mode, repetition=run_number,
+            run_path=run.relative_to(config.root).as_posix(), **context,
+        )
     manifest = {
         "run_id": run_id, "run_number": run_number,
         "scenario_id": scenario.scenario_id, "prompt_type": prompt_type, "repetition": run_number,
@@ -70,7 +78,18 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         manifest["pipeline_state"] = value
         manifest["state_history"].append({"state": value, "timestamp": utc_now()})
         write_json(run / "manifest.json", manifest)
-        print(f"{run_id}: {value}", flush=True)
+        if value.startswith("CHECKER"):
+            details = "logs/checker_stderr.log"
+        elif value.startswith("AUT"):
+            details = "logs/aut/stderr.log"
+        else:
+            details = "evaluation/correction.yaml"
+        if event_callback:
+            event_callback(
+                "pipeline_state", state=value, error=manifest.get("pipeline_error"),
+                details_path=str(run / details) if value.endswith("FAILED") or value in (
+                    "CORRECTION_MISSING", "CORRECTION_INVALID") else None,
+            )
 
     stage = "AUT"
     checker_seconds = None
@@ -106,6 +125,9 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             raise RuntimeError("Lo snapshot della correction non corrisponde all'input letto prima della run.")
         manifest["correction_snapshot"] = "evaluation/correction.yaml"
         write_json(run / "manifest.json", manifest)
+        if event_callback:
+            event_callback("correction_ready")
+            event_callback("checker_running")
         checker_started = time.monotonic()
         try:
             outcome = run_checker(config, run, correction_snapshot)
@@ -151,7 +173,9 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             checker_outcome=checker_outcome,
         )
         write_json(evaluation / "metrics.json", metrics)
-        print_run_summary(metrics)
+        if event_callback:
+            event_callback("metrics_collected")
+            event_callback("result", metrics={**metrics, "task_success": manifest.get("task_success")})
     return run
 
 
@@ -234,7 +258,7 @@ def reevaluate_run(config, run: Path) -> Path:
     if outcome is None:
         metrics["checker"] = {"passed": None, "failed": None, "total": None, "pass_rate": None}
     write_json(evaluation / "metrics.json", metrics)
-    print_run_summary(metrics)
+    print_run_summary({**metrics, "task_success": manifest.get("task_success")})
     return run
 
 
