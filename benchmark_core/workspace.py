@@ -58,9 +58,9 @@ def component_versions() -> dict:
             ("inspect-ai", "inspect-swe", "kathara-lab-checker", "kathara", "pandas", "PyYAML", "openai")}
 
 
-def allocate_run_directory(runs: Path, scenario_id: str, skill_mode: str) -> tuple[Path, int]:
+def allocate_run_directory(runs: Path, scenario_id: str, prompt_type: str, skill_mode: str) -> tuple[Path, int]:
     """Alloca atomicamente il prossimo rNNN per scenario e modalità."""
-    mode_root = runs / scenario_id / skill_mode
+    mode_root = runs / scenario_id / prompt_type / skill_mode
     mode_root.mkdir(parents=True, exist_ok=True)
     existing = [
         int(match.group(1))
@@ -77,18 +77,18 @@ def allocate_run_directory(runs: Path, scenario_id: str, skill_mode: str) -> tup
             run_number += 1
 
 
-def logical_run_id(scenario_id: str, skill_mode: str, run_number: int) -> str:
-    return f"{scenario_id}__{skill_mode}__r{run_number:03d}"
+def logical_run_id(scenario_id: str, prompt_type: str, skill_mode: str, run_number: int) -> str:
+    return f"{scenario_id}__{prompt_type}__{skill_mode}__r{run_number:03d}"
 
 
-def create_workspace(runs: Path, scenario, skill_mode: str) -> Path:
-    run, _ = allocate_run_directory(runs, scenario.scenario_id, skill_mode)
+def create_workspace(runs: Path, scenario, prompt_type: str, skill_mode: str, prompt: str) -> Path:
+    run, _ = allocate_run_directory(runs, scenario.scenario_id, prompt_type, skill_mode)
     for folder in ("input", "lab", "logs/aut", "logs/generator", "results"):
         (run / folder).mkdir(parents=True, exist_ok=False)
     # input/lab: copia immutabile del baseline originale
     copy_lab(scenario.lab, run / "input/lab")
     # input/prompt.md: prompt originale per riferimento
-    (run / "input/prompt.md").write_text(scenario.prompt, encoding="utf-8")
+    (run / "input/prompt.md").write_text(prompt, encoding="utf-8")
     # lab/: unica copia modificabile — l'AUT lavora qui
     copy_lab(scenario.lab, run / "lab")
     return run

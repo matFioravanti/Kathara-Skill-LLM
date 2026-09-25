@@ -8,30 +8,30 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from .checker_runner import checker_test_rows
 
 RUN_COLUMNS = [
-    "scenario", "skill_mode", "run_number", "run_id", "agent", "model", "reasoning_effort",
+    "scenario", "prompt_type", "prompt_sha256", "skill_mode", "run_number", "run_id", "agent", "model", "reasoning_effort",
     "available_skills", "forced_skills", "selected_skills", "status",
     "agent_seconds", "checker_seconds", "total_seconds",
     "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
     "tests_passed", "tests_failed", "tests_total", "pass_rate", "correction_sha256",
 ]
 CHECK_COLUMNS = [
-    "scenario", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
+    "scenario", "prompt_type", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
 ]
 SUMMARY_COLUMNS = [
-    "scenario", "skill_mode", "runs", "successful_runs", "failed_runs",
+    "scenario", "prompt_type", "skill_mode", "runs", "successful_runs", "failed_runs",
     "mean_pass_rate", "min_pass_rate", "max_pass_rate",
     "mean_agent_seconds", "mean_total_seconds",
     "mean_input_tokens", "mean_output_tokens", "mean_total_tokens", "skill_selection_rate",
 ]
 EXCEL_COLUMN_ORDER = {
     "Runs": [
-        "scenario", "skill_mode", "run_number", "status", "pass_rate", "tests_passed",
+        "scenario", "prompt_type", "skill_mode", "run_number", "status", "pass_rate", "tests_passed",
         "tests_failed", "tests_total", "agent_seconds", "checker_seconds", "total_seconds",
         "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
         "agent", "model", "reasoning_effort", "available_skills", "forced_skills",
         "selected_skills", "run_id", "correction_sha256",
     ],
-    "Checks": ["scenario", "skill_mode", "run_number", "passed", "test_description", "reason", "run_id"],
+    "Checks": ["scenario", "prompt_type", "skill_mode", "run_number", "passed", "test_description", "reason", "run_id"],
     "Summary": [
         "scenario", "skill_mode", "runs", "successful_runs", "failed_runs", "mean_pass_rate",
         "min_pass_rate", "max_pass_rate", "skill_selection_rate", "mean_agent_seconds",
@@ -65,6 +65,8 @@ def _row_from_metrics(metrics: dict) -> dict:
     checker = metrics.get("checker") or {}
     return {
         "scenario": metrics.get("scenario"),
+        "prompt_type": metrics.get("prompt_type"),
+        "prompt_sha256": metrics.get("prompt_sha256"),
         "skill_mode": metrics.get("skill_mode"),
         "run_number": metrics.get("run_number"),
         "run_id": metrics.get("run_id"),
@@ -96,7 +98,7 @@ def _run_sort_key(row: dict):
         number = int(row.get("run_number"))
     except (TypeError, ValueError):
         number = -1
-    return (str(row.get("scenario") or ""), str(row.get("skill_mode") or ""), number,
+    return (str(row.get("scenario") or ""), str(row.get("prompt_type") or ""), str(row.get("skill_mode") or ""), number,
             str(row.get("run_id") or ""))
 
 
@@ -109,11 +111,11 @@ def _mean(values):
 def _summary_rows(metrics_rows: list[dict]) -> list[dict]:
     groups = {}
     for metrics in metrics_rows:
-        key = (metrics.get("scenario"), metrics.get("skill_mode"))
+        key = (metrics.get("scenario"), metrics.get("prompt_type"), metrics.get("skill_mode"))
         groups.setdefault(key, []).append(metrics)
     result = []
-    for (scenario, skill_mode), group in sorted(
-        groups.items(), key=lambda item: (str(item[0][0] or ""), str(item[0][1] or ""))
+    for (scenario, prompt_type, skill_mode), group in sorted(
+        groups.items(), key=lambda item: tuple(str(value or "") for value in item[0])
     ):
         pass_rates = [_number((row.get("checker") or {}).get("pass_rate")) for row in group]
         pass_rates = [value for value in pass_rates if value is not None]
@@ -126,7 +128,7 @@ def _summary_rows(metrics_rows: list[dict]) -> list[dict]:
             selection_rate = (sum(bool(row["selected_skills"]) for row in valid) / len(valid)
                               if valid else None)
         result.append({
-            "scenario": scenario, "skill_mode": skill_mode, "runs": len(group),
+            "scenario": scenario, "prompt_type": prompt_type, "skill_mode": skill_mode, "runs": len(group),
             "successful_runs": successful, "failed_runs": len(group) - successful,
             "mean_pass_rate": _mean(pass_rates),
             "min_pass_rate": min(pass_rates) if pass_rates else None,
@@ -156,8 +158,8 @@ def _atomic_excel(path: Path, frames: tuple[pd.DataFrame, pd.DataFrame, pd.DataF
     separator = Side(style="medium", color="4472C4")
     bottom_border = Border(bottom=separator)
     widths = {
-        "scenario": 22, "skill_mode": 18, "run_number": 13, "run_id": 42,
-        "agent": 15, "model": 24, "reasoning_effort": 18, "available_skills": 32,
+        "scenario": 22, "prompt_type": 14, "skill_mode": 18, "run_number": 13, "run_id": 42,
+        "prompt_sha256": 68, "agent": 15, "model": 24, "reasoning_effort": 18, "available_skills": 32,
         "forced_skills": 32, "selected_skills": 32, "status": 20, "passed": 12,
         "test_description": 52, "reason": 52, "correction_sha256": 68,
     }
@@ -229,15 +231,15 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd
             relative_parts = metrics_path.relative_to(runs).parts
         except ValueError:
             continue
-        if (len(relative_parts) != 5 or relative_parts[3:] != ("evaluation", "metrics.json")
-                or not relative_parts[2].startswith("r")
-                or not relative_parts[2][1:].isdigit()):
+        if (len(relative_parts) != 6 or relative_parts[4:] != ("evaluation", "metrics.json")
+                or not relative_parts[3].startswith("r")
+                or not relative_parts[3][1:].isdigit()):
             continue
         run = metrics_path.parent.parent
         metrics = _read_json(metrics_path)
         metrics_rows.append(metrics)
         run_rows.append(_row_from_metrics(metrics))
-        identity = {key: metrics.get(key) for key in ("scenario", "skill_mode", "run_number", "run_id")}
+        identity = {key: metrics.get(key) for key in ("scenario", "prompt_type", "skill_mode", "run_number", "run_id")}
         check_rows.extend({**identity, **check} for check in _saved_check_rows(run))
 
     run_rows.sort(key=_run_sort_key)

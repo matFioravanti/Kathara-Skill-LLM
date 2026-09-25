@@ -4,7 +4,7 @@ Reproducible benchmark for evaluating CLI LLM agents that configure DNS and web 
 
 ## Architecture
 
-Each scenario contains a prompt, a manual correction, and an immutable initial lab. For each skill mode, the runner allocates a fresh run at `runs/<scenario>/<skill_mode>/rNNN`, preserves the baseline in `input/lab`, creates the editable copy in `lab`, and launches the Agent Under Test (AUT) on the host Mac. Run numbers increase independently for each scenario and mode.
+Each scenario contains a prompt, a manual correction, and an immutable initial lab. For each skill mode, the runner allocates a fresh run at `runs/<scenario>/<prompt_type>/<skill_mode>/rNNN`, preserves the baseline in `input/lab`, creates the editable copy in `lab`, and launches the Agent Under Test (AUT) on the host Mac. Run numbers increase independently for each scenario and mode.
 
 The **active agent** of a run is unique: the same agent is used both as the AUT and as the Correction Generator. It is not possible to combine different agents within the same run.
 
@@ -51,7 +51,7 @@ checker results ───┘
 
 ### Inspect AI Telemetry
 
-At the end of the AUT, a dedicated adapter reads `result.json` and `events.jsonl` and builds a native Inspect AI log file (`runs/<scenario>/<skill_mode>/rNNN/logs/aut/<scenario>__<skill_mode>__rNNN.eval`). The log records input/output tokens, reasoning tokens, `input_tokens_cache_read`, duration, tool calls, errors, and run metadata. The file can be inspected with `inspect log dump` or `read_eval_log`.
+At the end of the AUT, a dedicated adapter reads `result.json` and `events.jsonl` and builds a native Inspect AI log file (`runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/logs/aut/<scenario>__<skill_mode>__rNNN.eval`). The log records input/output tokens, reasoning tokens, `input_tokens_cache_read`, duration, tool calls, errors, and run metadata. The file can be inspected with `inspect log dump` or `read_eval_log`.
 
 Inspect AI operates exclusively as a telemetry system: it does not wrap the AUT CLI, does not read, generate, or influence `correction.yaml`, and does not participate in lab evaluation. Kathara Lab Checker determines whether checks pass in a fully deterministic manner. The two systems remain separate and are associated only during aggregation through the unique `run_id` identifier.
 
@@ -117,18 +117,18 @@ Codex experiments select one Skill mode with `--skill-mode`:
 
 The default is `dns_only`, preserving the previous Codex run behavior. Each run receives only the selected skills under `lab/.codex/skills/`. User or parent-scope copies with the same names stop the preflight to prevent contaminated runs. Modes that include Creation require its canonical file at `skills/kathara-creation/SKILL.md`.
 
-`--skill-mode all` is a sequential orchestrator for the five modes above. It validates every required skill before starting, then creates one independent run per mode in the listed order. Each run saves its actual mode in its manifest.
+`--all-skill-modes` is a sequential orchestrator for the five modes above. It validates every required skill before starting, then creates one independent run per mode in the listed order. Each run saves its actual mode in its manifest.
 
 Reevaluate existing runs in place with the updated canonical correction, without model calls or new LLM tokens:
 
 ```bash
-python scripts/run_benchmark.py --scenario example_dns_001 --skill-mode all --rerun-correction
+python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --rerun-correction
 ```
 
 With `--all`, every existing scenario is reevaluated. A specific `--skill-mode` limits reevaluation to that mode; omitting it selects all five. All existing `rNNN` directories are processed in order. `--repetitions` is not accepted in this mode.
 
 ```bash
-python scripts/run_benchmark.py --scenario example_dns_001 --agent codex --skill-mode auto
+python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --agent codex --skill-mode auto
 ```
 
 ## Scenarios
@@ -137,15 +137,21 @@ Scenarios are discovered automatically under `scenarios/` and are valid when the
 
 ```text
 scenarios/<scenario_id>/
-├── prompt.txt
+├── correction.yaml
 ├── correction.yaml
 └── lab/
     └── lab.conf
 ```
 
-Each scenario must contain `prompt.txt`, `correction.yaml`, and `lab/lab.conf`. The correction is manual and shared across agents, Skill modes, and repetitions. Keep it at the scenario root, outside `lab/`; it is never included in the AUT workspace. The prompt is normative, and the lab is copied for each run.
+Each scenario must contain `correction.yaml` and `lab/lab.conf`. Prompts live only in `prompt/<scenario_id>/<prompt_type>.md` (T1–T6). The correction is manual and shared across agents, Skill modes, and repetitions. Keep it at the scenario root, outside `lab/`; it is never included in the AUT workspace. The prompt is normative, and the lab is copied for each run.
 
-Custom prompts can be organized freely under `prompt/`. Pass the file to use with `--prompt-path`; relative paths are resolved from the project root. Without this option, the runner uses `scenarios/<scenario_id>/prompt.txt`.
+The only prompt source is `prompt/<scenario_id>/<prompt_type>.md`; select it with `--prompt-type T1`.
+
+```bash
+python scripts/run_benchmark.py --scenario static-routing-5routers --prompt-type T1 --skill-mode dns_only
+python scripts/run_benchmark.py --scenario static-routing-5routers --prompt-type T1 --all-skill-modes
+python scripts/run_benchmark.py --all --prompt-type T1 --all-skill-modes --repetitions 5
+```
 
 ## Execution
 
@@ -169,23 +175,23 @@ Run a scenario:
 
 ```bash
 # With Codex
-python scripts/run_benchmark.py --scenario example_dns_001 --agent codex
+python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --agent codex
 
 # Custom prompt
-python scripts/run_benchmark.py --scenario example_dns_001 --prompt-path prompt/my_lab/prompt.txt --agent codex
+python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --agent codex
 
 # With Antigravity
-python scripts/run_benchmark.py --config benchmark_antigravity.yaml --scenario example_dns_001 --agent antigravity
+python scripts/run_benchmark.py --config benchmark_antigravity.yaml --scenario example_dns_001 --prompt-type T1 --agent antigravity
 ```
 
 Run five repetitions of all scenarios:
 
 ```bash
 # With Codex
-python scripts/run_benchmark.py --all --repetitions 5 --agent codex
+python scripts/run_benchmark.py --all --prompt-type T1 --all-skill-modes --repetitions 5 --agent codex
 
 # With Antigravity
-python scripts/run_benchmark.py --config benchmark_antigravity.yaml --all --repetitions 5 --agent antigravity
+python scripts/run_benchmark.py --config benchmark_antigravity.yaml --all --prompt-type T1 --repetitions 5 --agent antigravity
 ```
 
 `benchmark.continue_on_error` determines whether to continue after an infrastructure-level failed run. An AUT solution evaluated and rejected by the checker is a completed run, not a command error.
@@ -195,7 +201,7 @@ python scripts/run_benchmark.py --config benchmark_antigravity.yaml --all --repe
 Each run uses a readable logical ID, for example `example_dns_001__dns_only__r001`, and preserves:
 
 ```text
-runs/<scenario>/<skill_mode>/rNNN/
+runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/
 ├── manifest.json
 ├── input/
 │   ├── lab/          # original immutable baseline
@@ -206,7 +212,7 @@ runs/<scenario>/<skill_mode>/rNNN/
 │   └── metrics.json     # normalized processed metrics for this run
 ├── results/          # checker CSV reports
 └── logs/
-    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt.txt, <scenario>__<skill_mode>__rNNN.eval
+    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt_sent.md, <scenario>__<prompt_type>__<skill_mode>__rNNN.eval
     ├── diff.json
     ├── checker_invocation.json
     ├── checker_execution.json
@@ -233,7 +239,7 @@ python scripts/aggregate_results.py
 python scripts/analyze_results.py
 ```
 
-The aggregator reads only runs with the `scenario/skill_mode/rNNN/evaluation/metrics.json` layout and saved checker reports. It does not invoke Codex, Docker, Kathara, or the checker, and can be rerun safely with `python scripts/aggregate_results.py`. It writes `runs.csv`, `checks.csv`, and `summary.csv`, plus `benchmark.xlsx` with `Runs`, `Checks`, and `Summary` sheets. The workbook groups rows by scenario with separator lines, formatted headers, filters, and adjusted column widths; other files in `results/` are preserved.
+The aggregator reads only runs with the `scenario/prompt_type/skill_mode/rNNN/evaluation/metrics.json` layout and saved checker reports. It does not invoke Codex, Docker, Kathara, or the checker, and can be rerun safely with `python scripts/aggregate_results.py`. It writes `runs.csv`, `checks.csv`, and `summary.csv`, plus `benchmark.xlsx` with `Runs`, `Checks`, and `Summary` sheets. The workbook groups rows by scenario with separator lines, formatted headers, filters, and adjusted column widths; other files in `results/` are preserved.
 
 ## Smoke Check
 

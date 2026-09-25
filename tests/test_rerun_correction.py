@@ -12,7 +12,7 @@ from benchmark_core.pipeline import reevaluate_run
 
 class RerunCorrectionTest(unittest.TestCase):
     def fixture(self, root, mode="dns_only", number=1):
-        run = root / f"runs/example_dns_001/{mode}/r{number:03d}"
+        run = root / f"runs/example_dns_001/T1/{mode}/r{number:03d}"
         for folder in ("lab", "input/lab", "logs/aut", "results/lab", "evaluation"):
             (run / folder).mkdir(parents=True, exist_ok=True)
         (run / "lab/lab.conf").write_text("lab original\n")
@@ -21,14 +21,14 @@ class RerunCorrectionTest(unittest.TestCase):
         (run / "logs/aut/result.json").write_text('{"duration_seconds":3}\n')
         (run / "results/results.csv").write_text("OLD COUNTS\n")
         (run / "results/lab/lab_result_all.csv").write_text("old tests\n")
-        manifest = {"run_id": f"example_dns_001__{mode}__r{number:03d}", "run_number": number,
+        manifest = {"run_id": f"example_dns_001__T1__{mode}__r{number:03d}", "run_number": number,
                     "scenario_id": "example_dns_001", "skill_mode": mode, "agent": "codex",
                     "model": "test-model", "available_skills": [], "forced_skills": [],
                     "aut_execution_success": True, "checker_execution_success": True,
                     "task_success": True, "pipeline_state": "COMPLETED", "state_history": [],
                     "correction_sha256": "old"}
         (run / "manifest.json").write_text(json.dumps(manifest))
-        old_metrics = {"scenario": "example_dns_001", "skill_mode": mode, "run_number": number,
+        old_metrics = {"scenario": "example_dns_001", "prompt_type": "T1", "skill_mode": mode, "run_number": number,
                        "run_id": manifest["run_id"], "agent": "codex", "model": "test-model",
                        "available_skills": [], "forced_skills": [], "status": "COMPLETED",
                        "agent_success": True, "tokens": {"total": 17},
@@ -109,6 +109,9 @@ class RerunCorrectionTest(unittest.TestCase):
             root = Path(tmp)
             scenario_dir = root / "scenarios/example_dns_001"
             scenario_dir.mkdir(parents=True)
+            prompt_dir = root / "prompt/example_dns_001"
+            prompt_dir.mkdir(parents=True)
+            (prompt_dir / "T1.md").write_text("prompt")
             scenario = Scenario("example_dns_001", scenario_dir)
             config = Config(root, {"aut": {"agent": "codex"}, "benchmark": {"repetitions": 1},
                                    "results": {"directory": "results"}})
@@ -119,7 +122,7 @@ class RerunCorrectionTest(unittest.TestCase):
             def fake_reevaluate(_config, path):
                 expected.append(path)
                 return path
-            with patch("sys.argv", ["run_benchmark.py", "--scenario", "example_dns_001", "--skill-mode", "all", "--rerun-correction"]), \
+            with patch("sys.argv", ["run_benchmark.py", "--scenario", "example_dns_001", "--prompt-type", "T1", "--rerun-correction"]), \
                  patch.object(run_benchmark, "load_config", return_value=config), \
                  patch.object(run_benchmark, "discover_scenarios", return_value={scenario.scenario_id: scenario}), \
                  patch.object(run_benchmark, "preflight") as preflight, \
@@ -180,13 +183,14 @@ class RerunCorrectionTest(unittest.TestCase):
             headers = {cell.value: cell.column for cell in runs[1]}
             run_ids = [runs.cell(row, headers["run_id"]).value for row in range(2, runs.max_row + 1)
                        if runs.cell(row, headers["run_id"]).value]
-            self.assertEqual(run_ids.count("example_dns_001__dns_only__r001"), 1)
+            self.assertEqual(run_ids.count("example_dns_001__T1__dns_only__r001"), 1)
             self.assertEqual(runs.cell(2, headers["tests_passed"]).value, 2)
             self.assertEqual(runs.cell(2, headers["tests_total"]).value, 2)
             self.assertEqual(runs.cell(2, headers["pass_rate"]).value, 1.0)
             checks = workbook["Checks"]
-            check_descriptions = [checks.cell(row, 5).value for row in range(2, checks.max_row + 1)
-                                  if checks.cell(row, 5).value]
+            description_column = [cell.value for cell in checks[1]].index("test_description") + 1
+            check_descriptions = [checks.cell(row, description_column).value for row in range(2, checks.max_row + 1)
+                                  if checks.cell(row, description_column).value]
             self.assertEqual(check_descriptions, ["new check A", "new check B"])
             self.assertEqual(workbook["Summary"]["C2"].value, 1)
             self.assertEqual(workbook["Runs"].freeze_panes, "A2")

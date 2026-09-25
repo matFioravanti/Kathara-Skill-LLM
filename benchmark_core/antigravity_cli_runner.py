@@ -100,7 +100,7 @@ def run_antigravity(*, prompt: str, workspace: Path, logs: Path, timeout: int,
     final_message, usage = parse_events(stdout)
     (logs / "events.jsonl").write_text(stdout, encoding="utf-8")
     (logs / "stderr.log").write_text(stderr, encoding="utf-8")
-    (logs / "prompt.txt").write_text(prompt, encoding="utf-8")
+    (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
     
     result = AntigravityRun(command, returncode, stdout, stderr, duration, timed_out, final_message, usage)
     write_json(logs / "invocation.json", {

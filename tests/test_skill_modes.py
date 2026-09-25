@@ -134,7 +134,7 @@ class SkillModesTest(unittest.TestCase):
 
     def test_execution_prompt_keeps_original_scenario_file_bytes_unchanged(self):
         with tempfile.TemporaryDirectory() as temporary:
-            prompt_file = Path(temporary) / "prompt.txt"
+            prompt_file = Path(temporary) / "T1.md"
             original_bytes = b"Configure this lab.\r\nKeep this exact line.\r\n"
             prompt_file.write_bytes(original_bytes)
             prompt = prompt_file.read_text(encoding="utf-8")

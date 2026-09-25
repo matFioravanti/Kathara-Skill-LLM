@@ -73,7 +73,7 @@ class ResultCollectionTest(unittest.TestCase):
             write_json(logs / "result.json", {"duration_seconds": 4.25, "returncode": 0})
             metadata = {
                 "scenario_id": "example_dns_001", "skill_mode": "auto", "run_number": 1,
-                "run_id": "example_dns_001__auto__r001", "agent": "codex", "model": "codex-local",
+                "run_id": "example_dns_001__T1__auto__r001", "agent": "codex", "model": "codex-local",
                 "reasoning_effort": "low", "available_skills": ["kathara-creation", "kathara-dns"],
                 "forced_skills": [], "aut_execution_success": True, "pipeline_state": "COMPLETED",
                 "correction_sha256": "abc",
@@ -115,14 +115,14 @@ class ResultCollectionTest(unittest.TestCase):
                            selected: list[str] | None, pass_rate: float | None,
                            input_tokens: int | None, output_tokens: int | None,
                            scenario: str = "example_dns_001"):
-        run = root / f"{scenario}/auto/r{run_number:03d}"
+        run = root / f"{scenario}/T1/auto/r{run_number:03d}"
         evaluation = run / "evaluation"
         evaluation.mkdir(parents=True)
         logs = run / "logs/aut"
         logs.mkdir(parents=True)
         metrics = {
-            "scenario": scenario, "skill_mode": "auto", "run_number": run_number,
-            "run_id": f"{scenario}__auto__r{run_number:03d}", "agent": "codex",
+            "scenario": scenario, "prompt_type": "T1", "skill_mode": "auto", "run_number": run_number,
+            "run_id": f"{scenario}__T1__auto__r{run_number:03d}", "agent": "codex",
             "model": "codex-local", "reasoning_effort": "low",
             "available_skills": ["kathara-creation", "kathara-dns"], "forced_skills": [],
             "selected_skills": selected, "skill_trace_available": True,
@@ -165,7 +165,7 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(len(run_frame), 3)
             self.assertEqual(len(checks_frame), 2)
             self.assertEqual(list(checks_frame.columns), [
-                "scenario", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
+                "scenario", "prompt_type", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
             ])
             self.assertEqual(run_frame.loc[0, "available_skills"],
                              "kathara-creation;kathara-dns")
@@ -183,7 +183,7 @@ class ResultCollectionTest(unittest.TestCase):
             with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
                 self.assertEqual(workbook.sheet_names, ["Runs", "Checks", "Summary"])
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Runs").loc[0, "run_id"],
-                                 "example_dns_001__auto__r001")
+                                 "example_dns_001__T1__auto__r001")
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Checks").shape[0], 2)
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Summary").loc[0, "runs"], 3)
 
@@ -248,11 +248,30 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertIsNone(runs_sheet["A3"].value)
             self.assertEqual(runs_sheet["A4"].value, "example_dns_002")
             run_id_column = [cell.value for cell in runs_sheet[1]].index("run_id") + 1
-            self.assertEqual(runs_sheet.cell(2, run_id_column).value, "example_dns_001__auto__r001")
-            self.assertEqual(runs_sheet.cell(4, run_id_column).value, "example_dns_002__auto__r001")
+            self.assertEqual(runs_sheet.cell(2, run_id_column).value, "example_dns_001__T1__auto__r001")
+            self.assertEqual(runs_sheet.cell(4, run_id_column).value, "example_dns_002__T1__auto__r001")
             self.assertEqual(runs_sheet["A2"].border.bottom.style, "medium")
             self.assertEqual(runs_sheet["A1"].fill.fgColor.rgb[-6:], "17365D")
             self.assertEqual(runs_sheet.freeze_panes, "A2")
+
+    def test_summary_keeps_prompt_types_in_separate_groups(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            runs = root / "runs"
+            first = self._write_metrics_run(runs, 1, status="COMPLETED", selected=[], pass_rate=1.0,
+                                            input_tokens=10, output_tokens=5)
+            second = root / "runs/example_dns_001/T2/auto/r001"
+            second.parent.mkdir(parents=True)
+            import shutil
+            shutil.copytree(first, second)
+            metrics_path = second / "evaluation/metrics.json"
+            metrics = json.loads(metrics_path.read_text())
+            metrics["prompt_type"] = "T2"
+            metrics["run_id"] = "example_dns_001__T2__auto__r001"
+            metrics_path.write_text(json.dumps(metrics))
+            _, _, summary = aggregate(runs, root / "results")
+            self.assertEqual(set(summary["prompt_type"]), {"T1", "T2"})
+            self.assertEqual(summary["runs"].tolist(), [1, 1])
 
 
 if __name__ == "__main__":

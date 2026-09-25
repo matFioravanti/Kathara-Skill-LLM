@@ -21,6 +21,7 @@ def main():
     from benchmark_core.codex_cli_runner import command_for
     from benchmark_core.diff_metrics import compute_diff
     from benchmark_core.scenario_loader import discover_scenarios
+    from benchmark_core.prompts import resolve_prompt
     from benchmark_core.workspace import component_versions, create_workspace, logical_run_id, tree_hash, write_json
 
     for module in ("kathara_lab_checker", "pandas", "yaml"):
@@ -78,9 +79,11 @@ def main():
         }
         scenario = next(iter(scenarios.values()))
         before = tree_hash(scenario.lab)
-        run = create_workspace(tmp / "runs", scenario, "dns_only")
-        run_id = logical_run_id(scenario.scenario_id, "dns_only", 1)
-        assert run.relative_to(tmp / "runs").as_posix() == f"{scenario.scenario_id}/dns_only/r001"
+        resolved_prompt = resolve_prompt(ROOT, scenario.scenario_id, "T1")
+        prompt_text = resolved_prompt.read_text(encoding="utf-8")
+        run = create_workspace(tmp / "runs", scenario, "T1", "dns_only", prompt_text)
+        run_id = logical_run_id(scenario.scenario_id, "T1", "dns_only", 1)
+        assert run.relative_to(tmp / "runs").as_posix() == f"{scenario.scenario_id}/T1/dns_only/r001"
         lab = run / "lab"
         assert tree_hash(lab) == before
         (lab / "smoke.txt").write_text("one\ntwo\n")
@@ -153,7 +156,7 @@ def main():
 
         from benchmark_core.run_metrics import make_metrics
         metadata = {
-            "run_id": run_id, "run_number": 1, "skill_mode": "dns_only",
+            "run_id": run_id, "run_number": 1, "skill_mode": "dns_only", "prompt_type": "T1",
             "scenario_id": scenario.scenario_id, "agent": "codex", "model": "smoke",
             "reasoning_effort": "low", "available_skills": ["kathara-dns"],
             "forced_skills": ["kathara-dns"], "pipeline_state": "COMPLETED",

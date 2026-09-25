@@ -1,6 +1,2 @@
-Inserisci qui i prompt personalizzati, organizzati nelle cartelle che preferisci.
-Per usare un file, passa il suo percorso al runner con --prompt-path, ad esempio:
-
-python scripts/run_benchmark.py --scenario example_dns_001 --prompt-path prompt/mio_lab/prompt.txt
-
-Il percorso relativo è risolto dalla directory principale del progetto.
+La fonte unica dei prompt è prompt/<scenario_id>/<prompt_type>.md, con prompt_type T1-T6.
+Esempio: python scripts/run_benchmark.py --scenario Lab_1_No_DNS --prompt-type T1 --skill-mode dns_only

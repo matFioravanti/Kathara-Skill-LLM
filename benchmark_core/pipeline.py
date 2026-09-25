@@ -16,20 +16,23 @@ from .run_metrics import make_metrics, print_run_summary
 from .workspace import component_versions, create_workspace, logical_run_id, tree_hash, utc_now, write_json
 
 
-def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path:
+def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None) -> Path:
     skill_mode = skill_mode or "dns_only"
     skill_selection = mode_details(skill_mode)
     correction_source = scenario.correction
     correction_source_relative = correction_path(config.root, scenario.scenario_id).relative_to(config.root).as_posix()
     correction_content, correction_sha256 = read_correction(correction_source)
+    from .prompts import resolve_prompt
+    resolved_prompt = resolve_prompt(config.root, scenario.scenario_id, prompt_type)
+    prompt_text = resolved_prompt.read_text(encoding="utf-8")
     total_started = time.monotonic()
-    run = create_workspace(config.root / "runs", scenario, skill_mode)
+    run = create_workspace(config.root / "runs", scenario, prompt_type, skill_mode, prompt_text)
     run_number = int(run.name[1:])
-    run_id = logical_run_id(scenario.scenario_id, skill_mode, run_number)
+    run_id = logical_run_id(scenario.scenario_id, prompt_type, skill_mode, run_number)
     paths = skill_paths(config)
     manifest = {
         "run_id": run_id, "run_number": run_number,
-        "scenario_id": scenario.scenario_id, "repetition": run_number,
+        "scenario_id": scenario.scenario_id, "prompt_type": prompt_type, "repetition": run_number,
         "run_directory": str(run.relative_to(config.root / "runs")),
         "agent": agent, "agent_version": config.data["aut"]["version"], "model": config.model(),
         "reasoning_effort": config.reasoning_effort(),
@@ -45,8 +48,8 @@ def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path
         "checker_execution_success": None, "task_success": None,
         "source_lab_sha256": tree_hash(scenario.lab),
         "input_lab_sha256": tree_hash(run / "input/lab"),
-        "prompt_sha256": hashlib.sha256(scenario.prompt.encode()).hexdigest(),
-        "prompt_source": str(scenario.prompt_file or (scenario.directory / "prompt.txt")),
+        "prompt_sha256": hashlib.sha256(resolved_prompt.read_bytes()).hexdigest(),
+        "prompt_source": str(resolved_prompt.relative_to(config.root)),
         "dns_skill_sha256": hashlib.sha256(paths["dns"].read_bytes()).hexdigest(),
         "dns_skill_bundle_sha256": tree_hash(paths["dns"].parent),
         "correction_source": correction_source_relative,
@@ -76,7 +79,7 @@ def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path
         state("PENDING")
         state("AUT_RUNNING")
         try:
-            run_aut(config, scenario, run, agent, skill_mode=skill_mode, run_id=run_id)
+            run_aut(config, scenario, run, agent, prompt_text, skill_mode=skill_mode, run_id=run_id)
             manifest["aut_execution_success"] = True
         finally:
             manifest["aut_measurement_ended_at"] = utc_now()

@@ -145,6 +145,20 @@ def run_checker(config, run: Path, correction: Path) -> dict:
                         shutil.copy2(source, target)
                 write_json(run / "logs" / "checker_execution.json",
                            {"returncode": code, "timed_out": timed_out})
+                # Il checker può lasciare container attivi in caso di errore o interruzione.
+                # Pulisci il solo lab temporaneo, senza toccare gli altri Docker.
+                cleanup = subprocess.run(
+                    ["kathara", "lclean"], cwd=tmp_labs / "lab",
+                    capture_output=True, text=True, timeout=60,
+                )
+                write_json(run / "logs" / "kathara_cleanup.json", {
+                    "command": ["kathara", "lclean"], "returncode": cleanup.returncode,
+                    "stdout": cleanup.stdout, "stderr": cleanup.stderr,
+                })
+                if cleanup.returncode:
+                    raise RuntimeError(
+                        f"Pulizia del laboratorio Kathara fallita: {cleanup.stderr.strip() or cleanup.stdout.strip()}"
+                    )
         # tempdir rimossa automaticamente all'uscita del with
 
     if timed_out or code != 0:

@@ -18,7 +18,7 @@ class ManualCorrectionsTest(unittest.TestCase):
     def test_checker_command_uses_run_lab_and_explicit_correction_snapshot(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            run = root / "runs/example_dns_001/dns_only/r001"
+            run = root / "runs/example_dns_001/T1/dns_only/r001"
             (run / "lab").mkdir(parents=True)
             (run / "lab/lab.conf").write_text("client[0]=h1\n")
             (run / "logs").mkdir()
@@ -45,6 +45,7 @@ class ManualCorrectionsTest(unittest.TestCase):
                 return Process()
 
             with patch("benchmark_core.checker_runner.subprocess.Popen", side_effect=spawn_checker) as spawn, \
+                 patch("benchmark_core.checker_runner.subprocess.run", return_value=type("Cleanup", (), {"returncode": 0, "stdout": "", "stderr": ""})()), \
                  patch("benchmark_core.checker_runner.parse_reports", return_value=({"task_success": True}, [])):
                 result = run_checker(config, run, correction)
             command = spawn.call_args.args[0]
@@ -73,7 +74,6 @@ class ManualCorrectionsTest(unittest.TestCase):
             root = Path(temporary) / "scenarios"
             scenario_dir = root / "example_dns_001"
             (scenario_dir / "lab").mkdir(parents=True)
-            (scenario_dir / "prompt.txt").write_text("Configure DNS")
             (scenario_dir / "lab/lab.conf").write_text("client[0]=h1\n")
             with self.assertRaisesRegex(ValueError, "correction.yaml"):
                 discover_scenarios(root)
@@ -101,6 +101,9 @@ class ManualCorrectionsTest(unittest.TestCase):
             scenario_dir = root / "scenarios/example_dns_001"
             scenario_dir.mkdir(parents=True)
             scenario = Scenario("example_dns_001", scenario_dir)
+            prompt_dir = root / "prompt/example_dns_001"
+            prompt_dir.mkdir(parents=True)
+            (prompt_dir / "T1.md").write_text("prompt")
             config = Config(root, {
                 "aut": {"agent": "codex"},
                 "benchmark": {"repetitions": 1, "continue_on_error": True},
@@ -109,7 +112,7 @@ class ManualCorrectionsTest(unittest.TestCase):
             error = MissingCorrectionError(
                 "Missing correction file: scenarios/example_dns_001/correction.yaml\nNo model run was started."
             )
-            with patch("sys.argv", ["run_benchmark.py", "--all", "--skill-mode", "all"]), \
+            with patch("sys.argv", ["run_benchmark.py", "--all", "--prompt-type", "T1", "--all-skill-modes"]), \
                  patch.object(run_benchmark, "load_config", return_value=config), \
                  patch.object(run_benchmark, "discover_scenarios", return_value={scenario.scenario_id: scenario}), \
                  patch.object(run_benchmark, "preflight", side_effect=error) as check, \

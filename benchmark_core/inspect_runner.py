@@ -8,7 +8,7 @@ from .inspect_adapter import create_inspect_eval_log
 from .skill_modes import execution_prompt, prepare_skill_workspace
 
 
-def run_aut(config, scenario, run: Path, agent: str, skill_mode: str | None = None,
+def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill_mode: str | None = None,
             run_id: str | None = None) -> Path:
     validate_agent(agent)
     lab = run / "lab"
@@ -16,7 +16,7 @@ def run_aut(config, scenario, run: Path, agent: str, skill_mode: str | None = No
     if agent == "codex":
         skill_mode = skill_mode or "dns_only"
         prepare_skill_workspace(lab, config, skill_mode)
-        prompt = execution_prompt(skill_mode, scenario.prompt)
+        prompt = execution_prompt(skill_mode, original_prompt)
         run_codex(
             prompt=prompt,
             workspace=lab,
@@ -33,7 +33,7 @@ def run_aut(config, scenario, run: Path, agent: str, skill_mode: str | None = No
             f"Leggi e segui la skill DNS in {skill}. Non produrre JSON di modifiche, non delegare a Python "
             "la scrittura dei file e non generare correction.yaml. Non avviare Kathara: "
             "il laboratorio sarà avviato dal checker dopo questa chiamata.\n\n"
-            "REQUISITI ORIGINALI:\n" + scenario.prompt
+            "REQUISITI ORIGINALI:\n" + original_prompt
         )
         run_antigravity(
             prompt=prompt,

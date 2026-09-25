@@ -14,6 +14,7 @@ from benchmark_core.config import load_config, verify_skills
 from benchmark_core.pipeline import reevaluate_run, run_one
 from benchmark_core.preflight import preflight
 from benchmark_core.scenario_loader import discover_scenarios
+from benchmark_core.prompts import PROMPT_TYPES, missing_prompts
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, execute_skill_modes, mode_details
 
 
@@ -29,11 +30,17 @@ def main() -> int:
                         help="Rivaluta in-place le run esistenti senza eseguire l'AUT")
     parser.add_argument("--agent", choices=list(AGENTS))
     parser.add_argument("--skill-mode", choices=SKILL_MODE_CHOICES, default=None,
-                        help="Modalità Skill Codex; `all` esegue in serie le cinque modalità (default: dns_only)")
+                        help="Modalità Skill Codex (default: dns_only)")
+    parser.add_argument("--all-skill-modes", action="store_true",
+                        help="Esegue in sequenza tutte le cinque modalità Skill Codex")
+    parser.add_argument("--prompt-type", choices=PROMPT_TYPES,
+                        help="Tipo di prompt da usare (obbligatorio per i benchmark AUT)")
     parser.add_argument("--repetitions", type=int)
-    parser.add_argument("--prompt-path", type=Path,
-                        help="File di prompt da usare al posto di scenarios/<id>/prompt.txt")
     args = parser.parse_args()
+    if args.all_skill_modes and args.skill_mode is not None:
+        parser.error("--all-skill-modes è mutuamente esclusivo con --skill-mode")
+    if args.all_skill_modes and (args.check_skills or args.preflight or args.rerun_correction):
+        parser.error("--all-skill-modes è disponibile solo per benchmark AUT")
     if args.rerun_correction and args.repetitions is not None:
         parser.error("--repetitions non è applicabile con --rerun-correction")
     if args.rerun_correction and (args.check_skills or args.preflight):
@@ -44,7 +51,7 @@ def main() -> int:
             print(f"OK {name}: {path}")
         return 0
     agent = config.data["aut"]["agent"]
-    if args.skill_mode is not None and agent != "codex":
+    if (args.skill_mode is not None or args.all_skill_modes) and agent != "codex":
         parser.error("--skill-mode è supportato solo con --agent codex.")
     if args.agent and args.agent != agent:
         parser.error(
@@ -58,26 +65,28 @@ def main() -> int:
     if not (args.scenario or args.all or args.preflight or args.check_skills):
         parser.error("specificare --scenario, --all, --check-skills o --preflight")
     scenarios = discover_scenarios(config.root / "scenarios")
-    if args.prompt_path:
-        prompt_path = args.prompt_path if args.prompt_path.is_absolute() else config.root / args.prompt_path
-        prompt_path = prompt_path.resolve()
-        if not prompt_path.is_file():
-            parser.error(f"File prompt non trovato: {prompt_path}")
-        if not prompt_path.read_text(encoding="utf-8").strip():
-            parser.error(f"File prompt vuoto: {prompt_path}")
-        scenarios = {key: scenario.with_prompt(prompt_path) for key, scenario in scenarios.items()}
     if args.scenario and args.scenario not in scenarios:
         parser.error(f"Scenario non trovato: {args.scenario}; disponibili: {', '.join(scenarios)}")
     if not scenarios:
         raise ValueError("Nessuno scenario trovato.")
+    if not (args.preflight or args.check_skills):
+        if not args.prompt_type:
+            parser.error("--prompt-type è obbligatorio per eseguire un benchmark")
+    selected = [scenarios[args.scenario]] if args.scenario else list(scenarios.values())
+    if args.prompt_type and not args.rerun_correction:
+        missing = missing_prompts(config.root, [scenario.scenario_id for scenario in selected], args.prompt_type)
+        if missing:
+            parser.error("Prompt mancanti:\n" + "\n".join(missing))
     if args.rerun_correction:
         selected_ids = {scenario.scenario_id for scenario in ([scenarios[args.scenario]] if args.scenario else scenarios.values())}
-        modes = ("no_skill", "creation_only", "dns_only", "both_forced", "auto") if args.skill_mode in (None, "all") else (args.skill_mode,)
+        if not args.prompt_type:
+            parser.error("--prompt-type è obbligatorio con --rerun-correction")
+        modes = ("no_skill", "creation_only", "dns_only", "both_forced", "auto") if args.skill_mode is None else (args.skill_mode,)
         runs_root = config.root / "runs"
         candidates = []
         for scenario_id in sorted(selected_ids):
             for mode in modes:
-                mode_root = runs_root / scenario_id / mode
+                mode_root = runs_root / scenario_id / args.prompt_type / mode
                 candidates.extend(sorted((p for p in mode_root.iterdir()
                                           if p.is_dir() and re.fullmatch(r"r\d{3,}", p.name)),
                                          key=lambda p: int(p.name[1:])) if mode_root.is_dir() else [])
@@ -96,7 +105,7 @@ def main() -> int:
         finally:
             aggregate(runs_root, config.path(config.data["results"]["directory"]))
         return 1 if failed else 0
-    skill_mode = (args.skill_mode or "dns_only") if agent == "codex" else None
+    skill_mode = ("all" if args.all_skill_modes else (args.skill_mode or "dns_only")) if agent == "codex" else None
     if skill_mode and skill_mode != "all":
         selection = mode_details(skill_mode)
         print(f"Skill mode: {skill_mode}", flush=True)
@@ -104,7 +113,6 @@ def main() -> int:
         print(f"Forced skills: {', '.join(selection.forced_skills) or 'none'}", flush=True)
     elif skill_mode == "all":
         print("Skill mode batch: all (5 independent runs)", flush=True)
-    selected = [scenarios[args.scenario]] if args.scenario else list(scenarios.values())
     preflight(config, agent, skill_mode=skill_mode,
               scenario_ids=[scenario.scenario_id for scenario in selected])
     if args.preflight:
@@ -125,7 +133,7 @@ def main() -> int:
                         print(f"Forced skills: {', '.join(selection.forced_skills) or 'none'}", flush=True)
                     try:
                         effective_mode = mode if agent == "codex" else None
-                        run = run_one(config, scenario, agent, skill_mode=effective_mode)
+                        run = run_one(config, scenario, agent, args.prompt_type, skill_mode=effective_mode)
                         metadata = json.loads((run / "manifest.json").read_text())
                         return metadata["pipeline_state"] != "COMPLETED"
                     except Exception as exc:

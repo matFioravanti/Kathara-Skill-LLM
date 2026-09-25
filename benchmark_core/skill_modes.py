@@ -30,7 +30,7 @@ SKILL_MODES = {
     "auto": SkillMode(("kathara-creation", "kathara-dns"), (), ""),
 }
 SKILL_MODE_ORDER = tuple(SKILL_MODES)
-SKILL_MODE_CHOICES = (*SKILL_MODE_ORDER, "all")
+SKILL_MODE_CHOICES = SKILL_MODE_ORDER
 
 SKILL_CONFIG_KEYS = {
     "kathara-creation": "creation_skill",

@@ -151,6 +151,9 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     correction_sha = metadata.get("correction_sha256")
     return {
         "scenario": metadata.get("scenario_id", metadata.get("scenario")),
+        "scenario_id": metadata.get("scenario_id", metadata.get("scenario")),
+        "prompt_type": metadata.get("prompt_type"),
+        "prompt_sha256": metadata.get("prompt_sha256"),
         "skill_mode": metadata.get("skill_mode"),
         "run_number": metadata.get("run_number", metadata.get("repetition")),
         "run_id": metadata.get("run_id"),

@@ -164,8 +164,8 @@ def create_inspect_eval_log(
         )
 
         prompt_text = prompt
-        if not prompt_text and (logs / "prompt.txt").exists():
-            prompt_text = (logs / "prompt.txt").read_text(encoding="utf-8")
+        if not prompt_text and (logs / "prompt_sent.md").exists():
+            prompt_text = (logs / "prompt_sent.md").read_text(encoding="utf-8")
 
         sample = EvalSample(
             id=run_id,

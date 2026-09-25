@@ -18,26 +18,27 @@ class RunLayoutTest(unittest.TestCase):
             scenario_dir = root / "scenarios/example_dns_001"
             (scenario_dir / "lab").mkdir(parents=True)
             (scenario_dir / "lab/lab.conf").write_text("client[0]=h1\n")
-            (scenario_dir / "prompt.txt").write_text("Configure DNS")
+            (root / "prompt/example_dns_001").mkdir(parents=True, exist_ok=True)
+            (root / "prompt/example_dns_001/T1.md").write_text("Configure DNS")
             with self.assertRaisesRegex(ValueError, "Modalità Skill non valida"):
-                run_one(None, Scenario("example_dns_001", scenario_dir), "codex", "all")
-            self.assertFalse((root / "runs/example_dns_001/all").exists())
+                run_one(None, Scenario("example_dns_001", scenario_dir), "codex", "T1", "all")
+            self.assertFalse((root / "runs/example_dns_001/T1/all").exists())
 
     def test_numbering_is_independent_per_scenario_and_mode_and_never_overwrites(self):
         with tempfile.TemporaryDirectory() as temporary:
             runs = Path(temporary) / "runs"
-            first, n1 = allocate_run_directory(runs, "scenario_a", "dns_only")
+            first, n1 = allocate_run_directory(runs, "scenario_a", "T1", "dns_only")
             first_marker = first / "keep.txt"
             first_marker.write_text("preserve")
-            second, n2 = allocate_run_directory(runs, "scenario_a", "dns_only")
-            other_mode, n3 = allocate_run_directory(runs, "scenario_a", "auto")
-            other_scenario, n4 = allocate_run_directory(runs, "scenario_b", "dns_only")
+            second, n2 = allocate_run_directory(runs, "scenario_a", "T1", "dns_only")
+            other_mode, n3 = allocate_run_directory(runs, "scenario_a", "T1", "auto")
+            other_scenario, n4 = allocate_run_directory(runs, "scenario_b", "T1", "dns_only")
 
             self.assertEqual((n1, n2, n3, n4), (1, 2, 1, 1))
-            self.assertEqual(first.relative_to(runs).as_posix(), "scenario_a/dns_only/r001")
-            self.assertEqual(second.relative_to(runs).as_posix(), "scenario_a/dns_only/r002")
-            self.assertEqual(other_mode.relative_to(runs).as_posix(), "scenario_a/auto/r001")
-            self.assertEqual(other_scenario.relative_to(runs).as_posix(), "scenario_b/dns_only/r001")
+            self.assertEqual(first.relative_to(runs).as_posix(), "scenario_a/T1/dns_only/r001")
+            self.assertEqual(second.relative_to(runs).as_posix(), "scenario_a/T1/dns_only/r002")
+            self.assertEqual(other_mode.relative_to(runs).as_posix(), "scenario_a/T1/auto/r001")
+            self.assertEqual(other_scenario.relative_to(runs).as_posix(), "scenario_b/T1/dns_only/r001")
             self.assertEqual(first_marker.read_text(), "preserve")
 
     def test_all_creates_five_separate_effective_mode_paths_in_order(self):
@@ -46,13 +47,14 @@ class RunLayoutTest(unittest.TestCase):
             source = root / "scenarios/example_dns_001"
             (source / "lab").mkdir(parents=True)
             (source / "lab/lab.conf").write_text("client[0]=h1\n")
-            (source / "prompt.txt").write_text("Configure DNS")
+            (root / "prompt/example_dns_001").mkdir(parents=True, exist_ok=True)
+            (root / "prompt/example_dns_001/T1.md").write_text("Configure DNS")
             scenario = Scenario("example_dns_001", source)
             created = []
 
             def run(mode, index, total):
                 self.assertEqual(len(created), index - 1, "orchestrazione non sequenziale")
-                path = create_workspace(root / "runs", scenario, mode)
+                path = create_workspace(root / "runs", scenario, "T1", mode, "Configure DNS")
                 created.append((mode, path))
                 return path
 
@@ -61,7 +63,7 @@ class RunLayoutTest(unittest.TestCase):
             self.assertEqual([mode for mode, _ in created], expected)
             self.assertEqual(
                 [path.relative_to(root / "runs").as_posix() for _, path in created],
-                [f"example_dns_001/{mode}/r001" for mode in expected],
+                [f"example_dns_001/T1/{mode}/r001" for mode in expected],
             )
             self.assertFalse((root / "runs/example_dns_001/all").exists())
             self.assertEqual(len({path for _, path in created}), 5)
@@ -74,7 +76,8 @@ class RunLayoutTest(unittest.TestCase):
             scenario_dir = root / "scenarios/example_dns_001"
             (scenario_dir / "lab").mkdir(parents=True)
             (scenario_dir / "lab/lab.conf").write_text("client[0]=h1\n")
-            (scenario_dir / "prompt.txt").write_text("Configure DNS")
+            (root / "prompt/example_dns_001").mkdir(parents=True, exist_ok=True)
+            (root / "prompt/example_dns_001/T1.md").write_text("Configure DNS")
             scenario = Scenario("example_dns_001", scenario_dir)
             for rel in ("skills/dns/SKILL.md", "scenarios/example_dns_001/correction.yaml"):
                 path = root / rel
@@ -93,7 +96,7 @@ class RunLayoutTest(unittest.TestCase):
                  patch.object(pipeline, "validate_correction", return_value="sha"), \
                  patch.object(pipeline, "run_checker", return_value={"task_success": True}) as checker:
                 for mode in modes:
-                    runs.append(pipeline.run_one(config, scenario, "codex", mode))
+                    runs.append(pipeline.run_one(config, scenario, "codex", "T1", mode))
 
             import json
             self.assertEqual([call.args[2] for call in checker.call_args_list],
@@ -105,9 +108,12 @@ class RunLayoutTest(unittest.TestCase):
             run = runs[2]
             manifest = json.loads((run / "manifest.json").read_text())
             metrics = json.loads((run / "evaluation/metrics.json").read_text())
-            self.assertEqual(manifest["run_id"], "example_dns_001__dns_only__r001")
+            self.assertEqual(manifest["run_id"], "example_dns_001__T1__dns_only__r001")
             self.assertEqual(manifest["skill_mode"], "dns_only")
-            self.assertEqual(manifest["run_directory"], "example_dns_001/dns_only/r001")
+            self.assertEqual(manifest["prompt_type"], "T1")
+            self.assertEqual(metrics["prompt_type"], "T1")
+            self.assertEqual(manifest["prompt_sha256"], __import__("hashlib").sha256(b"Configure DNS").hexdigest())
+            self.assertEqual(manifest["run_directory"], "example_dns_001/T1/dns_only/r001")
             self.assertEqual(manifest["run_number"], 1)
             self.assertNotIn("all", manifest["run_id"])
             self.assertEqual(manifest["correction_source"], "scenarios/example_dns_001/correction.yaml")
@@ -119,7 +125,7 @@ class RunLayoutTest(unittest.TestCase):
                              [run / "evaluation/correction.yaml" for run in runs])
             self.assertNotIn("CORRECTION_GENERATION", str(manifest["state_history"]))
             self.assertEqual(manifest["artifacts"]["inspect_eval_log"],
-                             "logs/aut/example_dns_001__dns_only__r001.eval")
+                             "logs/aut/example_dns_001__T1__dns_only__r001.eval")
             self.assertEqual(metrics["run_id"], manifest["run_id"])
             self.assertEqual(metrics["correction_sha256"], "sha")
 
