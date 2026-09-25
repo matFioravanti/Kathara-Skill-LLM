@@ -145,6 +145,8 @@ scenarios/<scenario_id>/
 
 Ogni scenario deve contenere `prompt.txt`, `correction.yaml` e `lab/lab.conf`. La correction è manuale e condivisa tra agenti, modalità Skill e ripetizioni; resta nella root dello scenario, fuori da `lab/`, e non entra mai nel workspace AUT. Il prompt è la fonte normativa e il laboratorio viene copiato per ogni run.
 
+I prompt personalizzati possono essere organizzati liberamente sotto `prompt/`. `--prompt-path` indica il file da usare per la run; il percorso relativo è risolto dalla root del progetto. Senza questa opzione viene usato `scenarios/<scenario_id>/prompt.txt`.
+
 ## Esecuzione
 
 Assicurati di aver attivato l'ambiente virtuale prima di eseguire qualsiasi comando:
@@ -168,6 +170,9 @@ Eseguire uno scenario:
 ```bash
 # Con Codex
 python scripts/run_benchmark.py --scenario example_dns_001 --agent codex
+
+# Prompt personalizzato
+python scripts/run_benchmark.py --scenario example_dns_001 --prompt-path prompt/mio_lab/prompt.txt --agent codex
 
 # Con Antigravity
 python scripts/run_benchmark.py --config benchmark_antigravity.yaml --scenario example_dns_001 --agent antigravity

@@ -31,6 +31,8 @@ def main() -> int:
     parser.add_argument("--skill-mode", choices=SKILL_MODE_CHOICES, default=None,
                         help="Modalità Skill Codex; `all` esegue in serie le cinque modalità (default: dns_only)")
     parser.add_argument("--repetitions", type=int)
+    parser.add_argument("--prompt-path", type=Path,
+                        help="File di prompt da usare al posto di scenarios/<id>/prompt.txt")
     args = parser.parse_args()
     if args.rerun_correction and args.repetitions is not None:
         parser.error("--repetitions non è applicabile con --rerun-correction")
@@ -56,6 +58,14 @@ def main() -> int:
     if not (args.scenario or args.all or args.preflight or args.check_skills):
         parser.error("specificare --scenario, --all, --check-skills o --preflight")
     scenarios = discover_scenarios(config.root / "scenarios")
+    if args.prompt_path:
+        prompt_path = args.prompt_path if args.prompt_path.is_absolute() else config.root / args.prompt_path
+        prompt_path = prompt_path.resolve()
+        if not prompt_path.is_file():
+            parser.error(f"File prompt non trovato: {prompt_path}")
+        if not prompt_path.read_text(encoding="utf-8").strip():
+            parser.error(f"File prompt vuoto: {prompt_path}")
+        scenarios = {key: scenario.with_prompt(prompt_path) for key, scenario in scenarios.items()}
     if args.scenario and args.scenario not in scenarios:
         parser.error(f"Scenario non trovato: {args.scenario}; disponibili: {', '.join(scenarios)}")
     if not scenarios:

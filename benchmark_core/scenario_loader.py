@@ -7,6 +7,7 @@ import re
 class Scenario:
     scenario_id: str
     directory: Path
+    prompt_file: Path | None = None
 
     @property
     def lab(self) -> Path:
@@ -18,7 +19,10 @@ class Scenario:
 
     @property
     def prompt(self) -> str:
-        return (self.directory / "prompt.txt").read_text(encoding="utf-8")
+        return (self.prompt_file or (self.directory / "prompt.txt")).read_text(encoding="utf-8")
+
+    def with_prompt(self, prompt_file: Path) -> "Scenario":
+        return Scenario(self.scenario_id, self.directory, prompt_file.resolve())
 
 
 def discover_scenarios(directory: Path) -> dict[str, Scenario]:

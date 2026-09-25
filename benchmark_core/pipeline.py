@@ -46,6 +46,7 @@ def run_one(config, scenario, agent: str, skill_mode: str | None = None) -> Path
         "source_lab_sha256": tree_hash(scenario.lab),
         "input_lab_sha256": tree_hash(run / "input/lab"),
         "prompt_sha256": hashlib.sha256(scenario.prompt.encode()).hexdigest(),
+        "prompt_source": str(scenario.prompt_file or (scenario.directory / "prompt.txt")),
         "dns_skill_sha256": hashlib.sha256(paths["dns"].read_bytes()).hexdigest(),
         "dns_skill_bundle_sha256": tree_hash(paths["dns"].parent),
         "correction_source": correction_source_relative,
