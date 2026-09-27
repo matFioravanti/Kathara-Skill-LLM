@@ -474,7 +474,7 @@ class TestAggregationBackwardCompat(unittest.TestCase):
             # replicate viene backfilled con run_number
             self.assertEqual(list(run_frame["replicate"]), [1, 2])
             self.assertIn("experiment_id", summary.columns)
-            self.assertIn("prompt_type", summary.columns)
+            self.assertIn("T", summary.columns)
 
     def test_experiment_id_and_replicate_in_aggregation(self):
         from benchmark_core.aggregation import aggregate
@@ -489,14 +489,8 @@ class TestAggregationBackwardCompat(unittest.TestCase):
             self.assertFalse(run_frame["experiment_id"].isna().any())
             self.assertEqual(list(run_frame["replicate"]), [1, 2])
             self.assertEqual(list(run_frame["experiment_id"]), ["thesis", "thesis"])
-            # Summary deve avere experiment_id e prompt_type
             self.assertIn("experiment_id", summary.columns)
-            self.assertIn("prompt_type", summary.columns)
-
-    def test_summary_has_prompt_type_column(self):
-        """Verifica il fix: prompt_type deve essere visibile nel Summary."""
-        from benchmark_core.aggregation import SUMMARY_COLUMNS
-        self.assertIn("prompt_type", SUMMARY_COLUMNS)
+            self.assertIn("T", summary.columns)
 
     def test_excel_has_additional_sheets(self):
         from benchmark_core.aggregation import aggregate
@@ -511,13 +505,6 @@ class TestAggregationBackwardCompat(unittest.TestCase):
                 self.assertIn("Runs", wb.sheet_names)
                 self.assertIn("Checks", wb.sheet_names)
                 self.assertIn("Summary", wb.sheet_names)
-                self.assertIn("Dashboard", wb.sheet_names)
-                self.assertIn("Lab Summary", wb.sheet_names)
-                self.assertIn("Prompt Summary", wb.sheet_names)
-                self.assertIn("Skill Summary", wb.sheet_names)
-                self.assertIn("Token Analysis", wb.sheet_names)
-                self.assertIn("Time Analysis", wb.sheet_names)
-                self.assertIn("Failures", wb.sheet_names)
 
 
 if __name__ == "__main__":

@@ -158,7 +158,7 @@ class RerunCorrectionTest(unittest.TestCase):
             from openpyxl import load_workbook
             before = load_workbook(out / "benchmark.xlsx")
             self.assertEqual(before["Runs"].freeze_panes, "A2")
-            self.assertEqual(before["Runs"]["A1"].fill.fgColor.rgb[-6:], "17365D")
+            self.assertEqual(before["Runs"]["A1"].fill.fgColor.rgb[-6:], "2F5597")
 
             def new_checker(_config, _run, _snapshot):
                 (reports / "results.csv").write_text(
@@ -181,8 +181,8 @@ class RerunCorrectionTest(unittest.TestCase):
             workbook = load_workbook(out / "benchmark.xlsx", data_only=True)
             runs = workbook["Runs"]
             headers = {cell.value: cell.column for cell in runs[1]}
-            run_ids = [runs.cell(row, headers["run_id"]).value for row in range(2, runs.max_row + 1)
-                       if runs.cell(row, headers["run_id"]).value]
+            run_ids = [runs.cell(row, headers["ID"]).value for row in range(2, runs.max_row + 1)
+                       if runs.cell(row, headers["ID"]).value]
             self.assertEqual(run_ids.count("example_dns_001__T1__dns_only__r001"), 1)
             self.assertEqual(runs.cell(2, headers["checks_passed"]).value, 2)
             self.assertEqual(runs.cell(2, headers["checks_total"]).value, 2)
@@ -195,7 +195,7 @@ class RerunCorrectionTest(unittest.TestCase):
             summary_headers = {cell.value: cell.column for cell in workbook["Summary"][1]}
             self.assertEqual(workbook["Summary"].cell(2, summary_headers["total_runs"]).value, 1)
             self.assertEqual(workbook["Runs"].freeze_panes, "A2")
-            self.assertEqual(workbook["Runs"]["A1"].fill.fgColor.rgb[-6:], "17365D")
+            self.assertEqual(workbook["Runs"]["A1"].fill.fgColor.rgb[-6:], "2F5597")
 
 
 if __name__ == "__main__":

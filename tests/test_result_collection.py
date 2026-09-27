@@ -192,9 +192,9 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(len(run_frame), 3)
             self.assertEqual(len(checks_frame), 2)
             self.assertEqual(list(checks_frame.columns), [
-                "experiment_id", "scenario", "prompt_type", "skill_mode",
+                "ID", "Lab", "T", "experiment_id", "skill_mode",
                 "repetition", "replicate",
-                "agent", "model", "run_id",
+                "agent", "model",
                 "category", "test_description", "passed", "reason",
             ])
             self.assertEqual(checks_frame.loc[0, "category"], "other")
@@ -216,7 +216,7 @@ class ResultCollectionTest(unittest.TestCase):
                 self.assertIn("Runs", workbook.sheet_names)
                 self.assertIn("Checks", workbook.sheet_names)
                 self.assertIn("Summary", workbook.sheet_names)
-                self.assertEqual(pd.read_excel(workbook, sheet_name="Runs").loc[0, "run_id"],
+                self.assertEqual(pd.read_excel(workbook, sheet_name="Runs").loc[0, "ID"],
                                  "example_dns_001__T1__auto__r001")
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Checks").shape[0], 2)
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Summary").loc[0, "total_runs"], 3)
@@ -305,13 +305,13 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertIn("Summary", workbook.sheetnames)
             runs_sheet = workbook["Runs"]
             # experiment_id è la prima colonna; scenario è la seconda
-            scenario_col = [cell.value for cell in runs_sheet[1]].index("scenario") + 1
+            scenario_col = [cell.value for cell in runs_sheet[1]].index("Lab") + 1
             self.assertEqual(runs_sheet.cell(2, scenario_col).value, "example_dns_001")
             self.assertEqual(runs_sheet.cell(3, scenario_col).value, "example_dns_002")
-            run_id_column = [cell.value for cell in runs_sheet[1]].index("run_id") + 1
+            run_id_column = [cell.value for cell in runs_sheet[1]].index("ID") + 1
             self.assertEqual(runs_sheet.cell(2, run_id_column).value, "example_dns_001__T1__auto__r001")
             self.assertEqual(runs_sheet.cell(3, run_id_column).value, "example_dns_002__T1__auto__r001")
-            self.assertEqual(runs_sheet["A1"].fill.fgColor.rgb[-6:], "17365D")
+            self.assertEqual(runs_sheet["A1"].fill.fgColor.rgb[-6:], "2F5597")
             self.assertEqual(runs_sheet.freeze_panes, "A2")
 
     def test_summary_keeps_prompt_types_in_separate_groups(self):
@@ -330,7 +330,7 @@ class ResultCollectionTest(unittest.TestCase):
             metrics["run_id"] = "example_dns_001__T2__auto__r001"
             metrics_path.write_text(json.dumps(metrics))
             _, _, summary = aggregate(runs, root / "results")
-            self.assertEqual(set(summary["prompt_type"]), {"T1", "T2"})
+            self.assertEqual(set(summary["T"]), {"T1", "T2"})
             self.assertEqual(summary["total_runs"].tolist(), [1, 1])
 
     def test_failed_report_is_not_added_twice_and_summary_has_statistics(self):
