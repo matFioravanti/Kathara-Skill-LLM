@@ -5,7 +5,7 @@ experiment:
   id: thesis_final
 
 scenarios:
-  - Lab_1_No_DNS
+  - lab00_five_router
   - Lab_2_No_DNS
   - Lab_3_No_DNS
 

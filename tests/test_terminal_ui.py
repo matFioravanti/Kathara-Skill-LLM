@@ -21,7 +21,7 @@ class TerminalUiTest(unittest.TestCase):
 
     def test_completed_result_shows_available_metrics_and_skips_missing_values(self):
         metrics = {
-            "scenario": "Lab_1_No_DNS", "prompt_type": "T1", "skill_mode": "dns_only",
+            "scenario": "lab00_five_router", "prompt_type": "T1", "skill_mode": "dns_only",
             "run_number": 1, "status": "COMPLETED",
             "task_success": True,
             "checker": {"passed": 404, "total": 404, "pass_rate": 1.0},
@@ -48,7 +48,7 @@ class TerminalUiTest(unittest.TestCase):
         self.assertIn("logs/checker_stderr.log", rendered)
 
     def test_multi_run_summary_has_semantic_columns_and_rows(self):
-        rows = [{"metrics": {"scenario": "Lab_1_No_DNS", "prompt_type": "T1",
+        rows = [{"metrics": {"scenario": "lab00_five_router", "prompt_type": "T1",
                              "skill_mode": mode, "run_number": index, "status": "COMPLETED",
                              "checker": {"passed": 4, "total": 5, "pass_rate": 0.8},
                              "timing": {"total_seconds": 2.5}}}
