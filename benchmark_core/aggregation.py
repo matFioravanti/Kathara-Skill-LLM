@@ -1,51 +1,48 @@
-"""Materializza CSV e workbook Excel dai metrics.json e dai report del checker."""
+"""Aggregazione deterministica dei soli artefatti già presenti nelle run."""
 from pathlib import Path
+from datetime import datetime
+import os
 import json
+import re
+import statistics
+import zipfile
 
 import pandas as pd
-from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.styles import Alignment, Font, PatternFill
 
+from .checker_runner import category as checker_category
 from .checker_runner import checker_test_rows
 
 RUN_COLUMNS = [
-    "scenario", "prompt_type", "prompt_sha256", "skill_mode", "run_number", "run_id", "agent", "model", "reasoning_effort",
-    "available_skills", "forced_skills", "selected_skills", "status",
+    "scenario", "prompt_type", "skill_mode", "repetition", "agent", "model", "reasoning_effort",
+    "status", "pipeline_completed", "checker_executed", "task_success",
+    "checks_passed", "checks_total", "pass_rate",
     "agent_seconds", "checker_seconds", "total_seconds",
-    "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
-    "tests_passed", "tests_failed", "tests_total", "pass_rate", "correction_sha256",
+    "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens", "cost",
+    "run_id", "prompt_sha256", "correction_sha256",
 ]
 CHECK_COLUMNS = [
-    "scenario", "prompt_type", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
+    "scenario", "prompt_type", "skill_mode", "repetition", "agent", "model", "run_id",
+    "category", "test_description", "passed", "reason",
 ]
 SUMMARY_COLUMNS = [
-    "scenario", "prompt_type", "skill_mode", "runs", "successful_runs", "failed_runs",
-    "mean_pass_rate", "min_pass_rate", "max_pass_rate",
-    "mean_agent_seconds", "mean_total_seconds",
-    "mean_input_tokens", "mean_output_tokens", "mean_total_tokens", "skill_selection_rate",
+    "scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort",
+    "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
+    "task_success_runs", "task_failed_runs", "task_success_rate",
+    "mean_checks_passed", "mean_checks_total", "mean_pass_rate", "median_pass_rate", "stdev_pass_rate",
+    "mean_agent_seconds", "median_agent_seconds", "stdev_agent_seconds",
+    "mean_checker_seconds", "median_checker_seconds",
+    "mean_total_seconds", "median_total_seconds", "stdev_total_seconds",
+    "mean_input_tokens", "stdev_input_tokens", "mean_cached_input_tokens", "stdev_cached_input_tokens",
+    "mean_output_tokens", "stdev_output_tokens",
+    "mean_reasoning_tokens", "stdev_reasoning_tokens",
+    "mean_total_tokens", "median_total_tokens", "stdev_total_tokens",
 ]
-EXCEL_COLUMN_ORDER = {
-    "Runs": [
-        "scenario", "prompt_type", "skill_mode", "run_number", "status", "pass_rate", "tests_passed",
-        "tests_failed", "tests_total", "agent_seconds", "checker_seconds", "total_seconds",
-        "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
-        "agent", "model", "reasoning_effort", "available_skills", "forced_skills",
-        "selected_skills", "run_id", "correction_sha256",
-    ],
-    "Checks": ["scenario", "prompt_type", "skill_mode", "run_number", "passed", "test_description", "reason", "run_id"],
-    "Summary": [
-        "scenario", "skill_mode", "runs", "successful_runs", "failed_runs", "mean_pass_rate",
-        "min_pass_rate", "max_pass_rate", "skill_selection_rate", "mean_agent_seconds",
-        "mean_total_seconds", "mean_input_tokens", "mean_output_tokens", "mean_total_tokens",
-    ],
-}
 
-
-def _list_cell(value):
-    if value is None:
-        return None
-    if isinstance(value, (list, tuple)):
-        return ";".join(str(item) for item in value)
-    return value
+SKILL_MODE_ORDER = {name: index for index, name in enumerate(
+    ("no_skill", "creation_only", "dns_only", "both_forced", "auto")
+)}
+PROMPT_ORDER = {f"T{index}": index for index in range(1, 7)}
 
 
 def _number(value):
@@ -55,28 +52,128 @@ def _number(value):
 def _read_json(path: Path) -> dict:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
-        raise ValueError("Il documento deve essere un oggetto JSON.")
+        raise ValueError(f"Il documento deve essere un oggetto JSON: {path}")
     return value
 
 
-def _row_from_metrics(metrics: dict) -> dict:
+def _natural_key(value):
+    return tuple((0, int(part)) if part.isdigit() else (1, part.casefold())
+                 for part in re.split(r"(\d+)", str(value or "")))
+
+
+def _sort_key(row: dict):
+    try:
+        repetition = int(row.get("repetition"))
+    except (TypeError, ValueError):
+        repetition = -1
+    prompt = str(row.get("prompt_type") or "")
+    return (
+        _natural_key(row.get("scenario")), PROMPT_ORDER.get(prompt, 99), prompt,
+        SKILL_MODE_ORDER.get(row.get("skill_mode"), 99), str(row.get("skill_mode") or ""),
+        str(row.get("agent") or ""), str(row.get("model") or ""),
+        str(row.get("reasoning_effort") or ""), repetition, str(row.get("run_id") or ""),
+    )
+
+
+def _check_category(description: str) -> str:
+    text = description.casefold()
+    if "named is " in text:
+        return "dns_authority"
+    if any(service in text for service in ("bgpd is ", "ospfd is ", "ospf6d is ",
+                                           "ripd is ", "zebra is ", "watchfrr is ")):
+        return "routing"
+    if "delegat" in text:
+        return "dns_delegation"
+    known = checker_category(description)
+    if known == "dns_authority":
+        return "dns_authority"
+    if known == "local_ns":
+        return "dns_resolution"
+    if known == "dns_record":
+        return "dns_record"
+    if known == "http":
+        return "http"
+    if known == "reachability" or "reachable from device" in text:
+        return "reachability"
+    if known == "custom":
+        if "route" in text or "routing" in text:
+            return "routing"
+        if "ip address" in text or "inet" in text or " addr " in f" {text} ":
+            return "addressing"
+        return "custom"
+    if "resolv" in text or "name server" in text or "nameserver" in text:
+        return "dns_resolution"
+    if "dns" in text and any(word in text for word in ("record", "a record", "aaaa", "mx", "cname")):
+        return "dns_record"
+    if "dns" in text and any(word in text for word in ("authority", "authoritative")):
+        return "dns_authority"
+    if "dns" in text and "delegat" in text:
+        return "dns_delegation"
+    if any(word in text for word in ("checking the routing table", "route show", "routing table", "route ")):
+        return "routing"
+    if "reachable from device" in text or "ping" in text:
+        return "reachability"
+    if "ip address" in text or "inet6" in text or "interface" in text and "address" in text:
+        return "addressing"
+    if "check existence" in text or "collision domain" in text or "lab structure" in text:
+        return "topology"
+    if text.startswith(("http check", "http check on")):
+        return "http"
+    return "other"
+
+
+def _mean(values):
+    usable = [number for value in values if (number := _number(value)) is not None]
+    return statistics.fmean(usable) if usable else None
+
+
+def _median(values):
+    usable = [number for value in values if (number := _number(value)) is not None]
+    return statistics.median(usable) if usable else None
+
+
+def _stdev(values):
+    usable = [number for value in values if (number := _number(value)) is not None]
+    return statistics.stdev(usable) if len(usable) > 1 else None
+
+
+def _run_record(metrics: dict, manifest: dict) -> dict:
     timing = metrics.get("timing") or {}
     tokens = metrics.get("tokens") or {}
     checker = metrics.get("checker") or {}
+    tests_passed = _number(checker.get("passed"))
+    tests_total = _number(checker.get("total"))
+    pass_rate = _number(checker.get("pass_rate"))
+    if pass_rate is None and tests_passed is not None and tests_total:
+        pass_rate = tests_passed / tests_total
+    execution_flag = manifest.get("checker_execution_success")
+    status = metrics.get("status") or manifest.get("pipeline_state")
+    if "checker_execution_success" in manifest:
+        checker_executed = execution_flag is not None
+    else:
+        checker_executed = (_number(timing.get("checker_seconds")) is not None or status == "COMPLETED")
+    evaluated = (execution_flag is True or
+                 ("checker_execution_success" not in manifest and status == "COMPLETED")) and tests_total is not None
+    task_success = manifest.get("task_success")
+    if task_success not in (True, False):
+        failed_checks = _number(checker.get("failed"))
+        task_success = (failed_checks == 0 if failed_checks is not None else tests_passed == tests_total) \
+            if evaluated and tests_passed is not None else None
     return {
-        "scenario": metrics.get("scenario"),
-        "prompt_type": metrics.get("prompt_type"),
-        "prompt_sha256": metrics.get("prompt_sha256"),
-        "skill_mode": metrics.get("skill_mode"),
-        "run_number": metrics.get("run_number"),
-        "run_id": metrics.get("run_id"),
-        "agent": metrics.get("agent"),
-        "model": metrics.get("model"),
-        "reasoning_effort": metrics.get("reasoning_effort"),
-        "available_skills": _list_cell(metrics.get("available_skills")),
-        "forced_skills": _list_cell(metrics.get("forced_skills")),
-        "selected_skills": _list_cell(metrics.get("selected_skills")),
-        "status": metrics.get("status"),
+        "scenario": metrics.get("scenario") or manifest.get("scenario_id"),
+        "prompt_type": metrics.get("prompt_type") or manifest.get("prompt_type"),
+        "skill_mode": metrics.get("skill_mode") or manifest.get("skill_mode"),
+        "repetition": metrics.get("run_number", manifest.get("run_number")),
+        "agent": metrics.get("agent") or manifest.get("agent"),
+        "model": metrics.get("model") or manifest.get("model"),
+        "reasoning_effort": metrics.get("reasoning_effort") or manifest.get("reasoning_effort"),
+        "status": status,
+        "pipeline_completed": manifest.get("pipeline_state", status) == "COMPLETED",
+        "checker_executed": checker_executed,
+        "task_success": task_success if isinstance(task_success, bool) else None,
+        "checks_passed": tests_passed if evaluated else None,
+        "checks_total": tests_total if evaluated else None,
+        "pass_rate": pass_rate if evaluated else None,
         "agent_seconds": _number(timing.get("agent_seconds")),
         "checker_seconds": _number(timing.get("checker_seconds")),
         "total_seconds": _number(timing.get("total_seconds")),
@@ -85,172 +182,190 @@ def _row_from_metrics(metrics: dict) -> dict:
         "output_tokens": _number(tokens.get("output")),
         "reasoning_tokens": _number(tokens.get("reasoning")),
         "total_tokens": _number(tokens.get("total")),
-        "tests_passed": _number(checker.get("passed")),
-        "tests_failed": _number(checker.get("failed")),
-        "tests_total": _number(checker.get("total")),
-        "pass_rate": _number(checker.get("pass_rate")),
-        "correction_sha256": metrics.get("correction_sha256"),
+        "cost": _first_number(metrics.get("cost"), metrics.get("cost_usd"),
+                               manifest.get("cost"), manifest.get("cost_usd")),
+        "run_id": metrics.get("run_id") or manifest.get("run_id"),
+        "prompt_sha256": metrics.get("prompt_sha256") or manifest.get("prompt_sha256"),
+        "correction_sha256": metrics.get("correction_sha256") or manifest.get("correction_sha256"),
+        "_evaluated": evaluated,
+        "_manifest": manifest,
     }
 
 
-def _run_sort_key(row: dict):
+def _first_number(*values):
+    return next((number for value in values if (number := _number(value)) is not None), None)
+
+
+def _check_records(run: Path, record: dict) -> list[dict]:
     try:
-        number = int(row.get("run_number"))
-    except (TypeError, ValueError):
-        number = -1
-    return (str(row.get("scenario") or ""), str(row.get("prompt_type") or ""), str(row.get("skill_mode") or ""), number,
-            str(row.get("run_id") or ""))
-
-
-def _mean(values):
-    usable = [_number(value) for value in values]
-    usable = [value for value in usable if value is not None]
-    return sum(usable) / len(usable) if usable else None
-
-
-def _summary_rows(metrics_rows: list[dict]) -> list[dict]:
-    groups = {}
-    for metrics in metrics_rows:
-        key = (metrics.get("scenario"), metrics.get("prompt_type"), metrics.get("skill_mode"))
-        groups.setdefault(key, []).append(metrics)
-    result = []
-    for (scenario, prompt_type, skill_mode), group in sorted(
-        groups.items(), key=lambda item: tuple(str(value or "") for value in item[0])
-    ):
-        pass_rates = [_number((row.get("checker") or {}).get("pass_rate")) for row in group]
-        pass_rates = [value for value in pass_rates if value is not None]
-        successful = sum(row.get("status") == "COMPLETED" for row in group)
-        selection_rate = None
-        if skill_mode == "auto":
-            valid = [row for row in group if row.get("agent_success") is True
-                     and row.get("skill_trace_available") is True
-                     and isinstance(row.get("selected_skills"), list)]
-            selection_rate = (sum(bool(row["selected_skills"]) for row in valid) / len(valid)
-                              if valid else None)
-        result.append({
-            "scenario": scenario, "prompt_type": prompt_type, "skill_mode": skill_mode, "runs": len(group),
-            "successful_runs": successful, "failed_runs": len(group) - successful,
-            "mean_pass_rate": _mean(pass_rates),
-            "min_pass_rate": min(pass_rates) if pass_rates else None,
-            "max_pass_rate": max(pass_rates) if pass_rates else None,
-            "mean_agent_seconds": _mean((row.get("timing") or {}).get("agent_seconds") for row in group),
-            "mean_total_seconds": _mean((row.get("timing") or {}).get("total_seconds") for row in group),
-            "mean_input_tokens": _mean((row.get("tokens") or {}).get("input") for row in group),
-            "mean_output_tokens": _mean((row.get("tokens") or {}).get("output") for row in group),
-            "mean_total_tokens": _mean((row.get("tokens") or {}).get("total") for row in group),
-            "skill_selection_rate": selection_rate,
+        raw_rows = checker_test_rows(run / "results")
+    except (OSError, ValueError, UnicodeError):
+        return []
+    # The full report is the sole source. The checker also writes a failed-only report;
+    # reading that file as well would duplicate failed checks.
+    rows = []
+    for check in raw_rows:
+        description = check.get("test_description") or ""
+        rows.append({
+            "scenario": record.get("scenario"), "prompt_type": record.get("prompt_type"),
+            "skill_mode": record.get("skill_mode"), "repetition": record.get("repetition"),
+            "agent": record.get("agent"), "model": record.get("model"),
+            "run_id": record.get("run_id"), "category": _check_category(description),
+            "test_description": description, "passed": check.get("passed"), "reason": check.get("reason"),
         })
-    return result
+    return rows
+
+
+def _summary_records(records: list[dict]) -> list[dict]:
+    groups = {}
+    group_fields = ("scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort")
+    for record in records:
+        key = tuple(record.get(field) for field in group_fields)
+        groups.setdefault(key, []).append(record)
+    output = []
+    for key, group in groups.items():
+        evaluated = [row for row in group if row["_evaluated"]]
+        task_successes = sum(row.get("task_success") is True for row in evaluated)
+        task_failures = sum(row.get("task_success") is False for row in evaluated)
+        pass_rates = [row.get("pass_rate") for row in evaluated]
+        manifest_states = [row.get("pipeline_completed") for row in group]
+        checker_seconds = [row.get("checker_seconds") for row in group]
+        stats = {}
+        for column, values in (
+            ("pass_rate", pass_rates),
+            ("agent_seconds", [row.get("agent_seconds") for row in group]),
+            ("checker_seconds", checker_seconds),
+            ("total_seconds", [row.get("total_seconds") for row in group]),
+            ("input_tokens", [row.get("input_tokens") for row in group]),
+            ("cached_input_tokens", [row.get("cached_input_tokens") for row in group]),
+            ("output_tokens", [row.get("output_tokens") for row in group]),
+            ("reasoning_tokens", [row.get("reasoning_tokens") for row in group]),
+            ("total_tokens", [row.get("total_tokens") for row in group]),
+        ):
+            stats[f"mean_{column}"] = _mean(values)
+            stats[f"stdev_{column}"] = _stdev(values)
+            if column in ("pass_rate", "agent_seconds", "checker_seconds", "total_seconds", "total_tokens"):
+                stats[f"median_{column}"] = _median(values)
+        output.append({
+            **dict(zip(group_fields, key)),
+            "total_runs": len(group),
+            "pipeline_completed_runs": sum(state is True for state in manifest_states),
+            "checker_executed_runs": sum(row.get("checker_executed") is True for row in group),
+            "evaluated_runs": len(evaluated),
+            "task_success_runs": task_successes,
+            "task_failed_runs": task_failures,
+            "task_success_rate": task_successes / len(evaluated) if evaluated else None,
+            "mean_checks_passed": _mean(row.get("checks_passed") for row in evaluated),
+            "mean_checks_total": _mean(row.get("checks_total") for row in evaluated),
+            **stats,
+        })
+    return sorted(output, key=_sort_key)
 
 
 def _atomic_csv(path: Path, frame: pd.DataFrame) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
-    frame.to_csv(temporary, index=False, na_rep="")
+    frame.to_csv(temporary, index=False, na_rep="", lineterminator="\n")
     temporary.replace(path)
 
 
-def _atomic_excel(path: Path, frames: tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]) -> None:
+def _write_excel(path: Path, frames: tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]) -> None:
     temporary = path.with_name(f"{path.stem}.tmp{path.suffix}")
     header_fill = PatternFill("solid", fgColor="17365D")
     header_font = Font(color="FFFFFF", bold=True)
-    row_fills = (PatternFill("solid", fgColor="FFFFFF"), PatternFill("solid", fgColor="F2F6FA"))
-    accent_fill = PatternFill("solid", fgColor="DCE6F1")
-    separator = Side(style="medium", color="4472C4")
-    bottom_border = Border(bottom=separator)
-    widths = {
-        "scenario": 22, "prompt_type": 14, "skill_mode": 18, "run_number": 13, "run_id": 42,
-        "prompt_sha256": 68, "agent": 15, "model": 24, "reasoning_effort": 18, "available_skills": 32,
-        "forced_skills": 32, "selected_skills": 32, "status": 20, "passed": 12,
-        "test_description": 52, "reason": 52, "correction_sha256": 68,
-    }
+    body_fill = PatternFill("solid", fgColor="F4F7FA")
     with pd.ExcelWriter(temporary, engine="openpyxl") as writer:
-        for sheet, frame in zip(("Runs", "Checks", "Summary"), frames):
-            excel_frame = frame[EXCEL_COLUMN_ORDER[sheet]]
-            excel_frame.iloc[:0].to_excel(writer, sheet_name=sheet, index=False, na_rep="")
-            worksheet = writer.sheets[sheet]
-            worksheet.freeze_panes = "A2"
-            worksheet.sheet_view.showGridLines = False
-            worksheet.sheet_view.zoomScale = 90
-            worksheet.sheet_properties.tabColor = "4472C4"
-            worksheet.row_dimensions[1].height = 30
-            for cell in worksheet[1]:
-                cell.fill = header_fill
-                cell.font = header_font
+        writer.book.properties.created = datetime(2000, 1, 1)
+        writer.book.properties.modified = datetime(2000, 1, 1)
+        for name, frame in zip(("Runs", "Checks", "Summary"), frames):
+            frame.to_excel(writer, sheet_name=name, index=False, na_rep="")
+            sheet = writer.sheets[name]
+            sheet.freeze_panes = "A2"
+            sheet.sheet_view.showGridLines = False
+            sheet.sheet_view.zoomScale = 90
+            sheet.auto_filter.ref = sheet.dimensions
+            for cell in sheet[1]:
+                cell.fill, cell.font = header_fill, header_font
                 cell.alignment = Alignment(vertical="center", wrap_text=True)
-            for column_index, column in enumerate(excel_frame.columns, start=1):
-                worksheet.column_dimensions[worksheet.cell(1, column_index).column_letter].width = widths.get(
-                    column, 16 if "token" in column or "seconds" in column else 15
+            sheet.row_dimensions[1].height = 32
+            for column_index, column in enumerate(frame.columns, start=1):
+                values = [str(column)] + [str(value) for value in frame[column].dropna().head(100)]
+                width = min(max(max(map(len, values), default=12) + 2, 12), 52)
+                if column in ("run_id", "prompt_sha256", "correction_sha256"):
+                    width = 44 if column == "run_id" else 38
+                elif column in ("reason", "test_description"):
+                    width = 52
+                sheet.column_dimensions[sheet.cell(1, column_index).column_letter].width = width
+                for row_index in range(2, sheet.max_row + 1):
+                    cell = sheet.cell(row_index, column_index)
+                    cell.fill = body_fill if row_index % 2 == 0 else PatternFill(fill_type=None)
+                    cell.alignment = Alignment(vertical="top", wrap_text=column in ("reason", "test_description"))
+                    if column.endswith("rate") or column == "pass_rate":
+                        cell.number_format = "0.00%"
+                    elif column == "cost":
+                        cell.number_format = "$#,##0.0000"
+                    elif "seconds" in column:
+                        cell.number_format = "0.0"
+                    elif "tokens" in column or column in (
+                        "repetition", "checks_passed", "checks_total", "total_runs",
+                        "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
+                        "task_success_runs", "task_failed_runs",
+                    ):
+                        cell.number_format = "#,##0"
+            for row_index in range(2, sheet.max_row + 1):
+                sheet.row_dimensions[row_index].height = 21
+    canonical = path.with_name(f"{path.stem}.canonical{path.suffix}")
+    with zipfile.ZipFile(temporary, "r") as source, zipfile.ZipFile(
+        canonical, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
+    ) as target:
+        for name in sorted(source.namelist()):
+            original = source.getinfo(name)
+            info = zipfile.ZipInfo(name, date_time=(2000, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = original.create_system
+            info.external_attr = original.external_attr
+            info.internal_attr = original.internal_attr
+            content = source.read(name)
+            if name == "docProps/core.xml":
+                content = re.sub(
+                    rb"(<dcterms:modified\b[^>]*>).*?(</dcterms:modified>)",
+                    rb"\g<1>2000-01-01T00:00:00Z\g<2>", content,
                 )
-
-            cursor = 1
-            scenario_groups = list(excel_frame.groupby("scenario", sort=False, dropna=False))
-            for index, (_, block) in enumerate(scenario_groups):
-                block.to_excel(writer, sheet_name=sheet, startrow=cursor, index=False,
-                               header=False, na_rep="")
-                end_row = cursor + len(block)
-                fill = row_fills[index % len(row_fills)]
-                for row_index in range(cursor + 1, end_row + 1):
-                    worksheet.row_dimensions[row_index].height = 22
-                    for cell in worksheet[row_index][:len(excel_frame.columns)]:
-                        cell.fill = accent_fill if cell.column == 1 else fill
-                        cell.alignment = Alignment(vertical="center", wrap_text=cell.column > 3)
-                        if cell.column <= len(excel_frame.columns):
-                            cell.border = bottom_border if row_index == end_row else Border()
-                    if sheet == "Runs":
-                        status_col = excel_frame.columns.get_loc("status") + 1
-                        status_cell = worksheet.cell(row_index, status_col)
-                        status_cell.fill = PatternFill(
-                            "solid", fgColor="E2F0D9" if status_cell.value == "COMPLETED" else "FCE4D6"
-                        )
-                    elif sheet == "Checks":
-                        passed_col = excel_frame.columns.get_loc("passed") + 1
-                        passed_cell = worksheet.cell(row_index, passed_col)
-                        passed_cell.fill = PatternFill(
-                            "solid", fgColor="E2F0D9" if passed_cell.value is True else "FCE4D6"
-                        )
-                cursor = end_row + (1 if index < len(scenario_groups) - 1 else 0)
-            if cursor > 1:
-                worksheet.auto_filter.ref = f"A1:{worksheet.cell(cursor, len(excel_frame.columns)).coordinate}"
+            target.writestr(info, content, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+    os.replace(canonical, temporary)
     temporary.replace(path)
 
 
-def _saved_check_rows(run: Path) -> list[dict]:
-    try:
-        return checker_test_rows(run / "results")
-    except (OSError, ValueError, UnicodeError):
-        return []
-
-
 def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Rebuild the three CSVs and consolidated benchmark.xlsx from saved artifacts."""
-    metrics_rows = []
-    run_rows = []
-    check_rows = []
-    for metrics_path in sorted(runs.rglob("metrics.json")):
+    """Rigenera CSV e workbook dai manifest, metrics e report già salvati."""
+    records, check_records = [], []
+    for metrics_path in runs.rglob("metrics.json"):
         try:
-            relative_parts = metrics_path.relative_to(runs).parts
+            parts = metrics_path.relative_to(runs).parts
         except ValueError:
             continue
-        if (len(relative_parts) != 6 or relative_parts[4:] != ("evaluation", "metrics.json")
-                or not relative_parts[3].startswith("r")
-                or not relative_parts[3][1:].isdigit()):
+        if (len(parts) != 6 or parts[4:] != ("evaluation", "metrics.json")
+                or not re.fullmatch(r"r\d{3,}", parts[3])):
             continue
         run = metrics_path.parent.parent
         metrics = _read_json(metrics_path)
-        metrics_rows.append(metrics)
-        run_rows.append(_row_from_metrics(metrics))
-        identity = {key: metrics.get(key) for key in ("scenario", "prompt_type", "skill_mode", "run_number", "run_id")}
-        check_rows.extend({**identity, **check} for check in _saved_check_rows(run))
+        manifest_path = run / "manifest.json"
+        manifest = _read_json(manifest_path) if manifest_path.is_file() else {}
+        record = _run_record(metrics, manifest)
+        records.append(record)
+        check_records.extend(_check_records(run, record))
 
-    run_rows.sort(key=_run_sort_key)
-    check_rows.sort(key=lambda row: (*_run_sort_key(row), str(row.get("test_description") or "")))
-    runs_frame = pd.DataFrame(run_rows, columns=RUN_COLUMNS)
-    checks_frame = pd.DataFrame(check_rows, columns=CHECK_COLUMNS)
-    summary_frame = pd.DataFrame(_summary_rows(metrics_rows), columns=SUMMARY_COLUMNS)
-
+    records.sort(key=_sort_key)
+    check_records.sort(key=lambda row: (
+        _sort_key(row), row.get("category") or "", row.get("test_description") or "",
+        bool(row.get("passed")), row.get("reason") or "",
+    ))
+    run_frame = pd.DataFrame([{key: record.get(key) for key in RUN_COLUMNS} for record in records],
+                             columns=RUN_COLUMNS)
+    check_frame = pd.DataFrame(check_records, columns=CHECK_COLUMNS)
+    summary_frame = pd.DataFrame(_summary_records(records), columns=SUMMARY_COLUMNS)
     results.mkdir(parents=True, exist_ok=True)
-    _atomic_csv(results / "runs.csv", runs_frame)
-    _atomic_csv(results / "checks.csv", checks_frame)
+    _atomic_csv(results / "runs.csv", run_frame)
+    _atomic_csv(results / "checks.csv", check_frame)
     _atomic_csv(results / "summary.csv", summary_frame)
-    _atomic_excel(results / "benchmark.xlsx", (runs_frame, checks_frame, summary_frame))
-    return runs_frame, checks_frame, summary_frame
+    _write_excel(results / "benchmark.xlsx", (run_frame, check_frame, summary_frame))
+    return run_frame, check_frame, summary_frame

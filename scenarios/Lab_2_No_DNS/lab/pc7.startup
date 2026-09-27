@@ -1,0 +1,2 @@
+ip -6 address add 2001:db8:1::7/64 dev eth0
+ip -6 route add default via 2001:db8:1::1 dev eth0

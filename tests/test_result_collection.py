@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pandas as pd
 
-from benchmark_core.aggregation import aggregate
+from benchmark_core.aggregation import _check_category, aggregate
 from benchmark_core.run_metrics import codex_usage, make_metrics, selected_skills
 from benchmark_core.workspace import write_json
 
@@ -23,6 +23,25 @@ def command_event(command):
 
 
 class ResultCollectionTest(unittest.TestCase):
+    def test_check_categories_cover_network_and_dns_checks(self):
+        cases = {
+            "Check existence of `r1`": "topology",
+            "Verifying the IP address (10.1.0.1/24) assigned to eth0 of r1": "addressing",
+            "Checking the routing table of r1": "routing",
+            "Verifying `10.1.0.10` reachable from device `r1`": "reachability",
+            "Checking on `ns.example` is the authority for domain `example`": "dns_authority",
+            "Checking that named is running on device `pc2dual`": "dns_authority",
+            "Checking that ospfd is not running on device `r1`": "routing",
+            "Checking that `10.3.0.30` is the local name server for device `pc1`": "dns_resolution",
+            "Checking correctness of DNS records": "dns_record",
+            "HTTP check 'http://example.test' on client": "http",
+            "Checking the output of the command 'custom'": "custom",
+            "An unclassified validation": "other",
+        }
+        for description, expected in cases.items():
+            with self.subTest(description=description):
+                self.assertEqual(_check_category(description), expected)
+
     def test_usage_uses_only_the_last_turn_completed_and_does_not_infer_total(self):
         events = [
             codex_event("turn.completed", usage={"input_tokens": 12, "output_tokens": 3}),
@@ -132,11 +151,19 @@ class ResultCollectionTest(unittest.TestCase):
             "tokens": {"input": input_tokens, "cached_input": None, "output": output_tokens,
                        "reasoning": None, "total": None, "cache_write_input": None},
             "checker": {"passed": 1 if pass_rate is not None else None,
-                        "failed": 0 if pass_rate is not None else None,
-                        "total": 1 if pass_rate is not None else None, "pass_rate": pass_rate},
+                        "failed": (0 if pass_rate == 1.0 else 1) if pass_rate is not None else None,
+                        "total": (1 if pass_rate == 1.0 else 2) if pass_rate is not None else None,
+                        "pass_rate": pass_rate},
             "correction_sha256": "oracle-sha",
         }
         write_json(evaluation / "metrics.json", metrics)
+        write_json(run / "manifest.json", {
+            "scenario_id": scenario, "prompt_type": "T1", "skill_mode": "auto",
+            "run_number": run_number, "run_id": metrics["run_id"], "agent": "codex",
+            "model": "codex-local", "reasoning_effort": "low", "pipeline_state": status,
+            "checker_execution_success": True if status == "COMPLETED" else None,
+            "task_success": (pass_rate == 1.0) if status == "COMPLETED" and pass_rate is not None else None,
+        })
         if pass_rate is not None:
             report = run / "results/lab/lab_result_all.csv"
             report.parent.mkdir(parents=True)
@@ -165,19 +192,21 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(len(run_frame), 3)
             self.assertEqual(len(checks_frame), 2)
             self.assertEqual(list(checks_frame.columns), [
-                "scenario", "prompt_type", "skill_mode", "run_number", "run_id", "test_description", "passed", "reason",
+                "scenario", "prompt_type", "skill_mode", "repetition", "agent", "model", "run_id",
+                "category", "test_description", "passed", "reason",
             ])
-            self.assertEqual(run_frame.loc[0, "available_skills"],
-                             "kathara-creation;kathara-dns")
-            self.assertEqual(run_frame.loc[0, "forced_skills"], "")
-            self.assertEqual(run_frame.loc[0, "selected_skills"], "kathara-dns")
+            self.assertEqual(checks_frame.loc[0, "category"], "other")
             self.assertEqual(run_frame.loc[2, "status"], "AUT_FAILED")
+            self.assertEqual(run_frame.loc[0, "task_success"], True)
+            self.assertEqual(run_frame.loc[1, "task_success"], False)
             self.assertTrue(pd.isna(run_frame.loc[2, "input_tokens"]))
-            self.assertEqual(summary_frame.iloc[0]["runs"], 3)
-            self.assertEqual(summary_frame.iloc[0]["successful_runs"], 2)
-            self.assertEqual(summary_frame.iloc[0]["failed_runs"], 1)
+            self.assertEqual(summary_frame.iloc[0]["total_runs"], 3)
+            self.assertEqual(summary_frame.iloc[0]["pipeline_completed_runs"], 2)
+            self.assertEqual(summary_frame.iloc[0]["evaluated_runs"], 2)
+            self.assertEqual(summary_frame.iloc[0]["task_success_runs"], 1)
+            self.assertEqual(summary_frame.iloc[0]["task_failed_runs"], 1)
+            self.assertEqual(summary_frame.iloc[0]["task_success_rate"], 0.5)
             self.assertEqual(summary_frame.iloc[0]["mean_pass_rate"], 0.75)
-            self.assertAlmostEqual(summary_frame.iloc[0]["skill_selection_rate"], 0.5)
             self.assertEqual({path.name for path in output.glob("*.csv")},
                              {"runs.csv", "checks.csv", "summary.csv"})
             with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
@@ -185,7 +214,28 @@ class ResultCollectionTest(unittest.TestCase):
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Runs").loc[0, "run_id"],
                                  "example_dns_001__T1__auto__r001")
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Checks").shape[0], 2)
-                self.assertEqual(pd.read_excel(workbook, sheet_name="Summary").loc[0, "runs"], 3)
+                self.assertEqual(pd.read_excel(workbook, sheet_name="Summary").loc[0, "total_runs"], 3)
+                for sheet, frame in zip(("Runs", "Checks", "Summary"),
+                                        (run_frame, checks_frame, summary_frame)):
+                    excel_frame = pd.read_excel(workbook, sheet_name=sheet)
+                    self.assertEqual(excel_frame.columns.tolist(), frame.columns.tolist())
+                    self.assertEqual(len(excel_frame), len(frame))
+                    for column in frame.columns:
+                        for expected, actual in zip(frame[column], excel_frame[column]):
+                            if pd.isna(expected):
+                                self.assertTrue(pd.isna(actual))
+                            elif isinstance(expected, bool):
+                                self.assertEqual(bool(actual), expected)
+                            elif isinstance(expected, (int, float)):
+                                self.assertAlmostEqual(float(actual), float(expected), places=10)
+                            else:
+                                self.assertEqual(actual, expected)
+                from openpyxl import load_workbook
+                formatted = load_workbook(output / "benchmark.xlsx")
+                self.assertEqual(formatted["Runs"].freeze_panes, "A2")
+                self.assertIsNotNone(formatted["Runs"].auto_filter.ref)
+                pass_rate_column = run_frame.columns.get_loc("pass_rate") + 1
+                self.assertEqual(formatted["Runs"].cell(2, pass_rate_column).number_format, "0.00%")
 
     def test_aggregation_is_idempotent_for_metrics_runs(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -206,9 +256,8 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(first_bytes, second_bytes)
             self.assertEqual(first[0].iloc[0]["status"], "AUT_FAILED")
             self.assertEqual(second[0].iloc[0]["input_tokens"], 15)
-            self.assertEqual(second[0].iloc[0]["selected_skills"], "")
             self.assertTrue(pd.isna(second[0].iloc[0]["total_tokens"]))
-            self.assertEqual(second[2].iloc[0]["failed_runs"], 1)
+            self.assertEqual(second[2].iloc[0]["total_runs"], 1)
             self.assertEqual(unrelated.read_text(encoding="utf-8"), "preserve this user file\n")
 
     def test_empty_new_layout_writes_only_header_only_outputs(self):
@@ -245,12 +294,10 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(workbook.sheetnames, ["Runs", "Checks", "Summary"])
             runs_sheet = workbook["Runs"]
             self.assertEqual(runs_sheet["A2"].value, "example_dns_001")
-            self.assertIsNone(runs_sheet["A3"].value)
-            self.assertEqual(runs_sheet["A4"].value, "example_dns_002")
+            self.assertEqual(runs_sheet["A3"].value, "example_dns_002")
             run_id_column = [cell.value for cell in runs_sheet[1]].index("run_id") + 1
             self.assertEqual(runs_sheet.cell(2, run_id_column).value, "example_dns_001__T1__auto__r001")
-            self.assertEqual(runs_sheet.cell(4, run_id_column).value, "example_dns_002__T1__auto__r001")
-            self.assertEqual(runs_sheet["A2"].border.bottom.style, "medium")
+            self.assertEqual(runs_sheet.cell(3, run_id_column).value, "example_dns_002__T1__auto__r001")
             self.assertEqual(runs_sheet["A1"].fill.fgColor.rgb[-6:], "17365D")
             self.assertEqual(runs_sheet.freeze_panes, "A2")
 
@@ -271,7 +318,28 @@ class ResultCollectionTest(unittest.TestCase):
             metrics_path.write_text(json.dumps(metrics))
             _, _, summary = aggregate(runs, root / "results")
             self.assertEqual(set(summary["prompt_type"]), {"T1", "T2"})
-            self.assertEqual(summary["runs"].tolist(), [1, 1])
+            self.assertEqual(summary["total_runs"].tolist(), [1, 1])
+
+    def test_failed_report_is_not_added_twice_and_summary_has_statistics(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            runs = root / "runs"
+            first = self._write_metrics_run(runs, 1, status="COMPLETED", selected=[], pass_rate=0.0,
+                                            input_tokens=10, output_tokens=2)
+            failed_report = first / "results/lab/lab_result_failed.csv"
+            failed_report.write_text("Test Description,Passed,Reason\nsample-1,False,failure\n")
+            self._write_metrics_run(runs, 2, status="COMPLETED", selected=[], pass_rate=1.0,
+                                    input_tokens=20, output_tokens=4)
+            _, checks, summary = aggregate(runs, root / "results")
+            self.assertEqual(len(checks), 2)
+            row = summary.iloc[0]
+            self.assertEqual(row["total_runs"], 2)
+            self.assertEqual(row["task_success_runs"], 1)
+            self.assertEqual(row["task_failed_runs"], 1)
+            self.assertEqual(row["mean_pass_rate"], 0.5)
+            self.assertEqual(row["median_pass_rate"], 0.5)
+            self.assertAlmostEqual(row["stdev_pass_rate"], 2 ** -0.5)
+            self.assertTrue(pd.isna(row["mean_total_tokens"]))
 
 
 if __name__ == "__main__":

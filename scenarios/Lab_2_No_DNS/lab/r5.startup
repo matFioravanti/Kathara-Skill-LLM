@@ -1,0 +1,24 @@
+ip address add 10.0.6.2/30 dev eth2
+ip address add 10.0.5.2/30 dev eth3
+ip address add 10.0.10.2/30 dev eth1
+ip address add 100.0.8.1/24 dev eth0
+ip route add 200.0.1.0/24 via 10.0.6.1 dev eth2
+ip route add 10.0.8.0/30 via 10.0.6.1 dev eth2
+ip route add 10.0.7.0/30 via 10.0.10.1 dev eth1
+ip route add 100.0.6.0/24 via 10.0.6.1 dev eth2
+ip route add 10.0.3.0/30 via 10.0.5.1 dev eth3
+ip route add 10.0.0.0/30 via 10.0.6.1 dev eth2
+ip route add 100.0.0.0/24 via 10.0.5.1 dev eth3
+ip route add 200.0.6.0/24 via 10.0.10.1 dev eth1
+ip -6 address add 2001:db8:25::5/64 dev eth2
+ip -6 address add 2001:db8:35::5/64 dev eth3
+ip -6 address add 2001:db8:45::5/64 dev eth1
+ip -6 address add 2001:db8:5::1/64 dev eth0
+ip -6 route replace 2001:db8:1::/64 via 2001:db8:25::2 dev eth2
+ip -6 route replace 2001:db8:2::/64 via 2001:db8:25::2 dev eth2
+ip -6 route replace 2001:db8:3::/64 via 2001:db8:35::3 dev eth3
+ip -6 route replace 2001:db8:4::/64 via 2001:db8:45::4 dev eth1
+ip -6 route replace 2001:db8:12::/64 via 2001:db8:25::2 dev eth2
+ip -6 route replace 2001:db8:14::/64 via 2001:db8:45::4 dev eth1
+ip -6 route replace 2001:db8:23::/64 via 2001:db8:25::2 dev eth2
+ip -6 route replace 2001:db8:24::/64 via 2001:db8:25::2 dev eth2

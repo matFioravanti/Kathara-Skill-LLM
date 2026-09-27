@@ -184,15 +184,16 @@ class RerunCorrectionTest(unittest.TestCase):
             run_ids = [runs.cell(row, headers["run_id"]).value for row in range(2, runs.max_row + 1)
                        if runs.cell(row, headers["run_id"]).value]
             self.assertEqual(run_ids.count("example_dns_001__T1__dns_only__r001"), 1)
-            self.assertEqual(runs.cell(2, headers["tests_passed"]).value, 2)
-            self.assertEqual(runs.cell(2, headers["tests_total"]).value, 2)
+            self.assertEqual(runs.cell(2, headers["checks_passed"]).value, 2)
+            self.assertEqual(runs.cell(2, headers["checks_total"]).value, 2)
             self.assertEqual(runs.cell(2, headers["pass_rate"]).value, 1.0)
             checks = workbook["Checks"]
             description_column = [cell.value for cell in checks[1]].index("test_description") + 1
             check_descriptions = [checks.cell(row, description_column).value for row in range(2, checks.max_row + 1)
                                   if checks.cell(row, description_column).value]
             self.assertEqual(check_descriptions, ["new check A", "new check B"])
-            self.assertEqual(workbook["Summary"]["C2"].value, 1)
+            summary_headers = {cell.value: cell.column for cell in workbook["Summary"][1]}
+            self.assertEqual(workbook["Summary"].cell(2, summary_headers["total_runs"]).value, 1)
             self.assertEqual(workbook["Runs"].freeze_panes, "A2")
             self.assertEqual(workbook["Runs"]["A1"].fill.fgColor.rgb[-6:], "17365D")
 
