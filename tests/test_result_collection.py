@@ -192,7 +192,9 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(len(run_frame), 3)
             self.assertEqual(len(checks_frame), 2)
             self.assertEqual(list(checks_frame.columns), [
-                "scenario", "prompt_type", "skill_mode", "repetition", "agent", "model", "run_id",
+                "experiment_id", "scenario", "prompt_type", "skill_mode",
+                "repetition", "replicate",
+                "agent", "model", "run_id",
                 "category", "test_description", "passed", "reason",
             ])
             self.assertEqual(checks_frame.loc[0, "category"], "other")
@@ -210,7 +212,10 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual({path.name for path in output.glob("*.csv")},
                              {"runs.csv", "checks.csv", "summary.csv"})
             with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
-                self.assertEqual(workbook.sheet_names, ["Runs", "Checks", "Summary"])
+                # I fogli di base sono sempre presenti
+                self.assertIn("Runs", workbook.sheet_names)
+                self.assertIn("Checks", workbook.sheet_names)
+                self.assertIn("Summary", workbook.sheet_names)
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Runs").loc[0, "run_id"],
                                  "example_dns_001__T1__auto__r001")
                 self.assertEqual(pd.read_excel(workbook, sheet_name="Checks").shape[0], 2)
@@ -275,7 +280,10 @@ class ResultCollectionTest(unittest.TestCase):
                              {"runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx"})
             self.assertEqual(list(pd.read_csv(output / "runs.csv").columns), run_frame.columns.tolist())
             with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
-                self.assertEqual(workbook.sheet_names, ["Runs", "Checks", "Summary"])
+                # I fogli di base devono essere presenti (possono esserci anche fogli extra)
+                self.assertIn("Runs", workbook.sheet_names)
+                self.assertIn("Checks", workbook.sheet_names)
+                self.assertIn("Summary", workbook.sheet_names)
                 self.assertTrue(pd.read_excel(workbook, sheet_name="Runs").empty)
 
     def test_single_workbook_separates_all_scenario_blocks(self):
@@ -291,10 +299,15 @@ class ResultCollectionTest(unittest.TestCase):
 
             from openpyxl import load_workbook
             workbook = load_workbook(output / "benchmark.xlsx", data_only=True)
-            self.assertEqual(workbook.sheetnames, ["Runs", "Checks", "Summary"])
+            # Verifica che i fogli di base siano presenti (ci sono anche fogli extra)
+            self.assertIn("Runs", workbook.sheetnames)
+            self.assertIn("Checks", workbook.sheetnames)
+            self.assertIn("Summary", workbook.sheetnames)
             runs_sheet = workbook["Runs"]
-            self.assertEqual(runs_sheet["A2"].value, "example_dns_001")
-            self.assertEqual(runs_sheet["A3"].value, "example_dns_002")
+            # experiment_id è la prima colonna; scenario è la seconda
+            scenario_col = [cell.value for cell in runs_sheet[1]].index("scenario") + 1
+            self.assertEqual(runs_sheet.cell(2, scenario_col).value, "example_dns_001")
+            self.assertEqual(runs_sheet.cell(3, scenario_col).value, "example_dns_002")
             run_id_column = [cell.value for cell in runs_sheet[1]].index("run_id") + 1
             self.assertEqual(runs_sheet.cell(2, run_id_column).value, "example_dns_001__T1__auto__r001")
             self.assertEqual(runs_sheet.cell(3, run_id_column).value, "example_dns_002__T1__auto__r001")

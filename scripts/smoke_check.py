@@ -20,6 +20,7 @@ def main():
     from benchmark_core.config import load_config, skill_paths
     from benchmark_core.codex_cli_runner import command_for
     from benchmark_core.diff_metrics import compute_diff
+    from benchmark_core.experiment import load_experiment, build_run_matrix
     from benchmark_core.scenario_loader import discover_scenarios
     from benchmark_core.prompts import resolve_prompt
     from benchmark_core.workspace import component_versions, create_workspace, logical_run_id, tree_hash, write_json
@@ -170,7 +171,7 @@ def main():
         assert len(runs_frame) == 1 and len(checks_frame) == 2 and len(summary_frame) == 1
         assert runs_frame.iloc[0]["run_id"] == run_id
         assert checks_frame.iloc[0]["run_id"] == run_id
-        assert summary_frame.iloc[0]["runs"] == 1
+        assert summary_frame.iloc[0]["total_runs"] == 1
         assert len(analyze(tmp / "results")) == 1
         assert {path.name for path in (tmp / "results").iterdir()} == {
             "runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx",

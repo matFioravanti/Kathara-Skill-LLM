@@ -1,0 +1,16 @@
+# Experiment minimale: 1 scenario × 1 prompt × 1 skill mode × 1 repetition
+# Produce UNA sola chiamata LLM.
+
+experiment:
+  id: quick_test
+
+scenarios:
+  - Lab_1_No_DNS
+
+prompt_types:
+  - T3
+
+skill_modes:
+  - no_skill
+
+repetitions: 1

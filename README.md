@@ -257,3 +257,172 @@ The smoke check statically validates both agents (`codex` and `antigravity`), ve
 | Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Local Google login |
 
 Both agents share the same architecture: the agent modifies the lab files invoked from the command line, generates the correction, and Kathara Lab Checker determines the final result without any LLM involvement in the evaluation.
+
+## Experiment Layer
+
+The **experiment layer** lets you orchestrate a full matrix of runs defined in a YAML file, without removing the ability to run a single scenario with the existing commands.
+
+### Key Concepts
+
+| Concept | Meaning |
+|---|---|
+| **scenario** | A Kathara lab with its baseline, correction, and prompt |
+| **prompt_type** | One of T1–T6; selects `prompt/<scenario>/<T>.md` |
+| **skill_mode** | `no_skill`, `creation_only`, `dns_only`, `both_forced`, or `auto` |
+| **replicate** | Statistical repetition planned by the experiment |
+| **run_number** | Physical/historical counter of the directory `rNNN` |
+| **experiment** | A YAML-defined matrix of `scenario × prompt × skill_mode × replicates` |
+
+`replicate` and `run_number` are normally the same. They diverge only when a run is retried after an infrastructure failure — in that case the retried run gets a new `run_number` but inherits the same `replicate`.
+
+### Experiment YAML
+
+Create a file under `experiments/`:
+
+```yaml
+experiment:
+  id: thesis_final
+
+scenarios:
+  - Lab_01
+  - Lab_02
+
+prompt_types:
+  - T1
+  - T3
+
+skill_modes:
+  - no_skill
+  - dns_only
+
+repetitions: 3
+```
+
+A minimal single-run experiment:
+
+```yaml
+experiment:
+  id: quick_test
+
+scenarios:
+  - Lab_01
+
+prompt_types:
+  - T1
+
+skill_modes:
+  - no_skill
+
+repetitions: 1
+```
+
+### Running an Experiment
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml
+```
+
+Before any model call, the orchestrator validates:
+- All scenarios exist on disk
+- All prompt files are present
+- All skill modes are valid
+- All corrections exist and are valid
+- Infrastructure prerequisites (Docker, Kathara, agent auth)
+
+If any check fails the process exits without consuming tokens.
+
+### Resume Interrupted Experiments
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --resume
+```
+
+The orchestrator:
+1. Reads the experiment definition
+2. Builds all expected combinations
+3. Scans existing runs associated with the same `experiment_id`
+4. Marks replicates already **COMPLETED** as skipped
+5. Runs only the missing or infrastructure-failed replicates
+
+A run with `pipeline_state=COMPLETED, task_success=false` is a **valid observation** and is not retried. Only infrastructure failures (AUT crash, checker crash, etc.) can leave a replicate open for retry.
+
+### Rerun Correction at Experiment Level
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --rerun-correction
+```
+
+Reevaluates all existing runs of the experiment with the current canonical `correction.yaml` **without any new model calls or token consumption**. The AUT output (`lab/`) and all AUT logs remain byte-for-byte identical.
+
+Filter to a subset:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --rerun-correction \
+  --filter-scenario Lab_01 --filter-prompt T1 --filter-skill-mode no_skill
+```
+
+The per-scenario command continues to work unchanged:
+
+```bash
+python scripts/run_benchmark.py \
+  --scenario Lab_01 --prompt-type T1 --skill-mode no_skill --rerun-correction
+```
+
+### Dry Run
+
+Preview the plan without executing anything:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --resume --dry-run
+```
+
+### Scenario Metadata (Optional)
+
+Add `scenarios/<scenario>/metadata.yaml` for classification and analysis:
+
+```yaml
+id: Lab_01
+family: static_routing
+
+topology:
+  routers: 3
+  hosts: 2
+
+network:
+  ip_version: ipv4
+  routing: static
+
+services:
+  dns: true
+  web: false
+
+difficulty: medium
+```
+
+The file is entirely optional — its absence does not affect the checker or the run.
+
+### Infrastructure Failures
+
+An infrastructure failure is any run whose `pipeline_state` is not `COMPLETED` (e.g., `AUT_FAILED`, `CHECKER_FAILED`, `CORRECTION_MISSING`). These runs leave the corresponding replicate **open**: with `--resume` a new physical run will be allocated to fulfil that replicate. Infrastructure failures are listed in the `Failures` sheet of `benchmark.xlsx`.
+
+### benchmark.xlsx — Sheets
+
+| Sheet | Content |
+|---|---|
+| `Runs` | One row per run; `experiment_id`, `replicate`, `run_number` |
+| `Checks` | One row per individual checker test |
+| `Summary` | Descriptive statistics by `experiment_id × scenario × prompt_type × skill_mode` |
+| `Dashboard` | One row per experiment: counts, completion, infrastructure failures, mean pass rate |
+| `Matrix` | Pivot — rows = scenario × prompt, columns = skill_mode, values = mean pass rate |
+| `Lab Summary` | Aggregated by scenario × skill_mode |
+| `Prompt Summary` | Aggregated by prompt_type × skill_mode |
+| `Skill Summary` | Aggregated by skill_mode |
+| `Token Analysis` | Mean token stats per skill_mode |
+| `Time Analysis` | Mean timing stats per skill_mode |
+| `Failures` | List of infrastructure failures and failed tasks |
+
+CSV files (`runs.csv`, `checks.csv`, `summary.csv`) remain the **primary data source**. Excel is regenerated from them with `python scripts/aggregate_results.py`.
+
+### Evaluation Revisions
+
+Every time `--rerun-correction` is applied to a run, its `evaluation_revision` counter increments and `last_reevaluated_at` is updated. This allows distinguishing the original AUT execution from subsequent correction-only reevaluations.

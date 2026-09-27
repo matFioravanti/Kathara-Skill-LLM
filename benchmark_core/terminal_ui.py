@@ -154,3 +154,62 @@ def render_run_event(event: str, **data) -> None:
         pipeline_event("Metrics collected")
     elif event == "result":
         result(data["metrics"])
+
+
+# ---------------------------------------------------------------------------
+# Experiment-level UI
+# ---------------------------------------------------------------------------
+
+def experiment_header(experiment_id: str, spec_summary: dict) -> None:
+    """Intestazione dell'experiment prima dell'esecuzione."""
+    print(f"\n╭──────────────────────────────────────────────────────────────╮")
+    print(f"│                  KATHARA EXPERIMENT RUNNER                  │")
+    print(f"╰──────────────────────────────────────────────────────────────╯")
+    print(f"\n Experiment       {experiment_id}")
+    print(f"\n Scenarios:        {spec_summary.get('scenarios', '?'):>5}")
+    print(f" Prompt types:     {spec_summary.get('prompt_types', '?'):>5}")
+    print(f" Skill modes:      {spec_summary.get('skill_modes', '?'):>5}")
+    print(f" Replicates:       {spec_summary.get('repetitions', '?'):>5}")
+    print(f"\n Expected observations:  {spec_summary.get('expected', '?'):>5}")
+    print(f" Completed:              {spec_summary.get('completed', '?'):>5}")
+    print(f" Infrastructure failed:  {spec_summary.get('infra_failed', '?'):>5}")
+    print(f" Missing:                {spec_summary.get('missing', '?'):>5}")
+    print(flush=True)
+
+
+def experiment_run_header(
+    run_index: int, run_total: int,
+    scenario_id: str, prompt_type: str, skill_mode: str,
+    replicate: int, physical_run_name: str,
+) -> None:
+    """Intestazione compatta per ogni run nell'experiment."""
+    print(f"\n{_rule(f'RUN {run_index} / {run_total}')}")
+    print(f"\n  Scenario:   {scenario_id}")
+    print(f"  Prompt:     {prompt_type}")
+    print(f"  Skill mode: {skill_mode}")
+    print(f"  Replicate:  {replicate}")
+    print(f"  Physical:   {physical_run_name}")
+    print(f"\n{_rule('PIPELINE')}\n", flush=True)
+
+
+def experiment_complete(
+    experiment_id: str,
+    expected: int, completed: int, failures: int,
+    results_path: str,
+) -> None:
+    """Riepilogo finale al termine dell'experiment."""
+    print(f"\n{_rule('EXPERIMENT COMPLETED')}")
+    print(f"\n Experiment  {experiment_id}")
+    print(f"\n Expected observations:   {expected:>5}")
+    print(f" Completed observations:  {completed:>5}")
+    print(f" Infrastructure failures: {failures:>5}")
+    print(f"\n Results: {results_path}\n", flush=True)
+
+
+def experiment_skipped(cell_desc: str, reason: str) -> None:
+    print(f"  ↷  Skipped  {cell_desc}  ({reason})", flush=True)
+
+
+def experiment_rerun_correction_header(experiment_id: str, run_count: int) -> None:
+    print(f"\n{_rule(f'RERUN-CORRECTION: {experiment_id}')}")
+    print(f"  Rivalutazione di {run_count} run senza nuove chiamate al modello.\n", flush=True)

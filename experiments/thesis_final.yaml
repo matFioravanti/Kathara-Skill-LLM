@@ -1,0 +1,26 @@
+# Experiment di tesi: matrice completa
+# 3 lab × 5 prompt × 5 skill mode × 3 replicate = 225 osservazioni previste
+
+experiment:
+  id: thesis_final
+
+scenarios:
+  - Lab_1_No_DNS
+  - Lab_2_No_DNS
+  - Lab_3_No_DNS
+
+prompt_types:
+  - T1
+  - T2
+  - T3
+  - T4
+  - T5
+
+skill_modes:
+  - no_skill
+  - creation_only
+  - dns_only
+  - both_forced
+  - auto
+
+repetitions: 3

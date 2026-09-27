@@ -17,7 +17,8 @@ from .workspace import component_versions, create_workspace, logical_run_id, tre
 
 
 def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
-            ui_context: dict | None = None, event_callback=None) -> Path:
+            ui_context: dict | None = None, event_callback=None,
+            experiment_id: str | None = None, replicate: int | None = None) -> Path:
     skill_mode = skill_mode or "dns_only"
     skill_selection = mode_details(skill_mode)
     correction_source = scenario.correction
@@ -40,6 +41,8 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         )
     manifest = {
         "run_id": run_id, "run_number": run_number,
+        "experiment_id": experiment_id,
+        "replicate": replicate if replicate is not None else run_number,
         "scenario_id": scenario.scenario_id, "prompt_type": prompt_type, "repetition": run_number,
         "run_directory": str(run.relative_to(config.root / "runs")),
         "agent": agent, "agent_version": config.data["aut"]["version"], "model": config.model(),
@@ -64,6 +67,7 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "correction_sha256": correction_sha256,
         "sandbox_image": config.data["sandbox"]["image"],
         "timeout_seconds": config.data["benchmark"]["timeout_seconds"],
+        "evaluation_revision": 0,
         "artifacts": {
             "input_lab": "input/lab",
             "lab": "lab",
@@ -209,6 +213,8 @@ def reevaluate_run(config, run: Path) -> Path:
     manifest["correction_source"] = source.relative_to(config.root).as_posix()
     manifest["correction_snapshot"] = "evaluation/correction.yaml"
     manifest["correction_sha256"] = digest
+    manifest["evaluation_revision"] = manifest.get("evaluation_revision", 0) + 1
+    manifest["last_reevaluated_at"] = utc_now()
     manifest["checker_execution_success"] = None
     manifest["task_success"] = None
     manifest.pop("pipeline_error", None)

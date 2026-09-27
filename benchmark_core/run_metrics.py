@@ -156,6 +156,8 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "prompt_sha256": metadata.get("prompt_sha256"),
         "skill_mode": metadata.get("skill_mode"),
         "run_number": metadata.get("run_number", metadata.get("repetition")),
+        "replicate": metadata.get("replicate"),
+        "experiment_id": metadata.get("experiment_id"),
         "run_id": metadata.get("run_id"),
         "agent": agent,
         "model": metadata.get("model"),
@@ -174,6 +176,8 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "tokens": tokens,
         "checker": _checker_summary(run, checker_outcome),
         "correction_sha256": correction_sha,
+        "evaluation_revision": metadata.get("evaluation_revision", 0),
+        "last_reevaluated_at": metadata.get("last_reevaluated_at"),
     }
 
 

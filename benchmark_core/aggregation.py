@@ -14,19 +14,23 @@ from .checker_runner import category as checker_category
 from .checker_runner import checker_test_rows
 
 RUN_COLUMNS = [
-    "scenario", "prompt_type", "skill_mode", "repetition", "agent", "model", "reasoning_effort",
+    "experiment_id", "scenario", "prompt_type", "skill_mode",
+    "repetition", "replicate",
+    "agent", "model", "reasoning_effort",
     "status", "pipeline_completed", "checker_executed", "task_success",
     "checks_passed", "checks_total", "pass_rate",
     "agent_seconds", "checker_seconds", "total_seconds",
     "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens", "cost",
-    "run_id", "prompt_sha256", "correction_sha256",
+    "run_id", "run_number", "prompt_sha256", "correction_sha256",
+    "evaluation_revision", "last_reevaluated_at",
 ]
 CHECK_COLUMNS = [
-    "scenario", "prompt_type", "skill_mode", "repetition", "agent", "model", "run_id",
+    "experiment_id", "scenario", "prompt_type", "skill_mode", "repetition", "replicate",
+    "agent", "model", "run_id",
     "category", "test_description", "passed", "reason",
 ]
 SUMMARY_COLUMNS = [
-    "scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort",
+    "experiment_id", "scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "task_success_runs", "task_failed_runs", "task_success_rate",
     "mean_checks_passed", "mean_checks_total", "mean_pass_rate", "median_pass_rate", "stdev_pass_rate",
@@ -43,6 +47,23 @@ SKILL_MODE_ORDER = {name: index for index, name in enumerate(
     ("no_skill", "creation_only", "dns_only", "both_forced", "auto")
 )}
 PROMPT_ORDER = {f"T{index}": index for index in range(1, 7)}
+
+# Ordine delle colonne per i fogli Excel aggiuntivi
+EXCEL_COLUMN_ORDER = {
+    "Summary": [
+        "experiment_id", "scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort",
+        "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
+        "task_success_runs", "task_failed_runs", "task_success_rate",
+        "mean_checks_passed", "mean_checks_total", "mean_pass_rate", "median_pass_rate", "stdev_pass_rate",
+        "mean_agent_seconds", "median_agent_seconds", "stdev_agent_seconds",
+        "mean_checker_seconds", "median_checker_seconds",
+        "mean_total_seconds", "median_total_seconds", "stdev_total_seconds",
+        "mean_input_tokens", "stdev_input_tokens", "mean_cached_input_tokens", "stdev_cached_input_tokens",
+        "mean_output_tokens", "stdev_output_tokens",
+        "mean_reasoning_tokens", "stdev_reasoning_tokens",
+        "mean_total_tokens", "median_total_tokens", "stdev_total_tokens",
+    ],
+}
 
 
 def _number(value):
@@ -68,7 +89,8 @@ def _sort_key(row: dict):
         repetition = -1
     prompt = str(row.get("prompt_type") or "")
     return (
-        _natural_key(row.get("scenario")), PROMPT_ORDER.get(prompt, 99), prompt,
+        _natural_key(row.get("experiment_id")), _natural_key(row.get("scenario")),
+        PROMPT_ORDER.get(prompt, 99), prompt,
         SKILL_MODE_ORDER.get(row.get("skill_mode"), 99), str(row.get("skill_mode") or ""),
         str(row.get("agent") or ""), str(row.get("model") or ""),
         str(row.get("reasoning_effort") or ""), repetition, str(row.get("run_id") or ""),
@@ -159,11 +181,24 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         failed_checks = _number(checker.get("failed"))
         task_success = (failed_checks == 0 if failed_checks is not None else tests_passed == tests_total) \
             if evaluated and tests_passed is not None else None
+
+    # experiment_id: può essere None per run storiche senza questo campo
+    experiment_id = metrics.get("experiment_id") or manifest.get("experiment_id")
+    # replicate: retrocompatibile — se assente usa repetition/run_number
+    replicate = (metrics.get("replicate") if isinstance(metrics.get("replicate"), int)
+                 else manifest.get("replicate") if isinstance(manifest.get("replicate"), int)
+                 else None)
+    repetition = metrics.get("run_number", manifest.get("run_number"))
+    if replicate is None:
+        replicate = repetition  # retrocompatibilità
+
     return {
+        "experiment_id": experiment_id,
         "scenario": metrics.get("scenario") or manifest.get("scenario_id"),
         "prompt_type": metrics.get("prompt_type") or manifest.get("prompt_type"),
         "skill_mode": metrics.get("skill_mode") or manifest.get("skill_mode"),
-        "repetition": metrics.get("run_number", manifest.get("run_number")),
+        "repetition": repetition,
+        "replicate": replicate,
         "agent": metrics.get("agent") or manifest.get("agent"),
         "model": metrics.get("model") or manifest.get("model"),
         "reasoning_effort": metrics.get("reasoning_effort") or manifest.get("reasoning_effort"),
@@ -185,8 +220,11 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "cost": _first_number(metrics.get("cost"), metrics.get("cost_usd"),
                                manifest.get("cost"), manifest.get("cost_usd")),
         "run_id": metrics.get("run_id") or manifest.get("run_id"),
+        "run_number": repetition,
         "prompt_sha256": metrics.get("prompt_sha256") or manifest.get("prompt_sha256"),
         "correction_sha256": metrics.get("correction_sha256") or manifest.get("correction_sha256"),
+        "evaluation_revision": metrics.get("evaluation_revision", manifest.get("evaluation_revision", 0)),
+        "last_reevaluated_at": metrics.get("last_reevaluated_at") or manifest.get("last_reevaluated_at"),
         "_evaluated": evaluated,
         "_manifest": manifest,
     }
@@ -207,8 +245,10 @@ def _check_records(run: Path, record: dict) -> list[dict]:
     for check in raw_rows:
         description = check.get("test_description") or ""
         rows.append({
+            "experiment_id": record.get("experiment_id"),
             "scenario": record.get("scenario"), "prompt_type": record.get("prompt_type"),
             "skill_mode": record.get("skill_mode"), "repetition": record.get("repetition"),
+            "replicate": record.get("replicate"),
             "agent": record.get("agent"), "model": record.get("model"),
             "run_id": record.get("run_id"), "category": _check_category(description),
             "test_description": description, "passed": check.get("passed"), "reason": check.get("reason"),
@@ -218,7 +258,7 @@ def _check_records(run: Path, record: dict) -> list[dict]:
 
 def _summary_records(records: list[dict]) -> list[dict]:
     groups = {}
-    group_fields = ("scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort")
+    group_fields = ("experiment_id", "scenario", "prompt_type", "skill_mode", "agent", "model", "reasoning_effort")
     for record in records:
         key = tuple(record.get(field) for field in group_fields)
         groups.setdefault(key, []).append(record)
@@ -262,57 +302,323 @@ def _summary_records(records: list[dict]) -> list[dict]:
     return sorted(output, key=_sort_key)
 
 
+# ---------------------------------------------------------------------------
+# Fogli aggiuntivi
+# ---------------------------------------------------------------------------
+
+def _dashboard_records(records: list[dict]) -> list[dict]:
+    """Una riga per experiment_id (o None per run storiche)."""
+    groups: dict = {}
+    for r in records:
+        eid = r.get("experiment_id")
+        groups.setdefault(eid, []).append(r)
+    rows = []
+    for eid, group in sorted(groups.items(), key=lambda kv: str(kv[0] or "")):
+        evaluated = [r for r in group if r["_evaluated"]]
+        task_successes = sum(r.get("task_success") is True for r in evaluated)
+        pass_rates = [r.get("pass_rate") for r in evaluated if r.get("pass_rate") is not None]
+        scenarios = {r.get("scenario") for r in group if r.get("scenario")}
+        prompts = {r.get("prompt_type") for r in group if r.get("prompt_type")}
+        skill_modes = {r.get("skill_mode") for r in group if r.get("skill_mode")}
+        replicates = {r.get("replicate") for r in group if r.get("replicate") is not None}
+        infra = sum(1 for r in group if r.get("status") in (
+            "AUT_FAILED", "CHECKER_FAILED", "CORRECTION_MISSING", "CORRECTION_INVALID"
+        ))
+        rows.append({
+            "experiment_id": eid,
+            "scenarios": len(scenarios),
+            "prompt_types": len(prompts),
+            "skill_modes": len(skill_modes),
+            "replicates": len(replicates),
+            "expected_observations": None,  # non calcolabile senza spec
+            "completed_runs": sum(1 for r in group if r.get("pipeline_completed")),
+            "infrastructure_failures": infra,
+            "evaluated_runs": len(evaluated),
+            "task_success_runs": task_successes,
+            "mean_pass_rate": statistics.fmean(pass_rates) if pass_rates else None,
+        })
+    return rows
+
+
+DASHBOARD_COLUMNS = [
+    "experiment_id", "scenarios", "prompt_types", "skill_modes", "replicates",
+    "completed_runs", "infrastructure_failures", "evaluated_runs",
+    "task_success_runs", "mean_pass_rate",
+]
+
+
+def _matrix_records(records: list[dict]) -> pd.DataFrame:
+    """
+    Pivot: righe = (experiment_id, scenario, prompt_type),
+           colonne = skill_mode,
+           valori = mean_pass_rate delle replicate valide.
+    """
+    evaluated = [r for r in records if r["_evaluated"] and r.get("pass_rate") is not None]
+    if not evaluated:
+        return pd.DataFrame()
+    rows: dict = {}
+    for r in evaluated:
+        key = (r.get("experiment_id"), r.get("scenario"), r.get("prompt_type"))
+        mode = r.get("skill_mode") or "unknown"
+        rows.setdefault(key, {}).setdefault(mode, []).append(r["pass_rate"])
+    modes = sorted({r.get("skill_mode") or "unknown" for r in evaluated},
+                   key=lambda m: SKILL_MODE_ORDER.get(m, 99))
+    result_rows = []
+    for (eid, scenario, prompt), mode_data in sorted(rows.items(), key=lambda kv: (str(kv[0][0] or ""), str(kv[0][1] or ""), str(kv[0][2] or ""))):
+        row: dict = {"experiment_id": eid, "scenario": scenario, "prompt_type": prompt}
+        for m in modes:
+            values = mode_data.get(m, [])
+            row[m] = statistics.fmean(values) if values else None
+        result_rows.append(row)
+    columns = ["experiment_id", "scenario", "prompt_type"] + modes
+    return pd.DataFrame(result_rows, columns=columns)
+
+
+def _lab_summary_records(records: list[dict]) -> list[dict]:
+    """Aggregazione per (experiment_id, scenario, skill_mode)."""
+    groups: dict = {}
+    for r in records:
+        key = (r.get("experiment_id"), r.get("scenario"), r.get("skill_mode"))
+        groups.setdefault(key, []).append(r)
+    rows = []
+    for (eid, scenario, mode), group in sorted(groups.items()):
+        evaluated = [r for r in group if r["_evaluated"]]
+        pass_rates = [r["pass_rate"] for r in evaluated if r.get("pass_rate") is not None]
+        rows.append({
+            "experiment_id": eid, "scenario": scenario, "skill_mode": mode,
+            "total_runs": len(group), "evaluated_runs": len(evaluated),
+            "task_success_runs": sum(r.get("task_success") is True for r in evaluated),
+            "task_success_rate": (sum(r.get("task_success") is True for r in evaluated) / len(evaluated)
+                                  if evaluated else None),
+            "mean_pass_rate": _mean(pass_rates),
+            "median_pass_rate": _median(pass_rates),
+        })
+    return rows
+
+
+LAB_SUMMARY_COLUMNS = [
+    "experiment_id", "scenario", "skill_mode",
+    "total_runs", "evaluated_runs", "task_success_runs", "task_success_rate",
+    "mean_pass_rate", "median_pass_rate",
+]
+
+
+def _prompt_summary_records(records: list[dict]) -> list[dict]:
+    """Aggregazione per (experiment_id, prompt_type, skill_mode)."""
+    groups: dict = {}
+    for r in records:
+        key = (r.get("experiment_id"), r.get("prompt_type"), r.get("skill_mode"))
+        groups.setdefault(key, []).append(r)
+    rows = []
+    for (eid, prompt, mode), group in sorted(groups.items()):
+        evaluated = [r for r in group if r["_evaluated"]]
+        pass_rates = [r["pass_rate"] for r in evaluated if r.get("pass_rate") is not None]
+        rows.append({
+            "experiment_id": eid, "prompt_type": prompt, "skill_mode": mode,
+            "total_runs": len(group), "evaluated_runs": len(evaluated),
+            "task_success_runs": sum(r.get("task_success") is True for r in evaluated),
+            "task_success_rate": (sum(r.get("task_success") is True for r in evaluated) / len(evaluated)
+                                  if evaluated else None),
+            "mean_pass_rate": _mean(pass_rates),
+            "median_pass_rate": _median(pass_rates),
+        })
+    return rows
+
+
+PROMPT_SUMMARY_COLUMNS = [
+    "experiment_id", "prompt_type", "skill_mode",
+    "total_runs", "evaluated_runs", "task_success_runs", "task_success_rate",
+    "mean_pass_rate", "median_pass_rate",
+]
+
+
+def _skill_summary_records(records: list[dict]) -> list[dict]:
+    """Aggregazione generale per (experiment_id, skill_mode)."""
+    groups: dict = {}
+    for r in records:
+        key = (r.get("experiment_id"), r.get("skill_mode"))
+        groups.setdefault(key, []).append(r)
+    rows = []
+    for (eid, mode), group in sorted(groups.items(), key=lambda kv: (str(kv[0][0] or ""), SKILL_MODE_ORDER.get(str(kv[0][1] or ""), 99))):
+        evaluated = [r for r in group if r["_evaluated"]]
+        pass_rates = [r["pass_rate"] for r in evaluated if r.get("pass_rate") is not None]
+        rows.append({
+            "experiment_id": eid, "skill_mode": mode,
+            "total_runs": len(group), "evaluated_runs": len(evaluated),
+            "task_success_runs": sum(r.get("task_success") is True for r in evaluated),
+            "task_success_rate": (sum(r.get("task_success") is True for r in evaluated) / len(evaluated)
+                                  if evaluated else None),
+            "mean_pass_rate": _mean(pass_rates),
+            "stdev_pass_rate": _stdev(pass_rates),
+        })
+    return rows
+
+
+SKILL_SUMMARY_COLUMNS = [
+    "experiment_id", "skill_mode",
+    "total_runs", "evaluated_runs", "task_success_runs", "task_success_rate",
+    "mean_pass_rate", "stdev_pass_rate",
+]
+
+
+def _token_analysis_records(records: list[dict]) -> list[dict]:
+    """Token stats per (experiment_id, skill_mode)."""
+    groups: dict = {}
+    for r in records:
+        key = (r.get("experiment_id"), r.get("skill_mode"))
+        groups.setdefault(key, []).append(r)
+    rows = []
+    for (eid, mode), group in sorted(groups.items(), key=lambda kv: (str(kv[0][0] or ""), SKILL_MODE_ORDER.get(str(kv[0][1] or ""), 99))):
+        evaluated = [r for r in group if r["_evaluated"]]
+        pass_rates = [r["pass_rate"] for r in evaluated if r.get("pass_rate") is not None]
+        rows.append({
+            "experiment_id": eid, "skill_mode": mode,
+            "run_count": len(group),
+            "mean_input_tokens": _mean(r.get("input_tokens") for r in group),
+            "mean_cached_input_tokens": _mean(r.get("cached_input_tokens") for r in group),
+            "mean_output_tokens": _mean(r.get("output_tokens") for r in group),
+            "mean_reasoning_tokens": _mean(r.get("reasoning_tokens") for r in group),
+            "mean_total_tokens": _mean(r.get("total_tokens") for r in group),
+            "mean_pass_rate": _mean(pass_rates),
+        })
+    return rows
+
+
+TOKEN_ANALYSIS_COLUMNS = [
+    "experiment_id", "skill_mode", "run_count",
+    "mean_input_tokens", "mean_cached_input_tokens", "mean_output_tokens",
+    "mean_reasoning_tokens", "mean_total_tokens", "mean_pass_rate",
+]
+
+
+def _time_analysis_records(records: list[dict]) -> list[dict]:
+    """Timing stats per (experiment_id, skill_mode)."""
+    groups: dict = {}
+    for r in records:
+        key = (r.get("experiment_id"), r.get("skill_mode"))
+        groups.setdefault(key, []).append(r)
+    rows = []
+    for (eid, mode), group in sorted(groups.items(), key=lambda kv: (str(kv[0][0] or ""), SKILL_MODE_ORDER.get(str(kv[0][1] or ""), 99))):
+        rows.append({
+            "experiment_id": eid, "skill_mode": mode,
+            "run_count": len(group),
+            "mean_agent_seconds": _mean(r.get("agent_seconds") for r in group),
+            "mean_checker_seconds": _mean(r.get("checker_seconds") for r in group),
+            "mean_total_seconds": _mean(r.get("total_seconds") for r in group),
+            "median_total_seconds": _median(r.get("total_seconds") for r in group),
+        })
+    return rows
+
+
+TIME_ANALYSIS_COLUMNS = [
+    "experiment_id", "skill_mode", "run_count",
+    "mean_agent_seconds", "mean_checker_seconds", "mean_total_seconds", "median_total_seconds",
+]
+
+FAILURES_COLUMNS = [
+    "experiment_id", "scenario", "prompt_type", "skill_mode",
+    "replicate", "run_number", "run_id",
+    "pipeline_state", "pipeline_error",
+    "is_infrastructure_failure",
+]
+
+_INFRA_FAILURE_STATES = frozenset({
+    "AUT_FAILED", "CHECKER_FAILED", "CORRECTION_MISSING", "CORRECTION_INVALID",
+})
+
+
+def _failures_records(records: list[dict]) -> list[dict]:
+    """Run fallite infrastrutturalmente o task non riuscite."""
+    rows = []
+    for r in records:
+        status = r.get("status") or ""
+        is_infra = status in _INFRA_FAILURE_STATES
+        if not is_infra and r.get("task_success") is not False:
+            continue
+        manifest = r.get("_manifest") or {}
+        rows.append({
+            "experiment_id": r.get("experiment_id"),
+            "scenario": r.get("scenario"),
+            "prompt_type": r.get("prompt_type"),
+            "skill_mode": r.get("skill_mode"),
+            "replicate": r.get("replicate"),
+            "run_number": r.get("run_number"),
+            "run_id": r.get("run_id"),
+            "pipeline_state": status,
+            "pipeline_error": manifest.get("pipeline_error"),
+            "is_infrastructure_failure": is_infra,
+        })
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# Scrittura CSV e Excel
+# ---------------------------------------------------------------------------
+
 def _atomic_csv(path: Path, frame: pd.DataFrame) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     frame.to_csv(temporary, index=False, na_rep="", lineterminator="\n")
     temporary.replace(path)
 
 
-def _write_excel(path: Path, frames: tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]) -> None:
-    temporary = path.with_name(f"{path.stem}.tmp{path.suffix}")
+def _style_sheet(sheet, frame: pd.DataFrame) -> None:
     header_fill = PatternFill("solid", fgColor="17365D")
     header_font = Font(color="FFFFFF", bold=True)
     body_fill = PatternFill("solid", fgColor="F4F7FA")
+    sheet.freeze_panes = "A2"
+    sheet.sheet_view.showGridLines = False
+    sheet.sheet_view.zoomScale = 90
+    sheet.auto_filter.ref = sheet.dimensions
+    for cell in sheet[1]:
+        cell.fill, cell.font = header_fill, header_font
+        cell.alignment = Alignment(vertical="center", wrap_text=True)
+    sheet.row_dimensions[1].height = 32
+    for column_index, column in enumerate(frame.columns, start=1):
+        values = [str(column)] + [str(value) for value in frame[column].dropna().head(100)]
+        width = min(max(max(map(len, values), default=12) + 2, 12), 52)
+        if column in ("run_id", "prompt_sha256", "correction_sha256"):
+            width = 44 if column == "run_id" else 38
+        elif column in ("reason", "test_description"):
+            width = 52
+        sheet.column_dimensions[sheet.cell(1, column_index).column_letter].width = width
+        for row_index in range(2, sheet.max_row + 1):
+            cell = sheet.cell(row_index, column_index)
+            cell.fill = body_fill if row_index % 2 == 0 else PatternFill(fill_type=None)
+            cell.alignment = Alignment(vertical="top", wrap_text=column in ("reason", "test_description"))
+            if column.endswith("rate") or column == "pass_rate":
+                cell.number_format = "0.00%"
+            elif column == "cost":
+                cell.number_format = "$#,##0.0000"
+            elif "seconds" in column:
+                cell.number_format = "0.0"
+            elif "tokens" in column or column in (
+                "repetition", "replicate", "run_number",
+                "checks_passed", "checks_total", "total_runs",
+                "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
+                "task_success_runs", "task_failed_runs", "run_count",
+                "scenarios", "prompt_types", "skill_modes", "replicates",
+                "infrastructure_failures", "completed_runs",
+            ):
+                cell.number_format = "#,##0"
+    for row_index in range(2, sheet.max_row + 1):
+        sheet.row_dimensions[row_index].height = 21
+
+
+def _write_excel(
+    path: Path,
+    frames: tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame],
+    extra_frames: dict[str, pd.DataFrame] | None = None,
+) -> None:
+    temporary = path.with_name(f"{path.stem}.tmp{path.suffix}")
+    all_sheets = list(zip(("Runs", "Checks", "Summary"), frames))
+    if extra_frames:
+        all_sheets += list(extra_frames.items())
     with pd.ExcelWriter(temporary, engine="openpyxl") as writer:
         writer.book.properties.created = datetime(2000, 1, 1)
         writer.book.properties.modified = datetime(2000, 1, 1)
-        for name, frame in zip(("Runs", "Checks", "Summary"), frames):
+        for name, frame in all_sheets:
             frame.to_excel(writer, sheet_name=name, index=False, na_rep="")
-            sheet = writer.sheets[name]
-            sheet.freeze_panes = "A2"
-            sheet.sheet_view.showGridLines = False
-            sheet.sheet_view.zoomScale = 90
-            sheet.auto_filter.ref = sheet.dimensions
-            for cell in sheet[1]:
-                cell.fill, cell.font = header_fill, header_font
-                cell.alignment = Alignment(vertical="center", wrap_text=True)
-            sheet.row_dimensions[1].height = 32
-            for column_index, column in enumerate(frame.columns, start=1):
-                values = [str(column)] + [str(value) for value in frame[column].dropna().head(100)]
-                width = min(max(max(map(len, values), default=12) + 2, 12), 52)
-                if column in ("run_id", "prompt_sha256", "correction_sha256"):
-                    width = 44 if column == "run_id" else 38
-                elif column in ("reason", "test_description"):
-                    width = 52
-                sheet.column_dimensions[sheet.cell(1, column_index).column_letter].width = width
-                for row_index in range(2, sheet.max_row + 1):
-                    cell = sheet.cell(row_index, column_index)
-                    cell.fill = body_fill if row_index % 2 == 0 else PatternFill(fill_type=None)
-                    cell.alignment = Alignment(vertical="top", wrap_text=column in ("reason", "test_description"))
-                    if column.endswith("rate") or column == "pass_rate":
-                        cell.number_format = "0.00%"
-                    elif column == "cost":
-                        cell.number_format = "$#,##0.0000"
-                    elif "seconds" in column:
-                        cell.number_format = "0.0"
-                    elif "tokens" in column or column in (
-                        "repetition", "checks_passed", "checks_total", "total_runs",
-                        "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
-                        "task_success_runs", "task_failed_runs",
-                    ):
-                        cell.number_format = "#,##0"
-            for row_index in range(2, sheet.max_row + 1):
-                sheet.row_dimensions[row_index].height = 21
+            _style_sheet(writer.sheets[name], frame)
     canonical = path.with_name(f"{path.stem}.canonical{path.suffix}")
     with zipfile.ZipFile(temporary, "r") as source, zipfile.ZipFile(
         canonical, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
@@ -362,10 +668,26 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd
     run_frame = pd.DataFrame([{key: record.get(key) for key in RUN_COLUMNS} for record in records],
                              columns=RUN_COLUMNS)
     check_frame = pd.DataFrame(check_records, columns=CHECK_COLUMNS)
-    summary_frame = pd.DataFrame(_summary_records(records), columns=SUMMARY_COLUMNS)
+    summary_records = _summary_records(records)
+    summary_frame = pd.DataFrame(summary_records, columns=SUMMARY_COLUMNS)
+
+    # Fogli extra
+    extra: dict[str, pd.DataFrame] = {}
+    extra["Dashboard"] = pd.DataFrame(_dashboard_records(records), columns=DASHBOARD_COLUMNS)
+    matrix_df = _matrix_records(records)
+    if not matrix_df.empty:
+        extra["Matrix"] = matrix_df
+    extra["Lab Summary"] = pd.DataFrame(_lab_summary_records(records), columns=LAB_SUMMARY_COLUMNS)
+    extra["Prompt Summary"] = pd.DataFrame(_prompt_summary_records(records), columns=PROMPT_SUMMARY_COLUMNS)
+    extra["Skill Summary"] = pd.DataFrame(_skill_summary_records(records), columns=SKILL_SUMMARY_COLUMNS)
+    extra["Token Analysis"] = pd.DataFrame(_token_analysis_records(records), columns=TOKEN_ANALYSIS_COLUMNS)
+    extra["Time Analysis"] = pd.DataFrame(_time_analysis_records(records), columns=TIME_ANALYSIS_COLUMNS)
+    failures = _failures_records(records)
+    extra["Failures"] = pd.DataFrame(failures, columns=FAILURES_COLUMNS)
+
     results.mkdir(parents=True, exist_ok=True)
     _atomic_csv(results / "runs.csv", run_frame)
     _atomic_csv(results / "checks.csv", check_frame)
     _atomic_csv(results / "summary.csv", summary_frame)
-    _write_excel(results / "benchmark.xlsx", (run_frame, check_frame, summary_frame))
+    _write_excel(results / "benchmark.xlsx", (run_frame, check_frame, summary_frame), extra)
     return run_frame, check_frame, summary_frame
