@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-o224s7ze/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-o224s7ze/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -233,8 +233,8 @@ Checking the exit code of the command 'sh -c 'dig @2001:db8:1100::10 . SOA +nore
  Actual: 1
  Expected: 0[00m
 Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"\.\"" | grep -Eq "type[[:space:]]+(master|primary);"'' on 'pc2': [92m OK[00m
-Checking the exit code of the command 'sh -c 'out="$(dig @2001:db8:1100::10 test. NS +norecurse +noall +authority +additional)" && printf "%s\n" "$out" | grep -Eq "test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns1\.test\." && printf "%s\n" "$out" | grep -Eq "ns1\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:1::10" && printf "%s\n" "$out" | grep -Eq "test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns2\.test\." && printf "%s\n" "$out" | grep -Eq "ns2\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:2::10"'' on 'pc2': [91m The exit code of the command differs from the expected one.
- Actual: 9
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do out="$(dig @2001:db8:1100::10 test. NS +norecurse +noall +authority +additional)" || { sleep 1; continue; }; pns="$(printf "%s\n" "$out" | awk '"'"'$1=="test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$(printf "%s\n" "$pns" | sed '"'"'/^$/d'"'"' | wc -l)" -eq 2 || { sleep 1; continue; }; seen1=0; seen2=0; ok=1; for n in $pns; do v="$(printf "%s\n" "$out" | awk -v n="$n" '"'"'$1==n && $4=="AAAA" {print $5}'"'"' | sort -u)"; case "$v" in "2001:db8:1100:1::10") seen1=1 ;; "2001:db8:1100:2::10") seen2=1 ;; *) ok=0 ;; esac; done; test "$ok" -eq 1 && test "$seen1" -eq 1 && test "$seen2" -eq 1 || { sleep 1; continue; }; child="$(dig @2001:db8:1100:1::10 test. NS +norecurse +noall +answer)" || { sleep 1; continue; }; cns="$(printf "%s\n" "$child" | awk '"'"'$1=="test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$pns" = "$cns" && exit 0; sleep 1; done; exit 1'' on 'pc2': [91m The exit code of the command differs from the expected one.
+ Actual: 1
  Expected: 0[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100::10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'' on 'pc2': [91m The exit code of the command differs from the expected one.
  Actual: 1
@@ -265,8 +265,8 @@ Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. MX 
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'' on 'pc4': [91m The exit code of the command differs from the expected one.
  Actual: 1
  Expected: 0[00m
-Checking the exit code of the command 'sh -c 'out="$(dig @2001:db8:1100:1::10 services.test. NS +norecurse +noall +authority +additional)" && printf "%s\n" "$out" | grep -Eq "services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns\.services\.test\." && printf "%s\n" "$out" | grep -Eq "ns\.services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:3::10"'' on 'pc4': [91m The exit code of the command differs from the expected one.
- Actual: 9
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do out="$(dig @2001:db8:1100:1::10 services.test. NS +norecurse +noall +authority +additional)" || { sleep 1; continue; }; pns="$(printf "%s\n" "$out" | awk '"'"'$1=="services.test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$(printf "%s\n" "$pns" | sed '"'"'/^$/d'"'"' | wc -l)" -eq 1 || { sleep 1; continue; }; v="$(printf "%s\n" "$out" | awk -v n="$pns" '"'"'$1==n && $4=="AAAA" {print $5}'"'"' | sort -u)"; test "$v" = "2001:db8:1100:3::10" || { sleep 1; continue; }; childout="$(dig @2001:db8:1100:3::10 services.test. NS +norecurse +noall +answer)" || { sleep 1; continue; }; cns="$(printf "%s\n" "$childout" | awk '"'"'$1=="services.test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$pns" = "$cns" && exit 0; sleep 1; done; exit 1'' on 'pc4': [91m The exit code of the command differs from the expected one.
+ Actual: 1
  Expected: 0[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'' on 'pc4': [91m The exit code of the command differs from the expected one.
  Actual: 1
@@ -522,6 +522,6 @@ Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::
 Undeploying Network Scenario
 Total Tests: 342
 Passed Tests: 286/342
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-o224s7ze/labs/lab as CSV report...
-100%|██████████| 1/1 [00:47<00:00, 47.85s/it]100%|██████████| 1/1 [00:47<00:00, 47.85s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-o224s7ze/labs as CSV report...
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs/lab as CSV report...
+100%|██████████| 1/1 [01:01<00:00, 61.47s/it]100%|██████████| 1/1 [01:01<00:00, 61.47s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs as CSV report...

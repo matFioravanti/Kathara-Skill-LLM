@@ -1,0 +1,4 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,341,1,342,"1: Checking the exit code of the command 'sh -c '! grep -R -E ""^[[:space:]]*forwarders[[:space:]]*\{"" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 158.1054492919975,
+  "final_message": "Configurato il DNS gerarchico interno:\n\n- `pc2`: root `.`\n- `pc4`: primario `test.`\n- `pc6`: secondario `test.` con trasferimento da `pc4`\n- `pc8`: autoritativo `services.test.`\n- `pc10`: resolver ricorsivo con sole root hints interne\n- `pc12`: usa esclusivamente `pc10` in `/etc/resolv.conf`\n\nInclusi `www`, alias `portal`, MX, TXT, delega `services.test.`, e record IPv4/IPv6 richiesti. In `lab.conf` ho modificato soltanto le immagini dei cinque nodi DNS.\n\nLa verifica statica conferma che nessuna riga di rete è stata alterata e non ci sono hosts/forwarder pubblici. Non ho potuto eseguire il lab: il demone Docker non è accessibile nell’ambiente.",
+  "usage": {
+    "input_tokens": 502478,
+    "cached_input_tokens": 450816,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5832,
+    "reasoning_output_tokens": 1901
+  }
+}
