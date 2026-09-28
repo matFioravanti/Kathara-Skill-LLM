@@ -6,7 +6,7 @@ Benchmark riproducibile per valutare agenti LLM CLI che configurano DNS e serviz
 
 Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna modalità Skill il runner alloca una run in `runs/<scenario>/<prompt_type>/<skill_mode>/rNNN`, conserva il baseline in `input/lab`, crea la copia modificabile in `lab` e avvia l'Agent Under Test (AUT) sul Mac host. I numeri delle run avanzano indipendentemente per scenario e modalità.
 
-L'**active agent** di una run è unico: lo stesso agente viene utilizzato sia come AUT sia come Correction Generator. Non è possibile combinare agenti diversi nella stessa run.
+L'**active agent** di una run è unico: lo stesso agente viene utilizzato come AUT. Non è possibile combinare agenti diversi nella stessa run.
 
 Terminata l'esecuzione AUT, il runner salva gli eventi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Il Kathara Lab Checker valuta poi il `lab/` della run usando la correction manuale canonica `scenarios/<scenario>/correction.yaml`. Una copia byte per byte viene salvata in `evaluation/correction.yaml` per riprodurre la valutazione. La correction resta fuori da `lab/` e non viene fornita all'AUT.
 
@@ -256,4 +256,4 @@ Lo smoke check convalida staticamente entrambi gli agent (`codex` e `antigravity
 | Codex | `codex` | `benchmark.yaml` | `gpt-5.6-terra` | ChatGPT login locale |
 | Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Google login locale |
 
-Entrambi gli agenti condividono la stessa architettura: l'agente altera i file del laboratorio invocato su linea di comando, genera la correction, e il Kathara Lab Checker determina il risultato finale senza alcun coinvolgimento dell'LLM nella valutazione.
+Entrambi gli agenti condividono la stessa architettura: l'agente altera i file del laboratorio invocato su linea di comando, e il Kathara Lab Checker valuta la correction canonica sul laboratorio modificato determinando il risultato finale senza alcun coinvolgimento dell'LLM nella valutazione.

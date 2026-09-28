@@ -27,6 +27,8 @@ def manifest(root: Path) -> dict:
     result = {}
     for base, dirs, files in os.walk(root, followlinks=False):
         for name in sorted(dirs + files):
+            if name in ("results.csv", "lab_result_all.csv", "lab_result_failed.csv", "lab_result_summary.csv", "lab_result.xlsx"):
+                continue
             path = Path(base) / name
             info = path.lstat()
             entry = {"mode": stat.S_IMODE(info.st_mode)}
@@ -50,7 +52,7 @@ def copy_lab(source: Path, target: Path) -> None:
     # Nessun link può far leggere/scrivere file esterni durante la copia o il checker.
     if any(entry["kind"] == "link" for entry in manifest(source).values()):
         raise ValueError(f"Link simbolici non supportati nel laboratorio: {source}")
-    shutil.copytree(source, target, symlinks=True, dirs_exist_ok=True)
+    shutil.copytree(source, target, symlinks=True, dirs_exist_ok=True, ignore=shutil.ignore_patterns("lab_result_*.csv", "results.csv", "lab_result.xlsx"))
 
 
 def component_versions() -> dict:
