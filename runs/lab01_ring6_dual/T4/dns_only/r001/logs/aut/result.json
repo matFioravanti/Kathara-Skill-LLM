@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 100.0387931669975,
+  "final_message": "Completato DNS: root `pc2`; `test.` primario `pc4`/secondario `pc6`; `services.test.` `pc8`; resolver `pc10`.\nAggiornate solo le cinque direttive immagine DNS in `lab.conf`; rete e routing invariati.\nAggiunte zone, deleghe/glue IPv6, trasferimento esclusivo `pc4→pc6`, root hints interni e avvio `named`.\n`www.test.`: A `pc11`, AAAA `pc8`; alias `portal`, MX/TXT e record `services.test.` configurati.\n`pc12` usa esclusivamente `2001:db8:1100:4::10` come resolver.\nControllo statico dei contenuti superato; `named-checkconf`/`named-checkzone` non sono disponibili nell’host.",
+  "usage": {
+    "input_tokens": 170205,
+    "cached_input_tokens": 149760,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4352,
+    "reasoning_output_tokens": 961
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "scenario": "lab01_ring6_dual",
+  "scenario_id": "lab01_ring6_dual",
+  "prompt_type": "T4",
+  "prompt_sha256": "2a8097a874f855f3403b20082e02ff771f73bb8a15408ca9523a4533737e6e50",
+  "skill_mode": "no_skill",
+  "run_number": 1,
+  "replicate": 1,
+  "experiment_id": null,
+  "run_id": "lab01_ring6_dual__T4__no_skill__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [],
+  "forced_skills": [],
+  "selected_skills": [],
+  "skill_trace_available": true,
+  "agent_success": true,
+  "status": "COMPLETED",
+  "timing": {
+    "agent_seconds": 114.775457249998,
+    "checker_seconds": 31.667113333001907,
+    "total_seconds": 146.6041127080025
+  },
+  "tokens": {
+    "input": 280879,
+    "cached_input": 256000,
+    "output": 5312,
+    "reasoning": 1703,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 342,
+    "failed": 0,
+    "total": 342,
+    "pass_rate": 1.0
+  },
+  "correction_sha256": "a9801781decf25f494e647e626fdffa328e29c34fdfbb16ce0995efe1bf9b91e",
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
+}

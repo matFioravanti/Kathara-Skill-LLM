@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 114.775457249998,
+  "final_message": "Completato.\n\n- Configurati i ruoli DNS su `pc2`, `pc4`, `pc6`, `pc8`, `pc10` con immagine BIND; in `lab.conf` sono state modificate solo le rispettive direttive `[image]`.\n- Creata gerarchia root interna → `test.` (primario/secondario) → `services.test.`.\n- AXFR di `test.` consentito esclusivamente da `pc4` a `pc6`.\n- Resolver `pc10` ricorsivo, con root hints interni e senza forwarder.\n- Pubblicati A/AAAA, CNAME, MX e TXT richiesti.\n- `pc12` usa esclusivamente il resolver IPv6 `2001:db8:1100:4::10`.\n\nLa sintassi di `lab.conf` è stata verificata con Kathará. L’avvio integrale non è stato possibile perché il daemon Docker non è accessibile nell’ambiente.",
+  "usage": {
+    "input_tokens": 280879,
+    "cached_input_tokens": 256000,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5312,
+    "reasoning_output_tokens": 1703
+  }
+}

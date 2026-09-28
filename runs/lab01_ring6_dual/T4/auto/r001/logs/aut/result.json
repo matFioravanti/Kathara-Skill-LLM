@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 85.210669125001,
+  "final_message": "Completato.\n\n- Ruoli: root `pc2`; `test.` primario `pc4`, secondario `pc6`; `services.test.` `pc8`; resolver ricorsivo `pc10`.\n- Modificati in `lab.conf` solo gli image dei cinque dispositivi DNS, impostati a `kathara/bind`.\n- Implementate deleghe con glue IPv6, AXFR consentito soltanto a `pc6`, root hints interni senza forwarder né DNS pubblico.\n- Pubblicati `www.test.`, `portal.test.`, MX/TXT e i record `services.test.` richiesti.\n- `pc12` usa esclusivamente `2001:db8:1100:4::10` in `/etc/resolv.conf`.\n- Non sono stati aggiunti IP, rotte, host entries o modifiche alla topologia. I tool `named-check*` non sono disponibili localmente per il controllo BIND.",
+  "usage": {
+    "input_tokens": 162103,
+    "cached_input_tokens": 140544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3919,
+    "reasoning_output_tokens": 735
+  }
+}

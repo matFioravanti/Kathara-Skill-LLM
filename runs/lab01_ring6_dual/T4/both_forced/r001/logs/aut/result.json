@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 87.86738974999753,
+  "final_message": "Configurata gerarchia DNS: root `pc2`; `test.` primaria `pc4` e secondaria `pc6`; `services.test.` `pc8`; resolver ricorsivo `pc10`; client `pc12`.\nCreati BIND config/zone/hints in `pc2`, `pc4`, `pc6`, `pc8`, `pc10`; aggiunti avvio `named` e nameserver IPv6 su `pc12`.\n`www.test.`: A `10.11.5.10` (`pc11`) e AAAA `2001:db8:1100:3::10` (`pc8`); `portal` CNAME, MX/TXT e record services presenti.\nTrasferimento `test.` limitato a `pc6`; resolver senza forwarder con hint verso la root interna; autorevoli senza ricorsione.\n`lab.conf` non è stato modificato: `kathara/base` già include BIND. Validazione dinamica Kathará/BIND non eseguita, come richiesto dalla skill DNS.",
+  "usage": {
+    "input_tokens": 185089,
+    "cached_input_tokens": 156160,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3948,
+    "reasoning_output_tokens": 906
+  }
+}

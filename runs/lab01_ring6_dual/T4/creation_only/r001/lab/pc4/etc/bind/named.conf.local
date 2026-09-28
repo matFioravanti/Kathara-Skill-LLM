@@ -1,0 +1,6 @@
+zone "test" {
+    type master;
+    file "/etc/bind/db.test";
+    allow-transfer { 2001:db8:1100:2::10; };
+    also-notify { 2001:db8:1100:2::10; };
+};

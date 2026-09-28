@@ -1,0 +1,16 @@
+ip -6 address replace 2001:db8:1100:2::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:2::1 dev eth0
+mkdir -p /var/cache/bind
+cat > /etc/bind/named.conf <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { any; };
+    listen-on-v6 { any; };
+    recursion no;
+    allow-query { any; };
+    allow-transfer { none; };
+    dnssec-validation no;
+};
+zone "test." { type slave; masters { 2001:db8:1100:1::10; }; file "db.test"; };
+EOF
+named -c /etc/bind/named.conf
