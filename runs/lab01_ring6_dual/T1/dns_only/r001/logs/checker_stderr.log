@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-g081_s9g/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xfft_kvm/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-g081_s9g/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xfft_kvm/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -201,17 +201,6 @@ Checking kernel routes for `r5`...
 Checking the routing table of r5: [92m OK[00m
 Checking kernel routes for `r6`...
 Checking the routing table of r6: [92m OK[00m
-Checking DNS authorities...
-Checking authority ip for domain `.`
-Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`: [91m The dns authorities for domain `.` have the following IPs [''][00m
-Checking if all the named servers can correctly resolve 2001:db8:1100::10 as the root nameserver...
-Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`: [91m The dns authorities for domain `.` have the following IPs [''][00m
-Checking on `pc10` that `2001:db8:1100::10` is the authority for domain `.`: [91m The dns authorities for domain `.` have the following IPs [''][00m
-Checking authority ip for domain `test`
-Checking on `pc4` that `2001:db8:1100:1::10` is the authority for domain `test`: [91m The dns authorities for domain `test` have the following IPs ['', ''][00m
-Checking on `pc6` that `2001:db8:1100:2::10` is the authority for domain `test`: [91m named on pc6 is running but answered with SERVFAIL when quering for test[00m
-Checking authority ip for domain `services.test`
-Checking on `pc8` that `2001:db8:1100:3::10` is the authority for domain `services.test`: [91m The dns authorities for domain `services.test` have the following IPs [''][00m
 Checking local name servers configurations...
 Checking that `2001:db8:1100:4::10` is the local name server for device `pc12`: [92m OK[00m
 Checking DNS records...
@@ -238,40 +227,30 @@ Checking the exit code of the command 'sh -c 'dig @2001:db8:1100::10 test. SOA +
 Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.11\.1\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc3': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1100:1::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'' on 'pc4': [92m OK[00m
-Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\"" | grep -Eq "type[[:space:]]+(master|primary);"'' on 'pc4': [92m OK[00m
+Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\.?\"" | grep -Eq "type[[:space:]]+(master|primary);"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. A +short | grep -Fqx "10.11.5.10"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 portal.test. CNAME +short | grep -Fqx "www.test."'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. MX +short | grep -Fqx "10 mail.services.test."'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'' on 'pc4': [92m OK[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'' on 'pc4': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
+Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'out="$(dig @2001:db8:1100:1::10 services.test. NS +norecurse +noall +authority +additional)" && printf "%s\n" "$out" | grep -Eq "services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns\.services\.test\." && printf "%s\n" "$out" | grep -Eq "ns\.services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:3::10"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 . SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 services.test. SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'' on 'pc4': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.11\.2\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc5': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1100:2::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc6': [92m OK[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'' on 'pc6': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
-Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\"" | grep -Eq "type[[:space:]]+(secondary|slave);"'' on 'pc6': [92m OK[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 www.test. A +short | grep -Fqx "10.11.5.10"'' on 'pc6': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 www.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10"'' on 'pc6': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
-Checking the exit code of the command 'sh -c 's1="$(dig @2001:db8:1100:1::10 test. SOA +short | awk "{print \$3}")"; s2="$(dig @2001:db8:1100:2::10 test. SOA +short | awk "{print \$3}")"; test -n "$s1" && test "$s1" = "$s2"'' on 'pc6': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. AXFR +time=3 +tries=1 | grep -Eq "[[:space:]]SOA[[:space:]]"' ' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\.?\"" | grep -Eq "type[[:space:]]+(secondary|slave);"'' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 www.test. A +short | grep -Fqx "10.11.5.10" && exit 0; sleep 1; done; exit 1'' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 www.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10" && exit 0; sleep 1; done; exit 1'' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do s1="$(dig @2001:db8:1100:1::10 test. SOA +short | awk "{print \$3}")"; s2="$(dig @2001:db8:1100:2::10 test. SOA +short | awk "{print \$3}")"; test -n "$s1" && test "$s1" = "$s2" && exit 0; sleep 1; done; exit 1'' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:1::10 test. AXFR +time=3 +tries=1 | grep -Eq "[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'' on 'pc6': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'' on 'pc6': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.11\.3\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc7': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1100:3::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc8': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 services.test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'' on 'pc8': [92m OK[00m
-Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"services\.test\"" | grep -Eq "type[[:space:]]+(master|primary);"'' on 'pc8': [92m OK[00m
+Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"services\.test\.?\"" | grep -Eq "type[[:space:]]+(master|primary);"'' on 'pc8': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 mail.services.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10"'' on 'pc8': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 status.services.test. AAAA +short | grep -Fqx "2001:db8:1100:2::10"'' on 'pc8': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'' on 'pc8': [92m OK[00m
@@ -288,9 +267,7 @@ Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 www.test.
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 portal.test. CNAME +short | grep -Fqx "www.test."'' on 'pc10': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. MX +short | grep -Fqx "10 mail.services.test."'' on 'pc10': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'' on 'pc10': [92m OK[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'' on 'pc10': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
+Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'' on 'pc10': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 mail.services.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10"'' on 'pc10': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 status.services.test. AAAA +short | grep -Fqx "2001:db8:1100:2::10"'' on 'pc10': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.11\.5\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc11': [92m OK[00m
@@ -302,9 +279,7 @@ Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 www.test.
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 portal.test. CNAME +short | grep -Fqx "www.test."'' on 'pc12': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. MX +short | grep -Fqx "10 mail.services.test."'' on 'pc12': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'' on 'pc12': [92m OK[00m
-Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'' on 'pc12': [91m The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0[00m
+Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'' on 'pc12': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 mail.services.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10"'' on 'pc12': [92m OK[00m
 Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 status.services.test. AAAA +short | grep -Fqx "2001:db8:1100:2::10"'' on 'pc12': [92m OK[00m
 Checking the exit code of the command 'sh -c '! grep -Eq "(^|[[:space:]])(www|portal)\.test\.?([[:space:]]|$)|(^|[[:space:]])(mail|status)\.services\.test\.?([[:space:]]|$)" /etc/hosts'' on 'pc12': [92m OK[00m
@@ -450,8 +425,8 @@ Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:1::
 Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:2::/64 | grep -Eq "^2001:db8:1101:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'' on 'r6': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::/64 | grep -Eq "^2001:db8:1101:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'' on 'r6': [92m OK[00m
 Undeploying Network Scenario
-Total Tests: 359
-Passed Tests: 343/359
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-g081_s9g/labs/lab as CSV report...
-100%|██████████| 1/1 [00:28<00:00, 28.86s/it]100%|██████████| 1/1 [00:28<00:00, 28.86s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-g081_s9g/labs as CSV report...
+Total Tests: 353
+Passed Tests: 350/353
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xfft_kvm/labs/lab as CSV report...
+100%|██████████| 1/1 [00:28<00:00, 28.69s/it]100%|██████████| 1/1 [00:28<00:00, 28.69s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xfft_kvm/labs as CSV report...

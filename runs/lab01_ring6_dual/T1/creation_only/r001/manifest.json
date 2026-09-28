@@ -22,7 +22,7 @@
     "kathara-creation"
   ],
   "started_at": "2026-09-27T13:37:18.238097+00:00",
-  "completed_at": "2026-09-28T09:19:32.516520+00:00",
+  "completed_at": "2026-09-28T10:38:38.825261+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -57,6 +57,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-09-28T09:19:32.510032+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T10:38:38.818021+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -69,10 +73,10 @@
   "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
   "dns_skill_bundle_sha256": "815cd0e8fa799252a717ccf21afe815a73459496fc08a024f320c476e7191845",
   "correction_source": "scenarios/lab01_ring6_dual/correction.yaml",
-  "correction_sha256": "f4c719f0402a2032a6a544b5db5fd03cdae189c8599709b373119a1d68abea00",
+  "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 2,
+  "evaluation_revision": 3,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -84,5 +88,5 @@
   "aut_measurement_ended_at": "2026-09-27T13:37:37.760133+00:00",
   "final_lab_sha256": "fd49e5dfcc1d306a716fda6a8dece5d325b27d0d5e7ad0b0b4748ebb85671aa2",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T09:19:04.882321+00:00"
+  "last_reevaluated_at": "2026-09-28T10:37:51.553132+00:00"
 }

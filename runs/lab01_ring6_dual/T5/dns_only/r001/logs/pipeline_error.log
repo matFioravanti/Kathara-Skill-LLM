@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/matthew/Desktop/Tesi-Skill/benchmark_core/pipeline.py", line 235, in reevaluate_run
+    outcome = run_checker(config, run, snapshot)
+  File "/Users/matthew/Desktop/Tesi-Skill/benchmark_core/checker_runner.py", line 165, in run_checker
+    raise RuntimeError(f"Checker fallito: returncode={code}, timeout={timed_out}; vedere checker_stderr.log.")
+RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log.

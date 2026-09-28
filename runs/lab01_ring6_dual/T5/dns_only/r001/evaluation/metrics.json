@@ -20,10 +20,10 @@
   "selected_skills": [],
   "skill_trace_available": true,
   "agent_success": true,
-  "status": "COMPLETED",
+  "status": "CHECKER_FAILED",
   "timing": {
     "agent_seconds": 156.68988654200075,
-    "checker_seconds": 28.918776291000086,
+    "checker_seconds": 17.098162415999468,
     "total_seconds": 186.90305270799945
   },
   "tokens": {
@@ -35,12 +35,12 @@
     "cache_write_input": 0
   },
   "checker": {
-    "passed": 340,
-    "failed": 19,
-    "total": 359,
-    "pass_rate": 0.947075208913649
+    "passed": null,
+    "failed": null,
+    "total": null,
+    "pass_rate": null
   },
-  "correction_sha256": "f4c719f0402a2032a6a544b5db5fd03cdae189c8599709b373119a1d68abea00",
-  "evaluation_revision": 1,
-  "last_reevaluated_at": "2026-09-28T09:29:42.309663+00:00"
+  "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
+  "evaluation_revision": 2,
+  "last_reevaluated_at": "2026-09-28T10:51:12.658691+00:00"
 }

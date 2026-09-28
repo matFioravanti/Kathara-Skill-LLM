@@ -1,16 +1,2 @@
 Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
-lab,350,9,359,"1: Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`: The dns authorities for domain `.` have the following IPs ['']
-2: Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`: The dns authorities for domain `.` have the following IPs ['']
-3: Checking on `pc10` that `2001:db8:1100::10` is the authority for domain `.`: The dns authorities for domain `.` have the following IPs ['']
-4: Checking on `pc4` that `2001:db8:1100:1::10` is the authority for domain `test`: The dns authorities for domain `test` have the following IPs ['', '']
-5: Checking on `pc6` that `2001:db8:1100:2::10` is the authority for domain `test`: named on pc6 is running but answered with SERVFAIL when quering for test
-6: Checking on `pc8` that `2001:db8:1100:3::10` is the authority for domain `services.test`: The dns authorities for domain `services.test` have the following IPs ['']
-7: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4': The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0
-8: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc10': The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0
-9: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc12': The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0"
+lab,353,0,353,None

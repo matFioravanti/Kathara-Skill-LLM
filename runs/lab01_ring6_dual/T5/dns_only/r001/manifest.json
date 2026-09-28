@@ -22,7 +22,7 @@
     "kathara-dns"
   ],
   "started_at": "2026-09-27T14:57:03.629062+00:00",
-  "completed_at": "2026-09-28T09:30:11.235710+00:00",
+  "completed_at": "2026-09-28T10:51:29.768224+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -32,7 +32,7 @@
     "PyYAML": "6.0.3",
     "openai": "3.16.2"
   },
-  "pipeline_state": "COMPLETED",
+  "pipeline_state": "CHECKER_FAILED",
   "state_history": [
     {
       "state": "PENDING",
@@ -53,11 +53,15 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-09-28T09:30:11.228869+00:00"
+    },
+    {
+      "state": "CHECKER_FAILED",
+      "timestamp": "2026-09-28T10:51:29.755452+00:00"
     }
   ],
   "aut_execution_success": true,
-  "checker_execution_success": true,
-  "task_success": false,
+  "checker_execution_success": false,
+  "task_success": null,
   "source_lab_sha256": "b0628e13156ad5478fb3b35f3706fd573a9e4b32820268398213ad700d13a15c",
   "input_lab_sha256": "b0628e13156ad5478fb3b35f3706fd573a9e4b32820268398213ad700d13a15c",
   "prompt_sha256": "a7a26c510626e8fd8eea7c4259ec8f11f227742784d341a8aaa8262d099e84c4",
@@ -65,10 +69,10 @@
   "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
   "dns_skill_bundle_sha256": "815cd0e8fa799252a717ccf21afe815a73459496fc08a024f320c476e7191845",
   "correction_source": "scenarios/lab01_ring6_dual/correction.yaml",
-  "correction_sha256": "f4c719f0402a2032a6a544b5db5fd03cdae189c8599709b373119a1d68abea00",
+  "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 1,
+  "evaluation_revision": 2,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -80,5 +84,6 @@
   "aut_measurement_ended_at": "2026-09-27T14:59:40.344478+00:00",
   "final_lab_sha256": "4d57643dd2c19b1940b27ff3b1aaa279319bb9674ffb05937c3e79f53e8024c3",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T09:29:42.309663+00:00"
+  "last_reevaluated_at": "2026-09-28T10:51:12.658691+00:00",
+  "pipeline_error": "RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log."
 }
