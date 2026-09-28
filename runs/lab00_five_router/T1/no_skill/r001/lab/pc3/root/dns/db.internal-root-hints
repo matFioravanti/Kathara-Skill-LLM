@@ -1,3 +1,0 @@
-$TTL 300
-.               IN NS   ns.root.
-ns.root.        IN A    100.0.6.2

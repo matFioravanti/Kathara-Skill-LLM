@@ -1,5 +1,0 @@
-$TTL 3600
-@ IN SOA ns.test. hostmaster.test. ( 1 3600 900 604800 300 )
-@ IN NS ns.test.
-ns.test. IN A 100.0.8.2
-www.test. IN A 200.0.1.2

@@ -1,7 +1,0 @@
-$TTL 300
-@ IN SOA ns.services.test. hostmaster.services.test. (
-  2026092701 300 120 1209600 300 )
-  IN NS ns.services.test.
-ns IN A 192.168.34.139
-mail IN A 192.168.34.139
-status IN A 192.168.32.10

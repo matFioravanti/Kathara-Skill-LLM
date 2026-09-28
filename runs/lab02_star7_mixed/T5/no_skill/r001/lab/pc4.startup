@@ -1,3 +1,0 @@
-ip address replace 192.168.32.138/25 dev eth0
-ip route replace default via 192.168.32.129 dev eth0
-printf '%s\n' 'nameserver 192.168.34.138' > /etc/resolv.conf

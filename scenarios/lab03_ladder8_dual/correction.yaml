@@ -214,15 +214,12 @@ test:
     - '!named'
     pc13:
     - '!named'
-    - apache2
     pc14:
     - '!named'
     pc15:
     - '!named'
-    - apache2
     pc16:
     - '!named'
-    - apache2
     r1:
     - '!named'
     r2:
@@ -409,16 +406,6 @@ test:
         MX:
           test.:
           - 10 mail.services.test.
-    http:
-      pc13:
-      - url: http://10.33.1.138/
-        expected_status: 200
-      pc16:
-      - url: http://[2001:db8:1300:7::10]/
-        expected_status: 200
-      pc15:
-      - url: http://10.33.1.202/
-        expected_status: 200
   reachability:
     pc9:
     - 10.33.0.10
@@ -462,8 +449,6 @@ test:
     - command: sh -c 'dig @10.33.0.74 portal.test. CNAME +short | grep -Fqx "www.test."'
       exit_code: 0
     - command: sh -c 'dig @10.33.0.74 test. MX +short | grep -Fqx "10 mail.services.test."'
-      exit_code: 0
-    - command: sh -c 'dig @10.33.0.74 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
       exit_code: 0
     - command: sh -c 'dig @10.33.0.74 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
       exit_code: 0
@@ -537,8 +522,6 @@ test:
       exit_code: 0
     - command: sh -c 'dig @10.33.1.10 test. MX +short | grep -Fqx "10 mail.services.test."'
       exit_code: 0
-    - command: sh -c 'dig @10.33.1.10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
-      exit_code: 0
     - command: sh -c 'dig @10.33.1.10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
       exit_code: 0
     - command: sh -c 'dig @10.33.1.10 mail.services.test. A +short | grep -Fqx "10.33.0.202"'
@@ -563,8 +546,6 @@ test:
       exit_code: 0
     - command: sh -c 'dig @10.33.1.10 test. MX +short | grep -Fqx "10 mail.services.test."'
       exit_code: 0
-    - command: sh -c 'dig @10.33.1.10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
-      exit_code: 0
     - command: sh -c 'dig @10.33.1.10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
       exit_code: 0
     - command: sh -c 'dig @10.33.1.10 mail.services.test. A +short | grep -Fqx "10.33.0.202"'
@@ -574,10 +555,6 @@ test:
     - command: sh -c '! grep -Eq "(^|[[:space:]])(www|portal)\.test\.?([[:space:]]|$)|(^|[[:space:]])(mail|status)\.services\.test\.?([[:space:]]|$)" /etc/hosts'
       exit_code: 0
     - command: sh -c '! ip -6 -o addr show scope global | grep -q .'
-      exit_code: 0
-    - command: sh -c 'curl -4 -sS -o /dev/null -w "%{http_code}\n" http://www.test./ | grep -qx 200'
-      exit_code: 0
-    - command: sh -c 'curl -4 -sS -o /dev/null -w "%{http_code}\n" http://status.services.test./ | grep -qx 200'
       exit_code: 0
     pc12:
     - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:5::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'

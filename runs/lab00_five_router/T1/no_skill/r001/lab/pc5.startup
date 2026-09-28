@@ -1,9 +1,0 @@
-ip address add 100.0.8.2/24 dev eth0
-ip route add default via 100.0.8.1 dev eth0
-
-# Authoritative-only server for test.
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y bind9
-install -m 0644 /root/dns/named.conf /etc/bind/named.conf
-install -m 0644 /root/dns/db.test /etc/bind/db.test
-service bind9 restart

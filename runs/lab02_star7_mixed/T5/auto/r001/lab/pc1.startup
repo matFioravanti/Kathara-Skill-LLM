@@ -1,7 +1,0 @@
-ip address replace 192.168.32.10/25 dev eth0
-ip route replace default via 192.168.32.1 dev eth0
-ip -6 address replace 2001:db8:1200::10/64 dev eth0
-ip -6 route replace default via 2001:db8:1200::1 dev eth0
-mkdir -p /var/www/www.test
-printf '%s\\n' '<!doctype html><title>www.test</title><h1>www.test</h1>' > /var/www/www.test/index.html
-python3 -m http.server 80 --directory /var/www/www.test >/var/log/www.test-http.log 2>&1 &

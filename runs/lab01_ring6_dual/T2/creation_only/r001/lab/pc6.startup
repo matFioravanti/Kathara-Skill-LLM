@@ -1,5 +1,0 @@
-ip -6 address replace 2001:db8:1100:2::10/64 dev eth0
-ip -6 route replace default via 2001:db8:1100:2::1 dev eth0
-install -d -o bind -g bind /var/cache/bind/slaves
-systemctl restart bind9
-systemctl restart apache2

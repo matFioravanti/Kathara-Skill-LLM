@@ -1,3 +1,0 @@
-ip address replace 10.11.5.10/24 dev eth0
-ip route replace default via 10.11.5.1 dev eth0
-python3 -m http.server 80 --bind 10.11.5.10 --directory /var/www/html >/var/log/http-server.log 2>&1 &

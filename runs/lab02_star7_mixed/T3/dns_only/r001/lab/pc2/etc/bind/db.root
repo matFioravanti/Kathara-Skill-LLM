@@ -1,8 +1,0 @@
-$TTL 3600
-@ IN SOA a.root-servers. hostmaster.root. ( 1 3600 900 604800 300 )
-@ IN NS a.root-servers.
-a.root-servers. IN A 192.168.32.11
-test. IN NS ns1.test.
-test. IN NS ns2.test.
-ns1.test. IN AAAA 2001:db8:1200:1::10
-ns2.test. IN AAAA 2001:db8:1200:4::10

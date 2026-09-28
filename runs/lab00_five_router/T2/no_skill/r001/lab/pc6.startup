@@ -1,4 +1,0 @@
-ip -6 address add 2001:8::1/64 dev eth0
-
-# IPv6-only client: query pc3 over its IPv6 address.
-printf '%s\n' 'nameserver 2001:8::2' > /etc/resolv.conf

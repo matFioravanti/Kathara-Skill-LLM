@@ -1,5 +1,0 @@
-ip address add 200.0.1.2/24 dev eth0
-ip route add default via 200.0.1.1 dev eth0
-mkdir -p /var/www/html
-printf '%s\n' 'DNS lab web server' > /var/www/html/index.html
-python3 -m http.server 80 --directory /var/www/html >/var/log/http-server.log 2>&1 &

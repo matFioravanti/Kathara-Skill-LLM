@@ -1,5 +1,0 @@
-ip address replace 192.168.33.138/25 dev eth0
-ip route replace default via 192.168.33.129 dev eth0
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq && apt-get install -y -qq apache2
-service apache2 restart

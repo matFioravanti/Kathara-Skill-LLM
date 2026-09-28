@@ -1,4 +1,0 @@
-Test Description,Passed,Reason
-Checking that apache2 is running on device `pc6`,False,Daemon apache2 is not running on device `pc6`
-Checking that apache2 is running on device `pc8`,False,Daemon apache2 is not running on device `pc8`
-Checking that apache2 is running on device `pc11`,False,Daemon apache2 is not running on device `pc11`

@@ -1,4 +1,0 @@
-ip -6 address replace 2001:db8:1100:2::10/64 dev eth0
-ip -6 route replace default via 2001:db8:1100:2::1 dev eth0
-python3 -m http.server 80 --bind 2001:db8:1100:2::10 --directory /var/www/html >/var/log/http-server.log 2>&1 &
-systemctl restart named

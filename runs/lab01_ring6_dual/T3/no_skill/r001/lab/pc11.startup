@@ -1,5 +1,0 @@
-ip address replace 10.11.5.10/24 dev eth0
-ip route replace default via 10.11.5.1 dev eth0
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq && apt-get install -y -qq apache2
-service apache2 restart

@@ -1,2 +1,0 @@
-Test Description,Passed,Reason
-Checking that named is running on device `pc10`,False,Daemon named is not running on device `pc10`

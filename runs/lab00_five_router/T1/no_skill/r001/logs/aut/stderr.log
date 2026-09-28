@@ -1,3 +1,0 @@
-2026-09-25T19:48:20.596220Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 139 column 5
-2026-09-25T19:50:21.353723Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 139 column 5
-2026-09-25T19:50:40.570176Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 139 column 5

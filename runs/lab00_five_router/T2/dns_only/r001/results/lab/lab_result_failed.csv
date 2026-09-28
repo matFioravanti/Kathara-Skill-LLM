@@ -1,2 +1,0 @@
-Test Description,Passed,Reason
-HTTP check 'http://200.0.1.2/' on pc1 status,False,"Expected HTTP 200, got 0"

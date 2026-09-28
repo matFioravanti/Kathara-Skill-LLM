@@ -1,3 +1,0 @@
-ip -6 address replace 2001:db8:1200:1::10/64 dev eth0
-ip -6 route replace default via 2001:db8:1200:1::1 dev eth0
-service named start

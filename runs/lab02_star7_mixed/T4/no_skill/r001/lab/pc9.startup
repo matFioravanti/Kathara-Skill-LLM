@@ -1,9 +1,0 @@
-ip -6 address replace 2001:db8:1200:4::10/64 dev eth0
-ip -6 route replace default via 2001:db8:1200:4::1 dev eth0
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq && apt-get install -y -qq bind9 dnsutils
-mkdir -p /var/cache/bind
-printf '%s\n' \
-'options { directory "/var/cache/bind"; listen-on { none; }; listen-on-v6 { any; }; recursion no; };' \
-'zone "test" { type secondary; primaries { 2001:db8:1200:1::10; }; file "/var/cache/bind/db.test"; };' > /etc/bind/named.conf
-service bind9 restart
