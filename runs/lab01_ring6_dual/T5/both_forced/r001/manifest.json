@@ -24,7 +24,7 @@
     "kathara-dns"
   ],
   "started_at": "2026-09-27T15:00:10.589881+00:00",
-  "completed_at": "2026-09-28T10:52:07.774098+00:00",
+  "completed_at": "2026-09-28T12:03:12.461642+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -59,6 +59,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-09-28T10:52:07.763980+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T12:03:12.445806+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -74,7 +78,7 @@
   "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 2,
+  "evaluation_revision": 3,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -86,5 +90,5 @@
   "aut_measurement_ended_at": "2026-09-27T15:02:09.469247+00:00",
   "final_lab_sha256": "45c89f907b9cc8caa9fcdff829186854f4804c43e118f2d512fce807dcc11d4c",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T10:51:29.893259+00:00"
+  "last_reevaluated_at": "2026-09-28T12:02:35.065479+00:00"
 }

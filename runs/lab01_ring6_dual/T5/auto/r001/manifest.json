@@ -21,7 +21,7 @@
   ],
   "forced_skills": [],
   "started_at": "2026-09-27T15:02:37.640930+00:00",
-  "completed_at": "2026-09-28T10:52:42.971292+00:00",
+  "completed_at": "2026-09-28T12:03:48.987093+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -56,6 +56,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-09-28T10:52:42.958520+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T12:03:48.973862+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -71,7 +75,7 @@
   "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 2,
+  "evaluation_revision": 3,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -83,5 +87,5 @@
   "aut_measurement_ended_at": "2026-09-27T15:04:36.808250+00:00",
   "final_lab_sha256": "2a9b3ef4adf0cec160368cbbd6d2879122d690a7cc266d0d65ac3140d28718d0",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T10:52:07.908530+00:00"
+  "last_reevaluated_at": "2026-09-28T12:03:12.596631+00:00"
 }

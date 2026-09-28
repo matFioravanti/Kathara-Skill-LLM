@@ -22,7 +22,7 @@
     "kathara-dns"
   ],
   "started_at": "2026-09-27T14:57:03.629062+00:00",
-  "completed_at": "2026-09-28T10:51:29.768224+00:00",
+  "completed_at": "2026-09-28T12:02:34.930599+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -32,7 +32,7 @@
     "PyYAML": "6.0.3",
     "openai": "3.16.2"
   },
-  "pipeline_state": "CHECKER_FAILED",
+  "pipeline_state": "COMPLETED",
   "state_history": [
     {
       "state": "PENDING",
@@ -57,11 +57,15 @@
     {
       "state": "CHECKER_FAILED",
       "timestamp": "2026-09-28T10:51:29.755452+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T12:02:34.921687+00:00"
     }
   ],
   "aut_execution_success": true,
-  "checker_execution_success": false,
-  "task_success": null,
+  "checker_execution_success": true,
+  "task_success": false,
   "source_lab_sha256": "b0628e13156ad5478fb3b35f3706fd573a9e4b32820268398213ad700d13a15c",
   "input_lab_sha256": "b0628e13156ad5478fb3b35f3706fd573a9e4b32820268398213ad700d13a15c",
   "prompt_sha256": "a7a26c510626e8fd8eea7c4259ec8f11f227742784d341a8aaa8262d099e84c4",
@@ -72,7 +76,7 @@
   "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 2,
+  "evaluation_revision": 3,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -84,6 +88,5 @@
   "aut_measurement_ended_at": "2026-09-27T14:59:40.344478+00:00",
   "final_lab_sha256": "4d57643dd2c19b1940b27ff3b1aaa279319bb9674ffb05937c3e79f53e8024c3",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T10:51:12.658691+00:00",
-  "pipeline_error": "RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log."
+  "last_reevaluated_at": "2026-09-28T12:02:04.129576+00:00"
 }

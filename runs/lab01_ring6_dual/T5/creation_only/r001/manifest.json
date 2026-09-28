@@ -22,7 +22,7 @@
     "kathara-creation"
   ],
   "started_at": "2026-09-27T14:55:57.791469+00:00",
-  "completed_at": "2026-09-28T10:51:12.533663+00:00",
+  "completed_at": "2026-09-28T12:02:03.996065+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -57,6 +57,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-09-28T10:51:12.528096+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T12:02:03.988873+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -72,7 +76,7 @@
   "correction_sha256": "c4733d12f9aaad756d1efc8a7edcfcf6f412f96c7b905871f1ba012daed1cee1",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 2,
+  "evaluation_revision": 3,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -84,5 +88,5 @@
   "aut_measurement_ended_at": "2026-09-27T14:56:35.566297+00:00",
   "final_lab_sha256": "fd49e5dfcc1d306a716fda6a8dece5d325b27d0d5e7ad0b0b4748ebb85671aa2",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T10:50:24.807519+00:00"
+  "last_reevaluated_at": "2026-09-28T12:01:16.303347+00:00"
 }
