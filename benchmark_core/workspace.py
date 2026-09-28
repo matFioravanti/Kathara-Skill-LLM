@@ -20,6 +20,8 @@ def write_json(path: Path, data: dict) -> None:
     temporary.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
     temporary.replace(path)
 
+CHECKER_ARTIFACTS = {"results.csv", "lab_result_all.csv", "lab_result_failed.csv", "lab_result_summary.csv", "lab_result.xlsx"}
+
 
 def manifest(root: Path) -> dict:
     if not root.is_dir() or root.is_symlink():
@@ -27,7 +29,7 @@ def manifest(root: Path) -> dict:
     result = {}
     for base, dirs, files in os.walk(root, followlinks=False):
         for name in sorted(dirs + files):
-            if name in ("results.csv", "lab_result_all.csv", "lab_result_failed.csv", "lab_result_summary.csv", "lab_result.xlsx"):
+            if Path(base) == root and name in CHECKER_ARTIFACTS:
                 continue
             path = Path(base) / name
             info = path.lstat()
@@ -52,7 +54,13 @@ def copy_lab(source: Path, target: Path) -> None:
     # Nessun link può far leggere/scrivere file esterni durante la copia o il checker.
     if any(entry["kind"] == "link" for entry in manifest(source).values()):
         raise ValueError(f"Link simbolici non supportati nel laboratorio: {source}")
-    shutil.copytree(source, target, symlinks=True, dirs_exist_ok=True, ignore=shutil.ignore_patterns("lab_result_*.csv", "results.csv", "lab_result.xlsx"))
+    
+    def ignore_root_artifacts(dir_path, contents):
+        if Path(dir_path) == source:
+            return [name for name in contents if name in CHECKER_ARTIFACTS]
+        return []
+
+    shutil.copytree(source, target, symlinks=True, dirs_exist_ok=True, ignore=ignore_root_artifacts)
 
 
 def component_versions() -> dict:

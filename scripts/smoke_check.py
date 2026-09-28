@@ -169,8 +169,8 @@ def main():
         write_json(run / "logs/checker_execution.json", {"returncode": 0, "timed_out": False})
         runs_frame, checks_frame, summary_frame = aggregate(tmp / "runs", tmp / "results")
         assert len(runs_frame) == 1 and len(checks_frame) == 2 and len(summary_frame) == 1
-        assert runs_frame.iloc[0]["run_id"] == run_id
-        assert checks_frame.iloc[0]["run_id"] == run_id
+        assert runs_frame.iloc[0]["ID"] == run_id
+        assert checks_frame.iloc[0]["ID"] == run_id
         assert summary_frame.iloc[0]["total_runs"] == 1
         assert len(analyze(tmp / "results")) == 1
         assert {path.name for path in (tmp / "results").iterdir()} == {
