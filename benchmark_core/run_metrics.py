@@ -100,6 +100,23 @@ def selected_skills(events: list[dict], available: list[str]) -> list[str]:
     return [name for name in candidates if name in found]
 
 
+def forced_skill_satisfaction(forced: list[str] | None, selected: list[str] | None) -> tuple[bool | None, list[str]]:
+    """Computes whether all forced skills were observed in the trace.
+
+    Returns (forced_skills_satisfied, missing_forced_skills).
+    - If forced is None or empty (no_skill / auto): returns (None, []).
+    - Otherwise: returns (True/False, list of missing skill names).
+    Selected must be derived exclusively from real trace events; never set equal to forced.
+    """
+    if not forced:  # None or empty list -> no forcing (no_skill / auto)
+        return None, []
+    if selected is None:
+        # Trace not available (e.g. antigravity agent)
+        return None, []
+    missing = [name for name in forced if name not in selected]
+    return len(missing) == 0, missing
+
+
 def _checker_summary(run: Path, outcome: dict | None) -> dict:
     if outcome is None:
         try:
@@ -149,6 +166,8 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     status = metadata.get("pipeline_state", metadata.get("status"))
     agent_success = metadata.get("aut_execution_success")
     correction_sha = metadata.get("correction_sha256")
+    forced = metadata.get("forced_skills") if isinstance(metadata.get("forced_skills"), list) else None
+    satisfied, missing = forced_skill_satisfaction(forced, selected)
     return {
         "scenario": metadata.get("scenario_id", metadata.get("scenario")),
         "scenario_id": metadata.get("scenario_id", metadata.get("scenario")),
@@ -163,8 +182,10 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "model": metadata.get("model"),
         "reasoning_effort": metadata.get("reasoning_effort"),
         "available_skills": available,
-        "forced_skills": metadata.get("forced_skills") if isinstance(metadata.get("forced_skills"), list) else None,
+        "forced_skills": forced,
         "selected_skills": selected,
+        "forced_skills_satisfied": satisfied,
+        "missing_forced_skills": missing,
         "skill_trace_available": trace_available if agent != "antigravity" else False,
         "agent_success": agent_success,
         "status": status,
@@ -179,6 +200,7 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "evaluation_revision": metadata.get("evaluation_revision", 0),
         "last_reevaluated_at": metadata.get("last_reevaluated_at"),
     }
+
 
 
 def print_run_summary(metrics: dict) -> None:

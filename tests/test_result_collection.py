@@ -7,8 +7,9 @@ from unittest.mock import patch
 import pandas as pd
 
 from benchmark_core.aggregation import _check_category, aggregate
-from benchmark_core.run_metrics import codex_usage, make_metrics, selected_skills
+from benchmark_core.run_metrics import codex_usage, forced_skill_satisfaction, make_metrics, selected_skills
 from benchmark_core.workspace import write_json
+
 
 
 def codex_event(event_type, **fields):
@@ -353,6 +354,326 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(row["median_pass_rate"], 0.5)
             self.assertAlmostEqual(row["stdev_pass_rate"], 2 ** -0.5)
             self.assertTrue(pd.isna(row["mean_total_tokens"]))
+
+
+class ForcedSkillSatisfactionTest(unittest.TestCase):
+    """Tests for forced_skill_satisfaction() and its integration in make_metrics / aggregation."""
+
+    # ------------------------------------------------------------------
+    # Unit tests for forced_skill_satisfaction()
+    # ------------------------------------------------------------------
+
+    def test_no_skill_mode_returns_none(self):
+        satisfied, missing = forced_skill_satisfaction([], [])
+        self.assertIsNone(satisfied)
+        self.assertEqual(missing, [])
+
+    def test_auto_mode_returns_none_even_with_selected(self):
+        satisfied, missing = forced_skill_satisfaction([], ["kathara-dns"])
+        self.assertIsNone(satisfied)
+        self.assertEqual(missing, [])
+
+    def test_creation_only_satisfied(self):
+        satisfied, missing = forced_skill_satisfaction(["kathara-creation"], ["kathara-creation"])
+        self.assertTrue(satisfied)
+        self.assertEqual(missing, [])
+
+    def test_creation_only_not_satisfied(self):
+        satisfied, missing = forced_skill_satisfaction(["kathara-creation"], [])
+        self.assertFalse(satisfied)
+        self.assertEqual(missing, ["kathara-creation"])
+
+    def test_dns_only_satisfied(self):
+        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], ["kathara-dns"])
+        self.assertTrue(satisfied)
+        self.assertEqual(missing, [])
+
+    def test_dns_only_not_satisfied(self):
+        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], [])
+        self.assertFalse(satisfied)
+        self.assertEqual(missing, ["kathara-dns"])
+
+    def test_both_forced_satisfied_when_both_read(self):
+        satisfied, missing = forced_skill_satisfaction(
+            ["kathara-creation", "kathara-dns"],
+            ["kathara-creation", "kathara-dns"],
+        )
+        self.assertTrue(satisfied)
+        self.assertEqual(missing, [])
+
+    def test_both_forced_not_satisfied_when_only_one_read(self):
+        satisfied, missing = forced_skill_satisfaction(
+            ["kathara-creation", "kathara-dns"],
+            ["kathara-creation"],
+        )
+        self.assertFalse(satisfied)
+        self.assertEqual(missing, ["kathara-dns"])
+
+    def test_both_forced_not_satisfied_when_none_read(self):
+        satisfied, missing = forced_skill_satisfaction(
+            ["kathara-creation", "kathara-dns"],
+            [],
+        )
+        self.assertFalse(satisfied)
+        self.assertIn("kathara-creation", missing)
+        self.assertIn("kathara-dns", missing)
+
+    def test_selected_none_returns_none_satisfied(self):
+        """When trace is unavailable (e.g. antigravity), satisfaction is unknown."""
+        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], None)
+        self.assertIsNone(satisfied)
+        self.assertEqual(missing, [])
+
+    def test_selected_skills_are_not_set_to_forced(self):
+        """selected_skills must come from trace, not from forced_skills list."""
+        # Even if forced contains a skill, selected must remain as observed.
+        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], [])
+        self.assertFalse(satisfied)
+        # The missing list must contain the unread forced skill.
+        self.assertIn("kathara-dns", missing)
+
+    # ------------------------------------------------------------------
+    # Integration: make_metrics includes forced_skills_satisfied
+    # ------------------------------------------------------------------
+
+    def _make_run_with_events(self, tmpdir: Path, forced: list, events_jsonl: str,
+                              skill_mode: str = "dns_only") -> dict:
+        run = Path(tmpdir)
+        logs = run / "logs/aut"
+        logs.mkdir(parents=True)
+        (logs / "events.jsonl").write_text(events_jsonl, encoding="utf-8")
+        from benchmark_core.workspace import write_json
+        write_json(logs / "result.json", {"duration_seconds": 1.0, "returncode": 0})
+        metadata = {
+            "scenario_id": "test_scenario", "skill_mode": skill_mode, "run_number": 1,
+            "run_id": "test_run", "agent": "codex", "model": "test-model",
+            "reasoning_effort": "low",
+            "available_skills": ["kathara-creation", "kathara-dns"],
+            "forced_skills": forced,
+            "aut_execution_success": True, "pipeline_state": "COMPLETED",
+        }
+        return make_metrics(run, metadata, total_seconds=2.0, checker_seconds=None,
+                            checker_outcome=None)
+
+    def test_make_metrics_dns_only_satisfied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({
+                "type": "item.completed",
+                "item": {"id": "r1", "type": "command_execution",
+                         "command": "cat .codex/skills/kathara-dns/SKILL.md",
+                         "status": "completed", "exit_code": 0},
+            }) + "\n"
+            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
+        self.assertTrue(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], [])
+        self.assertEqual(metrics["selected_skills"], ["kathara-dns"])
+
+    def test_make_metrics_dns_only_not_satisfied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({"type": "turn.started"}) + "\n"
+            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
+        self.assertFalse(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], ["kathara-dns"])
+        self.assertEqual(metrics["selected_skills"], [])
+
+    def test_make_metrics_creation_only_satisfied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({
+                "type": "item.completed",
+                "item": {"id": "r1", "type": "command_execution",
+                         "command": "cat .codex/skills/kathara-creation/SKILL.md",
+                         "status": "completed", "exit_code": 0},
+            }) + "\n"
+            metrics = self._make_run_with_events(tmp, ["kathara-creation"], events, "creation_only")
+        self.assertTrue(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], [])
+
+    def test_make_metrics_creation_only_not_satisfied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({"type": "turn.started"}) + "\n"
+            metrics = self._make_run_with_events(tmp, ["kathara-creation"], events, "creation_only")
+        self.assertFalse(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], ["kathara-creation"])
+
+    def test_make_metrics_both_forced_satisfied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = (
+                json.dumps({"type": "item.completed", "item": {
+                    "id": "r1", "type": "command_execution",
+                    "command": "cat .codex/skills/kathara-creation/SKILL.md",
+                    "status": "completed", "exit_code": 0}}) + "\n"
+                + json.dumps({"type": "item.completed", "item": {
+                    "id": "r2", "type": "command_execution",
+                    "command": "cat .codex/skills/kathara-dns/SKILL.md",
+                    "status": "completed", "exit_code": 0}}) + "\n"
+            )
+            metrics = self._make_run_with_events(
+                tmp, ["kathara-creation", "kathara-dns"], events, "both_forced")
+        self.assertTrue(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], [])
+
+    def test_make_metrics_both_forced_only_one_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({"type": "item.completed", "item": {
+                "id": "r1", "type": "command_execution",
+                "command": "cat .codex/skills/kathara-creation/SKILL.md",
+                "status": "completed", "exit_code": 0}}) + "\n"
+            metrics = self._make_run_with_events(
+                tmp, ["kathara-creation", "kathara-dns"], events, "both_forced")
+        self.assertFalse(metrics["forced_skills_satisfied"])
+        self.assertIn("kathara-dns", metrics["missing_forced_skills"])
+
+    def test_make_metrics_auto_forced_skills_satisfied_is_none(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({"type": "item.completed", "item": {
+                "id": "r1", "type": "command_execution",
+                "command": "cat .codex/skills/kathara-dns/SKILL.md",
+                "status": "completed", "exit_code": 0}}) + "\n"
+            metrics = self._make_run_with_events(tmp, [], events, "auto")
+        self.assertIsNone(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], [])
+
+    def test_make_metrics_no_skill_forced_skills_satisfied_is_none(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({"type": "turn.started"}) + "\n"
+            metrics = self._make_run_with_events(tmp, [], events, "no_skill")
+        self.assertIsNone(metrics["forced_skills_satisfied"])
+        self.assertEqual(metrics["missing_forced_skills"], [])
+
+    # ------------------------------------------------------------------
+    # Integration: aggregate() includes forced_skill columns in runs/summary
+    # ------------------------------------------------------------------
+
+    def _write_forced_run(self, runs: Path, run_number: int, *, skill_mode: str,
+                          forced: list, selected: list, pass_rate: float | None,
+                          scenario: str = "forced_test"):
+        fss, mfs = forced_skill_satisfaction(forced, selected)
+        run = runs / f"{scenario}/T1/{skill_mode}/r{run_number:03d}"
+        evaluation = run / "evaluation"
+        evaluation.mkdir(parents=True)
+        (run / "logs/aut").mkdir(parents=True)
+        metrics = {
+            "scenario": scenario, "prompt_type": "T1", "skill_mode": skill_mode,
+            "run_number": run_number, "run_id": f"{scenario}__T1__{skill_mode}__r{run_number:03d}",
+            "agent": "codex", "model": "codex-local", "reasoning_effort": "low",
+            "available_skills": ["kathara-creation", "kathara-dns"],
+            "forced_skills": forced, "selected_skills": selected,
+            "forced_skills_satisfied": fss, "missing_forced_skills": mfs,
+            "skill_trace_available": True,
+            "agent_success": True, "status": "COMPLETED",
+            "timing": {"agent_seconds": 1.0, "checker_seconds": 1.0, "total_seconds": 2.0},
+            "tokens": {"input": 100, "cached_input": None, "output": 10,
+                       "reasoning": None, "total": None, "cache_write_input": None},
+            "checker": {"passed": 1 if pass_rate is not None else None,
+                        "failed": 0 if pass_rate == 1.0 else 1,
+                        "total": 1 if pass_rate is not None else None,
+                        "pass_rate": pass_rate},
+        }
+        from benchmark_core.workspace import write_json
+        write_json(evaluation / "metrics.json", metrics)
+        write_json(run / "manifest.json", {
+            "scenario_id": scenario, "prompt_type": "T1", "skill_mode": skill_mode,
+            "run_number": run_number, "run_id": metrics["run_id"], "agent": "codex",
+            "model": "codex-local", "reasoning_effort": "low",
+            "pipeline_state": "COMPLETED",
+            "available_skills": forced, "forced_skills": forced,
+            "checker_execution_success": True,
+            "task_success": pass_rate == 1.0 if pass_rate is not None else None,
+        })
+        if pass_rate is not None:
+            report = run / "results/lab/lab_result_all.csv"
+            report.parent.mkdir(parents=True)
+            passed = pass_rate == 1.0
+            report.write_text(
+                "Test Description,Passed,Reason\n"
+                f"sample,{passed},{'OK' if passed else 'fail'}\n",
+                encoding="utf-8",
+            )
+        return run
+
+    def test_aggregation_includes_skill_columns_in_runs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            runs = Path(tmp) / "runs"
+            self._write_forced_run(runs, 1, skill_mode="dns_only",
+                                   forced=["kathara-dns"], selected=["kathara-dns"],
+                                   pass_rate=1.0)
+            self._write_forced_run(runs, 2, skill_mode="dns_only",
+                                   forced=["kathara-dns"], selected=[],
+                                   pass_rate=0.0)
+            output = Path(tmp) / "results"
+            with patch("benchmark_core.checker_runner.subprocess.Popen"):
+                run_frame, _, summary_frame = aggregate(runs, output)
+
+            self.assertIn("available_skills", run_frame.columns)
+            self.assertIn("forced_skills", run_frame.columns)
+            self.assertIn("selected_skills", run_frame.columns)
+            self.assertIn("forced_skills_satisfied", run_frame.columns)
+            self.assertIn("missing_forced_skills", run_frame.columns)
+
+            # Row 0: skill was read -> satisfied
+            self.assertEqual(run_frame.loc[0, "forced_skills"], "kathara-dns")
+            self.assertEqual(run_frame.loc[0, "selected_skills"], "kathara-dns")
+            self.assertTrue(run_frame.loc[0, "forced_skills_satisfied"])
+            self.assertTrue(pd.isna(run_frame.loc[0, "missing_forced_skills"]))
+
+
+            # Row 1: skill was NOT read -> not satisfied
+            self.assertFalse(run_frame.loc[1, "forced_skills_satisfied"])
+            self.assertIn("kathara-dns", str(run_frame.loc[1, "missing_forced_skills"]))
+
+            # Summary columns
+            self.assertIn("forced_skill_valid_runs", summary_frame.columns)
+            self.assertIn("forced_skill_invalid_runs", summary_frame.columns)
+            self.assertIn("forced_skill_valid_rate", summary_frame.columns)
+            row = summary_frame.iloc[0]
+            self.assertEqual(row["forced_skill_valid_runs"], 1)
+            self.assertEqual(row["forced_skill_invalid_runs"], 1)
+            self.assertAlmostEqual(row["forced_skill_valid_rate"], 0.5)
+
+    def test_aggregation_auto_mode_forced_skill_columns_are_null(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            runs = Path(tmp) / "runs"
+            self._write_forced_run(runs, 1, skill_mode="auto",
+                                   forced=[], selected=["kathara-dns"], pass_rate=1.0)
+            output = Path(tmp) / "results"
+            with patch("benchmark_core.checker_runner.subprocess.Popen"):
+                run_frame, _, summary_frame = aggregate(runs, output)
+            self.assertTrue(pd.isna(run_frame.loc[0, "forced_skills_satisfied"]))
+            self.assertTrue(pd.isna(summary_frame.iloc[0]["forced_skill_valid_runs"]))
+            self.assertIsNone(summary_frame.iloc[0]["forced_skill_valid_rate"])
+
+    def test_old_runs_without_forced_skill_fields_do_not_crash(self):
+        """Old metrics.json files without forced_skills_satisfied are handled gracefully."""
+        with tempfile.TemporaryDirectory() as tmp:
+            runs = Path(tmp) / "runs"
+            run = runs / "old_scenario/T1/auto/r001"
+            evaluation = run / "evaluation"
+            evaluation.mkdir(parents=True)
+            (run / "logs/aut").mkdir(parents=True)
+            # Old-style metrics without new fields
+            from benchmark_core.workspace import write_json
+            write_json(evaluation / "metrics.json", {
+                "scenario": "old_scenario", "prompt_type": "T1", "skill_mode": "auto",
+                "run_number": 1, "run_id": "old_scenario__T1__auto__r001",
+                "agent": "codex", "model": "codex-local", "reasoning_effort": "low",
+                "status": "COMPLETED",
+                "timing": {"agent_seconds": 1.0, "checker_seconds": 1.0, "total_seconds": 2.0},
+                "tokens": {"input": 50, "cached_input": None, "output": 5,
+                           "reasoning": None, "total": None, "cache_write_input": None},
+                "checker": {"passed": None, "failed": None, "total": None, "pass_rate": None},
+                # NOTE: no forced_skills_satisfied, no missing_forced_skills
+            })
+            write_json(run / "manifest.json", {
+                "scenario_id": "old_scenario", "prompt_type": "T1", "skill_mode": "auto",
+                "run_number": 1, "run_id": "old_scenario__T1__auto__r001", "agent": "codex",
+                "model": "codex-local", "reasoning_effort": "low", "pipeline_state": "COMPLETED",
+                "checker_execution_success": True, "task_success": None,
+            })
+            output = Path(tmp) / "results"
+            with patch("benchmark_core.checker_runner.subprocess.Popen"):
+                run_frame, _, _ = aggregate(runs, output)
+            self.assertEqual(len(run_frame), 1)
+            self.assertTrue(pd.isna(run_frame.loc[0, "forced_skills_satisfied"]))
 
 
 if __name__ == "__main__":
