@@ -350,7 +350,7 @@ test:
       exit_code: 0
     - command: sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 www.test. AAAA +short | grep -Fqx "2001:db8:1100:3::10" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
-    - command: sh -c 'for i in 1 2 3 4 5; do s1="$(dig @2001:db8:1100:1::10 test. SOA +short | awk \"{print \\$3}\")"; s2="$(dig @2001:db8:1100:2::10 test. SOA +short | awk \"{print \\$3}\")"; test -n "$s1" && test "$s1" = "$s2" && exit 0; sleep 1; done; exit 1'
+    - command: sh -c 'for i in 1 2 3 4 5; do s1="$(dig @2001:db8:1100:1::10 test. SOA +short | awk "{print \$3}")"; s2="$(dig @2001:db8:1100:2::10 test. SOA +short | awk "{print \$3}")"; test -n "$s1" && test "$s1" = "$s2" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
     - command: sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:1::10 test. AXFR +time=3 +tries=1 | grep -Eq "[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
