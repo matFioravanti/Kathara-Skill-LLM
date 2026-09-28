@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 78.05187345800005,
+  "final_message": "Configurazione DNS avanzata completata.\n\n- Ruoli: `pc2` root, `pc4` master `test.`, `pc6` slave AXFR, `pc8` master `services.test.`, `pc10` resolver con soli hint interni, `pc12` client IPv6.\n- Aggiornati BIND e avvio servizio su tutti i nodi DNS; immagini impostate a `kathara/bind`.\n- Deleghe, glue AAAA, record richiesti e AXFR limitato a `pc6` sono configurati.\n- `pc10` non usa forwarder né root pubbliche; DNSSEC è disabilitato. `pc12` usa esclusivamente `2001:db8:1100:4::10`.\n- Nessuna modifica a topologia, indirizzi, gateway o routing statico. Verifica statica completata; i binari `named-check*` non sono disponibili nell’ambiente host.",
+  "usage": {
+    "input_tokens": 123441,
+    "cached_input_tokens": 107008,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3496,
+    "reasoning_output_tokens": 494
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 81.59898208400045,
+  "final_message": "Configurata la gerarchia DNS interna: root→pc2; `test.` primario→pc4, secondario AXFR→pc6; `services.test.`→pc8; resolver→pc10; client→pc12.  \nCreati i `named.conf`, le zone root/test/services e gli hint IPv6 esclusivamente verso `2001:db8:1100::10`; nessun forwarder o root pubblico.  \nInseriti deleghe, glue AAAA, record A/AAAA/CNAME/MX/TXT richiesti e AXFR limitato a pc6.  \nImmagini BIND abilitate solo per pc2, pc4, pc6, pc8 e pc10; startup DNS aggiunti senza modificare rete o routing.  \n`pc12` usa solo `nameserver 2001:db8:1100:4::10`; validatori BIND locali non disponibili, quindi non ho eseguito check dinamici Kathara.",
+  "usage": {
+    "input_tokens": 127515,
+    "cached_input_tokens": 104192,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3934,
+    "reasoning_output_tokens": 660
+  }
+}
