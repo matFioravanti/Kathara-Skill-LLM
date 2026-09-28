@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 42.60210095799994,
+  "final_message": "Completata la gerarchia DNS: `pc2` root, `pc4` master `test.`, `pc6` slave, `pc8` `services.test.`, `pc10` resolver ricorsivo.\n\nCreati i file BIND in `pc{2,4,6,8,10}/etc/bind/`; aggiunti avvii `named` e `pc12` usa solo `2001:db8:1100:4::10`.\n\nModificate esclusivamente le cinque direttive immagine DNS in `lab.conf`, impostandole a `kathara/bind`.\n\nDeleghe, glue IPv6, hint della root interna, record richiesti e transfer `test.` limitato a `pc6` sono configurati.\n\nAssunzione applicata: server DNS IPv6-only, quindi NS/glue/hint e record dei servizi sono AAAA; `www.test. A` punta a `pc11` (`10.11.5.10`).\n\nControllo statico completato; `named-checkconf`/`named-checkzone` non sono disponibili localmente.",
+  "usage": {
+    "input_tokens": 187150,
+    "cached_input_tokens": 163072,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3922,
+    "reasoning_output_tokens": 721
+  }
+}

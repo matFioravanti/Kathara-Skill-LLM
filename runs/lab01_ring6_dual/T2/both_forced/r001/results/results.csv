@@ -1,0 +1,4 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,341,1,342,"1: Checking the exit code of the command 'sh -c 'out=""$(dig @2001:db8:1100:1::10 services.test. NS +norecurse +noall +authority +additional)"" && printf ""%s\n"" ""$out"" | grep -Eq ""services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns\.services\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns\.services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:3::10""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

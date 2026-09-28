@@ -1,0 +1,345 @@
+Test Description,Passed,Reason
+Check existence of `pc1`,True,OK
+Check existence of `pc2`,True,OK
+Check existence of `pc3`,True,OK
+Check existence of `pc4`,True,OK
+Check existence of `pc5`,True,OK
+Check existence of `pc6`,True,OK
+Check existence of `pc7`,True,OK
+Check existence of `pc8`,True,OK
+Check existence of `pc9`,True,OK
+Check existence of `pc10`,True,OK
+Check existence of `pc11`,True,OK
+Check existence of `pc12`,True,OK
+Check existence of `r1`,True,OK
+Check existence of `r2`,True,OK
+Check existence of `r3`,True,OK
+Check existence of `r4`,True,OK
+Check existence of `r5`,True,OK
+Check existence of `r6`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc1`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc2`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc3`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc4`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc5`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc6`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc7`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc8`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc9`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc10`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc11`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc12`,True,OK
+Checking the collision domain attached to interface `eth0` of `r1`,True,OK
+Checking the collision domain attached to interface `eth1` of `r1`,True,OK
+Checking the collision domain attached to interface `eth2` of `r1`,True,OK
+Checking the collision domain attached to interface `eth0` of `r2`,True,OK
+Checking the collision domain attached to interface `eth1` of `r2`,True,OK
+Checking the collision domain attached to interface `eth2` of `r2`,True,OK
+Checking the collision domain attached to interface `eth0` of `r3`,True,OK
+Checking the collision domain attached to interface `eth1` of `r3`,True,OK
+Checking the collision domain attached to interface `eth2` of `r3`,True,OK
+Checking the collision domain attached to interface `eth0` of `r4`,True,OK
+Checking the collision domain attached to interface `eth1` of `r4`,True,OK
+Checking the collision domain attached to interface `eth2` of `r4`,True,OK
+Checking the collision domain attached to interface `eth0` of `r5`,True,OK
+Checking the collision domain attached to interface `eth1` of `r5`,True,OK
+Checking the collision domain attached to interface `eth2` of `r5`,True,OK
+Checking the collision domain attached to interface `eth0` of `r6`,True,OK
+Checking the collision domain attached to interface `eth1` of `r6`,True,OK
+Checking the collision domain attached to interface `eth2` of `r6`,True,OK
+Check existence of `pc1.startup` file,True,OK
+Check existence of `pc2.startup` file,True,OK
+Check existence of `pc3.startup` file,True,OK
+Check existence of `pc4.startup` file,True,OK
+Check existence of `pc5.startup` file,True,OK
+Check existence of `pc6.startup` file,True,OK
+Check existence of `pc7.startup` file,True,OK
+Check existence of `pc8.startup` file,True,OK
+Check existence of `pc9.startup` file,True,OK
+Check existence of `pc10.startup` file,True,OK
+Check existence of `pc11.startup` file,True,OK
+Check existence of `pc12.startup` file,True,OK
+Check existence of `r1.startup` file,True,OK
+Check existence of `r2.startup` file,True,OK
+Check existence of `r3.startup` file,True,OK
+Check existence of `r4.startup` file,True,OK
+Check existence of `r5.startup` file,True,OK
+Check existence of `r6.startup` file,True,OK
+Verifying the IP address (10.11.0.10/24) assigned to eth0 of pc1,True,OK
+Verifying the IP address (2001:db8:1100::10/64) assigned to eth0 of pc2,True,OK
+Verifying the IP address (10.11.1.10/24) assigned to eth0 of pc3,True,OK
+Verifying the IP address (2001:db8:1100:1::10/64) assigned to eth0 of pc4,True,OK
+Verifying the IP address (10.11.2.10/24) assigned to eth0 of pc5,True,OK
+Verifying the IP address (2001:db8:1100:2::10/64) assigned to eth0 of pc6,True,OK
+Verifying the IP address (10.11.3.10/24) assigned to eth0 of pc7,True,OK
+Verifying the IP address (2001:db8:1100:3::10/64) assigned to eth0 of pc8,True,OK
+Verifying the IP address (10.11.4.10/24) assigned to eth0 of pc9,True,OK
+Verifying the IP address (2001:db8:1100:4::10/64) assigned to eth0 of pc10,True,OK
+Verifying the IP address (10.11.5.10/24) assigned to eth0 of pc11,True,OK
+Verifying the IP address (2001:db8:1100:5::10/64) assigned to eth0 of pc12,True,OK
+Verifying the IP address (10.11.0.1/24) assigned to eth0 of r1,True,OK
+Verifying the IP address (172.18.0.1/30) assigned to eth1 of r1,True,OK
+Verifying the IP address (172.18.0.22/30) assigned to eth2 of r1,True,OK
+Verifying the IP address (10.11.1.1/24) assigned to eth0 of r2,True,OK
+Verifying the IP address (172.18.0.2/30) assigned to eth1 of r2,True,OK
+Verifying the IP address (172.18.0.5/30) assigned to eth2 of r2,True,OK
+Verifying the IP address (10.11.2.1/24) assigned to eth0 of r3,True,OK
+Verifying the IP address (172.18.0.6/30) assigned to eth1 of r3,True,OK
+Verifying the IP address (172.18.0.9/30) assigned to eth2 of r3,True,OK
+Verifying the IP address (10.11.3.1/24) assigned to eth0 of r4,True,OK
+Verifying the IP address (172.18.0.10/30) assigned to eth1 of r4,True,OK
+Verifying the IP address (172.18.0.13/30) assigned to eth2 of r4,True,OK
+Verifying the IP address (10.11.4.1/24) assigned to eth0 of r5,True,OK
+Verifying the IP address (172.18.0.14/30) assigned to eth1 of r5,True,OK
+Verifying the IP address (172.18.0.17/30) assigned to eth2 of r5,True,OK
+Verifying the IP address (10.11.5.1/24) assigned to eth0 of r6,True,OK
+Verifying the IP address (172.18.0.18/30) assigned to eth1 of r6,True,OK
+Verifying the IP address (172.18.0.21/30) assigned to eth2 of r6,True,OK
+Verifying `2001:db8:1100::10` reachable from device `pc10`,True,OK
+Verifying `2001:db8:1100:1::10` reachable from device `pc10`,True,OK
+Verifying `2001:db8:1100:2::10` reachable from device `pc10`,True,OK
+Verifying `2001:db8:1100:3::10` reachable from device `pc10`,True,OK
+Verifying `2001:db8:1100:1::10` reachable from device `pc6`,True,OK
+Verifying `2001:db8:1100:4::10` reachable from device `pc12`,True,OK
+Verifying `2001:db8:1100:3::10` reachable from device `pc12`,True,OK
+Verifying `2001:db8:1100:2::10` reachable from device `pc12`,True,OK
+Checking that named is not running on device `pc1`,True,OK
+Checking that named is running on device `pc2`,True,OK
+Checking that named is not running on device `pc3`,True,OK
+Checking that named is running on device `pc4`,True,OK
+Checking that named is not running on device `pc5`,True,OK
+Checking that named is running on device `pc6`,True,OK
+Checking that named is not running on device `pc7`,True,OK
+Checking that named is running on device `pc8`,True,OK
+Checking that named is not running on device `pc9`,True,OK
+Checking that named is running on device `pc10`,True,OK
+Checking that named is not running on device `pc11`,True,OK
+Checking that named is not running on device `pc12`,True,OK
+Checking that named is not running on device `r1`,True,OK
+Checking that named is not running on device `r2`,True,OK
+Checking that named is not running on device `r3`,True,OK
+Checking that named is not running on device `r4`,True,OK
+Checking that named is not running on device `r5`,True,OK
+Checking that named is not running on device `r6`,True,OK
+Checking the routing table of pc1,True,OK
+Checking the routing table of pc3,True,OK
+Checking the routing table of pc5,True,OK
+Checking the routing table of pc7,True,OK
+Checking the routing table of pc9,True,OK
+Checking the routing table of pc11,True,OK
+Checking the routing table of r1,True,OK
+Checking the routing table of r2,True,OK
+Checking the routing table of r3,True,OK
+Checking the routing table of r4,True,OK
+Checking the routing table of r5,True,OK
+Checking the routing table of r6,True,OK
+Checking that `2001:db8:1100:4::10` is the local name server for device `pc12`,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+"Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.0\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100::10 . SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""\.\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'out=""$(dig @2001:db8:1100::10 test. NS +norecurse +noall +authority +additional)"" && printf ""%s\n"" ""$out"" | grep -Eq ""test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns1\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns1\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:1::10"" && printf ""%s\n"" ""$out"" | grep -Eq ""test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns2\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns2\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:2::10""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100::10 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100::10 test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.1\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100:1::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\.?\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. A +short | grep -Fqx ""10.11.5.10""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx ""\""benchmark=dns-advanced\""""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'out=""$(dig @2001:db8:1100:1::10 services.test. NS +norecurse +noall +authority +additional)"" && printf ""%s\n"" ""$out"" | grep -Eq ""services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns\.services\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns\.services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1100:3::10""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 . SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 services.test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.2\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100:2::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"" && exit 0; sleep 1; done; exit 1'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\.?\"""" | grep -Eq ""type[[:space:]]+(secondary|slave);""'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 www.test. A +short | grep -Fqx ""10.11.5.10"" && exit 0; sleep 1; done; exit 1'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:2::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10"" && exit 0; sleep 1; done; exit 1'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do s1=""$(dig @2001:db8:1100:1::10 test. SOA +short | awk ""{print \$3}"")""; s2=""$(dig @2001:db8:1100:2::10 test. SOA +short | awk ""{print \$3}"")""; test -n ""$s1"" && test ""$s1"" = ""$s2"" && exit 0; sleep 1; done; exit 1'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1100:1::10 test. AXFR +time=3 +tries=1 | grep -Eq ""[[:space:]]SOA[[:space:]]"" && exit 0; sleep 1; done; exit 1'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.3\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc7'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100:3::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 services.test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""services\.test\.?\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 mail.services.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 status.services.test. AAAA +short | grep -Fqx ""2001:db8:1100:2::10""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 . SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.4\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc9'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100:4::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c '! grep -R -E ""^[[:space:]]*forwarders[[:space:]]*\{"" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'grep -R -E ""^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;"" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'conf=""$(named-checkconf -p 2>/dev/null)"" && printf ""%s\n"" ""$conf"" | grep -A8 -E ""zone \""\.\"""" | grep -Eq ""type[[:space:]]+hint;"" && f=""$(printf ""%s\n"" ""$conf"" | awk '""'""'/zone ""\.""/{z=1} z && $1==""file""{gsub(/["";]/,"""",$2); print $2; exit} z && /^};/{z=0}'""'""')"" && test -n ""$f"" && if [ ""${f#/}"" = ""$f"" ]; then d=""$(printf ""%s\n"" ""$conf"" | awk '""'""'$1==""directory""{gsub(/["";]/,"""",$2); print $2; exit}'""'""')""; f=""${d:-/etc/bind}/$f""; fi && test -r ""$f"" && awk '""'""'BEGIN{n=0;ok=0} /^[[:space:]]*($|;)/{next} {for(i=1;i<=NF;i++){if($i==""A""||$i==""AAAA""){n++; if($(i+1)==""2001:db8:1100::10"") ok++}}} END{exit !(n==1 && ok==1)}'""'""' ""$f""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'for z in . test. services.test.; do if dig @2001:db8:1100:4::10 ""$z"" SOA +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -qE ""flags:.*[[:space:]]aa[[:space:];]""; then exit 1; fi; done; exit 0'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 www.test. A +short | grep -Fqx ""10.11.5.10""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx ""\""benchmark=dns-advanced\""""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 mail.services.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 status.services.test. AAAA +short | grep -Fqx ""2001:db8:1100:2::10""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.5\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc11'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100:5::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c '! dig @2001:db8:1100:1::10 test. AXFR +time=3 +tries=1 2>/dev/null | grep -Eq ""www\.test\..*[[:space:]](A|AAAA)[[:space:]]""' ' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'test ""$(awk '""'""'$1==""nameserver""{print $2}'""'""' /etc/resolv.conf | wc -l)"" -eq 1 && grep -Eq ""^nameserver[[:space:]]+2001:db8:1100:4::10([[:space:]]|$)"" /etc/resolv.conf' ' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 www.test. A +short | grep -Fqx ""10.11.5.10""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx ""\""benchmark=dns-advanced\""""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 mail.services.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 status.services.test. AAAA +short | grep -Fqx ""2001:db8:1100:2::10""'' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c '! grep -Eq ""(^|[[:space:]])(www|portal)\.test\.?([[:space:]]|$)|(^|[[:space:]])(mail|status)\.services\.test\.?([[:space:]]|$)"" /etc/hosts'' on 'pc12'",True,OK
+Checking the exit code of the command 'sh -c '! ip -4 -o addr show scope global | grep -q .'' on 'pc12',True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq ""[[:space:]]2001:db8:1100::1/64[[:space:]]""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth1 | grep -Eq ""[[:space:]]2001:db8:1101::1/64[[:space:]]""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth2 | grep -Eq ""[[:space:]]2001:db8:1101:5::2/64[[:space:]]""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv4.ip_forward | grep -Eq ""=[[:space:]]*1$""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq ""=[[:space:]]*1$""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.1.0/24 | grep -Eq ""^10\.11\.1\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.2.0/24 | grep -Eq ""^10\.11\.2\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.3.0/24 | grep -Eq ""^10\.11\.3\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.4.0/24 | grep -Eq ""^10\.11\.4\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.21[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.5.0/24 | grep -Eq ""^10\.11\.5\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.21[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.4/30 | grep -Eq ""^172\.18\.0\.4/30[[:space:]]+via[[:space:]]+172\.18\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.8/30 | grep -Eq ""^172\.18\.0\.8/30[[:space:]]+via[[:space:]]+172\.18\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.12/30 | grep -Eq ""^172\.18\.0\.12/30[[:space:]]+via[[:space:]]+172\.18\.0\.21[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.16/30 | grep -Eq ""^172\.18\.0\.16/30[[:space:]]+via[[:space:]]+172\.18\.0\.21[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:1::/64 | grep -Eq ""^2001:db8:1100:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:2::/64 | grep -Eq ""^2001:db8:1100:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:3::/64 | grep -Eq ""^2001:db8:1100:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:4::/64 | grep -Eq ""^2001:db8:1100:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:5::/64 | grep -Eq ""^2001:db8:1100:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:1::/64 | grep -Eq ""^2001:db8:1101:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:2::/64 | grep -Eq ""^2001:db8:1101:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::/64 | grep -Eq ""^2001:db8:1101:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:4::/64 | grep -Eq ""^2001:db8:1101:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq ""[[:space:]]2001:db8:1100:1::1/64[[:space:]]""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth1 | grep -Eq ""[[:space:]]2001:db8:1101::2/64[[:space:]]""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth2 | grep -Eq ""[[:space:]]2001:db8:1101:1::1/64[[:space:]]""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv4.ip_forward | grep -Eq ""=[[:space:]]*1$""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq ""=[[:space:]]*1$""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.0.0/24 | grep -Eq ""^10\.11\.0\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.2.0/24 | grep -Eq ""^10\.11\.2\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.3.0/24 | grep -Eq ""^10\.11\.3\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.4.0/24 | grep -Eq ""^10\.11\.4\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.5.0/24 | grep -Eq ""^10\.11\.5\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.8/30 | grep -Eq ""^172\.18\.0\.8/30[[:space:]]+via[[:space:]]+172\.18\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.12/30 | grep -Eq ""^172\.18\.0\.12/30[[:space:]]+via[[:space:]]+172\.18\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.16/30 | grep -Eq ""^172\.18\.0\.16/30[[:space:]]+via[[:space:]]+172\.18\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.20/30 | grep -Eq ""^172\.18\.0\.20/30[[:space:]]+via[[:space:]]+172\.18\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100::/64 | grep -Eq ""^2001:db8:1100::/64[[:space:]]+via[[:space:]]+2001:db8:1101::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:2::/64 | grep -Eq ""^2001:db8:1100:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:3::/64 | grep -Eq ""^2001:db8:1100:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:4::/64 | grep -Eq ""^2001:db8:1100:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:5::/64 | grep -Eq ""^2001:db8:1100:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:2::/64 | grep -Eq ""^2001:db8:1101:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::/64 | grep -Eq ""^2001:db8:1101:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:4::/64 | grep -Eq ""^2001:db8:1101:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:5::/64 | grep -Eq ""^2001:db8:1101:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq ""[[:space:]]2001:db8:1100:2::1/64[[:space:]]""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth1 | grep -Eq ""[[:space:]]2001:db8:1101:1::2/64[[:space:]]""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth2 | grep -Eq ""[[:space:]]2001:db8:1101:2::1/64[[:space:]]""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv4.ip_forward | grep -Eq ""=[[:space:]]*1$""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq ""=[[:space:]]*1$""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.0.0/24 | grep -Eq ""^10\.11\.0\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.1.0/24 | grep -Eq ""^10\.11\.1\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.3.0/24 | grep -Eq ""^10\.11\.3\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.4.0/24 | grep -Eq ""^10\.11\.4\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.5.0/24 | grep -Eq ""^10\.11\.5\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.0/30 | grep -Eq ""^172\.18\.0\.0/30[[:space:]]+via[[:space:]]+172\.18\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.12/30 | grep -Eq ""^172\.18\.0\.12/30[[:space:]]+via[[:space:]]+172\.18\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.16/30 | grep -Eq ""^172\.18\.0\.16/30[[:space:]]+via[[:space:]]+172\.18\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.20/30 | grep -Eq ""^172\.18\.0\.20/30[[:space:]]+via[[:space:]]+172\.18\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100::/64 | grep -Eq ""^2001:db8:1100::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:1::/64 | grep -Eq ""^2001:db8:1100:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:3::/64 | grep -Eq ""^2001:db8:1100:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:4::/64 | grep -Eq ""^2001:db8:1100:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:5::/64 | grep -Eq ""^2001:db8:1100:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101::/64 | grep -Eq ""^2001:db8:1101::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::/64 | grep -Eq ""^2001:db8:1101:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:4::/64 | grep -Eq ""^2001:db8:1101:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:5::/64 | grep -Eq ""^2001:db8:1101:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq ""[[:space:]]2001:db8:1100:3::1/64[[:space:]]""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth1 | grep -Eq ""[[:space:]]2001:db8:1101:2::2/64[[:space:]]""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth2 | grep -Eq ""[[:space:]]2001:db8:1101:3::1/64[[:space:]]""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv4.ip_forward | grep -Eq ""=[[:space:]]*1$""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq ""=[[:space:]]*1$""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.0.0/24 | grep -Eq ""^10\.11\.0\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.1.0/24 | grep -Eq ""^10\.11\.1\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.2.0/24 | grep -Eq ""^10\.11\.2\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.4.0/24 | grep -Eq ""^10\.11\.4\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.14[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.5.0/24 | grep -Eq ""^10\.11\.5\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.14[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.0/30 | grep -Eq ""^172\.18\.0\.0/30[[:space:]]+via[[:space:]]+172\.18\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.4/30 | grep -Eq ""^172\.18\.0\.4/30[[:space:]]+via[[:space:]]+172\.18\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.16/30 | grep -Eq ""^172\.18\.0\.16/30[[:space:]]+via[[:space:]]+172\.18\.0\.14[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.20/30 | grep -Eq ""^172\.18\.0\.20/30[[:space:]]+via[[:space:]]+172\.18\.0\.14[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100::/64 | grep -Eq ""^2001:db8:1100::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:1::/64 | grep -Eq ""^2001:db8:1100:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:2::/64 | grep -Eq ""^2001:db8:1100:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:4::/64 | grep -Eq ""^2001:db8:1100:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:5::/64 | grep -Eq ""^2001:db8:1100:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101::/64 | grep -Eq ""^2001:db8:1101::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:1::/64 | grep -Eq ""^2001:db8:1101:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:4::/64 | grep -Eq ""^2001:db8:1101:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:5::/64 | grep -Eq ""^2001:db8:1101:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq ""[[:space:]]2001:db8:1100:4::1/64[[:space:]]""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth1 | grep -Eq ""[[:space:]]2001:db8:1101:3::2/64[[:space:]]""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth2 | grep -Eq ""[[:space:]]2001:db8:1101:4::1/64[[:space:]]""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv4.ip_forward | grep -Eq ""=[[:space:]]*1$""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq ""=[[:space:]]*1$""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.0.0/24 | grep -Eq ""^10\.11\.0\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.1.0/24 | grep -Eq ""^10\.11\.1\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.2.0/24 | grep -Eq ""^10\.11\.2\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.3.0/24 | grep -Eq ""^10\.11\.3\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.5.0/24 | grep -Eq ""^10\.11\.5\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.0/30 | grep -Eq ""^172\.18\.0\.0/30[[:space:]]+via[[:space:]]+172\.18\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.4/30 | grep -Eq ""^172\.18\.0\.4/30[[:space:]]+via[[:space:]]+172\.18\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.8/30 | grep -Eq ""^172\.18\.0\.8/30[[:space:]]+via[[:space:]]+172\.18\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.20/30 | grep -Eq ""^172\.18\.0\.20/30[[:space:]]+via[[:space:]]+172\.18\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100::/64 | grep -Eq ""^2001:db8:1100::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:1::/64 | grep -Eq ""^2001:db8:1100:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:2::/64 | grep -Eq ""^2001:db8:1100:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:3::/64 | grep -Eq ""^2001:db8:1100:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:5::/64 | grep -Eq ""^2001:db8:1100:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101::/64 | grep -Eq ""^2001:db8:1101::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:1::/64 | grep -Eq ""^2001:db8:1101:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:2::/64 | grep -Eq ""^2001:db8:1101:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:5::/64 | grep -Eq ""^2001:db8:1101:5::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r5'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq ""[[:space:]]2001:db8:1100:5::1/64[[:space:]]""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth1 | grep -Eq ""[[:space:]]2001:db8:1101:4::2/64[[:space:]]""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth2 | grep -Eq ""[[:space:]]2001:db8:1101:5::1/64[[:space:]]""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv4.ip_forward | grep -Eq ""=[[:space:]]*1$""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq ""=[[:space:]]*1$""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.0.0/24 | grep -Eq ""^10\.11\.0\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.1.0/24 | grep -Eq ""^10\.11\.1\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.2.0/24 | grep -Eq ""^10\.11\.2\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.3.0/24 | grep -Eq ""^10\.11\.3\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 10.11.4.0/24 | grep -Eq ""^10\.11\.4\.0/24[[:space:]]+via[[:space:]]+172\.18\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.0/30 | grep -Eq ""^172\.18\.0\.0/30[[:space:]]+via[[:space:]]+172\.18\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.4/30 | grep -Eq ""^172\.18\.0\.4/30[[:space:]]+via[[:space:]]+172\.18\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.8/30 | grep -Eq ""^172\.18\.0\.8/30[[:space:]]+via[[:space:]]+172\.18\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip route show 172.18.0.12/30 | grep -Eq ""^172\.18\.0\.12/30[[:space:]]+via[[:space:]]+172\.18\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100::/64 | grep -Eq ""^2001:db8:1100::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:1::/64 | grep -Eq ""^2001:db8:1100:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:2::/64 | grep -Eq ""^2001:db8:1100:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:3::/64 | grep -Eq ""^2001:db8:1100:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1100:4::/64 | grep -Eq ""^2001:db8:1100:4::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101::/64 | grep -Eq ""^2001:db8:1101::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:1::/64 | grep -Eq ""^2001:db8:1101:1::/64[[:space:]]+via[[:space:]]+2001:db8:1101:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:2::/64 | grep -Eq ""^2001:db8:1101:2::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::/64 | grep -Eq ""^2001:db8:1101:3::/64[[:space:]]+via[[:space:]]+2001:db8:1101:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)""'' on 'r6'",True,OK
