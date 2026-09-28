@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 106.0950417920003,
+  "final_message": "Configurato il lab senza modificare router, indirizzi o routing statico.\n\n- `pc2`: DNS autoritativo per `.` con delega `test.` a `ns.test.` e glue `100.0.8.2`.\n- `pc5`: unico autoritativo per `test.`, con `www.test. A 200.0.1.2`.\n- `pc3`: resolver ricorsivo con root hint interna `100.0.6.2`, senza forwarder e con `dnssec-validation no;`, in ascolto IPv4/IPv6.\n- `pc4` usa `100.0.0.2`; `pc6` usa `2001:8::2`.\n- `pc1` avvia Apache HTTP.\n\nLa sintassi di `lab.conf` è stata validata da Kathara. Il test in esecuzione non è possibile qui perché il daemon Docker non è accessibile.",
+  "usage": {
+    "input_tokens": 212419,
+    "cached_input_tokens": 192000,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4460,
+    "reasoning_output_tokens": 1806
+  }
+}

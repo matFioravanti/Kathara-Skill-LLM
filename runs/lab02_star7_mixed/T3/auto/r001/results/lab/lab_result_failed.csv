@@ -1,0 +1,58 @@
+Test Description,Passed,Reason
+Checking that apache2 is running on device `pc1`,False,Daemon apache2 is not running on device `pc1`
+Checking that apache2 is running on device `pc7`,False,Daemon apache2 is not running on device `pc7`
+Checking that apache2 is running on device `pc10`,False,Daemon apache2 is not running on device `pc10`
+Checking on `pc3` that `2001:db8:1200:1::10` is the authority for domain `test`,False,"The dns authorities for domain `test` have the following IPs ['', '']"
+Checking on `pc9` that `2001:db8:1200:4::10` is the authority for domain `test`,False,named on pc9 is running but answered with SERVFAIL when quering for test
+Checking correctness of DNS records,False,pc4 resolve A mail.services.test. with IP 192.168.33.139 instead of ['192.168.34.139']
+HTTP check 'http://192.168.33.138/' on pc7 status,False,"Expected HTTP 200, got 0"
+HTTP check 'http://[2001:db8:1200:4::11]/' on pc10 status,False,"Expected HTTP 200, got 0"
+HTTP check 'http://192.168.32.10/' on pc1 status,False,"Expected HTTP 200, got 0"
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc3'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc3'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://status.services.test./ | grep -qx 200'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'curl -6 -g -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\"""" | grep -Eq ""type[[:space:]]+(secondary|slave);""'' on 'pc9'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""services\.test\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc12'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.139 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc12'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

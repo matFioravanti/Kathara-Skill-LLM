@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 103.57773170900055,
+  "final_message": "Configurato DNS: root `.` → `pc2`, autoritativo `test.` → `pc5`, resolver ricorsivo → `pc3`.\nCreati BIND e zone in `pc2/etc/bind`, `pc3/etc/bind`, `pc5/etc/bind`; `www.test. A 200.0.1.2`.\n`pc4` usa `100.0.0.2`; `pc6` usa `2001:8::2`; nessun forwarder, AAAA o DNS pubblico.\nImmagini BIND impostate solo su `pc2`, `pc3`, `pc5`; router, indirizzi e routing invariati.\nVerifica statica OK; i comandi `named-checkconf`/`named-checkzone` non sono disponibili sull’host.\nNota: la procedura `kathara-dns` configura il record web, ma non aggiunge un demone HTTP su `pc1` perché non consente modifiche non-DNS al suo avvio.",
+  "usage": {
+    "input_tokens": 193442,
+    "cached_input_tokens": 173824,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4594,
+    "reasoning_output_tokens": 1641
+  }
+}

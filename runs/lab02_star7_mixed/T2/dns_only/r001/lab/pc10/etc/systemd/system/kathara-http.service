@@ -1,0 +1,10 @@
+[Unit]
+Description=HTTP service for www.test. IPv6
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -m http.server 80 --bind 2001:db8:1200:4::11 --directory /var/www/html
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

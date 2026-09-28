@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 108.59756483399906,
+  "final_message": "Completata l’infrastruttura DNS gerarchica interna e ridondata.\n\n- Ruoli: root `pc2`; `test.` master `pc4` e slave `pc6`; `services.test.` `pc8`; resolver ricorsivo `pc10`.\n- Creati i file BIND e impostate immagini `kathara/bind` sui soli cinque nodi DNS.\n- `pc12` usa esclusivamente `2001:db8:1100:4::10`; nessun forwarder né DNS pubblico.\n- Pubblicati deleghe, glue IPv6, trasferimento limitato a `pc6`, MX/SRV/TXT e record applicativi richiesti.\n- Endpoint: www→pc1, portal→pc3, mail.test→pc5, mail.services→pc7, status.services→pc9.\n- Verifica statica superata (`git diff --check`); `named-checkconf/zone` non è disponibile nell’host.",
+  "usage": {
+    "input_tokens": 165695,
+    "cached_input_tokens": 143616,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4639,
+    "reasoning_output_tokens": 1516
+  }
+}

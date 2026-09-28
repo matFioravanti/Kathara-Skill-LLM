@@ -1,0 +1,142 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,364,55,419,"1: Checking that apache2 is running on device `pc1`: Daemon apache2 is not running on device `pc1`
+2: Checking that apache2 is running on device `pc7`: Daemon apache2 is not running on device `pc7`
+3: Checking that apache2 is running on device `pc10`: Daemon apache2 is not running on device `pc10`
+4: Checking on `pc3` that `2001:db8:1200:1::10` is the authority for domain `test`: The dns authorities for domain `test` have the following IPs ['', '']
+5: Checking on `pc9` that `2001:db8:1200:4::10` is the authority for domain `test`: named on pc9 is running but answered with SERVFAIL when quering for test
+6: Checking correctness of DNS records: pc4 resolve A www.test. with IP 192.168.32.10 instead of ['192.168.33.138']
+7: Checking correctness of DNS records: pc4 resolve A mail.services.test. with IP 192.168.32.10 instead of ['192.168.34.139']
+8: Checking correctness of DNS records: pc4 resolve A status.services.test. with IP 192.168.33.10 instead of ['192.168.32.10']
+9: Checking correctness of DNS records: pc4 resolve AAAA www.test. with IP 2001:db8:1200::10 instead of ['2001:db8:1200:4::11']
+10: HTTP check 'http://192.168.33.138/' on pc7 status: Expected HTTP 200, got 0
+11: HTTP check 'http://[2001:db8:1200:4::11]/' on pc10 status: Expected HTTP 200, got 0
+12: HTTP check 'http://192.168.32.10/' on pc1 status: Expected HTTP 200, got 0
+13: Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+14: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+15: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+16: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+17: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+18: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+19: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+20: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+21: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+22: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+23: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+24: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+25: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+26: Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+27: Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://status.services.test./ | grep -qx 200'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+28: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+29: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+30: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+31: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+32: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+33: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+34: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+35: Checking the exit code of the command 'sh -c 'curl -6 -g -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+36: Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\"""" | grep -Eq ""type[[:space:]]+(secondary|slave);""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+37: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:4::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+38: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:4::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+39: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+40: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+41: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+42: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+43: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+44: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+45: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+46: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+47: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+48: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+49: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+50: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+51: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+52: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+53: Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""services\.test\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+54: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+55: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

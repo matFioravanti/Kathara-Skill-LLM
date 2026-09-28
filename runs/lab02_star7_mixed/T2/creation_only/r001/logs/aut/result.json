@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 95.41738958299902,
+  "final_message": "Laboratorio completato senza modificare topologia, indirizzi, gateway o rotte.\n\n- DNS root su `pc2`, `test.` primario su `pc3`, secondario via AXFR su `pc9`, `services.test.` su `pc12`.\n- Resolver ricorsivo interno su `pc11`, senza forwarder/DNS pubblici e con `dnssec-validation no`.\n- Client `pc4` e `pc6` configurati esclusivamente con `pc11`.\n- Record A, AAAA, CNAME, MX, SRV e TXT richiesti presenti.\n- Apache attivato su `pc7` (IPv4), `pc10` (IPv6) e `pc1` (status IPv4).\n- Trasferimento di `test.` limitato all’IPv6 di `pc9`.\n\nNon ho avviato Kathara: la skill richiede di attendere una richiesta esplicita di validazione runtime.",
+  "usage": {
+    "input_tokens": 122086,
+    "cached_input_tokens": 100096,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4596,
+    "reasoning_output_tokens": 1386
+  }
+}

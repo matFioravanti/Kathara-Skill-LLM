@@ -1,0 +1,6 @@
+ip address replace 192.168.34.139/25 dev eth0
+ip route replace default via 192.168.34.129 dev eth0
+systemctl restart named
+mkdir -p /var/www/status.services.test
+printf '%s\\n' '<!doctype html><title>status.services.test</title><h1>status.services.test</h1>' > /var/www/status.services.test/index.html
+python3 -m http.server 80 --directory /var/www/status.services.test >/var/log/status.services.test-http.log 2>&1 &

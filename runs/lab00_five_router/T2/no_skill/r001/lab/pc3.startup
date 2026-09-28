@@ -1,0 +1,29 @@
+ip address add 100.0.0.2/24 dev eth0
+ip route add default via 100.0.0.1 dev eth0
+ip address add 2001:8::2/64 dev eth0
+
+# Recursive resolver.  Its only starting point is the internal root server.
+mkdir -p /etc/bind
+cat > /etc/bind/named.conf <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { 100.0.0.2; };
+    listen-on-v6 { 2001:8::2; };
+    recursion yes;
+    allow-query { any; };
+    allow-recursion { any; };
+    dnssec-validation no;
+};
+
+zone "." {
+    type hint;
+    file "/etc/bind/db.root.internal";
+};
+EOF
+
+cat > /etc/bind/db.root.internal <<'EOF'
+.       300 IN NS ns.root.
+ns.root. 300 IN A  100.0.6.2
+EOF
+
+named-checkconf && named-checkzone . /etc/bind/db.root.internal && named -c /etc/bind/named.conf

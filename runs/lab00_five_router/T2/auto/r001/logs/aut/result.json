@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 77.62780225000006,
+  "final_message": "Configurato il DNS interno gerarchico:\n\n- `pc2`: root autoritativa con delega e glue per `test.`.\n- `pc5`: autoritativo per `test.` con `www.test. A 200.0.1.2`.\n- `pc3`: resolver ricorsivo con root hint interno verso `100.0.6.2`, senza forwarder e DNSSEC disabilitato.\n- `pc4` e `pc6`: usano rispettivamente `100.0.0.2` e `2001:8::2`.\n- BIND abilitato solo su `pc2`, `pc3`, `pc5`; topologia, IP, gateway e rotte sono invariati.\n\nNon ho avviato Kathara, come previsto dalla procedura della skill; `named-checkconf`/`named-checkzone` non sono disponibili sull’host. Inoltre nei file del laboratorio non è presente una configurazione del web server su `pc1`, quindi la risposta HTTP va verificata dopo l’avvio del lab con `curl http://200.0.1.2/`.",
+  "usage": {
+    "input_tokens": 98653,
+    "cached_input_tokens": 83712,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3598,
+    "reasoning_output_tokens": 1324
+  }
+}

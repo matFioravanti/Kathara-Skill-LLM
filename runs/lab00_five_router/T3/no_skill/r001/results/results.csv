@@ -1,0 +1,53 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,110,22,132,"1: Checking that named is running on device `pc2`: Daemon named is not running on device `pc2`
+2: Checking that named is running on device `pc3`: Daemon named is not running on device `pc3`
+3: Checking that named is running on device `pc5`: Daemon named is not running on device `pc5`
+4: Checking on `pc2` that `100.0.6.2` is the authority for domain `.`: named not started in `pc2`.startup`
+5: Checking on `pc2` that `100.0.6.2` is the authority for domain `.`: named not started in `pc2`.startup`
+6: Checking on `pc3` that `100.0.6.2` is the authority for domain `.`: named not started in `pc3`.startup`
+7: Checking on `pc3` that `100.0.6.2` is the authority for domain `.`: named not started in `pc3`.startup`
+8: Checking on `pc5` that `100.0.8.2` is the authority for domain `test`: named not started in `pc5`.startup`
+9: Checking correctness of DNS records: pc4 resolve A www.test. with IP ;; communications error to 100.0.0.2#53: connection refused
+;; communications error to 100.0.0.2#53: connection refused
+;; communications error to 100.0.0.2#53: connection refused
+;; no servers could be reached instead of ['200.0.1.2']
+10: Checking correctness of DNS records: pc6 resolve A www.test. with IP ;; communications error to 2001:8::2#53: connection refused
+;; communications error to 2001:8::2#53: connection refused
+;; communications error to 2001:8::2#53: connection refused
+;; no servers could be reached instead of ['200.0.1.2']
+11: Checking the exit code of the command 'sh -c 'dig @100.0.6.2 . SOA +norecurse +comments +answer +noquestion +nostats | tr '""'""'\n'""'""' '""'""' '""'""' | grep -Eq '""'""'flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]'""'""''' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+12: Checking the exit code of the command 'sh -c 'dig @100.0.6.2 test. NS +norecurse +noall +authority +additional | tr '""'""'\n'""'""' '""'""' '""'""' | grep -Eq '""'""'test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+.*[[:space:]]A[[:space:]]+100\.0\.8\.2'""'""''' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+13: Checking the exit code of the command 'sh -c 'dig @100.0.6.2 test. SOA +norecurse +comments +noquestion +nostats | grep '""'""'flags:'""'""' | grep -vqE '""'""'flags:.*[[:space:]]aa[[:space:];]'""'""''' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+14: Checking the exit code of the command 'sh -c 'dig @100.0.6.2 www.test. A +recurse +comments +noquestion +nostats | grep '""'""'flags:'""'""' | grep -vqE '""'""'flags:.*[[:space:]]ra[[:space:];]'""'""''' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+15: Checking the exit code of the command 'sh -c 'dig @100.0.8.2 test. SOA +norecurse +comments +answer +noquestion +nostats | tr '""'""'\n'""'""' '""'""' '""'""' | grep -Eq '""'""'flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]'""'""''' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+16: Checking the exit code of the command 'sh -c 'dig @100.0.8.2 test. NS +norecurse +noall +answer | grep -Eq '""'""'^test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+\.?$'""'""''' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+17: Checking the exit code of the command 'sh -c 'dig @100.0.8.2 www.test. A +norecurse +short | grep -qx '""'""'200.0.1.2'""'""''' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+18: Checking the exit code of the command 'sh -c 'dig @100.0.8.2 . SOA +norecurse +comments +noquestion +nostats | grep '""'""'flags:'""'""' | grep -vqE '""'""'flags:.*[[:space:]]aa[[:space:];]'""'""' && dig @100.0.8.2 www.test. A +recurse +comments +noquestion +nostats | grep '""'""'flags:'""'""' | grep -vqE '""'""'flags:.*[[:space:]]ra[[:space:];]'""'""''' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+19: Checking the exit code of the command 'sh -c 'dig @100.0.0.2 www.test. A +recurse +comments +answer +noquestion +nostats | tr '""'""'\n'""'""' '""'""' '""'""' | grep -Eq '""'""'flags:.*[[:space:]]ra[[:space:];].*www\.test\..*[[:space:]]A[[:space:]]+200\.0\.1\.2'""'""''' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+20: Checking the exit code of the command 'sh -c 'dig www.test. A +short | grep -qx '""'""'200.0.1.2'""'""''' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+21: Checking the exit code of the command 'sh -c '! grep -Eq '""'""'(^|[[:space:]])www\.test\.?([[:space:]]|$)'""'""' /etc/hosts && getent ahostsv4 www.test. | awk '""'""'$1==""200.0.1.2""{ok=1} END{exit !ok}'""'""''' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+22: Checking the exit code of the command 'sh -c 'dig www.test. A +short | grep -qx '""'""'200.0.1.2'""'""''' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

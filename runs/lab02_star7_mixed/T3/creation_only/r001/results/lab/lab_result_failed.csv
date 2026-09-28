@@ -1,0 +1,38 @@
+Test Description,Passed,Reason
+Checking that apache2 is running on device `pc1`,False,Daemon apache2 is not running on device `pc1`
+Checking on `pc3` that `2001:db8:1200:1::10` is the authority for domain `test`,False,"The dns authorities for domain `test` have the following IPs ['', '']"
+Checking on `pc9` that `2001:db8:1200:4::10` is the authority for domain `test`,False,named on pc9 is running but answered with SERVFAIL when quering for test
+HTTP check 'http://192.168.32.10/' on pc1 status,False,"Expected HTTP 200, got 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc3'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc3'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://status.services.test./ | grep -qx 200'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

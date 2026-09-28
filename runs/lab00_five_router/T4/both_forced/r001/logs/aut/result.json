@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 72.49628304199996,
+  "final_message": "Configurazione completata.\n\n- Ruoli: root autorevole `pc2`; autorevole `test.` `pc5`; resolver ricorsivo `pc3`; client `pc4` IPv4 e `pc6` IPv6.\n- Creati i file BIND in `pc2`, `pc3`, `pc5`; DNSSEC disabilitato e nessun forwarder/DNS esterno.\n- Aggiornati `lab.conf` e startup solo per immagini BIND, avvio named e resolver dei client.\n- `www.test.` risolve a `200.0.1.2`; `pc1` avvia Apache e serve una pagina HTTP.\n- Topologia, indirizzi, gateway e routing sono rimasti invariati.",
+  "usage": {
+    "input_tokens": 117425,
+    "cached_input_tokens": 98048,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3129,
+    "reasoning_output_tokens": 767
+  }
+}

@@ -1,0 +1,27 @@
+ip address add 100.0.8.2/24 dev eth0
+ip route add default via 100.0.8.1 dev eth0
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y bind9
+mkdir -p /etc/bind/zones
+printf '%s\n' \
+  'options {' \
+  '  directory "/var/cache/bind";' \
+  '  listen-on { 100.0.8.2; };' \
+  '  listen-on-v6 { none; };' \
+  '  recursion no;' \
+  '  dnssec-validation no;' \
+  '};' \
+  'zone "test" {' \
+  '  type master;' \
+  '  file "/etc/bind/zones/db.test";' \
+  '};' > /etc/bind/named.conf
+printf '%s\n' \
+  '$TTL 300' \
+  '$ORIGIN test.' \
+  '@ IN SOA ns.test. hostmaster.test. ( 1 3600 900 604800 300 )' \
+  '@ IN NS ns.test.' \
+  'ns IN A 100.0.8.2' \
+  'www IN A 200.0.1.2' > /etc/bind/zones/db.test
+named-checkconf
+named-checkzone test. /etc/bind/zones/db.test
+named -c /etc/bind/named.conf

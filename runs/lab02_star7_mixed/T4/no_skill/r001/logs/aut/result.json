@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 130.50595158399665,
+  "final_message": "Completato il lab con:\n\n- Root DNS interna su `pc2`\n- `test.` primaria su `pc3` e secondaria con AXFR riservato a `pc9`\n- Delega autonoma di `services.test.` su `pc12`\n- Resolver ricorsivo senza forwarder su `pc11`, con root-hint interna\n- Client `pc4` e `pc6` configurati esclusivamente verso il resolver nella rispettiva famiglia IP\n- Record A/AAAA, CNAME, MX, SRV e TXT richiesti\n- Apache avviato su `pc1`, `pc7` e `pc10`\n\nHo preservato indirizzamento e routing esistenti, senza usare `/etc/hosts` o aggiungere rotte. Non ho potuto eseguire l’emulazione completa perché il demone Docker non è accessibile nell’ambiente corrente.",
+  "usage": {
+    "input_tokens": 583484,
+    "cached_input_tokens": 528128,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5758,
+    "reasoning_output_tokens": 1852
+  }
+}

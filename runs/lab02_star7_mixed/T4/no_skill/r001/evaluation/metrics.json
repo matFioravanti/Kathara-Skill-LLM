@@ -1,0 +1,42 @@
+{
+  "scenario": "lab02_star7_mixed",
+  "scenario_id": "lab02_star7_mixed",
+  "prompt_type": "T4",
+  "prompt_sha256": "985be9a25c5acf88edaf0d708961fb485bdc5641b44eff7f9bbfe94004abca71",
+  "skill_mode": "no_skill",
+  "run_number": 1,
+  "replicate": 1,
+  "experiment_id": null,
+  "run_id": "lab02_star7_mixed__T4__no_skill__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [],
+  "forced_skills": [],
+  "selected_skills": [],
+  "skill_trace_available": true,
+  "agent_success": true,
+  "status": "COMPLETED",
+  "timing": {
+    "agent_seconds": 130.50595158399665,
+    "checker_seconds": 28.55462737500011,
+    "total_seconds": 159.8047973749999
+  },
+  "tokens": {
+    "input": 583484,
+    "cached_input": 528128,
+    "output": 5758,
+    "reasoning": 1852,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 341,
+    "failed": 78,
+    "total": 419,
+    "pass_rate": 0.8138424821002387
+  },
+  "correction_sha256": "b960c1f67a9aa52c88976bb37cb9a0c8bfd205f59f050d374044c33b4ee7b6d4",
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-09-28T09:36:51.710492+00:00"
+}

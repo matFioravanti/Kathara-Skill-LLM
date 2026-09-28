@@ -1,0 +1,19 @@
+ip -6 address replace 2001:db8:1100::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100::1 dev eth0
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq && apt-get install -y -qq bind9 dnsutils
+install -d /etc/bind/zones
+printf '%s\n' \
+'options {' '  directory "/var/cache/bind";' '  listen-on { none; };' '  listen-on-v6 { any; };' '  recursion no;' '  allow-query { any; };' '  dnssec-validation no;' '};' \
+'zone "." {' '  type primary;' '  file "/etc/bind/zones/db.root";' '};' > /etc/bind/named.conf
+printf '%s\n' \
+'$TTL 300' \
+'. IN SOA ns.root. hostmaster.root. ( 2026092701 3600 900 604800 300 )' \
+'. IN NS ns.root.' \
+'ns.root. IN AAAA 2001:db8:1100::10' \
+'test. IN NS ns1.test.' \
+'test. IN NS ns2.test.' \
+'ns1.test. IN AAAA 2001:db8:1100:1::10' \
+'ns2.test. IN AAAA 2001:db8:1100:2::10' > /etc/bind/zones/db.root
+named-checkconf && named-checkzone . /etc/bind/zones/db.root
+service bind9 restart

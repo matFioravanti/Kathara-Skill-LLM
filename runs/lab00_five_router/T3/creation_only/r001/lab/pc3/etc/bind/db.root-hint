@@ -1,0 +1,2 @@
+.       3600    IN      NS      ns.root.
+ns.root.        3600    IN      A       100.0.6.2

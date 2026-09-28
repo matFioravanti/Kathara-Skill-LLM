@@ -1,0 +1,43 @@
+{
+  "files_created": 21,
+  "files_modified": 8,
+  "files_deleted": 0,
+  "files_changed": 29,
+  "lines_added": 111,
+  "lines_deleted": 0,
+  "created": [
+    "pc11/etc/bind/db.root-hints",
+    "pc11/etc/bind/named.conf",
+    "pc11/etc/bind/named.conf.local",
+    "pc11/etc/bind/named.conf.options",
+    "pc12/etc/bind/db.services.test",
+    "pc12/etc/bind/named.conf",
+    "pc12/etc/bind/named.conf.local",
+    "pc12/etc/bind/named.conf.options",
+    "pc2/etc/bind/db.root",
+    "pc2/etc/bind/named.conf",
+    "pc2/etc/bind/named.conf.local",
+    "pc2/etc/bind/named.conf.options",
+    "pc3/etc/bind/db.test",
+    "pc3/etc/bind/named.conf",
+    "pc3/etc/bind/named.conf.local",
+    "pc3/etc/bind/named.conf.options",
+    "pc4/etc/resolv.conf",
+    "pc6/etc/resolv.conf",
+    "pc9/etc/bind/named.conf",
+    "pc9/etc/bind/named.conf.local",
+    "pc9/etc/bind/named.conf.options"
+  ],
+  "modified": [
+    "pc1.startup",
+    "pc10.startup",
+    "pc11.startup",
+    "pc12.startup",
+    "pc2.startup",
+    "pc3.startup",
+    "pc7.startup",
+    "pc9.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}

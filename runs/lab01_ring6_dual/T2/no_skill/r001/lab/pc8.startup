@@ -1,0 +1,25 @@
+ip -6 address replace 2001:db8:1100:3::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:3::1 dev eth0
+install -d /etc/bind
+printf '%s\n' \
+'options {' \
+'  directory "/var/cache/bind";' \
+'  listen-on { none; };' \
+'  listen-on-v6 { any; };' \
+'  recursion no;' \
+'  allow-query { any; };' \
+'  dnssec-validation no;' \
+'};' \
+'zone "services.test" {' \
+'  type primary;' \
+'  file "/etc/bind/db.services.test";' \
+'};' > /etc/bind/named.conf
+printf '%s\n' \
+'$TTL 3600' \
+'@ IN SOA ns.services.test. hostmaster.services.test. ( 2026092701 3600 900 604800 3600 )' \
+'@ IN NS ns.services.test.' \
+'ns IN AAAA 2001:db8:1100:3::10' \
+'mail IN AAAA 2001:db8:1100:3::10' \
+'status IN AAAA 2001:db8:1100:2::10' > /etc/bind/db.services.test
+service named restart 2>/dev/null || service bind9 restart 2>/dev/null || /usr/sbin/named -u bind
+service apache2 restart

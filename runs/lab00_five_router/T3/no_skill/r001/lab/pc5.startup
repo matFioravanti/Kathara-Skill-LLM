@@ -1,0 +1,25 @@
+ip address add 100.0.8.2/24 dev eth0
+ip route add default via 100.0.8.1 dev eth0
+
+# Sole authoritative server for the delegated test. zone.
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y bind9
+install -d /etc/bind
+printf '%s\n' \
+  'options {' \
+  '    directory "/var/cache/bind";' \
+  '    listen-on { any; };' \
+  '    listen-on-v6 { none; };' \
+  '    recursion no;' \
+  '};' \
+  'zone "test." {' \
+  '    type master;' \
+  '    file "/etc/bind/db.test";' \
+  '};' > /etc/bind/named.conf
+printf '%s\n' \
+  '$TTL 86400' \
+  '@ IN SOA ns.test. hostmaster.test. ( 1 3600 900 604800 86400 )' \
+  '@ IN NS ns.test.' \
+  'ns.test. IN A 100.0.8.2' \
+  'www.test. IN A 200.0.1.2' > /etc/bind/db.test
+service bind9 restart

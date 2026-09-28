@@ -1,0 +1,44 @@
+{
+  "scenario": "lab00_five_router",
+  "scenario_id": "lab00_five_router",
+  "prompt_type": "T4",
+  "prompt_sha256": "56894ead2a43ca67a3f41d5fa18b396126ceb2648d7bb8341102d1c737780de0",
+  "skill_mode": "both_forced",
+  "run_number": 1,
+  "run_id": "lab00_five_router__T4__both_forced__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "selected_skills": [],
+  "skill_trace_available": true,
+  "agent_success": true,
+  "status": "COMPLETED",
+  "timing": {
+    "agent_seconds": 72.49628304199996,
+    "checker_seconds": 26.957386332999704,
+    "total_seconds": 99.55962649999947
+  },
+  "tokens": {
+    "input": 117425,
+    "cached_input": 98048,
+    "output": 3129,
+    "reasoning": 767,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 132,
+    "failed": 0,
+    "total": 132,
+    "pass_rate": 1.0
+  },
+  "correction_sha256": "316f0a564b9f48f30a9fa9ea2d6452021081b2904e145120aa8944475ae64456"
+}

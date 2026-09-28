@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 109.7977762920018,
+  "final_message": "Completata l’infrastruttura DNS interna gerarchica e ridondata.\n\n- Root: `pc2`\n- `test.` primario/secondario: `pc3` / `pc9`, con AXFR limitato al secondario\n- `services.test.` autoritativo: `pc12`\n- Resolver ricorsivo iterativo, senza forwarder: `pc11`\n- Client configurati con un solo resolver: `pc4` IPv4, `pc6` IPv6\n- Pubblicati A/AAAA, CNAME, MX, SRV e TXT richiesti; avviati gli HTTP server su `pc1`, `pc7`, `pc10`.\n\nConfigurazioni principali: [root](</Users/matthew/Desktop/Tesi-Skill/runs/lab02_star7_mixed/T4/creation_only/r001/lab/pc2/etc/bind/named.conf>), [zona test](</Users/matthew/Desktop/Tesi-Skill/runs/lab02_star7_mixed/T4/creation_only/r001/lab/pc3/etc/bind/db.test>), [resolver](</Users/matthew/Desktop/Tesi-Skill/runs/lab02_star7_mixed/T4/creation_only/r001/lab/pc11/etc/bind/named.conf>), [zona services](</Users/matthew/Desktop/Tesi-Skill/runs/lab02_star7_mixed/T4/creation_only/r001/lab/pc12/etc/bind/db.services.test>).",
+  "usage": {
+    "input_tokens": 308974,
+    "cached_input_tokens": 269056,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5185,
+    "reasoning_output_tokens": 1720
+  }
+}

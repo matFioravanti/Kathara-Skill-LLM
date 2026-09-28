@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 134.53301904199907,
+  "final_message": "Completato il DNS: `pc2` root, `pc4` primario `test.`, `pc6` secondario AXFR, `pc8` autoritativo `services.test.`, `pc10` resolver ricorsivo con hint root interni.\n\nAggiunti record, deleghe/glue IPv6, AXFR limitato a `pc6`, DNSSEC disabilitato e `pc12` configurato esclusivamente con `pc10`.\n\nAttivati endpoint HTTP: `pc11` IPv4 per `www.test.`, `pc8` IPv6 per `www.test.`, `pc6` IPv6 per `status.services.test.`.\n\nImmagini BIND applicate solo ai cinque nodi DNS; topologia, indirizzi e routing invariati. Verifica statica completata (`git diff --check`); nessun avvio Kathara eseguito come richiesto dalla skill.",
+  "usage": {
+    "input_tokens": 288420,
+    "cached_input_tokens": 258560,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6601,
+    "reasoning_output_tokens": 2068
+  }
+}

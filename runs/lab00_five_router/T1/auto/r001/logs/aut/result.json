@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 87.43581533300039,
+  "final_message": "Configurazione completata.\n\n- pc2 è root autoritativa, con delega e glue per `test.` su pc5.\n- pc5 serve solo `test.`, incluso `www.test. A 200.0.1.2`.\n- pc3 è resolver ricorsivo con soli root hints interni e DNSSEC disabilitato.\n- pc4 e pc6 interrogano pc3 rispettivamente via IPv4 e IPv6; pc6 resta senza default route IPv6.\n- pc1 avvia un server HTTP su porta 80.\n- Controlli statici completati; i test `dig`/HTTP dinamici vanno eseguiti avviando il lab.",
+  "usage": {
+    "input_tokens": 131726,
+    "cached_input_tokens": 113152,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3668,
+    "reasoning_output_tokens": 1015
+  }
+}

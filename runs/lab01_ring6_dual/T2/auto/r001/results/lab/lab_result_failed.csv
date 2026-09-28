@@ -1,0 +1,25 @@
+Test Description,Passed,Reason
+Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`,False,The dns authorities for domain `.` have the following IPs ['']
+Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`,False,The dns authorities for domain `.` have the following IPs ['']
+Checking on `pc10` that `2001:db8:1100::10` is the authority for domain `.`,False,The dns authorities for domain `.` have the following IPs ['']
+Checking on `pc4` that `2001:db8:1100:1::10` is the authority for domain `test`,False,"The dns authorities for domain `test` have the following IPs ['', '']"
+Checking on `pc6` that `2001:db8:1100:2::10` is the authority for domain `test`,False,"The dns authorities for domain `test` have the following IPs ['', '']"
+Checking on `pc8` that `2001:db8:1100:3::10` is the authority for domain `services.test`,False,The dns authorities for domain `services.test` have the following IPs ['']
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""test\"""" | grep -Eq ""type[[:space:]]+(secondary|slave);""'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E ""zone \""services\.test\"""" | grep -Eq ""type[[:space:]]+(master|primary);""'' on 'pc8'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc10'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc12'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

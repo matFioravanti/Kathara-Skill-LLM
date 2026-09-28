@@ -1,0 +1,4 @@
+2026-09-25T20:14:53.915925Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 139 column 5
+2026-09-25T20:15:52.610089Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find expected lines in /Users/matthew/Desktop/Tesi-Skill/runs/Lab_1_No_DNS/T3/creation_only/r001/lab/pc3.startup:
+ip address add default via 100.0.0.1 dev eth0
+ip address add 2001:8::2/64 dev eth0

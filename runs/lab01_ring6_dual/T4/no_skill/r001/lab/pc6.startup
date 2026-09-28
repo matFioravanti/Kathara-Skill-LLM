@@ -1,0 +1,6 @@
+ip -6 address replace 2001:db8:1100:2::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:2::1 dev eth0
+mkdir -p /var/cache/bind
+printf '%s\n' 'options {' '  directory "/var/cache/bind";' '  listen-on { any; };' '  listen-on-v6 { any; };' '  recursion no;' '  dnssec-validation no;' '};' 'zone "test" {' '  type slave;' '  masters { 2001:db8:1100:1::10; };' '  file "/var/cache/bind/db.test";' '};' > /etc/bind/named.conf
+service named restart
+service apache2 restart

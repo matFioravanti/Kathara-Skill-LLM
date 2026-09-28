@@ -1,0 +1,26 @@
+{
+  "files_created": 6,
+  "files_modified": 6,
+  "files_deleted": 0,
+  "files_changed": 12,
+  "lines_added": 85,
+  "lines_deleted": 0,
+  "created": [
+    "pc2/root/dns/db.internal-root",
+    "pc2/root/dns/named.conf",
+    "pc3/root/dns/db.internal-root-hints",
+    "pc3/root/dns/named.conf",
+    "pc5/root/dns/db.test",
+    "pc5/root/dns/named.conf"
+  ],
+  "modified": [
+    "pc1.startup",
+    "pc2.startup",
+    "pc3.startup",
+    "pc4.startup",
+    "pc5.startup",
+    "pc6.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}

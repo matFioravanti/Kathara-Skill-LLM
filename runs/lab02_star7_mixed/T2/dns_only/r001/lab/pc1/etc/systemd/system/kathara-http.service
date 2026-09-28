@@ -1,0 +1,10 @@
+[Unit]
+Description=HTTP service for status.services.test.
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -m http.server 80 --bind 192.168.32.10 --directory /var/www/html
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

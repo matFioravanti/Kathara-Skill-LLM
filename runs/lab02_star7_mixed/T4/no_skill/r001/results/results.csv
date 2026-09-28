@@ -1,0 +1,218 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,341,78,419,"1: Checking that named is running on device `pc2`: Daemon named is not running on device `pc2`
+2: Checking that named is running on device `pc3`: Daemon named is not running on device `pc3`
+3: Checking that named is running on device `pc9`: Daemon named is not running on device `pc9`
+4: Checking that named is running on device `pc11`: Daemon named is not running on device `pc11`
+5: Checking that named is running on device `pc12`: Daemon named is not running on device `pc12`
+6: Checking on `pc2` that `192.168.32.11` is the authority for domain `.`: named not started in `pc2`.startup`
+7: Checking on `pc2` that `192.168.32.11` is the authority for domain `.`: named not started in `pc2`.startup`
+8: Checking on `pc11` that `192.168.32.11` is the authority for domain `.`: named not started in `pc11`.startup`
+9: Checking on `pc3` that `2001:db8:1200:1::10` is the authority for domain `test`: named not started in `pc3`.startup`
+10: Checking on `pc9` that `2001:db8:1200:4::10` is the authority for domain `test`: named not started in `pc9`.startup`
+11: Checking on `pc12` that `192.168.34.139` is the authority for domain `services.test`: named not started in `pc12`.startup`
+12: Checking correctness of DNS records: pc4 resolve A www.test. with IP ;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; no servers could be reached instead of ['192.168.33.138']
+13: Checking correctness of DNS records: pc4 resolve A mail.services.test. with IP ;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; no servers could be reached instead of ['192.168.34.139']
+14: Checking correctness of DNS records: pc4 resolve A status.services.test. with IP ;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; no servers could be reached instead of ['192.168.32.10']
+15: Checking correctness of DNS records: pc4 resolve AAAA www.test. with IP ;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; no servers could be reached instead of ['2001:db8:1200:4::11']
+16: Checking correctness of DNS records: pc4 resolve MX test. with IP ;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; communications error to 192.168.34.138#53: connection refused
+;; no servers could be reached instead of ['10 mail.services.test.']
+17: Checking the exit code of the command 'sh -c 'dig @192.168.32.11 . SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+18: Checking the exit code of the command 'sh -c 'out=""$(dig @192.168.32.11 test. NS +norecurse +noall +authority +additional)"" && printf ""%s\n"" ""$out"" | grep -Eq ""test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns1\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns1\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1200:1::10"" && printf ""%s\n"" ""$out"" | grep -Eq ""test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns2\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns2\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+AAAA[[:space:]]+2001:db8:1200:4::10""'' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 9
+ Expected: 0
+19: Checking the exit code of the command 'sh -c 'dig @192.168.32.11 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+20: Checking the exit code of the command 'sh -c 'dig @192.168.32.11 test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+21: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+22: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+23: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+24: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+25: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+26: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+27: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+28: Checking the exit code of the command 'sh -c 'out=""$(dig @2001:db8:1200:1::10 services.test. NS +norecurse +noall +authority +additional)"" && printf ""%s\n"" ""$out"" | grep -Eq ""services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns\.services\.test\."" && printf ""%s\n"" ""$out"" | grep -Eq ""ns\.services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+A[[:space:]]+192\.168\.34\.139""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 9
+ Expected: 0
+29: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+30: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 . SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+31: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 services.test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+32: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+33: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+34: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+35: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+36: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+37: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+38: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+39: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+40: Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+41: Checking the exit code of the command 'sh -c 'curl -4 -sS -o /dev/null -w ""%{http_code}\n"" http://status.services.test./ | grep -qx 200'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+42: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+43: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+44: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+45: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+46: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+47: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+48: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+49: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+50: Checking the exit code of the command 'sh -c 'curl -6 -g -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+51: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:4::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+52: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:4::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+53: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:4::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+54: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:1::10 test. AXFR +time=3 +tries=1 | grep -Eq ""[[:space:]]SOA[[:space:]]""' ' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+55: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:4::10 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+56: Checking the exit code of the command 'sh -c 'grep -R -E ""^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;"" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+57: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+58: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+59: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+60: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+61: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+62: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+63: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+64: Checking the exit code of the command 'sh -c 'dig @192.168.34.138 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+65: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. A +short | grep -Fqx ""192.168.33.138""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+66: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1200:4::11""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+67: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 portal.test. CNAME +short | grep -Fqx ""www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+68: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. MX +short | grep -Fqx ""10 mail.services.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+69: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx ""0 5 80 www.test.""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+70: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+71: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+72: Checking the exit code of the command 'sh -c 'dig @2001:db8:1200:5::10 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+73: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 services.test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+74: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 mail.services.test. A +short | grep -Fqx ""192.168.34.139""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+75: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 status.services.test. A +short | grep -Fqx ""192.168.32.10""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+76: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 www.test. A +recurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]ra[[:space:];]""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+77: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 . SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+78: Checking the exit code of the command 'sh -c 'dig @192.168.34.139 test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

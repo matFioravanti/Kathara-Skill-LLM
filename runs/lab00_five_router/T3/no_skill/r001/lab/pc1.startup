@@ -1,0 +1,7 @@
+ip address add 200.0.1.2/24 dev eth0
+ip route add default via 200.0.1.1 dev eth0
+
+# Web server for www.test.
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y apache2
+service apache2 restart

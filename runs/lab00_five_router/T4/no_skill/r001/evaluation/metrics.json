@@ -1,0 +1,38 @@
+{
+  "scenario": "lab00_five_router",
+  "scenario_id": "lab00_five_router",
+  "prompt_type": "T4",
+  "prompt_sha256": "56894ead2a43ca67a3f41d5fa18b396126ceb2648d7bb8341102d1c737780de0",
+  "skill_mode": "no_skill",
+  "run_number": 1,
+  "run_id": "lab00_five_router__T4__no_skill__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [],
+  "forced_skills": [],
+  "selected_skills": [],
+  "skill_trace_available": true,
+  "agent_success": true,
+  "status": "COMPLETED",
+  "timing": {
+    "agent_seconds": 134.087549459,
+    "checker_seconds": 23.507565916000203,
+    "total_seconds": 157.70456325000032
+  },
+  "tokens": {
+    "input": 415178,
+    "cached_input": 379392,
+    "output": 5419,
+    "reasoning": 2079,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 132,
+    "failed": 0,
+    "total": 132,
+    "pass_rate": 1.0
+  },
+  "correction_sha256": "316f0a564b9f48f30a9fa9ea2d6452021081b2904e145120aa8944475ae64456"
+}

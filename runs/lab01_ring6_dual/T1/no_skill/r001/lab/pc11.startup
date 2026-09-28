@@ -1,0 +1,7 @@
+ip address replace 10.11.5.10/24 dev eth0
+ip route replace default via 10.11.5.1 dev eth0
+
+# IPv4 HTTP endpoint for www.test.
+mkdir -p /var/www/html
+printf '%s\n' 'www.test IPv4 internal service' > /var/www/html/index.html
+service apache2 restart 2>/dev/null || apachectl start

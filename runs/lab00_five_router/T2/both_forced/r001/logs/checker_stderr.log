@@ -1,0 +1,218 @@
+Parsing test configuration...
+Parsing inline network scenarios template
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-tmn5bg3u/labs
+  0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-tmn5bg3u/labs/lab
+Network scenario name: lab
+Undeploying network scenario in case it was running...
+Deploying network scenario...
+Waiting convergence...
+Starting tests
+Verifying lab structure using inline lab.conf template
+Checking devices existence...
+Check existence of `r1`: [92m OK[00m
+Check existence of `r2`: [92m OK[00m
+Check existence of `r3`: [92m OK[00m
+Check existence of `r4`: [92m OK[00m
+Check existence of `r5`: [92m OK[00m
+Check existence of `pc1`: [92m OK[00m
+Check existence of `pc2`: [92m OK[00m
+Check existence of `pc3`: [92m OK[00m
+Check existence of `pc4`: [92m OK[00m
+Check existence of `pc5`: [92m OK[00m
+Check existence of `pc6`: [92m OK[00m
+Checking collision domains...
+Checking the collision domain attached to interface `eth0` of `r1`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r1`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r1`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth3` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth4` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r3`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r3`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r3`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth3` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth3` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc1`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc2`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc3`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc4`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc5`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc6`: [92m OK[00m
+Checking that all required startup files exist...
+Check existence of `r1.startup` file: [92m OK[00m
+Check existence of `r2.startup` file: [92m OK[00m
+Check existence of `r3.startup` file: [92m OK[00m
+Check existence of `r4.startup` file: [92m OK[00m
+Check existence of `r5.startup` file: [92m OK[00m
+Check existence of `pc1.startup` file: [92m OK[00m
+Check existence of `pc2.startup` file: [92m OK[00m
+Check existence of `pc3.startup` file: [92m OK[00m
+Check existence of `pc4.startup` file: [92m OK[00m
+Check existence of `pc5.startup` file: [92m OK[00m
+Check existence of `pc6.startup` file: [92m OK[00m
+Verifying the IP addresses assigned to devices...
+Checking IPs for `r1`...
+Verifying the IP address (200.0.1.1/24) assigned to eth0 of r1: [92m OK[00m
+Verifying the IP address (10.0.8.1/30) assigned to eth1 of r1: [92m OK[00m
+Verifying the IP address (10.0.7.1/30) assigned to eth2 of r1: [92m OK[00m
+Checking IPs for `r2`...
+Verifying the IP address (100.0.6.1/24) assigned to eth0 of r2: [92m OK[00m
+Verifying the IP address (10.0.3.1/30) assigned to eth1 of r2: [92m OK[00m
+Verifying the IP address (10.0.6.1/30) assigned to eth2 of r2: [92m OK[00m
+Verifying the IP address (10.0.0.1/30) assigned to eth3 of r2: [92m OK[00m
+Verifying the IP address (10.0.8.2/30) assigned to eth4 of r2: [92m OK[00m
+Checking IPs for `r3`...
+Verifying the IP address (100.0.0.1/24) assigned to eth0 of r3: [92m OK[00m
+Verifying the IP address (10.0.5.1/30) assigned to eth1 of r3: [92m OK[00m
+Verifying the IP address (10.0.3.2/30) assigned to eth2 of r3: [92m OK[00m
+Checking IPs for `r4`...
+Verifying the IP address (200.0.6.1/24) assigned to eth0 of r4: [92m OK[00m
+Verifying the IP address (10.0.7.2/30) assigned to eth1 of r4: [92m OK[00m
+Verifying the IP address (10.0.0.2/30) assigned to eth2 of r4: [92m OK[00m
+Verifying the IP address (10.0.10.1/30) assigned to eth3 of r4: [92m OK[00m
+Checking IPs for `r5`...
+Verifying the IP address (100.0.8.1/24) assigned to eth0 of r5: [92m OK[00m
+Verifying the IP address (10.0.10.2/30) assigned to eth1 of r5: [92m OK[00m
+Verifying the IP address (10.0.6.2/30) assigned to eth2 of r5: [92m OK[00m
+Verifying the IP address (10.0.5.2/30) assigned to eth3 of r5: [92m OK[00m
+Checking IPs for `pc1`...
+Verifying the IP address (200.0.1.2/24) assigned to eth0 of pc1: [92m OK[00m
+Checking IPs for `pc2`...
+Verifying the IP address (100.0.6.2/24) assigned to eth0 of pc2: [92m OK[00m
+Checking IPs for `pc3`...
+Verifying the IP address (100.0.0.2/24) assigned to eth0 of pc3: [92m OK[00m
+Verifying the IP address (2001:8::2/64) assigned to eth0 of pc3: [92m OK[00m
+Checking IPs for `pc4`...
+Verifying the IP address (200.0.6.2/24) assigned to eth0 of pc4: [92m OK[00m
+Checking IPs for `pc5`...
+Verifying the IP address (100.0.8.2/24) assigned to eth0 of pc5: [92m OK[00m
+Checking IPs for `pc6`...
+Verifying the IP address (2001:8::1/64) assigned to eth0 of pc6: [92m OK[00m
+Starting reachability test...
+Verifying `100.0.8.2` reachable from device `pc2`: [92m OK[00m
+Verifying `100.0.0.2` reachable from device `pc2`: [92m OK[00m
+Verifying `100.0.6.2` reachable from device `pc3`: [92m OK[00m
+Verifying `100.0.8.2` reachable from device `pc3`: [92m OK[00m
+Verifying `200.0.1.2` reachable from device `pc3`: [92m OK[00m
+Verifying `100.0.0.2` reachable from device `pc4`: [92m OK[00m
+Verifying `200.0.1.2` reachable from device `pc4`: [92m OK[00m
+Verifying `2001:8::2` reachable from device `pc6`: [92m OK[00m
+Checking running daemons...
+Checking running daemons on `r1`...
+Checking that named is not running on device `r1`: [92m OK[00m
+Checking running daemons on `r2`...
+Checking that named is not running on device `r2`: [92m OK[00m
+Checking running daemons on `r3`...
+Checking that named is not running on device `r3`: [92m OK[00m
+Checking running daemons on `r4`...
+Checking that named is not running on device `r4`: [92m OK[00m
+Checking running daemons on `r5`...
+Checking that named is not running on device `r5`: [92m OK[00m
+Checking running daemons on `pc1`...
+Checking that named is not running on device `pc1`: [92m OK[00m
+Checking running daemons on `pc2`...
+Checking that named is running on device `pc2`: [92m OK[00m
+Checking running daemons on `pc3`...
+Checking that named is running on device `pc3`: [92m OK[00m
+Checking running daemons on `pc4`...
+Checking that named is not running on device `pc4`: [92m OK[00m
+Checking running daemons on `pc5`...
+Checking that named is running on device `pc5`: [92m OK[00m
+Checking running daemons on `pc6`...
+Checking that named is not running on device `pc6`: [92m OK[00m
+Checking Routing Tables...
+Checking kernel routes for `r1`...
+Checking the routing table of r1: [92m OK[00m
+Checking kernel routes for `r2`...
+Checking the routing table of r2: [92m OK[00m
+Checking kernel routes for `r3`...
+Checking the routing table of r3: [92m OK[00m
+Checking kernel routes for `r4`...
+Checking the routing table of r4: [92m OK[00m
+Checking kernel routes for `r5`...
+Checking the routing table of r5: [92m OK[00m
+Checking kernel routes for `pc1`...
+Checking the routing table of pc1: [92m OK[00m
+Checking kernel routes for `pc2`...
+Checking the routing table of pc2: [92m OK[00m
+Checking kernel routes for `pc3`...
+Checking the routing table of pc3: [92m OK[00m
+Checking kernel routes for `pc4`...
+Checking the routing table of pc4: [92m OK[00m
+Checking kernel routes for `pc5`...
+Checking the routing table of pc5: [92m OK[00m
+Checking DNS authorities...
+Checking authority ip for domain `.`
+Checking on `pc2` that `100.0.6.2` is the authority for domain `.`: [92m OK[00m
+Checking if all the named servers can correctly resolve 100.0.6.2 as the root nameserver...
+Checking on `pc2` that `100.0.6.2` is the authority for domain `.`: [92m OK[00m
+Checking on `pc3` that `100.0.6.2` is the authority for domain `.`: [92m OK[00m
+Checking on `pc3` that `100.0.6.2` is the authority for domain `.`: [92m OK[00m
+Checking authority ip for domain `test`
+Checking on `pc5` that `100.0.8.2` is the authority for domain `test`: [92m OK[00m
+Checking local name servers configurations...
+Checking that `100.0.0.2` is the local name server for device `pc4`: [92m OK[00m
+Checking that `2001:8::2` is the local name server for device `pc6`: [92m OK[00m
+Checking DNS records...
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking HTTP endpoints via cURL...
+Performing HTTP checks on pc1...
+HTTP check 'http://200.0.1.2/' on pc1 status: [92m HTTP 200 == 200[00m
+Checking custom commands output...
+Checking the exit code of the command 'sh -c 'dig @100.0.6.2 . SOA +norecurse +comments +answer +noquestion +nostats | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]'"'"''' on 'pc2': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.6.2 test. NS +norecurse +noall +authority +additional | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+.*[[:space:]]A[[:space:]]+100\.0\.8\.2'"'"''' on 'pc2': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.6.2 test. SOA +norecurse +comments +noquestion +nostats | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]aa[[:space:];]'"'"''' on 'pc2': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.6.2 www.test. A +recurse +comments +noquestion +nostats | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]ra[[:space:];]'"'"''' on 'pc2': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.8.2 test. SOA +norecurse +comments +answer +noquestion +nostats | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]'"'"''' on 'pc5': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.8.2 test. NS +norecurse +noall +answer | grep -Eq '"'"'^test\..*[[:space:]]NS[[:space:]]+[^[:space:]]+\.?$'"'"''' on 'pc5': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.8.2 www.test. A +norecurse +short | grep -qx '"'"'200.0.1.2'"'"''' on 'pc5': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.8.2 . SOA +norecurse +comments +noquestion +nostats | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]aa[[:space:];]'"'"' && dig @100.0.8.2 www.test. A +recurse +comments +noquestion +nostats | grep '"'"'flags:'"'"' | grep -vqE '"'"'flags:.*[[:space:]]ra[[:space:];]'"'"''' on 'pc5': [92m OK[00m
+Checking the exit code of the command 'sh -c 'ip -6 -o addr show dev eth0 | grep -Eq '"'"'[[:space:]]2001:8::2/64[[:space:]]'"'"''' on 'pc3': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig @100.0.0.2 www.test. A +recurse +comments +answer +noquestion +nostats | tr '"'"'\n'"'"' '"'"' '"'"' | grep -Eq '"'"'flags:.*[[:space:]]ra[[:space:];].*www\.test\..*[[:space:]]A[[:space:]]+200\.0\.1\.2'"'"''' on 'pc3': [92m OK[00m
+Checking the exit code of the command 'sh -c 'for z in . test.; do
+  if dig @100.0.0.2 "$z" SOA +recurse +comments +noquestion +nostats |
+     grep '"'"'flags:'"'"' |
+     grep -qE '"'"'flags:.*[[:space:]]aa[[:space:];]'"'"'; then
+    exit 1;
+  fi;
+done; exit 0'' on 'pc3': [92m OK[00m
+Checking the exit code of the command 'sh -c '! grep -R -E '"'"'^[[:space:]]*forwarders[[:space:]]*\{'"'"' /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc3': [92m OK[00m
+Checking the exit code of the command 'sh -c 'grep -R -E '"'"'^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;'"'"' /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc3': [92m OK[00m
+Checking the exit code of the command 'sh -c 'conf="$(named-checkconf -p 2>/dev/null)" && printf '"'"'%s\n'"'"' "$conf" | awk '"'"'/zone "\."/{z=1} z && /type[[:space:]]+hint;/{ok=1} z && /^};/{z=0} END{exit !ok}'"'"' && f="$(printf '"'"'%s\n'"'"' "$conf" |
+     awk '"'"'/zone "\."/{z=1} z && $1=="file"{gsub(/[";]/,"",$2); print $2; exit} z && /^};/{z=0}'"'"')" &&
+test -n "$f" && if [ "${f#/}" = "$f" ]; then
+  d="$(printf '"'"'%s\n'"'"' "$conf" |
+       awk '"'"'$1=="directory"{gsub(/[";]/,"",$2); print $2; exit}'"'"')";
+  f="${d:-/etc/bind}/$f";
+fi && test -r "$f" && awk '"'"'
+  /^[[:space:]]*($|;)/ {next}
+  {
+    for (i=1; i<=NF; i++) {
+      if ($i=="A" && i<NF) {seen=1; if ($(i+1)!="100.0.6.2") bad=1}
+      if ($i=="AAAA") bad=1
+    }
+  }
+  END {exit !(seen && !bad)}
+'"'"' "$f"'' on 'pc3': [92m OK[00m
+Checking the exit code of the command 'sh -c 'test "$(awk '"'"'$1=="nameserver"{print $2}'"'"' /etc/resolv.conf | wc -l)" -eq 1 && grep -Eq '"'"'^nameserver[[:space:]]+100\.0\.0\.2([[:space:]]|$)'"'"' /etc/resolv.conf'' on 'pc4': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig www.test. A +short | grep -qx '"'"'200.0.1.2'"'"''' on 'pc4': [92m OK[00m
+Checking the exit code of the command 'sh -c '! grep -Eq '"'"'(^|[[:space:]])www\.test\.?([[:space:]]|$)'"'"' /etc/hosts && getent ahostsv4 www.test. | awk '"'"'$1=="200.0.1.2"{ok=1} END{exit !ok}'"'"''' on 'pc4': [92m OK[00m
+Checking the exit code of the command 'sh -c 'test "$(awk '"'"'$1=="nameserver"{print $2}'"'"' /etc/resolv.conf | wc -l)" -eq 1 && grep -Eq '"'"'^nameserver[[:space:]]+2001:8::2([[:space:]]|$)'"'"' /etc/resolv.conf'' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c 'dig www.test. A +short | grep -qx '"'"'200.0.1.2'"'"''' on 'pc6': [92m OK[00m
+Checking the exit code of the command 'sh -c '! grep -Eq '"'"'(^|[[:space:]])www\.test\.?([[:space:]]|$)'"'"' /etc/hosts && ! ip -6 route show | grep -q '"'"'^default[[:space:]]'"'"''' on 'pc6': [92m OK[00m
+Undeploying Network Scenario
+Total Tests: 132
+Passed Tests: 132/132
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-tmn5bg3u/labs/lab as CSV report...
+100%|██████████| 1/1 [00:22<00:00, 22.89s/it]100%|██████████| 1/1 [00:22<00:00, 22.89s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-tmn5bg3u/labs as CSV report...

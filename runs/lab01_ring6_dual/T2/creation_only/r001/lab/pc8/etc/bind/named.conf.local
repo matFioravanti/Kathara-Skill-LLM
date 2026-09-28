@@ -1,0 +1,5 @@
+zone "services.test" {
+    type master;
+    file "/etc/bind/db.services.test";
+    allow-transfer { none; };
+};

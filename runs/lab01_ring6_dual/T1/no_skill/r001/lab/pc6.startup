@@ -1,0 +1,27 @@
+ip -6 address replace 2001:db8:1100:2::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:2::1 dev eth0
+
+# Secondary only: its copy of test. is obtained from pc4 by AXFR/IXFR.
+mkdir -p /etc/bind /var/cache/bind
+chown bind:bind /var/cache/bind 2>/dev/null || true
+cat > /etc/bind/named.conf <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { none; };
+    listen-on-v6 { any; };
+    recursion no;
+    allow-query { any; };
+    dnssec-validation no;
+};
+zone "test" {
+    type secondary;
+    file "/var/cache/bind/db.test";
+    masters { 2001:db8:1100:1::10; };
+};
+EOF
+service named restart 2>/dev/null || service bind9 restart 2>/dev/null || /usr/sbin/named -u bind
+
+# HTTP endpoint for status.services.test. (the name is resolved by pc8).
+mkdir -p /var/www/html
+printf '%s\n' 'status.services.test internal service' > /var/www/html/index.html
+service apache2 restart 2>/dev/null || apachectl start

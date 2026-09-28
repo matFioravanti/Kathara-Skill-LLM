@@ -1,0 +1,86 @@
+{
+  "run_id": "lab01_ring6_dual__T3__both_forced__r001",
+  "run_number": 1,
+  "experiment_id": null,
+  "replicate": 1,
+  "scenario_id": "lab01_ring6_dual",
+  "prompt_type": "T3",
+  "repetition": 1,
+  "run_directory": "lab01_ring6_dual/T3/both_forced/r001",
+  "agent": "codex",
+  "agent_version": "0.146.0",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "execution_backend": "codex_cli",
+  "authentication": "local_chatgpt_login",
+  "api_key_used": false,
+  "skill_mode": "both_forced",
+  "available_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "started_at": "2026-09-27T14:39:11.571530+00:00",
+  "completed_at": "2026-09-28T09:25:34.600721+00:00",
+  "component_versions": {
+    "inspect-ai": "0.3.266",
+    "inspect-swe": "0.2.71",
+    "kathara-lab-checker": "0.1.14",
+    "kathara": "3.8.3",
+    "pandas": "3.0.6",
+    "PyYAML": "6.0.3",
+    "openai": "3.16.2"
+  },
+  "pipeline_state": "COMPLETED",
+  "state_history": [
+    {
+      "state": "PENDING",
+      "timestamp": "2026-09-27T14:39:11.577615+00:00"
+    },
+    {
+      "state": "AUT_RUNNING",
+      "timestamp": "2026-09-27T14:39:11.577875+00:00"
+    },
+    {
+      "state": "AUT_COMPLETED",
+      "timestamp": "2026-09-27T14:40:39.515432+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-27T14:41:08.175246+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T09:25:34.591114+00:00"
+    }
+  ],
+  "aut_execution_success": true,
+  "checker_execution_success": true,
+  "task_success": false,
+  "source_lab_sha256": "b0628e13156ad5478fb3b35f3706fd573a9e4b32820268398213ad700d13a15c",
+  "input_lab_sha256": "b0628e13156ad5478fb3b35f3706fd573a9e4b32820268398213ad700d13a15c",
+  "prompt_sha256": "6a271f30dc32f77b99cb2dbd1bdf4bef6e9e4d8cd9f801859033c436550698b5",
+  "prompt_source": "prompt/lab01_ring6_dual/T3.md",
+  "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
+  "dns_skill_bundle_sha256": "815cd0e8fa799252a717ccf21afe815a73459496fc08a024f320c476e7191845",
+  "correction_source": "scenarios/lab01_ring6_dual/correction.yaml",
+  "correction_sha256": "f4c719f0402a2032a6a544b5db5fd03cdae189c8599709b373119a1d68abea00",
+  "sandbox_image": "python:3.14.6-bookworm",
+  "timeout_seconds": 900,
+  "evaluation_revision": 1,
+  "artifacts": {
+    "input_lab": "input/lab",
+    "lab": "lab",
+    "aut_logs": "logs/aut",
+    "inspect_eval_log": "logs/aut/lab01_ring6_dual__T3__both_forced__r001.eval",
+    "correction_snapshot": "evaluation/correction.yaml",
+    "results": "results"
+  },
+  "aut_measurement_ended_at": "2026-09-27T14:40:39.497615+00:00",
+  "final_lab_sha256": "11bb4a0d07eef2ce9a4f1998ae8ca340261a2e6e816d6d6f7fe16e64309b9477",
+  "correction_snapshot": "evaluation/correction.yaml",
+  "last_reevaluated_at": "2026-09-28T09:25:04.760028+00:00"
+}

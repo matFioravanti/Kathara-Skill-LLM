@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 102.78662550000081,
+  "final_message": "Configurato DNS gerarchico: root `pc2` → `test.` primario `pc4` / secondario `pc6` → `services.test.` su `pc8`; resolver ricorsivo `pc10`.\n\nAggiunti zone file, trasferimento `pc4`→`pc6`, root hints interni IPv6 e record richiesti, incluso `www` A (`pc11`) + AAAA (`pc8`).\n\n`pc12` usa esclusivamente `2001:db8:1100:4::10` come nameserver.\n\nNon ho modificato `lab.conf`, indirizzi, gateway, routing o topologia; nessun forwarder o uso di `/etc/hosts`.",
+  "usage": {
+    "input_tokens": 188909,
+    "cached_input_tokens": 169728,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4908,
+    "reasoning_output_tokens": 1353
+  }
+}

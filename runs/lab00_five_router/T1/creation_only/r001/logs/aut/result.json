@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 16.44146745800026,
+  "final_message": "Specifica operativa pronta:\n\n- Mantengo invariati `lab.conf`, topologia, indirizzamento, gateway e routing statico.\n- `pc2` sarà DNS autoritativo solo per `.`: delega `test.` a `pc5` con NS e glue `A 100.0.8.2`; ricorsione disabilitata.\n- `pc5` sarà DNS autoritativo solo per `test.`, con `www.test. A 200.0.1.2`; senza ricorsione.\n- `pc3` sarà resolver ricorsivo, con root hints esclusivamente verso `100.0.6.2`, senza forwarder, senza autorità sulle zone `.`/`test.`, e `dnssec-validation no;`.\n- `pc4` userà `100.0.0.2` come resolver.\n- `pc6` resterà IPv6-only, senza default route IPv6, e userà `2001:8::2` per risolvere il record A.\n- `pc1` eseguirà HTTP su `200.0.1.2`, verificato con risposta HTTP 200.\n- Non verranno aggiunti `/etc/hosts`, record AAAA, DNS pubblici, né modifiche di rete.\n\nConfermi che devo ora creare/modificare i file del lab secondo questa specifica?",
+  "usage": {
+    "input_tokens": 19234,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 466,
+    "reasoning_output_tokens": 118
+  }
+}

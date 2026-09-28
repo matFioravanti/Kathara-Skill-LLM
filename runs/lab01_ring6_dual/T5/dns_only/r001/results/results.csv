@@ -1,0 +1,38 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,340,19,359,"1: Checking that apache2 is running on device `pc6`: Daemon apache2 is not running on device `pc6`
+2: Checking that apache2 is running on device `pc8`: Daemon apache2 is not running on device `pc8`
+3: Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`: The dns authorities for domain `.` have the following IPs ['']
+4: Checking on `pc2` that `2001:db8:1100::10` is the authority for domain `.`: The dns authorities for domain `.` have the following IPs ['']
+5: Checking on `pc10` that `2001:db8:1100::10` is the authority for domain `.`: The dns authorities for domain `.` have the following IPs ['']
+6: Checking on `pc4` that `2001:db8:1100:1::10` is the authority for domain `test`: The dns authorities for domain `test` have the following IPs ['', '']
+7: Checking on `pc6` that `2001:db8:1100:2::10` is the authority for domain `test`: named on pc6 is running but answered with SERVFAIL when quering for test
+8: Checking on `pc8` that `2001:db8:1100:3::10` is the authority for domain `services.test`: The dns authorities for domain `services.test` have the following IPs ['']
+9: HTTP check 'http://[2001:db8:1100:3::10]/' on pc8 status: Expected HTTP 200, got 0
+10: HTTP check 'http://[2001:db8:1100:2::10]/' on pc6 status: Expected HTTP 200, got 0
+11: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:1::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+12: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+13: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 www.test. A +short | grep -Fqx ""10.11.5.10""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+14: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:2::10 www.test. AAAA +short | grep -Fqx ""2001:db8:1100:3::10""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+15: Checking the exit code of the command 'sh -c 's1=""$(dig @2001:db8:1100:1::10 test. SOA +short | awk ""{print \$3}"")""; s2=""$(dig @2001:db8:1100:2::10 test. SOA +short | awk ""{print \$3}"")""; test -n ""$s1"" && test ""$s1"" = ""$s2""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+16: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc10': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+17: Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:4::10 test. TXT +short | grep -Fqx """"benchmark=dns-advanced""""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+18: Checking the exit code of the command 'sh -c 'curl -6 -g -sS -o /dev/null -w ""%{http_code}\n"" http://www.test./ | grep -qx 200'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+19: Checking the exit code of the command 'sh -c 'curl -6 -g -sS -o /dev/null -w ""%{http_code}\n"" http://status.services.test./ | grep -qx 200'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

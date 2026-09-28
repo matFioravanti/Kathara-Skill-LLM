@@ -1,0 +1,9 @@
+$TTL 3600
+@ IN SOA ns.root. hostmaster.root. (
+  1 3600 900 604800 300
+)
+@ IN NS ns.root.
+ns.root. IN A 100.0.6.2
+
+test. IN NS ns.test.
+ns.test. IN A 100.0.8.2

@@ -1,0 +1,78 @@
+{
+  "run_id": "lab00_five_router__T3__both_forced__r001",
+  "run_number": 1,
+  "scenario_id": "lab00_five_router",
+  "prompt_type": "T3",
+  "repetition": 1,
+  "run_directory": "lab00_five_router/T3/both_forced/r001",
+  "agent": "codex",
+  "agent_version": "0.146.0",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "execution_backend": "codex_cli",
+  "authentication": "local_chatgpt_login",
+  "api_key_used": false,
+  "skill_mode": "both_forced",
+  "available_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "started_at": "2026-09-25T20:19:23.798744+00:00",
+  "completed_at": "2026-09-25T20:21:00.988584+00:00",
+  "component_versions": {
+    "inspect-ai": "0.3.266",
+    "inspect-swe": "0.2.71",
+    "kathara-lab-checker": "0.1.14",
+    "kathara": "3.8.3",
+    "pandas": "3.0.6",
+    "PyYAML": "6.0.3",
+    "openai": "3.16.2"
+  },
+  "pipeline_state": "COMPLETED",
+  "state_history": [
+    {
+      "state": "PENDING",
+      "timestamp": "2026-09-25T20:19:23.808479+00:00"
+    },
+    {
+      "state": "AUT_RUNNING",
+      "timestamp": "2026-09-25T20:19:23.808822+00:00"
+    },
+    {
+      "state": "AUT_COMPLETED",
+      "timestamp": "2026-09-25T20:20:37.933648+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-25T20:21:00.988048+00:00"
+    }
+  ],
+  "aut_execution_success": true,
+  "checker_execution_success": true,
+  "task_success": true,
+  "source_lab_sha256": "535b3d00158152bc520d1a80b001b24a366f6bd86ec295cf294362f455137974",
+  "input_lab_sha256": "535b3d00158152bc520d1a80b001b24a366f6bd86ec295cf294362f455137974",
+  "prompt_sha256": "122e574da84eb437b1fd85b0e95f813176fe029ec9da4a302a89f5026bf45be0",
+  "prompt_source": "prompt/lab00_five_router/T3.md",
+  "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
+  "dns_skill_bundle_sha256": "b1fb08418c03e88ac22ea5ccb838a75ff58b140fd8602eaf35aa3722f5a84b94",
+  "correction_source": "scenarios/lab00_five_router/correction.yaml",
+  "correction_sha256": "316f0a564b9f48f30a9fa9ea2d6452021081b2904e145120aa8944475ae64456",
+  "sandbox_image": "python:3.14.6-bookworm",
+  "timeout_seconds": 900,
+  "artifacts": {
+    "input_lab": "input/lab",
+    "lab": "lab",
+    "aut_logs": "logs/aut",
+    "inspect_eval_log": "logs/aut/lab00_five_router__T3__both_forced__r001.eval",
+    "correction_snapshot": "evaluation/correction.yaml",
+    "results": "results"
+  },
+  "aut_measurement_ended_at": "2026-09-25T20:20:37.917228+00:00",
+  "final_lab_sha256": "a76772b94df42593ff2f0971dba0815c569e42826b1a8e9cb98d7f88379f3d70",
+  "correction_snapshot": "evaluation/correction.yaml"
+}

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 105.65182112500042,
+  "final_message": "Configurazione DNS completata nei file di avvio:\n\n- `pc2`: root DNS autoritativo per `.`, con delega di `test.` a `ns.test. (100.0.8.2)` e glue A.\n- `pc5`: autoritativo solo per `test.`, con `www.test. A 200.0.1.2`.\n- `pc3`: resolver ricorsivo IPv4/IPv6 con root hint interna verso `pc2`, senza forwarder e con `dnssec-validation no;`.\n- `pc4`: usa `100.0.0.2` come nameserver.\n- `pc6`: usa `2001:8::2` come nameserver.\n- `pc1`: avvia Apache per servire `http://200.0.1.2/`.\n\nNon ho modificato topologia, indirizzi, gateway, routing o `/etc/hosts`; non è stato aggiunto alcun AAAA.\n\nIl controllo statico di Kathara (`lstart --print`) è passato. Non ho potuto eseguire il test runtime perché il Docker daemon non è accessibile nell’ambiente corrente.",
+  "usage": {
+    "input_tokens": 214019,
+    "cached_input_tokens": 193024,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4753,
+    "reasoning_output_tokens": 1921
+  }
+}

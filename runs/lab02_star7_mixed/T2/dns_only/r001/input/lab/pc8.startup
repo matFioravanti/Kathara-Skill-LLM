@@ -1,0 +1,2 @@
+ip address replace 192.168.33.139/25 dev eth0
+ip route replace default via 192.168.33.129 dev eth0

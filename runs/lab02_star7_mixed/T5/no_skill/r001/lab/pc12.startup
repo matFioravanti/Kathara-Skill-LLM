@@ -1,0 +1,6 @@
+ip address replace 192.168.34.139/25 dev eth0
+ip route replace default via 192.168.34.129 dev eth0
+mkdir -p /etc/bind
+printf '%s\n' 'options {' '  directory "/var/cache/bind";' '  listen-on { any; };' '  listen-on-v6 { none; };' '  allow-query { any; };' '  recursion no;' '  dnssec-validation no;' '};' 'zone "services.test" {' '  type master;' '  file "/etc/bind/db.services.test";' '};' > /etc/bind/named.conf
+printf '%s\n' '$TTL 300' '@ IN SOA ns.services.test. hostmaster.services.test. ( 2026092701 3600 900 604800 300 )' '@ IN NS ns.services.test.' 'ns IN A 192.168.34.139' 'mail IN A 192.168.34.139' 'status IN A 192.168.32.10' > /etc/bind/db.services.test
+service bind9 restart 2>/dev/null || service named restart

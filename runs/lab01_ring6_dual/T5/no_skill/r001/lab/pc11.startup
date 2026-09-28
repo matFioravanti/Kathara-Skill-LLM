@@ -1,0 +1,6 @@
+ip address replace 10.11.5.10/24 dev eth0
+ip route replace default via 10.11.5.1 dev eth0
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq && apt-get install -y -qq apache2
+printf '%s\n' '<!doctype html><title>www.test</title><h1>www.test IPv4 service</h1>' > /var/www/html/index.html
+service apache2 start

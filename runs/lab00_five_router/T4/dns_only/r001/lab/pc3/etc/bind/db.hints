@@ -1,0 +1,2 @@
+. 3600000 IN NS a.root-servers.
+a.root-servers. 3600000 IN A 100.0.6.2

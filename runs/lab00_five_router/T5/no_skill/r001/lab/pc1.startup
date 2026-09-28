@@ -1,0 +1,6 @@
+ip address add 200.0.1.2/24 dev eth0
+ip route add default via 200.0.1.1 dev eth0
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y apache2
+printf '%s\n' '<!doctype html><title>www.test</title><h1>www.test</h1>' > /var/www/html/index.html
+service apache2 start

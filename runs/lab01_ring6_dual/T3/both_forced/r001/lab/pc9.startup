@@ -1,0 +1,2 @@
+ip address replace 10.11.4.10/24 dev eth0
+ip route replace default via 10.11.4.1 dev eth0
