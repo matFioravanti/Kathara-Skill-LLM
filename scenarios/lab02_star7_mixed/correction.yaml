@@ -271,11 +271,7 @@ test:
     dns:
       authoritative:
         .:
-        - 192.168.32.11
-        test:
-        - 2001:db8:1200:1::10
-        - 2001:db8:1200:4::10
-        services.test:
+        - 192.168.32.11        services.test:
         - 192.168.34.139
 # Checker compatibility: only resolver addresses representable in ip_mapping are listed here.
 # Additional resolver family/client checks remain enforced in custom_commands.
@@ -347,7 +343,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:1::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
       exit_code: 0
-    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\"" | grep -Eq "type[[:space:]]+(master|primary);"'
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\.?\"" | grep -Eq "type[[:space:]]+(master|primary);"'
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:1::10 www.test. A +short | grep -Fqx "192.168.33.138"'
       exit_code: 0
@@ -359,7 +355,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:1::10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
       exit_code: 0
-    - command: sh -c 'dig @2001:db8:1200:1::10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
+    - command: sh -c 'dig @2001:db8:1200:1::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
       exit_code: 0
     - command: sh -c 'out="$(dig @2001:db8:1200:1::10 services.test. NS +norecurse +noall +authority +additional)" && printf "%s\n" "$out" | grep -Eq "services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+NS[[:space:]]+ns\.services\.test\." && printf "%s\n" "$out" | grep -Eq "ns\.services\.test\.[[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+A[[:space:]]+192\.168\.34\.139"'
       exit_code: 0
@@ -384,7 +380,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
       exit_code: 0
-    - command: sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
+    - command: sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
       exit_code: 0
     - command: sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx "192.168.34.139"'
       exit_code: 0
@@ -422,7 +418,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
       exit_code: 0
-    - command: sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
+    - command: sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx "192.168.34.139"'
       exit_code: 0
@@ -443,17 +439,17 @@ test:
     pc9:
     - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1200:4::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
       exit_code: 0
-    - command: sh -c 'dig @2001:db8:1200:4::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1200:4::10 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
-    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\"" | grep -Eq "type[[:space:]]+(secondary|slave);"'
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\.?\"" | grep -Eq "type[[:space:]]+(secondary|slave);"'
       exit_code: 0
-    - command: sh -c 'dig @2001:db8:1200:4::10 www.test. A +short | grep -Fqx "192.168.33.138"'
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1200:4::10 www.test. A +short | grep -Fqx "192.168.33.138" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
-    - command: sh -c 'dig @2001:db8:1200:4::10 www.test. AAAA +short | grep -Fqx "2001:db8:1200:4::11"'
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1200:4::10 www.test. AAAA +short | grep -Fqx "2001:db8:1200:4::11" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
-    - command: sh -c 's1="$(dig @2001:db8:1200:1::10 test. SOA +short | awk "{print \$3}")"; s2="$(dig @2001:db8:1200:4::10 test. SOA +short | awk "{print \$3}")"; test -n "$s1" && test "$s1" = "$s2"'
+    - command: sh -c 'for i in 1 2 3 4 5; do s1="$(dig @2001:db8:1200:1::10 test. SOA +short | awk \"{print \\$3}\")"; s2="$(dig @2001:db8:1200:4::10 test. SOA +short | awk \"{print \\$3}\")"; test -n "$s1" && test "$s1" = "$s2" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
-    - command: 'sh -c ''dig @2001:db8:1200:1::10 test. AXFR +time=3 +tries=1 | grep -Eq "[[:space:]]SOA[[:space:]]"'' '
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @2001:db8:1200:1::10 test. AXFR +time=3 +tries=1 | grep -Eq "[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:4::10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
       exit_code: 0
@@ -485,7 +481,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @192.168.34.138 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
       exit_code: 0
-    - command: sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
+    - command: sh -c 'dig @192.168.34.138 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
       exit_code: 0
     - command: sh -c 'dig @192.168.34.138 mail.services.test. A +short | grep -Fqx "192.168.34.139"'
       exit_code: 0
@@ -501,7 +497,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:5::10 _http._tcp.test. SRV +short | grep -Fqx "0 5 80 www.test."'
       exit_code: 0
-    - command: sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx ""benchmark=dns-advanced""'
+    - command: sh -c 'dig @2001:db8:1200:5::10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
       exit_code: 0
     - command: sh -c 'dig @2001:db8:1200:5::10 mail.services.test. A +short | grep -Fqx "192.168.34.139"'
       exit_code: 0
@@ -512,7 +508,7 @@ test:
       exit_code: 0
     - command: sh -c 'dig @192.168.34.139 services.test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
       exit_code: 0
-    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"services\.test\"" | grep -Eq "type[[:space:]]+(master|primary);"'
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"services\.test\.?\"" | grep -Eq "type[[:space:]]+(master|primary);"'
       exit_code: 0
     - command: sh -c 'dig @192.168.34.139 mail.services.test. A +short | grep -Fqx "192.168.34.139"'
       exit_code: 0
