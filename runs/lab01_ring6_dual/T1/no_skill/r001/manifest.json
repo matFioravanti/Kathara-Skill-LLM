@@ -18,7 +18,7 @@
   "available_skills": [],
   "forced_skills": [],
   "started_at": "2026-09-28T16:58:07.780756+00:00",
-  "completed_at": "2026-09-28T20:08:18.734381+00:00",
+  "completed_at": "2026-09-28T20:52:39.838320+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -49,6 +49,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-09-28T20:08:18.723590+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-28T20:52:39.828206+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -61,10 +65,10 @@
   "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
   "dns_skill_bundle_sha256": "815cd0e8fa799252a717ccf21afe815a73459496fc08a024f320c476e7191845",
   "correction_source": "scenarios/lab01_ring6_dual/correction.yaml",
-  "correction_sha256": "62c393b24952b34631b5d66c3bd00521a04087f3089ca4329bfb2d260ab4daa1",
+  "correction_sha256": "a9801781decf25f494e647e626fdffa328e29c34fdfbb16ce0995efe1bf9b91e",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 1,
+  "evaluation_revision": 2,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -76,5 +80,5 @@
   "aut_measurement_ended_at": "2026-09-28T17:01:04.009869+00:00",
   "final_lab_sha256": "666a80e51d3df87afc346d947a138bfe2fe2e7179d6d3438d67f46abb1514722",
   "correction_snapshot": "evaluation/correction.yaml",
-  "last_reevaluated_at": "2026-09-28T20:07:44.967889+00:00"
+  "last_reevaluated_at": "2026-09-28T20:52:10.963325+00:00"
 }

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 97.83104329199705,
+  "final_message": "Completata l’infrastruttura DNS IPv6 interna e ridondata.\n\n- Ruoli: root `pc2`; master/secondary `test.` `pc4`/`pc6`; `services.test.` `pc8`; resolver `pc10`; client `pc12`.\n- Creati i `named.conf`, le zone, e i root hints in `pc{2,4,6,8,10}/etc/bind/`; aggiunti avvii `named` e `resolv.conf` su `pc12`.\n- Modificate solo le direttive image dei cinque nodi DNS in `lab.conf` (`kathara/bind`).\n- `test.` trasferibile esclusivamente a `pc6`; resolver senza forwarder e con root artificiale `pc2`.\n- Pubblicati record AAAA, MX e TXT richiesti. Assunzione necessaria: essendo tutti i nodi assegnati IPv6-only, i servizi usano gli IPv6 di `pc4` e `pc8`.\n- Verifica statica completata; `named-checkconf`/`named-checkzone` non sono disponibili nell’ambiente host.",
+  "usage": {
+    "input_tokens": 153129,
+    "cached_input_tokens": 130560,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4623,
+    "reasoning_output_tokens": 1387
+  }
+}

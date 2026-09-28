@@ -367,7 +367,7 @@ test:
     pc10:
     - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1100:4::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
       exit_code: 0
-    - command: sh -c '! grep -R -E "^[[:space:]]*forwarders[[:space:]]*\{" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'
+    - command: sh -c 'conf="$(named-checkconf -p 2>/dev/null)" || exit 1; printf "%s\n" "$conf" | awk '"'"'BEGIN{inside=0;bad=0} {line=$0; sub(/\/\/.*/,"",line); sub(/#.*/,"",line); if(!inside){if(line ~ /^[[:space:]]*forwarders[[:space:]]*\{/){sub(/^[^{]*\{/ ,"",line); inside=1}else next} if(inside){end=(line ~ /\}/); if(end) sub(/\}.*/,"",line); gsub(/[[:space:];]/,"",line); if(line!="") bad=1; if(end) inside=0}} END{exit bad}'"'"''
       exit_code: 0
     - command: sh -c 'grep -R -E "^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'
       exit_code: 0

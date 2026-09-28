@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-gyrrk0g9/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-gyrrk0g9/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -323,7 +323,7 @@ Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 test. SOA
  Expected: 0[00m
 Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.11\.4\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc9': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1100:4::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'' on 'pc10': [92m OK[00m
-Checking the exit code of the command 'sh -c '! grep -R -E "^[[:space:]]*forwarders[[:space:]]*\{" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10': [92m OK[00m
+Checking the exit code of the command 'sh -c 'conf="$(named-checkconf -p 2>/dev/null)" || exit 1; printf "%s\n" "$conf" | awk '"'"'BEGIN{inside=0;bad=0} {line=$0; sub(/\/\/.*/,"",line); sub(/#.*/,"",line); if(!inside){if(line ~ /^[[:space:]]*forwarders[[:space:]]*\{/){sub(/^[^{]*\{/ ,"",line); inside=1}else next} if(inside){end=(line ~ /\}/); if(end) sub(/\}.*/,"",line); gsub(/[[:space:];]/,"",line); if(line!="") bad=1; if(end) inside=0}} END{exit bad}'"'"''' on 'pc10': [92m OK[00m
 Checking the exit code of the command 'sh -c 'grep -R -E "^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10': [91m The exit code of the command differs from the expected one.
  Actual: 1
  Expected: 0[00m
@@ -522,6 +522,6 @@ Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::
 Undeploying Network Scenario
 Total Tests: 342
 Passed Tests: 286/342
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs/lab as CSV report...
-100%|██████████| 1/1 [01:01<00:00, 61.47s/it]100%|██████████| 1/1 [01:01<00:00, 61.47s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-u2g49_f6/labs as CSV report...
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-gyrrk0g9/labs/lab as CSV report...
+100%|██████████| 1/1 [00:57<00:00, 57.18s/it]100%|██████████| 1/1 [00:57<00:00, 57.18s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-gyrrk0g9/labs as CSV report...

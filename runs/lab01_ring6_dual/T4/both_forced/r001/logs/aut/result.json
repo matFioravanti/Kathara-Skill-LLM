@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 124.92339045799599,
+  "final_message": "Completata la gerarchia DNS interna.\n\n- Ruoli: root `pc2`; `test.` master `pc4`, slave `pc6`; `services.test.` `pc8`; resolver `pc10`; client `pc12`.\n- Creati i file BIND in `pc2`, `pc4`, `pc6`, `pc8`, `pc10`; deleghe, glue IPv6, AXFR limitato a `pc6`, root hints interni e nessun forwarder.\n- Pubblicati `www`, `portal`, MX/mail e TXT di `test.`, più `mail.services.test.` e `status.services.test.`.\n- Append-only agli startup DNS e a `pc12` (unico resolver IPv6); nessun IP/route modificato.\n- `lab.conf` invariato: `kathara/base` include già BIND. Validazione dinamica non eseguita, come richiesto dalla skill DNS.",
+  "usage": {
+    "input_tokens": 251294,
+    "cached_input_tokens": 219136,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5215,
+    "reasoning_output_tokens": 1895
+  }
+}

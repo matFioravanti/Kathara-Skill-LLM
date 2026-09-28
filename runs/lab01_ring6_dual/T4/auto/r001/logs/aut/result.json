@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 105.57897966699966,
+  "final_message": "Completato il DNS gerarchico IPv6 interno.\n\n- Ruoli: root `pc2`; `test.` master `pc4` e slave `pc6`; `services.test.` `pc8`; resolver ricorsivo `pc10`.\n- `pc12` usa esclusivamente `2001:db8:1100:4::10`.\n- Aggiunte deleghe/glue, transfer di `test.` limitato a `pc6`, root hints interni e nessun forwarder.\n- Pubblicati `www`, `portal`, MX/mail e TXT di `test.`, più `mail` e `status` sotto `services.test.`.\n- In `lab.conf` sono cambiate soltanto le immagini dei cinque nodi DNS.",
+  "usage": {
+    "input_tokens": 167153,
+    "cached_input_tokens": 145664,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4922,
+    "reasoning_output_tokens": 1755
+  }
+}

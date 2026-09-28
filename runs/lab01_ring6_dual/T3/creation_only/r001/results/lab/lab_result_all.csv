@@ -179,7 +179,7 @@ Checking correctness of DNS records,False,pc12 resolve MX test. with IP  instead
 "Checking the exit code of the command 'sh -c 'dig @2001:db8:1100:3::10 test. SOA +norecurse +comments +noquestion +nostats | grep ""flags:"" | grep -vqE ""flags:.*[[:space:]]aa[[:space:];]""'' on 'pc8'",True,OK
 "Checking the exit code of the command 'sh -c 'ip route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+10\.11\.4\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc9'",True,OK
 "Checking the exit code of the command 'sh -c 'ip -6 route show default | grep -Eq ""^default[[:space:]]+via[[:space:]]+2001:db8:1100:4::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)""'' on 'pc10'",True,OK
-"Checking the exit code of the command 'sh -c '! grep -R -E ""^[[:space:]]*forwarders[[:space:]]*\{"" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'conf=""$(named-checkconf -p 2>/dev/null)"" || exit 1; printf ""%s\n"" ""$conf"" | awk '""'""'BEGIN{inside=0;bad=0} {line=$0; sub(/\/\/.*/,"""",line); sub(/#.*/,"""",line); if(!inside){if(line ~ /^[[:space:]]*forwarders[[:space:]]*\{/){sub(/^[^{]*\{/ ,"""",line); inside=1}else next} if(inside){end=(line ~ /\}/); if(end) sub(/\}.*/,"""",line); gsub(/[[:space:];]/,"""",line); if(line!="""") bad=1; if(end) inside=0}} END{exit bad}'""'""''' on 'pc10'",True,OK
 "Checking the exit code of the command 'sh -c 'grep -R -E ""^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;"" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'' on 'pc10'",False,"The exit code of the command differs from the expected one.
  Actual: 1
  Expected: 0"

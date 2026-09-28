@@ -1,0 +1,3 @@
+ip -6 address replace 2001:db8:1100:5::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:5::1 dev eth0
+printf 'nameserver 2001:db8:1100:4::10\noptions ndots:1\n' > /etc/resolv.conf
