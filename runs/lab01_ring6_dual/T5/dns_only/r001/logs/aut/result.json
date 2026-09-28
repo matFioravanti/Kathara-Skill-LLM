@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 95.47220141700382,
+  "final_message": "DNS interno gerarchico completato: root `pc2`; `test.` primario `pc4` e secondario `pc6`; `services.test.` `pc8`; resolver `pc10`.\n\nCreati i BIND config/zone/hint in `pc2`, `pc4`, `pc6`, `pc8`, `pc10`; aggiunto l’avvio di `named` ai soli server e `pc12` usa esclusivamente `2001:db8:1100:4::10`.\n\n`www.test.`: A `10.11.5.10` (`pc11`) e AAAA `2001:db8:1100:3::10` (`pc8`); inclusi CNAME, MX, delega/glue, record mail/status e TXT richiesto.\n\nCambiati soltanto gli attributi `[image]` in `lab.conf` dei cinque nodi DNS, in `kathara/bind`; nessuna modifica a topologia, indirizzi o routing.\n\nAssunzione: poiché server DNS e client sono IPv6-only, trasporto, root hints e glue usano AAAA; l’unico record IPv4 richiesto è l’A di `www.test.`.",
+  "usage": {
+    "input_tokens": 176521,
+    "cached_input_tokens": 153856,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4501,
+    "reasoning_output_tokens": 1128
+  }
+}

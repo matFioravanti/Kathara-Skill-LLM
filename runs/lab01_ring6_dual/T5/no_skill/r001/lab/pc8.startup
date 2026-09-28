@@ -1,0 +1,30 @@
+ip -6 address replace 2001:db8:1100:3::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:3::1 dev eth0
+mkdir -p /etc/bind
+cat > /etc/bind/named.conf <<'EOF'
+options {
+    directory "/etc/bind";
+    listen-on { any; };
+    listen-on-v6 { any; };
+    recursion no;
+    allow-query { any; };
+    allow-transfer { none; };
+    dnssec-validation no;
+};
+
+zone "services.test." {
+    type master;
+    file "/etc/bind/db.services.test";
+};
+EOF
+cat > /etc/bind/db.services.test <<'EOF'
+$TTL 300
+@ IN SOA ns.services.test. hostmaster.services.test. (
+    2026092801 300 120 1209600 300 )
+  IN NS ns.services.test.
+
+ns IN AAAA 2001:db8:1100:3::10
+mail IN AAAA 2001:db8:1100:3::10
+status IN AAAA 2001:db8:1100:2::10
+EOF
+named -c /etc/bind/named.conf
