@@ -19,7 +19,14 @@ from .workspace import component_versions, create_workspace, logical_run_id, tre
 def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
             ui_context: dict | None = None, event_callback=None,
             experiment_id: str | None = None, replicate: int | None = None) -> Path:
-    skill_mode = skill_mode or "dns_only"
+    # The five Codex skill modes are EXCLUSIVE to agent=="codex".
+    # For any other agent (e.g. Antigravity) skill_mode is forced to "no_skill"
+    # so that available_skills/forced_skills are both empty and no $skill directive
+    # is prepended to the prompt by execution_prompt().
+    if agent != "codex":
+        skill_mode = "no_skill"
+    else:
+        skill_mode = skill_mode or "dns_only"
     skill_selection = mode_details(skill_mode)
     correction_source = scenario.correction
     correction_source_relative = correction_path(config.root, scenario.scenario_id).relative_to(config.root).as_posix()

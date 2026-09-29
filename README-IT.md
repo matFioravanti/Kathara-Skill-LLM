@@ -235,9 +235,19 @@ runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/
 * `checks.csv` — una riga per ogni test individuale del Kathara Lab Checker.
 * `summary.csv` — statistiche descrittive raggruppate per scenario e modalità Skill.
 
-I token provengono dall'ultimo evento Codex `turn.completed` che contiene `usage` in `logs/aut/events.jsonl`. La trace corrente espone `input_tokens`, `cached_input_tokens`, `cache_write_input_tokens`, `output_tokens` e `reasoning_output_tokens`; `total_tokens` resta null se assente. Gli usage dei turni precedenti non vengono sommati. `selected_skills` contiene soltanto Skill disponibili il cui `SKILL.md` compare in un comando di lettura `command_execution` tracciato; il dato resta distinto dalle Skill forzate.
+I token provengono dall'ultimo evento Codex `turn.completed` che contiene `usage` in `logs/aut/events.jsonl`. La trace corrente espone `input_tokens`, `cached_input_tokens`, `cache_write_input_tokens`, `output_tokens` e `reasoning_output_tokens`; `total_tokens` resta null se assente. Gli usage dei turni precedenti non vengono sommati.
 
-`agent_seconds` viene dalla durata del subprocess misurata dal runner AUT. `checker_seconds` misura `run_checker`, inclusi preparazione e parsing dei report. `total_seconds` misura il tempo da subito prima dell'allocazione del workspace fino al completamento delle fasi della run; esclude preflight e serializzazione finale delle metriche. In `summary.csv`, `skill_selection_rate` è valorizzato solo per `auto`: il denominatore include le run AUT completate con trace leggibile e il numeratore quelle che hanno selezionato almeno una Skill disponibile.
+Le metriche attuali relative alle skill sono:
+* `available_skills`: Skill rese disponibili all'AUT.
+* `forced_skills`: Skill esplicitamente forzate tramite direttiva a prompt.
+* `observed_skills`: Skill per cui il trace mostra evidenza esplicita di lettura del relativo `SKILL.md`.
+* `skill_observation_status`: Classificazione dell'osservazione (es. tutte le skill forzate lette, mancanti, ecc.).
+* `forced_skills_satisfied`: True se tutte le skill forzate sono state osservate nel trace.
+* `missing_forced_skills`: Lista delle skill forzate che non sono state lette.
+
+Attenzione: `observed_skills == []` NON significa "Codex non ha utilizzato nessuna Skill" (potrebbe averle caricate nativamente in modo inosservabile). Significa solo che non c'è evidenza nel trace di un comando esplicito di lettura del file.
+
+`agent_seconds` viene dalla durata del subprocess misurata dal runner AUT. `checker_seconds` misura `run_checker`, inclusi preparazione e parsing dei report. `total_seconds` misura il tempo da subito prima dell'allocazione del workspace fino al completamento delle fasi della run; esclude preflight e serializzazione finale delle metriche.
 
 ## Aggregazione e analisi
 

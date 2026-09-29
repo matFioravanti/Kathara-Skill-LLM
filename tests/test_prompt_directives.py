@@ -298,5 +298,99 @@ class ConfigSkillOptionalityTest(unittest.TestCase):
             self.assertIn("creation_skill", config.data["aut"])
 
 
+class PipelineToRunnerTest(unittest.TestCase):
+    """
+    Verify the prompt that reaches run_codex when calling pipeline.run_one().
+    This ensures that there is no double-application of execution_prompt()
+    between pipeline.py and inspect_runner.py.
+    """
+    def setUp(self):
+        self._tmpdir = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmpdir.name)
+        self.config = _make_config(self.root)
+        lab_dir = self.root / "scenarios/lab_001/lab"
+        lab_dir.mkdir(parents=True)
+        (lab_dir / "lab.conf").write_text("client[0]=h1\n")
+        self.scenario = Scenario("lab_001", self.root / "scenarios/lab_001")
+        prompt_dir = self.root / "prompt/lab_001"
+        prompt_dir.mkdir(parents=True)
+        (prompt_dir / "T1.md").write_text("Configure the lab.", encoding="utf-8")
+        self.original_prompt = "Configure the lab."
+
+    def tearDown(self):
+        self._tmpdir.cleanup()
+
+    def _intercept_run_one(self, mode: str) -> str:
+        captured = {}
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            captured["prompt"] = prompt
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+            (logs / f"lab_001__T1__{mode}__r001.eval").write_text("{}", encoding="utf-8")
+            (logs / "events.jsonl").write_text("", encoding="utf-8")
+            (logs / "result.json").write_text("{}", encoding="utf-8")
+            mock = MagicMock()
+            mock.success = True
+            return mock
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.inspect_runner.prepare_skill_workspace"), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode=mode)
+        
+        return captured.get("prompt", "")
+
+    def test_pipeline_to_runner_dns_only(self):
+        prompt = self._intercept_run_one("dns_only")
+        self.assertEqual(prompt.count("$kathara-dns"), 1)
+        self.assertEqual(prompt.count("$kathara-creation"), 0)
+
+    def test_pipeline_to_runner_both_forced(self):
+        prompt = self._intercept_run_one("both_forced")
+        self.assertEqual(prompt.count("$kathara-dns"), 1)
+        self.assertEqual(prompt.count("$kathara-creation"), 1)
+
+    def test_pipeline_to_runner_antigravity_is_not_forced(self):
+        captured = {}
+        def fake_run_antigravity(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            captured["prompt"] = prompt
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+            (logs / "lab_001__T1__no_skill__r001.eval").write_text("{}", encoding="utf-8")
+            (logs / "events.jsonl").write_text("", encoding="utf-8")
+            (logs / "result.json").write_text("{}", encoding="utf-8")
+            mock = MagicMock()
+            mock.success = True
+            return mock
+
+        from benchmark_core import pipeline
+        
+        agy_config = Config(self.root, {
+            "aut": {
+                "agent": "antigravity",
+                "version": "test",
+                "model": None,
+                "reasoning_effort": None,
+                "dns_skill": "skills/kathara-dns/SKILL.md",
+            },
+            "benchmark": {"timeout_seconds": 30},
+            "sandbox": {"image": "test"},
+        })
+        
+        with patch("benchmark_core.inspect_runner.run_antigravity", side_effect=fake_run_antigravity), \
+             patch("benchmark_core.inspect_runner.prepare_skill_workspace"), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            run_path = pipeline.run_one(agy_config, self.scenario, "antigravity", "T1", skill_mode=None)
+            
+        manifest = json.loads((run_path / "manifest.json").read_text())
+        self.assertEqual(manifest["skill_mode"], "no_skill")
+
+
 if __name__ == "__main__":
     unittest.main()
