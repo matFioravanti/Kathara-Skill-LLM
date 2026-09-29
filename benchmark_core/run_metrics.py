@@ -1,7 +1,6 @@
 """Metriche normalizzate della run, derivate da trace e risultati conservati."""
 from pathlib import Path
 import json
-import re
 
 from .checker_runner import checker_test_rows, parse_reports
 
