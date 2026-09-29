@@ -21,8 +21,8 @@
   "forced_skills": [
     "kathara-dns"
   ],
-  "started_at": "2026-09-29T10:39:27.780773+00:00",
-  "completed_at": "2026-09-29T10:41:46.392273+00:00",
+  "started_at": "2026-09-29T12:28:49.112477+00:00",
+  "completed_at": "2026-09-29T12:30:36.950479+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -36,19 +36,19 @@
   "state_history": [
     {
       "state": "PENDING",
-      "timestamp": "2026-09-29T10:39:27.788607+00:00"
+      "timestamp": "2026-09-29T12:28:49.119883+00:00"
     },
     {
       "state": "AUT_RUNNING",
-      "timestamp": "2026-09-29T10:39:27.788899+00:00"
+      "timestamp": "2026-09-29T12:28:49.120184+00:00"
     },
     {
       "state": "AUT_COMPLETED",
-      "timestamp": "2026-09-29T10:41:13.980918+00:00"
+      "timestamp": "2026-09-29T12:30:04.627838+00:00"
     },
     {
       "state": "COMPLETED",
-      "timestamp": "2026-09-29T10:41:46.391953+00:00"
+      "timestamp": "2026-09-29T12:30:36.949998+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -60,7 +60,7 @@
   "prompt_sent_sha256": "2fa4724a1891d55b0fb3cbb8cde77955b0d1fff6e0949a9506622ac3fa8d859c",
   "prompt_source": "prompt/lab01_ring6_dual/T1.md",
   "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
-  "dns_skill_bundle_sha256": "815cd0e8fa799252a717ccf21afe815a73459496fc08a024f320c476e7191845",
+  "dns_skill_bundle_sha256": "0f1d5cc5f9de7241599cc14e8cd8b483b41310f4dbebc962d4119deb323a7ce9",
   "creation_skill_sha256": null,
   "creation_skill_bundle_sha256": null,
   "correction_source": "scenarios/lab01_ring6_dual/correction.yaml",
@@ -76,7 +76,7 @@
     "correction_snapshot": "evaluation/correction.yaml",
     "results": "results"
   },
-  "aut_measurement_ended_at": "2026-09-29T10:41:13.969393+00:00",
-  "final_lab_sha256": "5516183b7082338f411cb3ee83087af5ca5744ab1a8beae84e68091906df1438",
+  "aut_measurement_ended_at": "2026-09-29T12:30:04.618365+00:00",
+  "final_lab_sha256": "699fabd7cb815892a94a7872117900434ad778df886a36edb6b5d33aa0be1d50",
   "correction_snapshot": "evaluation/correction.yaml"
 }

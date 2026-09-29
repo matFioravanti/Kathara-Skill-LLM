@@ -28,15 +28,15 @@
   "agent_success": true,
   "status": "COMPLETED",
   "timing": {
-    "agent_seconds": 106.13738454099985,
-    "checker_seconds": 32.340411749999475,
-    "total_seconds": 138.62338420800006
+    "agent_seconds": 75.41813383299996,
+    "checker_seconds": 32.257011624998995,
+    "total_seconds": 107.84984787499889
   },
   "tokens": {
-    "input": 248582,
-    "cached_input": 217088,
-    "output": 4264,
-    "reasoning": 823,
+    "input": 105136,
+    "cached_input": 89856,
+    "output": 3436,
+    "reasoning": 353,
     "total": null,
     "cache_write_input": 0
   },
