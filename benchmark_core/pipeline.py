@@ -11,7 +11,7 @@ from .config import skill_paths
 from .correction_input import correction_path, read_correction, validate_correction
 from .diff_metrics import compute_diff
 from .inspect_runner import run_aut
-from .skill_modes import execution_prompt, mode_details
+from .skill_modes import mode_details
 from .run_metrics import make_metrics, print_run_summary
 from .workspace import component_versions, create_workspace, logical_run_id, tree_hash, utc_now, write_json
 
@@ -27,8 +27,6 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
     from .prompts import resolve_prompt
     resolved_prompt = resolve_prompt(config.root, scenario.scenario_id, prompt_type)
     prompt_text = resolved_prompt.read_text(encoding="utf-8")
-    # The prompt actually sent to the AUT includes the $skill directive prefix when applicable
-    prompt_sent = execution_prompt(skill_mode, prompt_text)
     total_started = time.monotonic()
     run = create_workspace(config.root / "runs", scenario, prompt_type, skill_mode, prompt_text)
     run_number = int(run.name[1:])
@@ -65,7 +63,9 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "source_lab_sha256": tree_hash(scenario.lab),
         "input_lab_sha256": tree_hash(run / "input/lab"),
         "prompt_sha256": hashlib.sha256(resolved_prompt.read_bytes()).hexdigest(),
-        "prompt_sent_sha256": hashlib.sha256(prompt_sent.encode("utf-8")).hexdigest(),
+        # prompt_sent_sha256 is computed after AUT from logs/aut/prompt_sent.md
+        # to ensure it matches the exact bytes written to disk by the runner.
+        "prompt_sent_sha256": None,
         "prompt_source": str(resolved_prompt.relative_to(config.root)),
         "dns_skill_sha256": (
             hashlib.sha256(paths["kathara-dns"].read_bytes()).hexdigest()
@@ -122,10 +122,16 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         state("PENDING")
         state("AUT_RUNNING")
         try:
-            run_aut(config, scenario, run, agent, prompt_sent, skill_mode=skill_mode, run_id=run_id)
+            run_aut(config, scenario, run, agent, prompt_text, skill_mode=skill_mode, run_id=run_id)
             manifest["aut_execution_success"] = True
         finally:
             manifest["aut_measurement_ended_at"] = utc_now()
+            # Compute prompt_sent_sha256 from the exact bytes written by the runner.
+            _prompt_sent_path = run / "logs/aut/prompt_sent.md"
+            if _prompt_sent_path.is_file():
+                manifest["prompt_sent_sha256"] = hashlib.sha256(
+                    _prompt_sent_path.read_bytes()
+                ).hexdigest()
             # Anche un AUT interrotto può aver modificato file: conserva il diff parziale.
             try:
                 compute_diff(scenario.lab, run / "lab", run / "logs/diff.json")

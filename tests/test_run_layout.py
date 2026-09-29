@@ -96,10 +96,20 @@ class RunLayoutTest(unittest.TestCase):
                         "dns_skill": "skills/dns/SKILL.md", "creation_skill": "skills/creation/SKILL.md"},
                 "sandbox": {"image": "fixture"}, "benchmark": {"timeout_seconds": 10},
             })
+            from benchmark_core.skill_modes import execution_prompt as _ep
+
+            def fake_run_aut(config, scenario, run, agent, prompt_text, skill_mode=None, run_id=None):
+                # Simulate what run_aut + runner do: write prompt_sent.md with
+                # the effective prompt (original prefix + $skill directives)
+                aut_logs = run / "logs/aut"
+                aut_logs.mkdir(parents=True, exist_ok=True)
+                prompt_sent = _ep(skill_mode or "no_skill", prompt_text)
+                (aut_logs / "prompt_sent.md").write_text(prompt_sent, encoding="utf-8")
+
             modes = ["no_skill", "creation_only", "dns_only", "both_forced", "auto"]
             runs = []
             with patch.object(pipeline, "component_versions", return_value={}), \
-                 patch.object(pipeline, "run_aut"), \
+                 patch.object(pipeline, "run_aut", side_effect=fake_run_aut), \
                  patch.object(pipeline, "read_correction", return_value=(b"canonical correction", "sha")), \
                  patch.object(pipeline, "validate_correction", return_value="sha"), \
                  patch.object(pipeline, "run_checker", return_value={"task_success": True}) as checker, \
@@ -124,11 +134,14 @@ class RunLayoutTest(unittest.TestCase):
             self.assertEqual(metrics["prompt_type"], "T1")
             original_sha = hashlib.sha256(b"Configure DNS").hexdigest()
             self.assertEqual(manifest["prompt_sha256"], original_sha)
-            # dns_only prompt sent = "$kathara-dns\n\nConfigure DNS"
-            prompt_sent = "$kathara-dns\n\nConfigure DNS"
-            self.assertEqual(manifest["prompt_sent_sha256"],
-                             hashlib.sha256(prompt_sent.encode("utf-8")).hexdigest())
-            # For no_skill (runs[0]) the two hashes must coincide
+            # prompt_sent_sha256 must equal sha256 of the prompt_sent.md file (written by the runner)
+            prompt_sent_path = run / "logs/aut/prompt_sent.md"
+            self.assertTrue(prompt_sent_path.is_file(), "prompt_sent.md not written")
+            expected_sent_sha = hashlib.sha256(prompt_sent_path.read_bytes()).hexdigest()
+            self.assertEqual(manifest["prompt_sent_sha256"], expected_sent_sha)
+            # The dns_only prompt_sent must differ from the original
+            self.assertNotEqual(manifest["prompt_sha256"], manifest["prompt_sent_sha256"])
+            # For no_skill (runs[0]) the two hashes must coincide (no prefix added)
             manifest_no_skill = json.loads((runs[0] / "manifest.json").read_text())
             self.assertEqual(manifest_no_skill["prompt_sha256"], manifest_no_skill["prompt_sent_sha256"])
             # dns_only: dns hash present, creation hash absent

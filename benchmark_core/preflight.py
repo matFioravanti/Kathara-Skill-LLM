@@ -5,7 +5,6 @@ import sys
 from pathlib import Path
 
 from .agent_factory import validate_agent
-from .config import verify_skills
 from .correction_input import correction_path, validate_correction
 
 
@@ -19,7 +18,31 @@ def preflight(config, agent: str, skill_mode: str | None = None,
         scenario_ids = ()
     for scenario_id in scenario_ids:
         validate_correction(correction_path(config.root, scenario_id))
-    verify_skills(config)
+
+    # --- Mode-aware skill verification ---
+    # Only verify skills required by the actual mode and agent.
+    # No global verify_skills() call: that would require all skills even in no_skill/dns_only.
+    if agent == "codex":
+        from .skill_modes import (
+            ensure_no_external_skill_collisions,
+            expand_skill_mode,
+            validate_mode_sources,
+        )
+        ensure_no_external_skill_collisions(config.root)
+        effective_modes = expand_skill_mode(skill_mode) if skill_mode is not None else ()
+        for mode in effective_modes:
+            validate_mode_sources(config, mode)
+    elif agent == "antigravity":
+        # Antigravity uses only the dns_skill; verify it if configured.
+        from .config import verify_skills
+        dns_configured = config.data.get("aut", {}).get("dns_skill")
+        if dns_configured:
+            verify_skills(config, ("kathara-dns",))
+        else:
+            raise RuntimeError(
+                "La configurazione Antigravity richiede aut.dns_skill."
+            )
+
     validate_agent(agent)
 
     # Prerequisiti comuni: Docker, Kathara, checker.
@@ -31,15 +54,6 @@ def preflight(config, agent: str, skill_mode: str | None = None,
 
     if agent == "codex":
         from .codex_cli_runner import codex_environment
-        if skill_mode is not None:
-            from .skill_modes import (
-                ensure_no_external_skill_collisions,
-                expand_skill_mode,
-                validate_mode_sources,
-            )
-            ensure_no_external_skill_collisions(config.root)
-            for mode in expand_skill_mode(skill_mode):
-                validate_mode_sources(config, mode)
         codex = shutil.which("codex")
         if not codex:
             raise RuntimeError("Codex CLI non trovata nel PATH.")

@@ -78,30 +78,38 @@ class CodexCliRunnerTest(unittest.TestCase):
             self.assertEqual(second[1]["env"].get("CODEX_API_KEY"), None)
 
     def test_preflight_checks_login_status(self):
-        class Config:  # il test non coinvolge configurazione/provider Inspect
-            pass
-        calls = []
-        def fake_run(command, **kwargs):
-            calls.append(command)
-            return subprocess.CompletedProcess(command, 0, "Logged in using ChatGPT", "")
-        with patch("benchmark_core.preflight.verify_skills", return_value={}), \
-             patch("benchmark_core.preflight.shutil.which", return_value="/usr/local/bin/codex"), \
-             patch("benchmark_core.preflight.subprocess.run", side_effect=fake_run):
-            preflight(Config(), "codex")
-        self.assertIn(["/usr/local/bin/codex", "login", "status"], calls)
+        import tempfile as _tmp, pathlib as _pl
+        with _tmp.TemporaryDirectory() as _t:
+            class Config:
+                root = _pl.Path(_t)
+                data = {"aut": {}}
+            calls = []
+            def fake_run(command, **kwargs):
+                calls.append(command)
+                return subprocess.CompletedProcess(command, 0, "Logged in using ChatGPT", "")
+            with patch("benchmark_core.preflight.shutil.which", return_value="/usr/local/bin/codex"), \
+                 patch("benchmark_core.preflight.subprocess.run", side_effect=fake_run), \
+                 patch("benchmark_core.skill_modes.ensure_no_external_skill_collisions"), \
+                 patch("benchmark_core.skill_modes.validate_mode_sources"):
+                preflight(Config(), "codex")
+            self.assertIn(["/usr/local/bin/codex", "login", "status"], calls)
 
     def test_preflight_reports_missing_login(self):
-        class Config:
-            pass
-        def fake_run(command, **kwargs):
-            if command[1:] == ["login", "status"]:
-                return subprocess.CompletedProcess(command, 1, "", "not logged in")
-            return subprocess.CompletedProcess(command, 0, "", "")
-        with patch("benchmark_core.preflight.verify_skills", return_value={}), \
-             patch("benchmark_core.preflight.shutil.which", return_value="codex"), \
-             patch("benchmark_core.preflight.subprocess.run", side_effect=fake_run):
-            with self.assertRaisesRegex(RuntimeError, "not authenticated"):
-                preflight(Config(), "codex")
+        import tempfile as _tmp, pathlib as _pl
+        with _tmp.TemporaryDirectory() as _t:
+            class Config:
+                root = _pl.Path(_t)
+                data = {"aut": {}}
+            def fake_run(command, **kwargs):
+                if command[1:] == ["login", "status"]:
+                    return subprocess.CompletedProcess(command, 1, "", "not logged in")
+                return subprocess.CompletedProcess(command, 0, "", "")
+            with patch("benchmark_core.preflight.shutil.which", return_value="codex"), \
+                 patch("benchmark_core.preflight.subprocess.run", side_effect=fake_run), \
+                 patch("benchmark_core.skill_modes.ensure_no_external_skill_collisions"), \
+                 patch("benchmark_core.skill_modes.validate_mode_sources"):
+                with self.assertRaisesRegex(RuntimeError, "not authenticated"):
+                    preflight(Config(), "codex")
 
 
     def _is_codex_available_and_logged_in(self) -> bool:
@@ -148,15 +156,18 @@ class CodexCliRunnerTest(unittest.TestCase):
 
             prompt = "$test-probe\nPerform the action."
 
-            try:
-                result = subprocess.run(
-                    ["codex", "exec", "--json", "--ephemeral", "--skip-git-repo-check", "-C", str(root), "-"],
-                    input=prompt, text=True, capture_output=True, timeout=30, env=os.environ,
-                )
-            except subprocess.CalledProcessError as e:
-                if "Not inside a trusted directory" in e.stderr:
+            result = subprocess.run(
+                ["codex", "exec", "--json", "--ephemeral", "--skip-git-repo-check", "-C", str(root), "-"],
+                input=prompt, text=True, capture_output=True, timeout=30, env=os.environ,
+            )
+            if result.returncode != 0:
+                stderr_text = result.stderr or ""
+                if "Not inside a trusted directory" in stderr_text:
                     self.skipTest("Codex CLI requires trusted directory even with skip flag.")
-                raise
+                self.fail(
+                    f"Codex CLI exited with code {result.returncode}.\n"
+                    f"stderr: {stderr_text[:500]}"
+                )
 
             import json as _json
             events = []
@@ -165,6 +176,14 @@ class CodexCliRunnerTest(unittest.TestCase):
                     events.append(_json.loads(line))
                 except _json.JSONDecodeError:
                     pass
+
+            # If there are no events at all the output is suspicious: do not treat
+            # it as evidence of unobservability – skip instead.
+            if not events:
+                self.skipTest(
+                    "Codex returned exit 0 but produced no JSON events. "
+                    "Cannot make a reliable observation."
+                )
 
             from benchmark_core.run_metrics import observed_skills
             observed = observed_skills(events, ["test-probe"])

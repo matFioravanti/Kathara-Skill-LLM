@@ -38,10 +38,10 @@ def load_config(path: Path) -> Config:
             raise ValueError(f"{section}.{key} deve essere booleano.")
     if data["checker"].get("report_type") != "csv":
         raise ValueError("Questa integrazione richiede checker.report_type: csv.")
-    # Only "agent", "version", "dns_skill" are unconditionally required.
-    # "creation_skill" is only required when the agent/mode actually uses it.
+    # Only "agent" and "version" are unconditionally required in aut.
+    # dns_skill and creation_skill are validated mode-by-mode in preflight/pipeline.
     for section, keys in {
-        "aut": ("agent", "version", "dns_skill"),
+        "aut": ("agent", "version"),
         "sandbox": ("image",), "results": ("directory",),
     }.items():
         for key in keys:

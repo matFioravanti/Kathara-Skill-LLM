@@ -199,7 +199,6 @@ class SkillModesTest(unittest.TestCase):
             config = Config(root)
             self.make_skill(root, "kathara-dns", "Configure DNS in Kathara labs.", directory="dns")
             with patch.dict("os.environ", {"CODEX_HOME": str(root / "codex-home")}), \
-                 patch("benchmark_core.preflight.verify_skills", return_value={}), \
                  patch("benchmark_core.preflight.subprocess.run") as command:
                 with self.assertRaisesRegex(ValueError, "kathara-creation non trovata"):
                     preflight(config, "codex", skill_mode="all", scenario_ids=[])
