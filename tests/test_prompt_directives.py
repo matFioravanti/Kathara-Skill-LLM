@@ -504,6 +504,97 @@ class PipelineToRunnerTest(unittest.TestCase):
         # Ensure the test ran and fake_run_codex captured the workspace
         self.assertIn("workspace", captured)
 
+    def test_persistent_lab_clean(self):
+        """Test persistent lab clean (no .codex) after run."""
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            self.assertTrue((workspace / ".codex/skills/kathara-dns/SKILL.md").exists())
+            (workspace / "final-file.txt").write_text("proof", encoding="utf-8")
+            
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+            (logs / "events.jsonl").write_text("", encoding="utf-8")
+            (logs / "result.json").write_text("{}", encoding="utf-8")
+            mock = MagicMock()
+            mock.success = True
+            return mock
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            run_path = pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode="dns_only")
+
+        self.assertFalse((run_path / "lab/.codex").exists())
+        self.assertTrue((run_path / "lab/final-file.txt").exists())
+
+    def test_persistent_lab_clean_after_error(self):
+        """Test persistent lab clean after error."""
+        class CodexExecutionError(Exception):
+            pass
+
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            self.assertTrue((workspace / ".codex/skills/kathara-dns/SKILL.md").exists())
+            (workspace / "generated-before-error.txt").write_text("proof", encoding="utf-8")
+            raise CodexExecutionError("Simulated failure")
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            run_path = pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode="dns_only")
+
+        self.assertFalse((run_path / "lab/.codex").exists())
+        self.assertTrue((run_path / "lab/generated-before-error.txt").exists())
+
+    def test_ds_store_not_materialized(self):
+        """Crea artificialmente .DS_Store e verifica che non venga copiato nel temp lab."""
+        dns_skill = self.root / "skills/kathara-dns/SKILL.md"
+        ds_store = dns_skill.parent / ".DS_Store"
+        ds_store.write_text("dummy", encoding="utf-8")
+        
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            self.assertTrue((workspace / ".codex/skills/kathara-dns/SKILL.md").exists())
+            self.assertFalse((workspace / ".codex/skills/kathara-dns/.DS_Store").exists())
+            
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+            (logs / "events.jsonl").write_text("", encoding="utf-8")
+            (logs / "result.json").write_text("{}", encoding="utf-8")
+            mock = MagicMock()
+            mock.success = True
+            return mock
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode="dns_only")
+
+    def test_bundle_hash_ignores_ds_store(self):
+        from benchmark_core.workspace import tree_hash
+        bundle_dir = self.root / "test_bundle"
+        bundle_dir.mkdir()
+        skill_md = bundle_dir / "SKILL.md"
+        skill_md.write_text("initial", encoding="utf-8")
+        
+        initial_hash = tree_hash(bundle_dir)
+        
+        ds_store = bundle_dir / ".DS_Store"
+        ds_store.write_text("dummy", encoding="utf-8")
+        
+        hash_with_ds_store = tree_hash(bundle_dir)
+        self.assertEqual(initial_hash, hash_with_ds_store)
+        
+        skill_md.write_text("changed", encoding="utf-8")
+        hash_changed = tree_hash(bundle_dir)
+        self.assertNotEqual(initial_hash, hash_changed)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -80,6 +80,10 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                     variant="aut",
                 )
         finally:
+            codex_dir = temp_lab / ".codex"
+            if codex_dir.exists():
+                shutil.rmtree(codex_dir)
+
             staging_lab = run / "lab.sync-tmp"
             if staging_lab.exists():
                 shutil.rmtree(staging_lab)

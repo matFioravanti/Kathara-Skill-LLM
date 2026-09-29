@@ -28,7 +28,10 @@ def manifest(root: Path) -> dict:
         raise ValueError(f"Lab non valido: {root}")
     result = {}
     for base, dirs, files in os.walk(root, followlinks=False):
+        dirs[:] = [d for d in dirs if d not in (".DS_Store", "__pycache__")]
         for name in sorted(dirs + files):
+            if name in (".DS_Store", "__pycache__") or name.endswith(".pyc"):
+                continue
             if Path(base) == root and name in CHECKER_ARTIFACTS:
                 continue
             path = Path(base) / name

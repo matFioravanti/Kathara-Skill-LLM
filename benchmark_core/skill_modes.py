@@ -119,7 +119,12 @@ def prepare_skill_workspace(workspace: Path, config, mode: str) -> SkillMode:
     sources = source_paths(config, details.available_skills)
     validate_mode_sources(config, mode)
     for name, source in sources.items():
-        shutil.copytree(source.parent, skill_dir / name, symlinks=True)
+        shutil.copytree(
+            source.parent, 
+            skill_dir / name, 
+            symlinks=True,
+            ignore=shutil.ignore_patterns(".DS_Store", "__pycache__", "*.pyc")
+        )
     return details
 
 
