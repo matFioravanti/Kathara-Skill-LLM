@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yh2urm1t/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-euppde7r/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yh2urm1t/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-euppde7r/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -412,6 +412,6 @@ Checking the exit code of the command 'sh -c 'ip -6 route show 2001:db8:1101:3::
 Undeploying Network Scenario
 Total Tests: 342
 Passed Tests: 342/342
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yh2urm1t/labs/lab as CSV report...
-100%|██████████| 1/1 [00:31<00:00, 31.43s/it]100%|██████████| 1/1 [00:31<00:00, 31.43s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yh2urm1t/labs as CSV report...
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-euppde7r/labs/lab as CSV report...
+100%|██████████| 1/1 [00:31<00:00, 31.12s/it]100%|██████████| 1/1 [00:31<00:00, 31.12s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-euppde7r/labs as CSV report...

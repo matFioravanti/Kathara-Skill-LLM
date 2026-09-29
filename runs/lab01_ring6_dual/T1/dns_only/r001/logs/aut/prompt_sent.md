@@ -1,4 +1,4 @@
-Use only $kathara-dns for this task.
+$kathara-dns
 
 # Specifica DNS avanzata — lab01_ring6_dual
 
@@ -44,7 +44,8 @@ Nel laboratorio Kathara esistente `lab01_ring6_dual` va configurata una gerarchi
 ## Vincoli (MUST NOT)
 
 ### Vincoli generali
-- Non modificare `lab.conf`, topologia, collision domain, indirizzi, gateway o routing statico.
+- In `lab.conf` è consentito modificare esclusivamente le direttive `<device>[image]` dei dispositivi che svolgono un ruolo DNS; non modificare nessun’altra riga di `lab.conf`.
+- Non modificare topologia, collision domain, indirizzi, gateway o routing statico.
 - Non aggiungere host, link, interfacce, indirizzi o rotte.
 - Non usare forwarder, DNS pubblici o root hint pubblici.
 - Non inserire `www.test.`, `portal.test.`, `mail.services.test.` o `status.services.test.` in `/etc/hosts`.

@@ -1,5 +1,0 @@
-zone "test" {
-    type slave;
-    file "/var/cache/bind/db.test";
-    masters { 2001:db8:1100:1::10; };
-};

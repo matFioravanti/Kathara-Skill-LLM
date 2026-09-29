@@ -2,7 +2,8 @@
   "scenario": "lab01_ring6_dual",
   "scenario_id": "lab01_ring6_dual",
   "prompt_type": "T1",
-  "prompt_sha256": "ed0c13581a8f46f81241e2fa7746a790a1183129c1ebde2bb85d7d8262257d82",
+  "prompt_sha256": "5ecb00730f5646047b7c15af154a839dd93d58303f827846105f2abf2bb84a48",
+  "prompt_sent_sha256": "2fa4724a1891d55b0fb3cbb8cde77955b0d1fff6e0949a9506622ac3fa8d859c",
   "skill_mode": "dns_only",
   "run_number": 1,
   "replicate": 1,
@@ -17,22 +18,25 @@
   "forced_skills": [
     "kathara-dns"
   ],
-  "selected_skills": [
+  "observed_skills": [],
+  "skill_observation_status": "native_loading_unobservable",
+  "forced_skills_satisfied": null,
+  "missing_forced_skills": [
     "kathara-dns"
   ],
   "skill_trace_available": true,
   "agent_success": true,
   "status": "COMPLETED",
   "timing": {
-    "agent_seconds": 81.59898208400045,
-    "checker_seconds": 32.675526541999716,
-    "total_seconds": 116.62640200000169
+    "agent_seconds": 106.13738454099985,
+    "checker_seconds": 32.340411749999475,
+    "total_seconds": 138.62338420800006
   },
   "tokens": {
-    "input": 127515,
-    "cached_input": 104192,
-    "output": 3934,
-    "reasoning": 660,
+    "input": 248582,
+    "cached_input": 217088,
+    "output": 4264,
+    "reasoning": 823,
     "total": null,
     "cache_write_input": 0
   },
@@ -43,6 +47,6 @@
     "pass_rate": 1.0
   },
   "correction_sha256": "a9801781decf25f494e647e626fdffa328e29c34fdfbb16ce0995efe1bf9b91e",
-  "evaluation_revision": 2,
-  "last_reevaluated_at": "2026-09-28T20:53:38.471915+00:00"
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
 }
