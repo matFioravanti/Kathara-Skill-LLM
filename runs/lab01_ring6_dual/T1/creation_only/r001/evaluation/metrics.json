@@ -19,13 +19,6 @@
   "forced_skills": [
     "kathara-creation"
   ],
-  "observed_skills": [],
-  "skill_observation_status": "explicit_read_checkpoint",
-  "forced_skills_satisfied": false,
-  "missing_forced_skills": [
-    "kathara-creation"
-  ],
-  "skill_trace_available": true,
   "agent_success": true,
   "status": "COMPLETED",
   "timing": {

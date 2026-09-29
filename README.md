@@ -245,12 +245,15 @@ The tracked skill metrics are:
   * `auto` mode does not receive `$skill` or explicit checkpoints; discovery remains native.
   * `no_skill` receives no benchmark skills.
   * Legacy runs without `skill_protocol` maintain the old `native_loading_unobservable` interpretation.
-* `observed_skills`: Exclusively Skills for which the trace contains explicit evidence of reading the corresponding `SKILL.md`.
-* `skill_observation_status`: Classification of the observation. Under `explicit_read_v1`, forced mode with all read -> `explicit_read_checkpoint`.
-* `forced_skills_satisfied`: True if all forced skills were explicitly observed in the trace. Under `explicit_read_v1`, forced mode with at least one not read -> `false`.
-* `missing_forced_skills`: List of forced skills that were not observed in the trace.
+Il benchmark registra il trattamento assegnato tramite:
+- `skill_mode`
+- `available_skills`
+- `forced_skills`
+- `skill_protocol`
 
-Note that `observed_skills == []` does NOT mean "Codex did not use any Skill" (it may have loaded them natively in an unobservable way for `auto` or legacy runs). It only means there is no explicit `command_execution` trace reading the file.
+ma NON tenta più di inferire dai command_execution se Codex abbia effettivamente caricato o utilizzato una Skill, perché il caricamento nativo può non essere osservabile tramite comandi shell.
+
+La correttezza del risultato resta valutata indipendentemente tramite Kathara Lab Checker.
 
 `agent_seconds` comes from the AUT runner's measured subprocess duration. `checker_seconds` measures `run_checker` including preparation and report parsing. `total_seconds` measures elapsed time from immediately before workspace allocation through completion of the run stages, excluding preflight and the final metrics serialization.
 

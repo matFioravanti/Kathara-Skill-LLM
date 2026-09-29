@@ -240,12 +240,15 @@ I token provengono dall'ultimo evento Codex `turn.completed` che contiene `usage
 Le metriche attuali relative alle skill sono:
 * `available_skills`: Skill rese disponibili all'AUT.
 * `forced_skills`: Skill esplicitamente forzate tramite direttiva a prompt.
-* `observed_skills`: Skill per cui il trace mostra evidenza esplicita di lettura del relativo `SKILL.md`.
-* `skill_observation_status`: Classificazione dell'osservazione (es. tutte le skill forzate lette, mancanti, ecc.).
-* `forced_skills_satisfied`: True se tutte le skill forzate sono state osservate nel trace.
-* `missing_forced_skills`: Lista delle skill forzate che non sono state lette.
+Il benchmark registra il trattamento assegnato tramite:
+- `skill_mode`
+- `available_skills`
+- `forced_skills`
+- `skill_protocol`
 
-Attenzione: `observed_skills == []` NON significa "Codex non ha utilizzato nessuna Skill" (potrebbe averle caricate nativamente in modo inosservabile). Significa solo che non c'è evidenza nel trace di un comando esplicito di lettura del file.
+ma NON tenta più di inferire dai command_execution se Codex abbia effettivamente caricato o utilizzato una Skill, perché il caricamento nativo può non essere osservabile tramite comandi shell.
+
+La correttezza del risultato resta valutata indipendentemente tramite Kathara Lab Checker.
 
 `agent_seconds` viene dalla durata del subprocess misurata dal runner AUT. `checker_seconds` misura `run_checker`, inclusi preparazione e parsing dei report. `total_seconds` misura il tempo da subito prima dell'allocazione del workspace fino al completamento delle fasi della run; esclude preflight e serializzazione finale delle metriche.
 

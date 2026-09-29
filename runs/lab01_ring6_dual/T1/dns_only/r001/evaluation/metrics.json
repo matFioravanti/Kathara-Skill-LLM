@@ -19,13 +19,6 @@
   "forced_skills": [
     "kathara-dns"
   ],
-  "observed_skills": [
-    "kathara-dns"
-  ],
-  "skill_observation_status": "explicit_read_checkpoint",
-  "forced_skills_satisfied": true,
-  "missing_forced_skills": [],
-  "skill_trace_available": true,
   "agent_success": true,
   "status": "COMPLETED",
   "timing": {

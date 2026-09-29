@@ -27,8 +27,7 @@ RUN_COLUMNS = [
     "evaluation_revision", "last_reevaluated_at",
 
     # 3. SKILL
-    "available_skills", "forced_skills", "observed_skills",
-    "skill_observation_status", "forced_skills_satisfied", "missing_forced_skills",
+    "available_skills", "forced_skills",
 
     # 4. TOKEN
     "input_tokens", "cached_input_tokens", "output_tokens",
@@ -43,7 +42,6 @@ SUMMARY_COLUMNS = [
     "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "task_success_runs", "task_failed_runs", "task_success_rate",
-    "forced_skill_valid_runs", "forced_skill_invalid_runs", "forced_skill_valid_rate",
     "mean_checks_passed", "mean_checks_total", "mean_pass_rate", "median_pass_rate", "stdev_pass_rate",
     "mean_agent_seconds", "median_agent_seconds", "stdev_agent_seconds",
     "mean_checker_seconds", "median_checker_seconds",
@@ -211,12 +209,6 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     forced_raw = metrics.get("forced_skills")
     if not isinstance(forced_raw, list):
         forced_raw = manifest.get("forced_skills")
-    observed_raw = metrics.get("observed_skills", metrics.get("selected_skills"))
-    # forced_skills_satisfied: prefer metrics (computed from trace), fallback to None for old runs
-    fss = metrics.get("forced_skills_satisfied")
-    mfs_raw = metrics.get("missing_forced_skills")
-    if not isinstance(mfs_raw, list):
-        mfs_raw = []
 
     return {
         "experiment_id": experiment_id,
@@ -255,10 +247,6 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "last_reevaluated_at": metrics.get("last_reevaluated_at") or manifest.get("last_reevaluated_at"),
         "available_skills": _skill_list_str(avail_raw),
         "forced_skills": _skill_list_str(forced_raw),
-        "observed_skills": _skill_list_str(observed_raw),
-        "skill_observation_status": metrics.get("skill_observation_status"),
-        "forced_skills_satisfied": fss if isinstance(fss, bool) else None,
-        "missing_forced_skills": _skill_list_str(mfs_raw) if mfs_raw else None,
 
         "_evaluated": evaluated,
         "_manifest": manifest,
@@ -322,12 +310,7 @@ def _summary_records(records: list[dict]) -> list[dict]:
             stats[f"stdev_{column}"] = _stdev(values)
             if column in ("pass_rate", "agent_seconds", "checker_seconds", "total_seconds", "total_tokens"):
                 stats[f"median_{column}"] = _median(values)
-        # Forced skill satisfaction (only for modes with at least one forced skill)
-        fss_values = [row.get("forced_skills_satisfied") for row in group
-                      if row.get("forced_skills_satisfied") is not None]
-        forced_valid = sum(v is True for v in fss_values)
-        forced_invalid = sum(v is False for v in fss_values)
-        forced_valid_rate = forced_valid / len(fss_values) if fss_values else None
+        
         output.append({
             **dict(zip(group_fields, key)),
             "total_runs": len(group),
@@ -337,9 +320,6 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "task_success_runs": task_successes,
             "task_failed_runs": task_failures,
             "task_success_rate": task_successes / len(evaluated) if evaluated else None,
-            "forced_skill_valid_runs": forced_valid if fss_values else None,
-            "forced_skill_invalid_runs": forced_invalid if fss_values else None,
-            "forced_skill_valid_rate": forced_valid_rate,
             "mean_checks_passed": _mean(row.get("checks_passed") for row in evaluated),
             "mean_checks_total": _mean(row.get("checks_total") for row in evaluated),
             **stats,
