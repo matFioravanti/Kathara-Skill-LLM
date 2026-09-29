@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 91.53086016700036,
+  "final_message": "Configurazione DNS avanzata completata.\n\n- Ruoli: `pc2` root, `pc4` master `test.`, `pc6` slave via AXFR, `pc8` master `services.test.`, `pc10` resolver ricorsivo con hint interno, `pc12` client IPv6.\n- Creati i file BIND nelle directory dei cinque nodi DNS; incluse deleghe, glue AAAA, record richiesti e trasferimento autorizzato solo `pc4 → pc6`.\n- Modificate soltanto le immagini dei nodi DNS in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-soh0r9sw/lab/lab.conf) e aggiunti gli avvii di `named`; routing/topologia invariati.\n- [pc12.startup](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-soh0r9sw/lab/pc12.startup) usa esclusivamente `2001:db8:1100:4::10`.\n- Nessun forwarder, root pubblico o record DNS in `/etc/hosts`. Verifica statica completata; gli strumenti `named-check*` non sono disponibili sull’host.",
+  "usage": {
+    "input_tokens": 129239,
+    "cached_input_tokens": 112128,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3995,
+    "reasoning_output_tokens": 419
+  }
+}

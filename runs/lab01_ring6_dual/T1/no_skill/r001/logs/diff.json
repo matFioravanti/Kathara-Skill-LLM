@@ -1,0 +1,30 @@
+{
+  "files_created": 9,
+  "files_modified": 7,
+  "files_deleted": 0,
+  "files_changed": 16,
+  "lines_added": 127,
+  "lines_deleted": 5,
+  "created": [
+    "shared/pc10.db.root.hint",
+    "shared/pc10.named.conf",
+    "shared/pc2.db.root",
+    "shared/pc2.named.conf",
+    "shared/pc4.db.test",
+    "shared/pc4.named.conf",
+    "shared/pc6.named.conf",
+    "shared/pc8.db.services.test",
+    "shared/pc8.named.conf"
+  ],
+  "modified": [
+    "lab.conf",
+    "pc10.startup",
+    "pc12.startup",
+    "pc2.startup",
+    "pc4.startup",
+    "pc6.startup",
+    "pc8.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}

@@ -1,0 +1,5 @@
+ip -6 address replace 2001:db8:1100:3::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1100:3::1 dev eth0
+cp /shared/pc8.named.conf /etc/bind/named.conf
+cp /shared/pc8.db.services.test /etc/bind/db.services.test
+named -c /etc/bind/named.conf -u bind &

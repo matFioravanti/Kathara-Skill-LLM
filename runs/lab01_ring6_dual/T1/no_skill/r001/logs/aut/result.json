@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 133.3228270840009,
+  "final_message": "Configurata la gerarchia DNS interna avanzata.\n\n- `pc2`, `pc4`, `pc6`, `pc8`, `pc10` usano l’immagine BIND.\n- Root, primario, secondario via AXFR, sottozona e resolver ricorsivo sono separati nei rispettivi ruoli.\n- Il resolver usa esclusivamente gli hint della root IPv6 interna, senza forwarder e con DNSSEC validation disabilitata.\n- `pc12` usa `pc10` come resolver IPv6.\n- Delega, glue IPv6, record A/AAAA/CNAME/MX/TXT e sottozona sono stati definiti.\n- `lab.conf` è stato modificato solo nelle cinque direttive `[image]` consentite.\n\nIl dry-run di Kathara (`kathara lstart --print`) e la sintassi degli startup risultano validi.",
+  "usage": {
+    "input_tokens": 256142,
+    "cached_input_tokens": 219392,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5907,
+    "reasoning_output_tokens": 1958
+  }
+}
