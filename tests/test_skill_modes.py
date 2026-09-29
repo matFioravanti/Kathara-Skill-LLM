@@ -20,6 +20,8 @@ class Config:
         self.root = root
         self.data = {
             "aut": {
+                "agent": "codex",
+                "version": "1.0.0",
                 "creation_skill": "skills/kathara-creation/SKILL.md",
                 "dns_skill": "skills/dns/SKILL.md",
             }

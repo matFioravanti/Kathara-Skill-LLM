@@ -82,10 +82,12 @@ class CodexCliRunnerTest(unittest.TestCase):
         with _tmp.TemporaryDirectory() as _t:
             class Config:
                 root = _pl.Path(_t)
-                data = {"aut": {}}
+                data = {"aut": {"version": "1.0.0"}}
             calls = []
             def fake_run(command, **kwargs):
                 calls.append(command)
+                if "--version" in command:
+                    return subprocess.CompletedProcess(command, 0, "codex-cli 1.0.0\n", "")
                 return subprocess.CompletedProcess(command, 0, "Logged in using ChatGPT", "")
             with patch("benchmark_core.preflight.shutil.which", return_value="/usr/local/bin/codex"), \
                  patch("benchmark_core.preflight.subprocess.run", side_effect=fake_run), \
@@ -99,10 +101,12 @@ class CodexCliRunnerTest(unittest.TestCase):
         with _tmp.TemporaryDirectory() as _t:
             class Config:
                 root = _pl.Path(_t)
-                data = {"aut": {}}
+                data = {"aut": {"version": "1.0.0"}}
             def fake_run(command, **kwargs):
                 if command[1:] == ["login", "status"]:
                     return subprocess.CompletedProcess(command, 1, "", "not logged in")
+                if "--version" in command:
+                    return subprocess.CompletedProcess(command, 0, "codex-cli 1.0.0\n", "")
                 return subprocess.CompletedProcess(command, 0, "", "")
             with patch("benchmark_core.preflight.shutil.which", return_value="codex"), \
                  patch("benchmark_core.preflight.subprocess.run", side_effect=fake_run), \

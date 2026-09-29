@@ -1,4 +1,5 @@
 """Verifiche runtime senza avviare laboratori né chiamate ai modelli."""
+import re
 import shutil
 import subprocess
 import sys
@@ -6,6 +7,13 @@ from pathlib import Path
 
 from .agent_factory import validate_agent
 from .correction_input import correction_path, validate_correction
+
+
+def parse_cli_version(output: str) -> str:
+    match = re.search(r"(?:v)?(\d+\.\d+\.\d+(?:-\w+)?)", output)
+    if not match:
+        raise RuntimeError(f"Unable to parse valid version from output: {output!r}")
+    return match.group(1)
 
 
 def preflight(config, agent: str, skill_mode: str | None = None,
@@ -54,24 +62,53 @@ def preflight(config, agent: str, skill_mode: str | None = None,
 
     if agent == "codex":
         from .codex_cli_runner import codex_environment
+        
+        expected_version = config.data.get("aut", {}).get("version")
+        if not expected_version:
+            raise RuntimeError("aut.version is missing from configuration.")
+            
         codex = shutil.which("codex")
         if not codex:
             raise RuntimeError("Codex CLI non trovata nel PATH.")
+            
         environment = codex_environment()
-        agent_commands = [[codex, "--version"], [codex, "login", "status"]]
-        for command in agent_commands:
-            result = subprocess.run(command, capture_output=True, text=True, timeout=30, env=environment)
-            if result.returncode:
-                if command[1:] == ["login", "status"]:
-                    raise RuntimeError("Codex CLI is not authenticated. Run `codex` or `codex login` manually and authenticate with ChatGPT.")
-                raise RuntimeError(f"Prerequisito non disponibile: {' '.join(command)}\n{result.stderr.strip()}")
+        
+        version_result = subprocess.run([codex, "--version"], capture_output=True, text=True, timeout=30, env=environment)
+        if version_result.returncode:
+            raise RuntimeError(f"Prerequisito non disponibile: {codex} --version\n{version_result.stderr.strip()}")
+            
+        actual_version = parse_cli_version(version_result.stdout)
+        if actual_version != expected_version:
+            raise RuntimeError(
+                f"Codex CLI version mismatch:\n"
+                f"expected {expected_version}\n"
+                f"actual {actual_version}"
+            )
+            
+        login_result = subprocess.run([codex, "login", "status"], capture_output=True, text=True, timeout=30, env=environment)
+        if login_result.returncode:
+            raise RuntimeError("Codex CLI is not authenticated. Run `codex` or `codex login` manually and authenticate with ChatGPT.")
+            
     elif agent == "antigravity":
+        expected_version = config.data.get("aut", {}).get("version")
+        if not expected_version:
+            raise RuntimeError("aut.version is missing from configuration.")
+            
         agy = shutil.which("agy")
         if not agy:
             raise RuntimeError("Antigravity CLI (agy) non trovata nel PATH.")
-        result = subprocess.run([agy, "--version"], capture_output=True, text=True, timeout=30)
-        if result.returncode:
-            raise RuntimeError(f"Prerequisito non disponibile: {agy} --version\n{result.stderr.strip()}")
+            
+        version_result = subprocess.run([agy, "--version"], capture_output=True, text=True, timeout=30)
+        if version_result.returncode:
+            raise RuntimeError(f"Prerequisito non disponibile: {agy} --version\n{version_result.stderr.strip()}")
+            
+        actual_version = parse_cli_version(version_result.stdout)
+        if actual_version != expected_version:
+            raise RuntimeError(
+                f"Antigravity CLI version mismatch:\n"
+                f"expected {expected_version}\n"
+                f"actual {actual_version}"
+            )
 
     for command in common_commands:
         result = subprocess.run(command, capture_output=True, text=True, timeout=30)
