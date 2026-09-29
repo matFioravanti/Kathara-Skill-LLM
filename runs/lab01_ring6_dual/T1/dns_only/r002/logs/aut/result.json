@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 116.43934145799903,
+  "final_message": "Configurata gerarchia DNS interna IPv6 completa.\n\n- Ruoli: root `pc2`; master `test.` `pc4`; slave `test.` `pc6`; `services.test.` `pc8`; resolver `pc10`; client `pc12`.\n- Creati BIND config/zone files sui cinque server; `pc6` trasferisce soltanto da `pc4`.\n- Delegate e glue IPv6 configurati; record A/AAAA/CNAME/MX/TXT richiesti inclusi.\n- `pc10` usa solo il root hint interno `pc2`, senza forwarder e con DNSSEC disabilitato.\n- Aggiornate solo le cinque direttive immagine DNS in `lab.conf`; startup DNS/resolver aggiunti in coda.\n- Controllo statico superato; `named-checkconf`/`named-checkzone` non sono disponibili nell’ambiente.",
+  "usage": {
+    "input_tokens": 226379,
+    "cached_input_tokens": 198656,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5549,
+    "reasoning_output_tokens": 951
+  }
+}
