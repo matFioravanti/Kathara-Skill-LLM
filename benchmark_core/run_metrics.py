@@ -6,10 +6,10 @@ from .checker_runner import checker_test_rows, parse_reports
 
 
 
-def load_jsonl(path: Path) -> tuple[list[dict], bool]:
+def load_jsonl(path: Path) -> list[dict]:
     events = []
     if not path.is_file():
-        return events, False
+        return events
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         try:
             event = json.loads(line)
@@ -17,7 +17,7 @@ def load_jsonl(path: Path) -> tuple[list[dict], bool]:
             continue
         if isinstance(event, dict):
             events.append(event)
-    return events, bool(events)
+    return events
 
 
 def codex_usage(events: list[dict]) -> dict:
@@ -105,7 +105,7 @@ def _duration(path: Path, key: str) -> float | None:
 def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
                  checker_seconds: float | None, checker_outcome: dict | None) -> dict:
     logs = run / "logs/aut"
-    events, trace_available = load_jsonl(logs / "events.jsonl")
+    events = load_jsonl(logs / "events.jsonl")
     agent = metadata.get("agent")
     available = metadata.get("available_skills") if isinstance(metadata.get("available_skills"), list) else None
     if agent == "antigravity":
