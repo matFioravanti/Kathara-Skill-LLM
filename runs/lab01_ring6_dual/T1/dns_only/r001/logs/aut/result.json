@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 92.81746191599814,
+  "final_message": "Configurata la gerarchia DNS IPv6 richiesta: `pc2` root, `pc4` master `test.`, `pc6` slave via AXFR, `pc8` autorevole `services.test.`, `pc10` resolver con hint interno; `pc12` usa `pc10`.\nCreati i file BIND nelle directory `pc2/pc4/pc6/pc8/pc10/etc/bind/` e aggiunti gli avvii `named`; `pc12.startup` imposta il resolver IPv6.\nModificate esclusivamente le cinque direttive immagine DNS in `lab.conf`, tutte a `kathara/bind`; router, topologia, IP e rotte invariati.\nNessun forwarder, root hint pubblico, zona autorevole sul resolver o record richiesto in `/etc/hosts`.\nAssunzione: il client esplicitamente richiesto è `pc12`; gli altri host non sono stati riconfigurati.\nAvviso: `named-checkconf` e `named-checkzone` non sono installati nell’host; test `kathara`/`dig` lasciati alla validazione esterna prevista.",
+  "usage": {
+    "input_tokens": 189571,
+    "cached_input_tokens": 164096,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4356,
+    "reasoning_output_tokens": 750
+  }
+}
