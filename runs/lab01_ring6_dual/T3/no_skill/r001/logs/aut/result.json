@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 150.86971237499893,
+  "final_message": "Completato il DNS gerarchico interno.\n\n- Ruoli configurati su `kathara/bind`: `pc2` root, `pc4` primario `test.`, `pc6` secondario AXFR, `pc8` autorevole `services.test.`, `pc10` resolver iterativo.\n- `pc12` usa esclusivamente `pc10` come nameserver IPv6.\n- Inseriti A/AAAA, CNAME, MX e TXT richiesti; nessun forwarder, DNS pubblico o `/etc/hosts`.\n- In `lab.conf` ho modificato solo le cinque direttive `[image]` dei nodi DNS.\n\nLa sintassi di `lab.conf` è valida (`kathara lstart --print`). Non ho potuto eseguire i test DNS in runtime perché il demone Docker non è accessibile nell’ambiente.",
+  "usage": {
+    "input_tokens": 372229,
+    "cached_input_tokens": 314880,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6070,
+    "reasoning_output_tokens": 1784
+  }
+}

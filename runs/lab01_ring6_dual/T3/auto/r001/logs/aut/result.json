@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 90.22394720800003,
+  "final_message": "Configurato il DNS gerarchico interno:\n\n- `pc2` root, `pc4` primario `test.`, `pc6` secondario via AXFR, `pc8` autoritativo `services.test.`, `pc10` resolver con soli root hints interni.\n- Aggiunte deleghe e glue IPv6, record `www`, `portal`, MX, TXT, `mail` e `status`; `pc12` usa esclusivamente `pc10`.\n- Cambiate solo le cinque direttive immagine DNS in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-srey_wu8/lab/lab.conf).\n- Non sono presenti forwarder, DNS pubblici né modifiche a rete, indirizzi, routing o `/etc/hosts`.\n- I tool `named-checkconf`/`named-checkzone` non sono disponibili sull’host, quindi non ho potuto eseguire la validazione BIND locale.",
+  "usage": {
+    "input_tokens": 149938,
+    "cached_input_tokens": 130304,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4355,
+    "reasoning_output_tokens": 763
+  }
+}
