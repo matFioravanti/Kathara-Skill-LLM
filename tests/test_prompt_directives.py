@@ -359,6 +359,7 @@ class PipelineToRunnerTest(unittest.TestCase):
         captured = {}
         def fake_run_antigravity(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
             captured["prompt"] = prompt
+            self.assertNotIn(str(self.root), prompt)
             logs.mkdir(parents=True, exist_ok=True)
             (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
             (logs / "lab_001__T1__no_skill__r001.eval").write_text("{}", encoding="utf-8")
@@ -401,10 +402,10 @@ class PipelineToRunnerTest(unittest.TestCase):
             self.assertFalse(workspace.is_relative_to(self.root))
             import subprocess
             try:
-                res = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=workspace, capture_output=True, text=True, check=True)
-                self.assertNotEqual(Path(res.stdout.strip()).resolve(), self.root.resolve())
-            except subprocess.CalledProcessError:
-                pass
+                subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=workspace, capture_output=True, text=True, check=True)
+                self.fail("git rev-parse should have failed (exit code != 0)")
+            except subprocess.CalledProcessError as e:
+                self.assertNotEqual(e.returncode, 0)
             
             # Create modification
             (workspace / "aut-proof.txt").write_text("proof", encoding="utf-8")
@@ -471,10 +472,10 @@ class PipelineToRunnerTest(unittest.TestCase):
             # 3. git rev-parse non restituisce config.root
             import subprocess
             try:
-                res = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=workspace, capture_output=True, text=True, check=True)
-                self.assertNotEqual(Path(res.stdout.strip()).resolve(), self.root.resolve())
-            except subprocess.CalledProcessError:
-                pass
+                subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=workspace, capture_output=True, text=True, check=True)
+                self.fail("git rev-parse should have failed (exit code != 0)")
+            except subprocess.CalledProcessError as e:
+                self.assertNotEqual(e.returncode, 0)
                 
             # 4. workspace contiene il laboratorio baseline
             self.assertTrue((workspace / "lab.conf").exists())

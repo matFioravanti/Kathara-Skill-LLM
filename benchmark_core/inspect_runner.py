@@ -16,17 +16,17 @@ def validate_aut_workspace_isolation(workspace: Path, config_root: Path):
     if workspace.is_relative_to(config_root):
         raise RuntimeError(f"AUT workspace {workspace} is still inside config root {config_root}")
     try:
-        res = subprocess.run(
+        subprocess.run(
             ["git", "rev-parse", "--show-toplevel"],
             cwd=workspace,
             capture_output=True,
             text=True,
             check=True
         )
-        git_root = Path(res.stdout.strip()).resolve()
-        if git_root == config_root.resolve():
-            raise RuntimeError("AUT workspace leaks into the main Git repository")
+        # Se ha successo, significa che workspace è in UN repository Git, non va bene
+        raise RuntimeError(f"AUT workspace {workspace} is inside a Git repository. It must be completely isolated.")
     except subprocess.CalledProcessError:
+        # Expected: it's not a git repository
         pass
 
 
@@ -57,10 +57,15 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                     variant="aut",
                 )
             elif agent == "antigravity":
-                skill = config.path(config.data["aut"]["dns_skill"])
+                original_skill = config.path(config.data["aut"]["dns_skill"])
+                temp_skill_dir = Path(temp_dir) / "antigravity_skills"
+                temp_skill_dir.mkdir(parents=True, exist_ok=True)
+                temp_skill = temp_skill_dir / "SKILL.md"
+                shutil.copy2(original_skill, temp_skill)
+
                 prompt = (
                     f"Configura direttamente i file del laboratorio nella directory corrente {temp_lab}. "
-                    f"Leggi e segui la skill DNS in {skill}. Non produrre JSON di modifiche, non delegare a Python "
+                    f"Leggi e segui la skill DNS in {temp_skill}. Non produrre JSON di modifiche, non delegare a Python "
                     "la scrittura dei file e non generare correction.yaml. Non avviare Kathara: "
                     "il laboratorio sarà avviato dal checker dopo questa chiamata.\n\n"
                     "REQUISITI ORIGINALI:\n" + original_prompt
@@ -75,9 +80,14 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                     variant="aut",
                 )
         finally:
+            staging_lab = run / "lab.sync-tmp"
+            if staging_lab.exists():
+                shutil.rmtree(staging_lab)
+            shutil.copytree(temp_lab, staging_lab)
+            
             if persistent_lab.exists():
                 shutil.rmtree(persistent_lab)
-            shutil.copytree(temp_lab, persistent_lab)
+            staging_lab.rename(persistent_lab)
 
     # Step di telemetria Inspect AI: crea il log .eval nativo senza alterare l'esito dell'AUT
     eval_log_path = create_inspect_eval_log(
