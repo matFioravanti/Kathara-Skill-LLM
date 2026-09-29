@@ -16,16 +16,16 @@ SKILL_MODES = {
     "no_skill": SkillMode((), (), ""),
     "creation_only": SkillMode(
         ("kathara-creation",), ("kathara-creation",),
-        "$kathara-creation",
+        "$kathara-creation\n\nPrima di procedere, leggi esplicitamente il file\n`.codex/skills/kathara-creation/SKILL.md`\ne segui le istruzioni contenute nella Skill.",
     ),
     "dns_only": SkillMode(
         ("kathara-dns",), ("kathara-dns",),
-        "$kathara-dns",
+        "$kathara-dns\n\nPrima di procedere, leggi esplicitamente il file\n`.codex/skills/kathara-dns/SKILL.md`\ne segui le istruzioni contenute nella Skill.",
     ),
     "both_forced": SkillMode(
         ("kathara-creation", "kathara-dns"),
         ("kathara-creation", "kathara-dns"),
-        "$kathara-creation\n$kathara-dns",
+        "$kathara-creation\n$kathara-dns\n\nPrima di procedere, leggi esplicitamente entrambi i file:\n- `.codex/skills/kathara-creation/SKILL.md`\n- `.codex/skills/kathara-dns/SKILL.md`\n\nSegui le istruzioni contenute nelle Skill pertinenti alla richiesta.",
     ),
     "auto": SkillMode(("kathara-creation", "kathara-dns"), (), ""),
 }

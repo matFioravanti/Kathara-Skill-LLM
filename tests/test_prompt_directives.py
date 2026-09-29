@@ -345,15 +345,28 @@ class PipelineToRunnerTest(unittest.TestCase):
         
         return captured.get("prompt", "")
 
+    def test_pipeline_to_runner_no_skill(self):
+        prompt = self._intercept_run_one("no_skill")
+        self.assertEqual(prompt, self.original_prompt)
+
+    def test_pipeline_to_runner_auto(self):
+        prompt = self._intercept_run_one("auto")
+        self.assertEqual(prompt, self.original_prompt)
+
     def test_pipeline_to_runner_dns_only(self):
         prompt = self._intercept_run_one("dns_only")
         self.assertEqual(prompt.count("$kathara-dns"), 1)
         self.assertEqual(prompt.count("$kathara-creation"), 0)
+        self.assertIn(".codex/skills/kathara-dns/SKILL.md", prompt)
+        self.assertTrue(prompt.endswith("\n\n" + self.original_prompt))
 
     def test_pipeline_to_runner_both_forced(self):
         prompt = self._intercept_run_one("both_forced")
         self.assertEqual(prompt.count("$kathara-dns"), 1)
         self.assertEqual(prompt.count("$kathara-creation"), 1)
+        self.assertIn(".codex/skills/kathara-dns/SKILL.md", prompt)
+        self.assertIn(".codex/skills/kathara-creation/SKILL.md", prompt)
+        self.assertTrue(prompt.endswith("\n\n" + self.original_prompt))
 
     def test_pipeline_to_runner_antigravity_is_not_forced(self):
         captured = {}

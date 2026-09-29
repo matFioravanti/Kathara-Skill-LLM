@@ -88,15 +88,25 @@ class SkillModesTest(unittest.TestCase):
 
         creation_prompt = execution_prompt("creation_only", original)
         self.assertIn("$kathara-creation", creation_prompt)
+        self.assertEqual(creation_prompt.count("$kathara-creation"), 1)
+        self.assertNotIn("kathara-dns", creation_prompt)
+        self.assertIn(".codex/skills/kathara-creation/SKILL.md", creation_prompt)
         self.assertTrue(creation_prompt.endswith("\n\n" + original))
 
         dns_prompt = execution_prompt("dns_only", original)
         self.assertIn("$kathara-dns", dns_prompt)
+        self.assertEqual(dns_prompt.count("$kathara-dns"), 1)
+        self.assertNotIn("kathara-creation", dns_prompt)
+        self.assertIn(".codex/skills/kathara-dns/SKILL.md", dns_prompt)
         self.assertTrue(dns_prompt.endswith("\n\n" + original))
 
         both_prompt = execution_prompt("both_forced", original)
         self.assertIn("$kathara-creation", both_prompt)
+        self.assertEqual(both_prompt.count("$kathara-creation"), 1)
         self.assertIn("$kathara-dns", both_prompt)
+        self.assertEqual(both_prompt.count("$kathara-dns"), 1)
+        self.assertIn(".codex/skills/kathara-creation/SKILL.md", both_prompt)
+        self.assertIn(".codex/skills/kathara-dns/SKILL.md", both_prompt)
         self.assertTrue(both_prompt.endswith("\n\n" + original))
 
 

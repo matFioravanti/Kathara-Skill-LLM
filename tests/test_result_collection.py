@@ -462,7 +462,7 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             events = json.dumps({
                 "type": "item.completed",
                 "item": {"id": "r1", "type": "command_execution",
-                         "command": "cat .codex/skills/kathara-dns/SKILL.md",
+                         "command": "sed -n '1,240p' .codex/skills/kathara-dns/SKILL.md",
                          "status": "completed", "exit_code": 0},
             }) + "\n"
             metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
@@ -505,17 +505,18 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             events = (
                 json.dumps({"type": "item.completed", "item": {
                     "id": "r1", "type": "command_execution",
-                    "command": "cat .codex/skills/kathara-creation/SKILL.md",
+                    "command": "sed -n '1,240p' .codex/skills/kathara-creation/SKILL.md",
                     "status": "completed", "exit_code": 0}}) + "\n"
                 + json.dumps({"type": "item.completed", "item": {
                     "id": "r2", "type": "command_execution",
-                    "command": "cat .codex/skills/kathara-dns/SKILL.md",
+                    "command": "sed -n '1,240p' .codex/skills/kathara-dns/SKILL.md",
                     "status": "completed", "exit_code": 0}}) + "\n"
             )
             metrics = self._make_run_with_events(
                 tmp, ["kathara-creation", "kathara-dns"], events, "both_forced")
         self.assertTrue(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], [])
+        self.assertEqual(metrics["observed_skills"], ["kathara-creation", "kathara-dns"])
 
     def test_make_metrics_both_forced_only_one_read(self):
         with tempfile.TemporaryDirectory() as tmp:
