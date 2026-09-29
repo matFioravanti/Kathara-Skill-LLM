@@ -107,13 +107,20 @@ Missing runtime Skills or a scenario correction produce an explicit error before
 
 Codex experiments select one Skill mode with `--skill-mode`:
 
-| Mode | Available to Codex | Explicitly required |
-|------|--------------------|---------------------|
-| `no_skill` | none | none |
-| `creation_only` | Creation | Creation |
-| `dns_only` | DNS | DNS |
-| `both_forced` | Creation and DNS | both |
-| `auto` | Creation and DNS | none |
+| Mode          | Available to Codex | Explicit invocation |
+|---------------|--------------------|---------------------|
+| `no_skill`      | none               | none                |
+| `creation_only` | Creation           | $kathara-creation   |
+| `dns_only`      | DNS                | $kathara-dns        |
+| `both_forced`   | Creation + DNS     | both                |
+| `auto`          | Creation + DNS     | none                |
+
+"Explicitly invoked" does not necessarily equal "full compliance with every instruction".
+The telemetry distinguishes:
+- availability
+- explicit invocation
+- observed skill loading/read
+- task outcome
 
 The default is `dns_only`, preserving the previous Codex run behavior. Each run receives only the selected skills under `lab/.codex/skills/`. User or parent-scope copies with the same names stop the preflight to prevent contaminated runs. Modes that include Creation require its canonical file at `skills/kathara-creation/SKILL.md`.
 

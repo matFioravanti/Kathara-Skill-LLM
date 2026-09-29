@@ -16,26 +16,16 @@ SKILL_MODES = {
     "no_skill": SkillMode((), (), ""),
     "creation_only": SkillMode(
         ("kathara-creation",), ("kathara-creation",),
-        "Before doing anything else, you MUST read the complete "
-        "`.codex/skills/kathara-creation/SKILL.md` file. "
-        "Only after reading it in full should you proceed with the task. "
-        "Follow that Skill for the entire execution. Do not proceed without reading it.",
+        "$kathara-creation",
     ),
     "dns_only": SkillMode(
         ("kathara-dns",), ("kathara-dns",),
-        "Before doing anything else, you MUST read the complete "
-        "`.codex/skills/kathara-dns/SKILL.md` file. "
-        "Only after reading it in full should you proceed with the task. "
-        "Follow that Skill for the entire execution. Do not proceed without reading it.",
+        "$kathara-dns",
     ),
     "both_forced": SkillMode(
         ("kathara-creation", "kathara-dns"),
         ("kathara-creation", "kathara-dns"),
-        "Before doing anything else, you MUST read the complete "
-        "`.codex/skills/kathara-creation/SKILL.md` file and the complete "
-        "`.codex/skills/kathara-dns/SKILL.md` file. "
-        "Only after reading both in full should you proceed with the task. "
-        "Follow both Skills for the entire execution. Do not proceed without reading them.",
+        "$kathara-creation\n$kathara-dns",
     ),
     "auto": SkillMode(("kathara-creation", "kathara-dns"), (), ""),
 }

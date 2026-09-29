@@ -104,5 +104,69 @@ class CodexCliRunnerTest(unittest.TestCase):
                 preflight(Config(), "codex")
 
 
+    def _is_codex_available_and_logged_in(self) -> bool:
+        import shutil
+        if not shutil.which("codex"):
+            return False
+        try:
+            result = subprocess.run(["codex", "login", "status"], capture_output=True, text=True)
+            return result.returncode == 0
+        except Exception:
+            return False
+
+    def test_native_skill_loading_diagnostic(self):
+        """Integration test to verify real Codex CLI behavior with $skill directive.
+        
+        This test proves that native skill loading is unobservable in events.jsonl
+        and justifies the 'None' return value in forced_skill_satisfaction.
+        """
+        if not self._is_codex_available_and_logged_in():
+            self.skipTest("Codex CLI is not available or not logged in.")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            skill_dir = root / ".codex" / "skills" / "test-probe"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: test-probe\ndescription: Test skill\n---\n# Test Probe\nDo a simple addition like 2+2.",
+                encoding="utf-8"
+            )
+
+            prompt = "$test-probe\nPerform the action."
+            events_file = root / "output.jsonl"
+            
+            try:
+                subprocess.run(
+                    ["codex", "exec", "--json", "--ephemeral", "--skip-git-repo-check", "-C", str(root), "-"],
+                    input=prompt, text=True, check=True, capture_output=True, env=os.environ
+                )
+            except subprocess.CalledProcessError as e:
+                if "Not inside a trusted directory" in e.stderr:
+                     self.skipTest("Codex CLI requires trusted directory even with skip flag.")
+                raise
+
+            # Assuming Codex writes some output or we capture it. Wait, the actual command writes to stdout!
+            # Let's fix this: run_codex doesn't use output.jsonl, we use our own run:
+            result = subprocess.run(
+                ["codex", "exec", "--json", "--ephemeral", "--skip-git-repo-check", "-C", str(root), "-"],
+                input=prompt, text=True, capture_output=True, env=os.environ
+            )
+            
+            import json
+            events = []
+            for line in result.stdout.splitlines():
+                try:
+                    events.append(json.loads(line))
+                except json.JSONDecodeError:
+                    pass
+            
+            # Use our parser to check if the skill was observed
+            from benchmark_core.run_metrics import observed_skills
+            observed = observed_skills(events, ["test-probe"])
+            
+            # Since the native $skill loading is internal, it doesn't emit a command_execution event
+            # that reads the SKILL.md file. Thus, it should be unobservable.
+            self.assertEqual(observed, [])
+
 if __name__ == "__main__":
     unittest.main()

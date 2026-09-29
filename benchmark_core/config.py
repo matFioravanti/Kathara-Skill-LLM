@@ -39,7 +39,7 @@ def load_config(path: Path) -> Config:
     if data["checker"].get("report_type") != "csv":
         raise ValueError("Questa integrazione richiede checker.report_type: csv.")
     for section, keys in {
-        "aut": ("agent", "version", "dns_skill"),
+        "aut": ("agent", "version", "dns_skill", "creation_skill"),
         "sandbox": ("image",), "results": ("directory",),
     }.items():
         for key in keys:
@@ -60,7 +60,10 @@ def load_config(path: Path) -> Config:
 
 
 def skill_paths(config: Config) -> dict[str, Path]:
-    return {"dns": config.path(config.data["aut"]["dns_skill"])}
+    return {
+        "dns": config.path(config.data["aut"]["dns_skill"]),
+        "creation": config.path(config.data["aut"]["creation_skill"]),
+    }
 
 
 def verify_skills(config: Config) -> dict[str, Path]:
@@ -71,4 +74,5 @@ def verify_skills(config: Config) -> dict[str, Path]:
     # Il parser ufficiale verifica frontmatter e risorse della skill.
     from .skill_loader import load_skill
     load_skill(paths["dns"])
+    load_skill(paths["creation"])
     return paths

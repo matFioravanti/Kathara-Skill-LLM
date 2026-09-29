@@ -69,8 +69,11 @@ def _token_value(value):
     return value if type(value) is int and value >= 0 else None
 
 
-def selected_skills(events: list[dict], available: list[str]) -> list[str]:
-    """Only marks a skill when a traced read command names its SKILL.md file."""
+def observed_skills(events: list[dict], available: list[str]) -> list[str]:
+    """Only marks a skill when a traced read command names its SKILL.md file.
+    
+    Observed skills represent only skills for which the trace contains observable evidence of reading the corresponding SKILL.md. They do not represent native Codex skill selection when the CLI does not expose skill-loading events.
+    """
     candidates = available
     found = set()
     for event in events:
@@ -100,21 +103,28 @@ def selected_skills(events: list[dict], available: list[str]) -> list[str]:
     return [name for name in candidates if name in found]
 
 
-def forced_skill_satisfaction(forced: list[str] | None, selected: list[str] | None) -> tuple[bool | None, list[str]]:
+def forced_skill_satisfaction(forced: list[str] | None, observed: list[str] | None, observation_status: str | None = None) -> tuple[bool | None, list[str]]:
     """Computes whether all forced skills were observed in the trace.
 
     Returns (forced_skills_satisfied, missing_forced_skills).
     - If forced is None or empty (no_skill / auto): returns (None, []).
-    - Otherwise: returns (True/False, list of missing skill names).
-    Selected must be derived exclusively from real trace events; never set equal to forced.
+    - If observed contains all forced skills: returns (True, []).
+    - If observation_status == "native_loading_unobservable" and there are missing skills: returns (None, missing_forced_skills).
     """
     if not forced:  # None or empty list -> no forcing (no_skill / auto)
         return None, []
-    if selected is None:
-        # Trace not available (e.g. antigravity agent)
+    if observed is None:
+        # Trace not available
         return None, []
-    missing = [name for name in forced if name not in selected]
-    return len(missing) == 0, missing
+    missing = [name for name in forced if name not in observed]
+    
+    if len(missing) == 0:
+        return True, []
+    
+    if observation_status == "native_loading_unobservable":
+        return None, missing
+        
+    return False, missing
 
 
 def _checker_summary(run: Path, outcome: dict | None) -> dict:
@@ -158,16 +168,22 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     available = metadata.get("available_skills") if isinstance(metadata.get("available_skills"), list) else None
     if agent == "antigravity":
         tokens = antigravity_usage(events)
-        selected = None
+        observed = None
     else:
         tokens = codex_usage(events)
-        selected = selected_skills(events, available or [])
+        observed = observed_skills(events, available or [])
     agent_seconds = _duration(logs / "result.json", "duration_seconds")
     status = metadata.get("pipeline_state", metadata.get("status"))
     agent_success = metadata.get("aut_execution_success")
     correction_sha = metadata.get("correction_sha256")
     forced = metadata.get("forced_skills") if isinstance(metadata.get("forced_skills"), list) else None
-    satisfied, missing = forced_skill_satisfaction(forced, selected)
+    
+    if metadata.get("skill_mode") == "no_skill":
+        observation_status = "not_applicable"
+    else:
+        observation_status = "native_loading_unobservable" if agent == "codex" else None
+        
+    satisfied, missing = forced_skill_satisfaction(forced, observed, observation_status)
     return {
         "scenario": metadata.get("scenario_id", metadata.get("scenario")),
         "scenario_id": metadata.get("scenario_id", metadata.get("scenario")),
@@ -183,7 +199,8 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "reasoning_effort": metadata.get("reasoning_effort"),
         "available_skills": available,
         "forced_skills": forced,
-        "selected_skills": selected,
+        "observed_skills": observed,
+        "skill_observation_status": observation_status,
         "forced_skills_satisfied": satisfied,
         "missing_forced_skills": missing,
         "skill_trace_available": trace_available if agent != "antigravity" else False,

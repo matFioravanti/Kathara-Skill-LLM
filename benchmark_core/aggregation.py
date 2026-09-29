@@ -27,8 +27,8 @@ RUN_COLUMNS = [
     "evaluation_revision", "last_reevaluated_at",
 
     # 3. SKILL
-    "available_skills", "forced_skills", "selected_skills",
-    "forced_skills_satisfied", "missing_forced_skills",
+    "available_skills", "forced_skills", "observed_skills",
+    "skill_observation_status", "forced_skills_satisfied", "missing_forced_skills",
 
     # 4. TOKEN
     "input_tokens", "cached_input_tokens", "output_tokens",
@@ -210,7 +210,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     forced_raw = metrics.get("forced_skills")
     if not isinstance(forced_raw, list):
         forced_raw = manifest.get("forced_skills")
-    selected_raw = metrics.get("selected_skills")
+    observed_raw = metrics.get("observed_skills", metrics.get("selected_skills"))
     # forced_skills_satisfied: prefer metrics (computed from trace), fallback to None for old runs
     fss = metrics.get("forced_skills_satisfied")
     mfs_raw = metrics.get("missing_forced_skills")
@@ -252,7 +252,8 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "last_reevaluated_at": metrics.get("last_reevaluated_at") or manifest.get("last_reevaluated_at"),
         "available_skills": _skill_list_str(avail_raw),
         "forced_skills": _skill_list_str(forced_raw),
-        "selected_skills": _skill_list_str(selected_raw),
+        "observed_skills": _skill_list_str(observed_raw),
+        "skill_observation_status": metrics.get("skill_observation_status"),
         "forced_skills_satisfied": fss if isinstance(fss, bool) else None,
         "missing_forced_skills": _skill_list_str(mfs_raw) if mfs_raw else None,
 

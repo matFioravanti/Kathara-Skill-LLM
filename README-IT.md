@@ -107,13 +107,20 @@ L'assenza delle Skill runtime o della correction di uno scenario produce un erro
 
 Gli esperimenti Codex selezionano una modalità Skill con `--skill-mode`:
 
-| Modalità | Disponibili a Codex | Richieste esplicitamente |
-|----------|---------------------|-------------------------|
-| `no_skill` | nessuna | nessuna |
-| `creation_only` | Creation | Creation |
-| `dns_only` | DNS | DNS |
-| `both_forced` | Creation e DNS | entrambe |
-| `auto` | Creation e DNS | nessuna |
+| Modalità        | Disponibili a Codex | Invocazione esplicita |
+|-----------------|---------------------|-----------------------|
+| `no_skill`      | nessuna             | nessuna               |
+| `creation_only` | Creation            | $kathara-creation     |
+| `dns_only`      | DNS                 | $kathara-dns          |
+| `both_forced`   | Creation e DNS      | entrambe              |
+| `auto`          | Creation e DNS      | nessuna               |
+
+"Invocazione esplicita" non equivale necessariamente a "totale aderenza ad ogni istruzione".
+La telemetria distingue:
+- disponibilità
+- invocazione esplicita
+- caricamento/lettura della skill osservata
+- risultato finale del task
 
 La modalità predefinita è `dns_only`, come nel comportamento Codex precedente. Ogni run riceve solo le skill selezionate sotto `lab/.codex/skills/`. Copie omonime nello scope utente o nei parent interrompono il preflight per evitare run contaminate. Le modalità che includono Creation richiedono il file canonico `skills/kathara-creation/SKILL.md`.
 

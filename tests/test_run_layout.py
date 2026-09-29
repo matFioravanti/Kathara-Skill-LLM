@@ -85,7 +85,7 @@ class RunLayoutTest(unittest.TestCase):
                 path.write_text("canonical correction")
             config = Config(root, {
                 "aut": {"version": "test", "model": "codex-default", "reasoning_effort": "medium",
-                        "dns_skill": "skills/dns/SKILL.md"},
+                        "dns_skill": "skills/dns/SKILL.md", "creation_skill": "skills/creation/SKILL.md"},
                 "sandbox": {"image": "fixture"}, "benchmark": {"timeout_seconds": 10},
             })
             modes = ["no_skill", "creation_only", "dns_only", "both_forced", "auto"]

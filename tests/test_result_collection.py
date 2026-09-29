@@ -7,7 +7,7 @@ from unittest.mock import patch
 import pandas as pd
 
 from benchmark_core.aggregation import _check_category, aggregate
-from benchmark_core.run_metrics import codex_usage, forced_skill_satisfaction, make_metrics, selected_skills
+from benchmark_core.run_metrics import codex_usage, forced_skill_satisfaction, make_metrics, observed_skills
 from benchmark_core.workspace import write_json
 
 
@@ -57,7 +57,7 @@ class ResultCollectionTest(unittest.TestCase):
         })
         self.assertIsNone(codex_usage([])["input"])
 
-    def test_selected_skills_requires_a_traced_read_of_available_skill_md(self):
+    def test_observed_skills_requires_a_traced_read_of_available_skill_md(self):
         events = [
             {"type": "item.started", "item": {"id": "failed_read", "type": "command_execution",
                                                  "command": "cat /run/lab/.codex/skills/kathara-creation/SKILL.md",
@@ -70,11 +70,11 @@ class ResultCollectionTest(unittest.TestCase):
             command_event("cat /run/lab/lab.conf"),
         ]
         self.assertEqual(
-            selected_skills(events, ["kathara-creation", "kathara-dns"]),
+            observed_skills(events, ["kathara-creation", "kathara-dns"]),
             ["kathara-dns"],
         )
-        self.assertEqual(selected_skills(events[3:], ["kathara-creation", "kathara-dns"]), [])
-        self.assertEqual(selected_skills(events, []), [])
+        self.assertEqual(observed_skills(events[3:], ["kathara-creation", "kathara-dns"]), [])
+        self.assertEqual(observed_skills(events, []), [])
 
     def test_metrics_keeps_available_forced_and_selected_separate_and_times_distinct(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -105,7 +105,7 @@ class ResultCollectionTest(unittest.TestCase):
             )
             self.assertEqual(metrics["available_skills"], ["kathara-creation", "kathara-dns"])
             self.assertEqual(metrics["forced_skills"], [])
-            self.assertEqual(metrics["selected_skills"], ["kathara-dns"])
+            self.assertEqual(metrics["observed_skills"], ["kathara-dns"])
             self.assertEqual(metrics["timing"], {
                 "agent_seconds": 4.25, "checker_seconds": 3.0, "total_seconds": 10.5,
             })
@@ -128,7 +128,7 @@ class ResultCollectionTest(unittest.TestCase):
                 "forced_skills": [], "pipeline_state": "COMPLETED", "aut_execution_success": True,
             }, total_seconds=1, checker_seconds=None, checker_outcome=None)
             self.assertTrue(metrics["skill_trace_available"])
-            self.assertEqual(metrics["selected_skills"], [])
+            self.assertEqual(metrics["observed_skills"], [])
             self.assertIsNone(metrics["tokens"]["input"])
 
     def _write_metrics_run(self, root: Path, run_number: int, *, status: str,
@@ -145,7 +145,7 @@ class ResultCollectionTest(unittest.TestCase):
             "run_id": f"{scenario}__T1__auto__r{run_number:03d}", "agent": "codex",
             "model": "codex-local", "reasoning_effort": "low",
             "available_skills": ["kathara-creation", "kathara-dns"], "forced_skills": [],
-            "selected_skills": selected, "skill_trace_available": True,
+            "observed_skills": selected, "skill_trace_available": True,
             "agent_success": status != "AUT_FAILED", "status": status,
             "timing": {"agent_seconds": float(run_number), "checker_seconds": 2.0,
                        "total_seconds": float(run_number + 2)},
@@ -379,8 +379,8 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
         self.assertEqual(missing, [])
 
     def test_creation_only_not_satisfied(self):
-        satisfied, missing = forced_skill_satisfaction(["kathara-creation"], [])
-        self.assertFalse(satisfied)
+        satisfied, missing = forced_skill_satisfaction(["kathara-creation"], [], "native_loading_unobservable")
+        self.assertIsNone(satisfied)
         self.assertEqual(missing, ["kathara-creation"])
 
     def test_dns_only_satisfied(self):
@@ -389,8 +389,8 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
         self.assertEqual(missing, [])
 
     def test_dns_only_not_satisfied(self):
-        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], [])
-        self.assertFalse(satisfied)
+        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], [], "native_loading_unobservable")
+        self.assertIsNone(satisfied)
         self.assertEqual(missing, ["kathara-dns"])
 
     def test_both_forced_satisfied_when_both_read(self):
@@ -405,16 +405,18 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
         satisfied, missing = forced_skill_satisfaction(
             ["kathara-creation", "kathara-dns"],
             ["kathara-creation"],
+            "native_loading_unobservable"
         )
-        self.assertFalse(satisfied)
+        self.assertIsNone(satisfied)
         self.assertEqual(missing, ["kathara-dns"])
 
     def test_both_forced_not_satisfied_when_none_read(self):
         satisfied, missing = forced_skill_satisfaction(
             ["kathara-creation", "kathara-dns"],
             [],
+            "native_loading_unobservable"
         )
-        self.assertFalse(satisfied)
+        self.assertIsNone(satisfied)
         self.assertIn("kathara-creation", missing)
         self.assertIn("kathara-dns", missing)
 
@@ -424,11 +426,11 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
         self.assertIsNone(satisfied)
         self.assertEqual(missing, [])
 
-    def test_selected_skills_are_not_set_to_forced(self):
-        """selected_skills must come from trace, not from forced_skills list."""
+    def test_observed_skills_are_not_set_to_forced(self):
+        """observed_skills must come from trace, not from forced_skills list."""
         # Even if forced contains a skill, selected must remain as observed.
-        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], [])
-        self.assertFalse(satisfied)
+        satisfied, missing = forced_skill_satisfaction(["kathara-dns"], [], "native_loading_unobservable")
+        self.assertIsNone(satisfied)
         # The missing list must contain the unread forced skill.
         self.assertIn("kathara-dns", missing)
 
@@ -466,7 +468,7 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
         self.assertTrue(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], [])
-        self.assertEqual(metrics["selected_skills"], ["kathara-dns"])
+        self.assertEqual(metrics["observed_skills"], ["kathara-dns"])
 
     def test_make_metrics_dns_only_not_satisfied(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -474,7 +476,7 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
         self.assertFalse(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], ["kathara-dns"])
-        self.assertEqual(metrics["selected_skills"], [])
+        self.assertEqual(metrics["observed_skills"], [])
 
     def test_make_metrics_creation_only_satisfied(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -547,7 +549,7 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
     def _write_forced_run(self, runs: Path, run_number: int, *, skill_mode: str,
                           forced: list, selected: list, pass_rate: float | None,
                           scenario: str = "forced_test"):
-        fss, mfs = forced_skill_satisfaction(forced, selected)
+        fss, mfs = forced_skill_satisfaction(forced, selected, "native_loading_unobservable")
         run = runs / f"{scenario}/T1/{skill_mode}/r{run_number:03d}"
         evaluation = run / "evaluation"
         evaluation.mkdir(parents=True)
@@ -557,8 +559,9 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             "run_number": run_number, "run_id": f"{scenario}__T1__{skill_mode}__r{run_number:03d}",
             "agent": "codex", "model": "codex-local", "reasoning_effort": "low",
             "available_skills": ["kathara-creation", "kathara-dns"],
-            "forced_skills": forced, "selected_skills": selected,
+            "forced_skills": forced, "observed_skills": selected,
             "forced_skills_satisfied": fss, "missing_forced_skills": mfs,
+            "skill_observation_status": "native_loading_unobservable",
             "skill_trace_available": True,
             "agent_success": True, "status": "COMPLETED",
             "timing": {"agent_seconds": 1.0, "checker_seconds": 1.0, "total_seconds": 2.0},
@@ -606,20 +609,42 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
 
             self.assertIn("available_skills", run_frame.columns)
             self.assertIn("forced_skills", run_frame.columns)
-            self.assertIn("selected_skills", run_frame.columns)
+            self.assertIn("observed_skills", run_frame.columns)
             self.assertIn("forced_skills_satisfied", run_frame.columns)
             self.assertIn("missing_forced_skills", run_frame.columns)
 
             # Row 0: skill was read -> satisfied
             self.assertEqual(run_frame.loc[0, "forced_skills"], "kathara-dns")
-            self.assertEqual(run_frame.loc[0, "selected_skills"], "kathara-dns")
+            self.assertEqual(run_frame.loc[0, "observed_skills"], "kathara-dns")
             self.assertTrue(run_frame.loc[0, "forced_skills_satisfied"])
             self.assertTrue(pd.isna(run_frame.loc[0, "missing_forced_skills"]))
 
 
-            # Row 1: skill was NOT read -> not satisfied
-            self.assertFalse(run_frame.loc[1, "forced_skills_satisfied"])
+            # Row 1: skill was NOT read -> not satisfied (unobservable -> None)
+            self.assertTrue(pd.isna(run_frame.loc[1, "forced_skills_satisfied"]))
             self.assertIn("kathara-dns", str(run_frame.loc[1, "missing_forced_skills"]))
+
+    def test_legacy_selected_skills_is_parsed_as_observed_skills(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            runs = Path(tmp) / "runs"
+            self._write_forced_run(runs, 1, skill_mode="dns_only",
+                                   forced=["kathara-dns"], selected=["kathara-dns"],
+                                   pass_rate=1.0, scenario="legacy_test")
+            
+            run_dir = runs / "legacy_test/T1/dns_only/r001"
+            metrics_path = run_dir / "evaluation/metrics.json"
+            metrics = json.loads(metrics_path.read_text())
+            # Convert observed_skills to legacy selected_skills
+            metrics["selected_skills"] = metrics.pop("observed_skills")
+            metrics_path.write_text(json.dumps(metrics))
+            
+            output = Path(tmp) / "results"
+            with patch("benchmark_core.checker_runner.subprocess.Popen"):
+                run_frame, _, summary_frame = aggregate(runs, output)
+                
+            self.assertIn("observed_skills", run_frame.columns)
+            self.assertNotIn("selected_skills", run_frame.columns)
+            self.assertEqual(run_frame.loc[0, "observed_skills"], "kathara-dns")
 
             # Summary columns
             self.assertIn("forced_skill_valid_runs", summary_frame.columns)
@@ -627,8 +652,8 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             self.assertIn("forced_skill_valid_rate", summary_frame.columns)
             row = summary_frame.iloc[0]
             self.assertEqual(row["forced_skill_valid_runs"], 1)
-            self.assertEqual(row["forced_skill_invalid_runs"], 1)
-            self.assertAlmostEqual(row["forced_skill_valid_rate"], 0.5)
+            self.assertEqual(row["forced_skill_invalid_runs"], 0)
+            self.assertEqual(row["forced_skill_valid_rate"], 1.0)
 
     def test_aggregation_auto_mode_forced_skill_columns_are_null(self):
         with tempfile.TemporaryDirectory() as tmp:
