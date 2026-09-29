@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 162.6984053749984,
+  "final_message": "Completato il laboratorio DNS gerarchico.\n\n- `pc2`, `pc4`, `pc6`, `pc8`, `pc10` usano ora `kathara/bind`; nessun’altra direttiva in `lab.conf` è stata modificata.\n- Create zone root, `test.`, `services.test.` e root hints interni per il resolver.\n- `pc6` trasferisce `test.` soltanto da `pc4`; il primario limita AXFR al secondario.\n- `pc12` usa come unico resolver `2001:db8:1100:4::10`.\n- Nessun forwarder, DNS pubblico, `/etc/hosts`, nuova rotta o indirizzo aggiunto.\n\nFile principali: [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-qj_adr95/lab/lab.conf), [zona test](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-qj_adr95/lab/pc4/etc/bind/db.test), [resolver](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-qj_adr95/lab/pc10/etc/bind/named.conf).\n\nLa validazione dry-run di Kathara passa. L’avvio effettivo non è verificabile qui perché il daemon Docker locale non è accessibile.",
+  "usage": {
+    "input_tokens": 562970,
+    "cached_input_tokens": 510720,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 7012,
+    "reasoning_output_tokens": 2262
+  }
+}

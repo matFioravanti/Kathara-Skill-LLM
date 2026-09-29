@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 104.28771362499901,
+  "final_message": "Configurazione completata.\n\n- Ruoli: root `pc2`; `test.` primario `pc4`, secondario `pc6`; `services.test.` `pc8`; resolver `pc10`; client `pc12`.\n- Creati BIND zones/config in `pc2`, `pc4`, `pc6`, `pc8`, `pc10`; aggiunti restart `named` e resolver IPv6 su `pc12`.\n- Modificate solo le cinque direttive immagine DNS in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-7b5lqbn4/lab/lab.conf).\n- Assunzione applicata: tutti i nodi DNS sono IPv6-only, quindi NS/glue/hints e servizi sono AAAA; `www.test.` conserva l’A richiesto verso `pc11`.\n- Controlli statici superati; `named-checkconf`/`named-checkzone` non sono disponibili localmente. Nessun comando Kathara dinamico è stato eseguito, come richiesto dalla skill DNS.",
+  "usage": {
+    "input_tokens": 225699,
+    "cached_input_tokens": 194816,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4894,
+    "reasoning_output_tokens": 879
+  }
+}

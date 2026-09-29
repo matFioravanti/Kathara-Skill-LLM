@@ -1,0 +1,7 @@
+$TTL 300
+@   IN SOA ns.services.test. hostmaster.services.test. (
+        2026092901 3600 600 86400 300 )
+    IN NS ns.services.test.
+ns      IN AAAA 2001:db8:1100:3::10
+mail    IN AAAA 2001:db8:1100:3::10
+status  IN AAAA 2001:db8:1100:2::10
