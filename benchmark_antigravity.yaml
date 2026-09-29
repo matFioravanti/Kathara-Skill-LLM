@@ -7,7 +7,7 @@ aut:
   agent: antigravity
   model: gemini-3.8-flash
   reasoning_effort: low
-  version: "1.2.8"
+  version: "1.2.9"
   dns_skill: skills/dns/SKILL.md
 
 sandbox:
