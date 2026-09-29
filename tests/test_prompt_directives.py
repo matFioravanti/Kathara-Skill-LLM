@@ -405,6 +405,7 @@ class PipelineToRunnerTest(unittest.TestCase):
             
         manifest = json.loads((run_path / "manifest.json").read_text())
         self.assertEqual(manifest["skill_mode"], "no_skill")
+        self.assertIsNone(manifest.get("skill_protocol"))
 
 
     def test_pipeline_uses_isolated_workspace_and_syncs_modifications(self):

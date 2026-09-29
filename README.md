@@ -239,13 +239,18 @@ Token counts come from the last Codex `turn.completed` event carrying a `usage` 
 
 The tracked skill metrics are:
 * `available_skills`: Skills made available to the AUT.
-* `forced_skills`: Skills explicitly forced via prompt directive.
-* `observed_skills`: Skills for which the trace shows explicit evidence of reading the corresponding `SKILL.md`.
-* `skill_observation_status`: Classification of the observation (e.g., all forced skills observed, missing forced skills, etc.).
-* `forced_skills_satisfied`: True if all forced skills were explicitly observed in the trace.
+* `forced_skills`: Skills explicitly forced via prompt directive (`$skill`).
+* `skill_protocol`: The experimental protocol used for the Skill condition.
+  * `explicit_read_v1`: In Codex forced modes, adds an explicit, standardized request to read the relevant `SKILL.md` alongside `$skill`.
+  * `auto` mode does not receive `$skill` or explicit checkpoints; discovery remains native.
+  * `no_skill` receives no benchmark skills.
+  * Legacy runs without `skill_protocol` maintain the old `native_loading_unobservable` interpretation.
+* `observed_skills`: Exclusively Skills for which the trace contains explicit evidence of reading the corresponding `SKILL.md`.
+* `skill_observation_status`: Classification of the observation. Under `explicit_read_v1`, forced mode with all read -> `explicit_read_checkpoint`.
+* `forced_skills_satisfied`: True if all forced skills were explicitly observed in the trace. Under `explicit_read_v1`, forced mode with at least one not read -> `false`.
 * `missing_forced_skills`: List of forced skills that were not observed in the trace.
 
-Note that `observed_skills == []` does NOT mean "Codex did not use any Skill" (it may have loaded them natively in an unobservable way). It only means there is no explicit `command_execution` trace reading the file.
+Note that `observed_skills == []` does NOT mean "Codex did not use any Skill" (it may have loaded them natively in an unobservable way for `auto` or legacy runs). It only means there is no explicit `command_execution` trace reading the file.
 
 `agent_seconds` comes from the AUT runner's measured subprocess duration. `checker_seconds` measures `run_checker` including preparation and report parsing. `total_seconds` measures elapsed time from immediately before workspace allocation through completion of the run stages, excluding preflight and the final metrics serialization.
 

@@ -178,8 +178,13 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     correction_sha = metadata.get("correction_sha256")
     forced = metadata.get("forced_skills") if isinstance(metadata.get("forced_skills"), list) else None
     
+    protocol = metadata.get("skill_protocol")
     if metadata.get("skill_mode") == "no_skill":
         observation_status = "not_applicable"
+    elif metadata.get("skill_mode") == "auto":
+        observation_status = "native_loading_unobservable"
+    elif protocol == "explicit_read_v1":
+        observation_status = "explicit_read_checkpoint"
     else:
         observation_status = "native_loading_unobservable" if agent == "codex" else None
         
@@ -191,6 +196,7 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "prompt_sha256": metadata.get("prompt_sha256"),
         "prompt_sent_sha256": metadata.get("prompt_sent_sha256"),
         "skill_mode": metadata.get("skill_mode"),
+        "skill_protocol": protocol,
         "run_number": metadata.get("run_number", metadata.get("repetition")),
         "replicate": metadata.get("replicate"),
         "experiment_id": metadata.get("experiment_id"),

@@ -439,7 +439,7 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
     # ------------------------------------------------------------------
 
     def _make_run_with_events(self, tmpdir: Path, forced: list, events_jsonl: str,
-                              skill_mode: str = "dns_only") -> dict:
+                              skill_mode: str = "dns_only", skill_protocol: str | None = None) -> dict:
         run = Path(tmpdir)
         logs = run / "logs/aut"
         logs.mkdir(parents=True)
@@ -450,6 +450,7 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             "scenario_id": "test_scenario", "skill_mode": skill_mode, "run_number": 1,
             "run_id": "test_run", "agent": "codex", "model": "test-model",
             "reasoning_effort": "low",
+            "skill_protocol": skill_protocol,
             "available_skills": ["kathara-creation", "kathara-dns"],
             "forced_skills": forced,
             "aut_execution_success": True, "pipeline_state": "COMPLETED",
@@ -465,20 +466,20 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
                          "command": "sed -n '1,240p' .codex/skills/kathara-dns/SKILL.md",
                          "status": "completed", "exit_code": 0},
             }) + "\n"
-            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
+            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only", "explicit_read_v1")
         self.assertTrue(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], [])
         self.assertEqual(metrics["observed_skills"], ["kathara-dns"])
+        self.assertEqual(metrics["skill_observation_status"], "explicit_read_checkpoint")
 
     def test_make_metrics_dns_only_not_satisfied(self):
         with tempfile.TemporaryDirectory() as tmp:
             events = json.dumps({"type": "turn.started"}) + "\n"
-            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
-        # Native loading is unobservable for Codex: absence of trace evidence
-        # does NOT prove the skill was not used. Returns None, not False.
-        self.assertIsNone(metrics["forced_skills_satisfied"])
+            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only", "explicit_read_v1")
+        self.assertFalse(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], ["kathara-dns"])
         self.assertEqual(metrics["observed_skills"], [])
+        self.assertEqual(metrics["skill_observation_status"], "explicit_read_checkpoint")
 
     def test_make_metrics_creation_only_satisfied(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -513,23 +514,32 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
                     "status": "completed", "exit_code": 0}}) + "\n"
             )
             metrics = self._make_run_with_events(
-                tmp, ["kathara-creation", "kathara-dns"], events, "both_forced")
+                tmp, ["kathara-creation", "kathara-dns"], events, "both_forced", "explicit_read_v1")
         self.assertTrue(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], [])
         self.assertEqual(metrics["observed_skills"], ["kathara-creation", "kathara-dns"])
+        self.assertEqual(metrics["skill_observation_status"], "explicit_read_checkpoint")
 
     def test_make_metrics_both_forced_only_one_read(self):
         with tempfile.TemporaryDirectory() as tmp:
             events = json.dumps({"type": "item.completed", "item": {
                 "id": "r1", "type": "command_execution",
-                "command": "cat .codex/skills/kathara-creation/SKILL.md",
+                "command": "sed -n '1,240p' .codex/skills/kathara-dns/SKILL.md",
                 "status": "completed", "exit_code": 0}}) + "\n"
             metrics = self._make_run_with_events(
-                tmp, ["kathara-creation", "kathara-dns"], events, "both_forced")
-        # kathara-dns was forced but not explicitly observed in the trace.
-        # Native loading is unobservable for Codex: returns None, not False.
+                tmp, ["kathara-creation", "kathara-dns"], events, "both_forced", "explicit_read_v1")
+        self.assertFalse(metrics["forced_skills_satisfied"])
+        self.assertIn("kathara-creation", metrics["missing_forced_skills"])
+        self.assertEqual(metrics["observed_skills"], ["kathara-dns"])
+        self.assertEqual(metrics["skill_observation_status"], "explicit_read_checkpoint")
+
+    def test_make_metrics_legacy_forced_no_protocol(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            events = json.dumps({"type": "turn.started"}) + "\n"
+            metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only", None)
         self.assertIsNone(metrics["forced_skills_satisfied"])
-        self.assertIn("kathara-dns", metrics["missing_forced_skills"])
+        self.assertEqual(metrics["missing_forced_skills"], ["kathara-dns"])
+        self.assertEqual(metrics["skill_observation_status"], "native_loading_unobservable")
 
     def test_make_metrics_auto_forced_skills_satisfied_is_none(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -537,9 +547,10 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
                 "id": "r1", "type": "command_execution",
                 "command": "cat .codex/skills/kathara-dns/SKILL.md",
                 "status": "completed", "exit_code": 0}}) + "\n"
-            metrics = self._make_run_with_events(tmp, [], events, "auto")
+            metrics = self._make_run_with_events(tmp, [], events, "auto", "explicit_read_v1")
         self.assertIsNone(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], [])
+        self.assertEqual(metrics["skill_observation_status"], "native_loading_unobservable")
 
     def test_make_metrics_no_skill_forced_skills_satisfied_is_none(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -547,6 +558,32 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
             metrics = self._make_run_with_events(tmp, [], events, "no_skill")
         self.assertIsNone(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], [])
+        self.assertEqual(metrics["skill_observation_status"], "not_applicable")
+
+    def test_aggregation_separates_skill_protocols(self):
+        from benchmark_core.aggregation import aggregate
+        from benchmark_core.workspace import write_json
+        with tempfile.TemporaryDirectory() as tmpdir:
+            runs_dir = Path(tmpdir)
+            for index, proto in enumerate((None, "explicit_read_v1"), 1):
+                run_id = f"r{index:03d}"
+                eval_dir = runs_dir / f"test/T1/auto/{run_id}/evaluation"
+                eval_dir.mkdir(parents=True)
+                metrics = {
+                    "scenario": "test", "prompt_type": "T1", "skill_mode": "auto",
+                    "agent": "codex", "model": "m", "reasoning_effort": "low",
+                    "skill_protocol": proto, "pipeline_state": "COMPLETED",
+                    "timing": {}, "tokens": {}, "checker": {}
+                }
+                write_json(eval_dir / "metrics.json", metrics)
+
+            results_dir = Path(tmpdir) / "results"
+            _, _, summary = aggregate(runs_dir, results_dir)
+
+            self.assertEqual(len(summary), 2)
+            import pandas as pd
+            self.assertTrue(pd.isna(summary.iloc[0]["skill_protocol"]))
+            self.assertEqual(summary.iloc[1]["skill_protocol"], "explicit_read_v1")
 
     # ------------------------------------------------------------------
     # Integration: aggregate() includes forced_skill columns in runs/summary

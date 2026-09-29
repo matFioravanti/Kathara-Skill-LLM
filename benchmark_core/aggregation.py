@@ -16,7 +16,7 @@ from .checker_runner import checker_test_rows
 RUN_COLUMNS = [
     # 1. IDENTIFICAZIONE
     "ID", "Lab", "T",
-    "experiment_id", "replicate", "run_number", "skill_mode",
+    "experiment_id", "replicate", "run_number", "skill_mode", "skill_protocol",
     "agent", "model", "reasoning_effort",
 
     # 2. METRICHE
@@ -40,7 +40,7 @@ CHECK_COLUMNS = [
     "category", "test_description", "passed", "reason",
 ]
 SUMMARY_COLUMNS = [
-    "experiment_id", "Lab", "T", "skill_mode", "agent", "model", "reasoning_effort",
+    "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "task_success_runs", "task_failed_runs", "task_success_rate",
     "forced_skill_valid_runs", "forced_skill_invalid_runs", "forced_skill_valid_rate",
@@ -96,6 +96,7 @@ def _sort_key(row: dict):
         _natural_key(row.get("experiment_id")), _natural_key(row.get("Lab")),
         PROMPT_ORDER.get(prompt, 99), prompt,
         SKILL_MODE_ORDER.get(row.get("skill_mode"), 99), str(row.get("skill_mode") or ""),
+        str(row.get("skill_protocol") or ""),
         str(row.get("agent") or ""), str(row.get("model") or ""),
         str(row.get("reasoning_effort") or ""), repetition, str(row.get("ID") or ""),
     )
@@ -222,6 +223,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "Lab": metrics.get("scenario") or manifest.get("scenario_id"),
         "T": metrics.get("prompt_type") or manifest.get("prompt_type"),
         "skill_mode": metrics.get("skill_mode") or manifest.get("skill_mode"),
+        "skill_protocol": metrics.get("skill_protocol") or manifest.get("skill_protocol"),
         "repetition": repetition,
         "replicate": replicate,
         "agent": metrics.get("agent") or manifest.get("agent"),
@@ -292,7 +294,7 @@ def _check_records(run: Path, record: dict) -> list[dict]:
 
 def _summary_records(records: list[dict]) -> list[dict]:
     groups = {}
-    group_fields = ("experiment_id", "Lab", "T", "skill_mode", "agent", "model", "reasoning_effort")
+    group_fields = ("experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort")
     for record in records:
         key = tuple(record.get(field) for field in group_fields)
         groups.setdefault(key, []).append(record)

@@ -60,7 +60,7 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "execution_backend": f"{agent}_cli",
         "authentication": "local_chatgpt_login" if agent == "codex" else "local_google_login",
         "api_key_used": False,
-        "skill_protocol": "explicit_read_v1",
+        "skill_protocol": "explicit_read_v1" if agent == "codex" else None,
         "skill_mode": skill_mode,
         "available_skills": list(skill_selection.available_skills) if skill_selection else [],
         "forced_skills": list(skill_selection.forced_skills) if skill_selection else [],
