@@ -316,6 +316,7 @@ class PipelineToRunnerTest(unittest.TestCase):
         prompt_dir.mkdir(parents=True)
         (prompt_dir / "T1.md").write_text("Configure the lab.", encoding="utf-8")
         self.original_prompt = "Configure the lab."
+        self.run_root = self.root / "runs"
 
     def tearDown(self):
         self._tmpdir.cleanup()
@@ -390,6 +391,117 @@ class PipelineToRunnerTest(unittest.TestCase):
             
         manifest = json.loads((run_path / "manifest.json").read_text())
         self.assertEqual(manifest["skill_mode"], "no_skill")
+
+
+    def test_pipeline_uses_isolated_workspace_and_syncs_modifications(self):
+        captured = {}
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            captured["workspace"] = workspace
+            # Verify isolation
+            self.assertFalse(workspace.is_relative_to(self.root))
+            import subprocess
+            try:
+                res = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=workspace, capture_output=True, text=True, check=True)
+                self.assertNotEqual(Path(res.stdout.strip()).resolve(), self.root.resolve())
+            except subprocess.CalledProcessError:
+                pass
+            
+            # Create modification
+            (workspace / "aut-proof.txt").write_text("proof", encoding="utf-8")
+            
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+            (logs / f"lab_001__T1__no_skill__r001.eval").write_text("{}", encoding="utf-8")
+            (logs / "events.jsonl").write_text("", encoding="utf-8")
+            (logs / "result.json").write_text("{}", encoding="utf-8")
+            mock = MagicMock()
+            mock.success = True
+            return mock
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.inspect_runner.prepare_skill_workspace"), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            run_path = pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode="no_skill")
+            
+        self.assertTrue((run_path / "lab/aut-proof.txt").exists())
+        self.assertFalse((run_path / "lab").is_relative_to(captured["workspace"]))
+
+    def test_pipeline_syncs_modifications_even_on_error(self):
+        class CodexExecutionError(Exception):
+            pass
+
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            (workspace / "partial-proof.txt").write_text("proof", encoding="utf-8")
+            raise CodexExecutionError("Simulated failure")
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.inspect_runner.prepare_skill_workspace"), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            run_path = pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode="no_skill")
+                
+        manifest = json.loads((run_path / "manifest.json").read_text())
+        self.assertFalse(manifest.get("aut_execution_success"))
+        
+        expected_path = run_path / "lab/partial-proof.txt"
+        self.assertTrue(expected_path.exists())
+
+
+    def test_aut_workspace_is_isolated_and_git_fails_without_llm(self):
+        secret_file = self.run_root / "legacy_solution/SECRET_PREVIOUS_SOLUTION.txt"
+        secret_file.parent.mkdir(parents=True)
+        secret_file.write_text("PREVIOUS_EXPERIMENT_SECRET", encoding="utf-8")
+
+        captured = {}
+        def fake_run_codex(*, prompt, workspace, logs, timeout, model, reasoning_effort, variant):
+            captured["workspace"] = workspace
+            # 1. aut_workspace NON sia sotto config.root
+            self.assertFalse(workspace.is_relative_to(self.root))
+            
+            # 2. il file sentinel non esiste all'interno dell'AUT workspace
+            self.assertFalse(list(workspace.rglob("SECRET_PREVIOUS_SOLUTION.txt")))
+            
+            # 3. git rev-parse non restituisce config.root
+            import subprocess
+            try:
+                res = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=workspace, capture_output=True, text=True, check=True)
+                self.assertNotEqual(Path(res.stdout.strip()).resolve(), self.root.resolve())
+            except subprocess.CalledProcessError:
+                pass
+                
+            # 4. workspace contiene il laboratorio baseline
+            self.assertTrue((workspace / "lab.conf").exists())
+            
+            # 5. contenga solo le Skill consentite dalla modalità (dns_only)
+            self.assertTrue((workspace / ".codex/skills/kathara-dns/SKILL.md").exists())
+            self.assertFalse((workspace / ".codex/skills/kathara-creation").exists())
+            
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+            (logs / "lab_001__T1__dns_only__r001.eval").write_text("{}", encoding="utf-8")
+            (logs / "events.jsonl").write_text("", encoding="utf-8")
+            (logs / "result.json").write_text("{}", encoding="utf-8")
+            mock = MagicMock()
+            mock.success = True
+            return mock
+
+        from benchmark_core import pipeline
+
+        with patch("benchmark_core.inspect_runner.run_codex", side_effect=fake_run_codex), \
+             patch("benchmark_core.pipeline.read_correction", return_value=(b"cor", "sha")), \
+             patch("benchmark_core.pipeline.run_checker", return_value={"task_success": True}), \
+             patch("benchmark_core.inspect_runner.create_inspect_eval_log", return_value=None):
+            pipeline.run_one(self.config, self.scenario, "codex", "T1", skill_mode="dns_only")
+            
+        # Ensure the test ran and fake_run_codex captured the workspace
+        self.assertIn("workspace", captured)
 
 
 if __name__ == "__main__":
