@@ -23,7 +23,7 @@ RUN_COLUMNS = [
     "status", "pipeline_completed", "checker_executed", "task_success",
     "checks_passed", "checks_total", "pass_rate",
     "agent_seconds", "checker_seconds", "total_seconds", "cost",
-    "prompt_sha256", "correction_sha256",
+    "prompt_sha256", "prompt_sent_sha256", "correction_sha256",
     "evaluation_revision", "last_reevaluated_at",
 
     # 3. SKILL
@@ -247,6 +247,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "ID": metrics.get("run_id") or manifest.get("run_id"),
         "run_number": repetition,
         "prompt_sha256": metrics.get("prompt_sha256") or manifest.get("prompt_sha256"),
+        "prompt_sent_sha256": metrics.get("prompt_sent_sha256") or manifest.get("prompt_sent_sha256"),
         "correction_sha256": metrics.get("correction_sha256") or manifest.get("correction_sha256"),
         "evaluation_revision": metrics.get("evaluation_revision", manifest.get("evaluation_revision", 0)),
         "last_reevaluated_at": metrics.get("last_reevaluated_at") or manifest.get("last_reevaluated_at"),

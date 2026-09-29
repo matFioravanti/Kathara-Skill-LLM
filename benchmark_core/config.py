@@ -38,8 +38,10 @@ def load_config(path: Path) -> Config:
             raise ValueError(f"{section}.{key} deve essere booleano.")
     if data["checker"].get("report_type") != "csv":
         raise ValueError("Questa integrazione richiede checker.report_type: csv.")
+    # Only "agent", "version", "dns_skill" are unconditionally required.
+    # "creation_skill" is only required when the agent/mode actually uses it.
     for section, keys in {
-        "aut": ("agent", "version", "dns_skill", "creation_skill"),
+        "aut": ("agent", "version", "dns_skill"),
         "sandbox": ("image",), "results": ("directory",),
     }.items():
         for key in keys:
@@ -59,20 +61,47 @@ def load_config(path: Path) -> Config:
     return config
 
 
-def skill_paths(config: Config) -> dict[str, Path]:
-    return {
-        "dns": config.path(config.data["aut"]["dns_skill"]),
-        "creation": config.path(config.data["aut"]["creation_skill"]),
-    }
+def skill_paths(config: Config, skills: tuple[str, ...] | None = None) -> dict[str, Path]:
+    """Returns paths for the given skill names (or all configured skills if skills is None).
+
+    If skills is None, returns paths for all skills that are configured in aut.
+    If a specific subset is requested (from mode_details), only those paths are returned.
+    Raises KeyError only when a requested skill has no corresponding config key.
+    """
+    from .skill_modes import SKILL_CONFIG_KEYS
+    if skills is None:
+        # Return all skills that are configured (used for hashing in manifest)
+        result = {}
+        for name, key in SKILL_CONFIG_KEYS.items():
+            configured = config.data["aut"].get(key)
+            if configured and isinstance(configured, str) and configured.strip():
+                result[name] = config.path(configured)
+        return result
+    # Return only the explicitly requested skills
+    result = {}
+    for name in skills:
+        key = SKILL_CONFIG_KEYS[name]
+        configured = config.data["aut"].get(key)
+        if not configured or not isinstance(configured, str) or not configured.strip():
+            raise ValueError(
+                f"La modalità corrente richiede la Skill '{name}', "
+                f"ma aut.{key} non è configurato in benchmark.yaml."
+            )
+        result[name] = config.path(configured)
+    return result
 
 
-def verify_skills(config: Config) -> dict[str, Path]:
-    paths = skill_paths(config)
+def verify_skills(config: Config, skills: tuple[str, ...] | None = None) -> dict[str, Path]:
+    """Verifies the given skill files exist and are valid.
+
+    If skills is None, verifies all configured skills.
+    """
+    paths = skill_paths(config, skills)
     missing = [str(p) for p in paths.values() if not p.is_file() or not p.read_text().strip()]
     if missing:
         raise ValueError("Skill/schema mancanti o vuoti (contenuto non generato):\n" + "\n".join(missing))
     # Il parser ufficiale verifica frontmatter e risorse della skill.
     from .skill_loader import load_skill
-    load_skill(paths["dns"])
-    load_skill(paths["creation"])
+    for path in paths.values():
+        load_skill(path)
     return paths

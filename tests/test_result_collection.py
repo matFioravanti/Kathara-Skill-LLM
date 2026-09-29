@@ -474,7 +474,9 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             events = json.dumps({"type": "turn.started"}) + "\n"
             metrics = self._make_run_with_events(tmp, ["kathara-dns"], events, "dns_only")
-        self.assertFalse(metrics["forced_skills_satisfied"])
+        # Native loading is unobservable for Codex: absence of trace evidence
+        # does NOT prove the skill was not used. Returns None, not False.
+        self.assertIsNone(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], ["kathara-dns"])
         self.assertEqual(metrics["observed_skills"], [])
 
@@ -494,7 +496,8 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             events = json.dumps({"type": "turn.started"}) + "\n"
             metrics = self._make_run_with_events(tmp, ["kathara-creation"], events, "creation_only")
-        self.assertFalse(metrics["forced_skills_satisfied"])
+        # Native loading is unobservable for Codex: returns None, not False.
+        self.assertIsNone(metrics["forced_skills_satisfied"])
         self.assertEqual(metrics["missing_forced_skills"], ["kathara-creation"])
 
     def test_make_metrics_both_forced_satisfied(self):
@@ -522,7 +525,9 @@ class ForcedSkillSatisfactionTest(unittest.TestCase):
                 "status": "completed", "exit_code": 0}}) + "\n"
             metrics = self._make_run_with_events(
                 tmp, ["kathara-creation", "kathara-dns"], events, "both_forced")
-        self.assertFalse(metrics["forced_skills_satisfied"])
+        # kathara-dns was forced but not explicitly observed in the trace.
+        # Native loading is unobservable for Codex: returns None, not False.
+        self.assertIsNone(metrics["forced_skills_satisfied"])
         self.assertIn("kathara-dns", metrics["missing_forced_skills"])
 
     def test_make_metrics_auto_forced_skills_satisfied_is_none(self):

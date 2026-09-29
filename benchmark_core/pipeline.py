@@ -11,7 +11,7 @@ from .config import skill_paths
 from .correction_input import correction_path, read_correction, validate_correction
 from .diff_metrics import compute_diff
 from .inspect_runner import run_aut
-from .skill_modes import mode_details
+from .skill_modes import execution_prompt, mode_details
 from .run_metrics import make_metrics, print_run_summary
 from .workspace import component_versions, create_workspace, logical_run_id, tree_hash, utc_now, write_json
 
@@ -27,11 +27,16 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
     from .prompts import resolve_prompt
     resolved_prompt = resolve_prompt(config.root, scenario.scenario_id, prompt_type)
     prompt_text = resolved_prompt.read_text(encoding="utf-8")
+    # The prompt actually sent to the AUT includes the $skill directive prefix when applicable
+    prompt_sent = execution_prompt(skill_mode, prompt_text)
     total_started = time.monotonic()
     run = create_workspace(config.root / "runs", scenario, prompt_type, skill_mode, prompt_text)
     run_number = int(run.name[1:])
     run_id = logical_run_id(scenario.scenario_id, prompt_type, skill_mode, run_number)
-    paths = skill_paths(config)
+    # Only load paths for skills actually used by this mode (avoids requiring creation_skill
+    # when running Antigravity or a mode that doesn't use kathara-creation).
+    mode_skills = skill_selection.available_skills
+    paths = skill_paths(config, mode_skills)
     context = ui_context or {}
     if event_callback:
         event_callback(
@@ -60,9 +65,24 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "source_lab_sha256": tree_hash(scenario.lab),
         "input_lab_sha256": tree_hash(run / "input/lab"),
         "prompt_sha256": hashlib.sha256(resolved_prompt.read_bytes()).hexdigest(),
+        "prompt_sent_sha256": hashlib.sha256(prompt_sent.encode("utf-8")).hexdigest(),
         "prompt_source": str(resolved_prompt.relative_to(config.root)),
-        "dns_skill_sha256": hashlib.sha256(paths["dns"].read_bytes()).hexdigest(),
-        "dns_skill_bundle_sha256": tree_hash(paths["dns"].parent),
+        "dns_skill_sha256": (
+            hashlib.sha256(paths["kathara-dns"].read_bytes()).hexdigest()
+            if "kathara-dns" in paths else None
+        ),
+        "dns_skill_bundle_sha256": (
+            tree_hash(paths["kathara-dns"].parent)
+            if "kathara-dns" in paths else None
+        ),
+        "creation_skill_sha256": (
+            hashlib.sha256(paths["kathara-creation"].read_bytes()).hexdigest()
+            if "kathara-creation" in paths else None
+        ),
+        "creation_skill_bundle_sha256": (
+            tree_hash(paths["kathara-creation"].parent)
+            if "kathara-creation" in paths else None
+        ),
         "correction_source": correction_source_relative,
         "correction_sha256": correction_sha256,
         "sandbox_image": config.data["sandbox"]["image"],
@@ -102,7 +122,7 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         state("PENDING")
         state("AUT_RUNNING")
         try:
-            run_aut(config, scenario, run, agent, prompt_text, skill_mode=skill_mode, run_id=run_id)
+            run_aut(config, scenario, run, agent, prompt_sent, skill_mode=skill_mode, run_id=run_id)
             manifest["aut_execution_success"] = True
         finally:
             manifest["aut_measurement_ended_at"] = utc_now()

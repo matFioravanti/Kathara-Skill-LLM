@@ -70,6 +70,7 @@ class RunLayoutTest(unittest.TestCase):
 
     def test_pipeline_manifest_keeps_effective_mode_and_logical_run_id(self):
         from benchmark_core import pipeline
+        from benchmark_core import skill_modes as _sm
 
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -79,10 +80,17 @@ class RunLayoutTest(unittest.TestCase):
             (root / "prompt/example_dns_001").mkdir(parents=True, exist_ok=True)
             (root / "prompt/example_dns_001/T1.md").write_text("Configure DNS")
             scenario = Scenario("example_dns_001", scenario_dir)
-            for rel in ("skills/dns/SKILL.md", "scenarios/example_dns_001/correction.yaml"):
+            # Write valid SKILL.md files and correction
+            for rel, content in [
+                ("skills/dns/SKILL.md",
+                 "---\nname: kathara-dns\ndescription: DNS skill\n---\n# DNS\n"),
+                ("skills/creation/SKILL.md",
+                 "---\nname: kathara-creation\ndescription: Creation skill\n---\n# Creation\n"),
+                ("scenarios/example_dns_001/correction.yaml", "canonical correction"),
+            ]:
                 path = root / rel
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text("canonical correction")
+                path.write_text(content)
             config = Config(root, {
                 "aut": {"version": "test", "model": "codex-default", "reasoning_effort": "medium",
                         "dns_skill": "skills/dns/SKILL.md", "creation_skill": "skills/creation/SKILL.md"},
@@ -94,25 +102,42 @@ class RunLayoutTest(unittest.TestCase):
                  patch.object(pipeline, "run_aut"), \
                  patch.object(pipeline, "read_correction", return_value=(b"canonical correction", "sha")), \
                  patch.object(pipeline, "validate_correction", return_value="sha"), \
-                 patch.object(pipeline, "run_checker", return_value={"task_success": True}) as checker:
+                 patch.object(pipeline, "run_checker", return_value={"task_success": True}) as checker, \
+                 patch.object(_sm, "validate_mode_sources", side_effect=lambda config, mode: _sm.mode_details(mode)):
                 for mode in modes:
                     runs.append(pipeline.run_one(config, scenario, "codex", "T1", mode))
 
             import json
+            import hashlib
             self.assertEqual([call.args[2] for call in checker.call_args_list],
                              [run / "evaluation/correction.yaml" for run in runs])
             self.assertTrue(all((run / "evaluation/correction.yaml").read_bytes() == b"canonical correction"
                                 for run in runs))
             self.assertEqual((root / "scenarios/example_dns_001/correction.yaml").read_text(),
                              "canonical correction")
-            run = runs[2]
+            run = runs[2]  # dns_only
             manifest = json.loads((run / "manifest.json").read_text())
             metrics = json.loads((run / "evaluation/metrics.json").read_text())
             self.assertEqual(manifest["run_id"], "example_dns_001__T1__dns_only__r001")
             self.assertEqual(manifest["skill_mode"], "dns_only")
             self.assertEqual(manifest["prompt_type"], "T1")
             self.assertEqual(metrics["prompt_type"], "T1")
-            self.assertEqual(manifest["prompt_sha256"], __import__("hashlib").sha256(b"Configure DNS").hexdigest())
+            original_sha = hashlib.sha256(b"Configure DNS").hexdigest()
+            self.assertEqual(manifest["prompt_sha256"], original_sha)
+            # dns_only prompt sent = "$kathara-dns\n\nConfigure DNS"
+            prompt_sent = "$kathara-dns\n\nConfigure DNS"
+            self.assertEqual(manifest["prompt_sent_sha256"],
+                             hashlib.sha256(prompt_sent.encode("utf-8")).hexdigest())
+            # For no_skill (runs[0]) the two hashes must coincide
+            manifest_no_skill = json.loads((runs[0] / "manifest.json").read_text())
+            self.assertEqual(manifest_no_skill["prompt_sha256"], manifest_no_skill["prompt_sent_sha256"])
+            # dns_only: dns hash present, creation hash absent
+            self.assertIsNotNone(manifest["dns_skill_sha256"])
+            self.assertIsNone(manifest["creation_skill_sha256"])
+            # both_forced (runs[3]): both hashes present
+            manifest_both = json.loads((runs[3] / "manifest.json").read_text())
+            self.assertIsNotNone(manifest_both["dns_skill_sha256"])
+            self.assertIsNotNone(manifest_both["creation_skill_sha256"])
             self.assertEqual(manifest["run_directory"], "example_dns_001/T1/dns_only/r001")
             self.assertEqual(manifest["run_number"], 1)
             self.assertEqual([item["state"] for item in manifest["state_history"]],
@@ -123,8 +148,6 @@ class RunLayoutTest(unittest.TestCase):
             self.assertEqual((run / "evaluation/correction.yaml").read_bytes(), b"canonical correction")
             self.assertFalse((run / "lab/correction.yaml").exists())
             self.assertFalse((run / "input/lab/correction.yaml").exists())
-            self.assertEqual([call.args[2] for call in checker.call_args_list],
-                             [run / "evaluation/correction.yaml" for run in runs])
             self.assertNotIn("CORRECTION_GENERATION", str(manifest["state_history"]))
             self.assertEqual(manifest["artifacts"]["inspect_eval_log"],
                              "logs/aut/example_dns_001__T1__dns_only__r001.eval")
