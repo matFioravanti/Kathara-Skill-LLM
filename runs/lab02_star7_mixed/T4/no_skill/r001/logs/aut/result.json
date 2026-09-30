@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 117.45902437499899,
+  "final_message": "Completato `lab02_star7_mixed`.\n\n- Configurati root (`pc2`), master/secondary di `test.` (`pc3`/`pc9`), autoritativo `services.test.` (`pc12`) e resolver ricorsivo interno (`pc11`).\n- Applicate deleghe gerarchiche, glue IPv6/IPv4 coerenti, AXFR consentito solo a `pc9`, senza forwarder né DNS pubblico.\n- Pubblicati record `www`, `portal`, MX, TXT, `mail` e `status` richiesti.\n- `pc4` usa esclusivamente il resolver via IPv4; `pc6` esclusivamente via IPv6.\n- In `lab.conf` ho modificato solo le cinque direttive `[image]` dei nodi DNS.\n\nIl controllo a secco di Kathará conferma che `lab.conf` è valido. Non ho potuto avviare il lab per test runtime perché il daemon Docker non è disponibile nell’ambiente.",
+  "usage": {
+    "input_tokens": 281581,
+    "cached_input_tokens": 259328,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5282,
+    "reasoning_output_tokens": 1766
+  }
+}

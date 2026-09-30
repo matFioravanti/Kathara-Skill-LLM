@@ -1,0 +1,48 @@
+{
+  "scenario": "lab03_ladder8_dual",
+  "scenario_id": "lab03_ladder8_dual",
+  "prompt_type": "T2",
+  "prompt_sha256": "93b98f34a70501f7e98bc4ec7ea76769f16751bd126add9b6d33dc87baece303",
+  "prompt_sent_sha256": "8319fa70d187d864402e89ef15f246bf59077732f1af7aad68d934c4017ddfa2",
+  "skill_mode": "both_forced",
+  "skill_protocol": "explicit_read_v1",
+  "run_number": 1,
+  "replicate": 1,
+  "experiment_id": null,
+  "run_id": "lab03_ladder8_dual__T2__both_forced__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "agent_success": true,
+  "status": "COMPLETED",
+  "timing": {
+    "agent_seconds": 84.6881819170012,
+    "checker_seconds": 36.073444624998956,
+    "total_seconds": 120.98138112499873
+  },
+  "tokens": {
+    "input": 172858,
+    "cached_input": 151808,
+    "output": 4033,
+    "reasoning": 528,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 540,
+    "failed": 0,
+    "total": 540,
+    "pass_rate": 1.0
+  },
+  "correction_sha256": "a0f76eedd989f2673e4d46300725f17ef741e85beb496515c1e9c11572c13795",
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
+}

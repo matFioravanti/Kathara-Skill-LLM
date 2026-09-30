@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 87.14808112500032,
+  "final_message": "Configurato DNS gerarchico interno completo:\n\n- Ruoli: root `pc2`; primario/secondario `test.` `pc4`/`pc6`; autoritativo `services.test.` `pc8`; resolver `pc10`.\n- Client `pc12` usa esclusivamente `2001:db8:1100:4::10`.\n- Include delega e glue IPv6, trasferimento di zona verso il secondario, root hints interne e nessun forwarder/DNS pubblico.\n- Record richiesti: `www`, `portal` CNAME, MX, `mail`, `status` e TXT `benchmark=dns-advanced`.\n- In `lab.conf` sono mutate solo le immagini dei cinque dispositivi DNS.\n- Verifica statica effettuata; `named-checkconf`/`named-checkzone` non sono disponibili nell’host, quindi il test runtime resta da eseguire avviando il lab.",
+  "usage": {
+    "input_tokens": 143767,
+    "cached_input_tokens": 121344,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4175,
+    "reasoning_output_tokens": 820
+  }
+}

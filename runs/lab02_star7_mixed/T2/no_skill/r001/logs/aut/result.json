@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 297.06945887500115,
+  "final_message": "Laboratorio configurato.\n\n- Ruoli DNS assegnati a `pc2`, `pc3`, `pc9`, `pc11`, `pc12`, con sole direttive `[image]` modificate in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-xmri8fq0/lab/lab.conf:48).\n- Gerarchia root → `test.` → `services.test.` configurata con glue coerenti IPv4/IPv6.\n- `pc9` è secondario di `test.` via AXFR dal solo `pc3`; il primario consente trasferimenti esclusivamente a `pc9`.\n- Resolver ricorsivo interno su `pc11`, senza forwarder né DNS pubblici, con root hints interni e DNSSEC validation disabilitata.\n- `pc4` e `pc6` usano esclusivamente `pc11`.\n- Verificato `kathara lstart --print`: `lab.conf` è valido.\n\nNon è stato possibile avviare i container perché il socket Docker dell’ambiente non è accessibile.",
+  "usage": {
+    "input_tokens": 330160,
+    "cached_input_tokens": 306176,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 7220,
+    "reasoning_output_tokens": 2837
+  }
+}

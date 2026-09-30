@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 146.44030683400342,
+  "final_message": "Implementazione completata.\n\n- DNS gerarchico: root `pc2`, `test.` primario `pc3` e secondario AXFR `pc9`, sottozona `services.test.` su `pc12`, resolver ricorsivo `pc11`.\n- Client `pc4` (IPv4) e `pc6` (IPv6) usano esclusivamente `pc11`.\n- Inclusi deleghe/glue, `www`, `portal` CNAME, MX, mail/status e TXT richiesti.\n- In `lab.conf` sono state cambiate solo le cinque direttive `image` dei nodi DNS, usando `kathara/bind` ([immagine BIND ufficiale Kathará](https://github.com/KatharaFramework/Docker-Images)).\n- `kathara lstart --print` convalida correttamente `lab.conf`; il collaudo runtime non è eseguibile qui perché il daemon Docker non è accessibile.",
+  "usage": {
+    "input_tokens": 440287,
+    "cached_input_tokens": 393728,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5979,
+    "reasoning_output_tokens": 1818
+  }
+}

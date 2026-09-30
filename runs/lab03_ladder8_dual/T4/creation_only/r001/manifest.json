@@ -1,0 +1,83 @@
+{
+  "run_id": "lab03_ladder8_dual__T4__creation_only__r001",
+  "run_number": 1,
+  "experiment_id": null,
+  "replicate": 1,
+  "scenario_id": "lab03_ladder8_dual",
+  "prompt_type": "T4",
+  "repetition": 1,
+  "run_directory": "lab03_ladder8_dual/T4/creation_only/r001",
+  "agent": "codex",
+  "agent_version": "0.157.1",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "execution_backend": "codex_cli",
+  "authentication": "local_chatgpt_login",
+  "api_key_used": false,
+  "skill_protocol": "explicit_read_v1",
+  "skill_mode": "creation_only",
+  "available_skills": [
+    "kathara-creation"
+  ],
+  "forced_skills": [
+    "kathara-creation"
+  ],
+  "started_at": "2026-09-29T20:25:59.818457+00:00",
+  "completed_at": "2026-09-29T20:28:32.009316+00:00",
+  "component_versions": {
+    "inspect-ai": "0.3.266",
+    "inspect-swe": "0.2.71",
+    "kathara-lab-checker": "0.1.14",
+    "kathara": "3.8.3",
+    "pandas": "3.0.6",
+    "PyYAML": "6.0.3",
+    "openai": "3.16.2"
+  },
+  "pipeline_state": "COMPLETED",
+  "state_history": [
+    {
+      "state": "PENDING",
+      "timestamp": "2026-09-29T20:25:59.827450+00:00"
+    },
+    {
+      "state": "AUT_RUNNING",
+      "timestamp": "2026-09-29T20:25:59.827831+00:00"
+    },
+    {
+      "state": "AUT_COMPLETED",
+      "timestamp": "2026-09-29T20:27:54.878555+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-09-29T20:28:32.008931+00:00"
+    }
+  ],
+  "aut_execution_success": true,
+  "checker_execution_success": true,
+  "task_success": false,
+  "source_lab_sha256": "062057e1ddd7d8d49d6f6d232a44278557a2301bba8fb5cd883c67ba2701e0e2",
+  "input_lab_sha256": "062057e1ddd7d8d49d6f6d232a44278557a2301bba8fb5cd883c67ba2701e0e2",
+  "prompt_sha256": "ce74a59d190cdacf8ca6944c1375bca87f20ec5f1cbf48b6436ed8cf33df1f5b",
+  "prompt_sent_sha256": "73ff9909c23eccfb46409fc95af8c336c3a00a592777847a3c296b9bc657d8ac",
+  "prompt_source": "prompt/lab03_ladder8_dual/T4.md",
+  "dns_skill_sha256": null,
+  "dns_skill_bundle_sha256": null,
+  "creation_skill_sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+  "creation_skill_bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e",
+  "correction_source": "scenarios/lab03_ladder8_dual/correction.yaml",
+  "correction_sha256": "a0f76eedd989f2673e4d46300725f17ef741e85beb496515c1e9c11572c13795",
+  "sandbox_image": "python:3.14.6-bookworm",
+  "timeout_seconds": 900,
+  "evaluation_revision": 0,
+  "artifacts": {
+    "input_lab": "input/lab",
+    "lab": "lab",
+    "aut_logs": "logs/aut",
+    "inspect_eval_log": "logs/aut/lab03_ladder8_dual__T4__creation_only__r001.eval",
+    "correction_snapshot": "evaluation/correction.yaml",
+    "results": "results"
+  },
+  "aut_measurement_ended_at": "2026-09-29T20:27:54.864266+00:00",
+  "final_lab_sha256": "1c61aee24503f33632151258096d50b6ba03b2307b528d2c45717a43c4a44890",
+  "correction_snapshot": "evaluation/correction.yaml"
+}

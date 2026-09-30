@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 103.79836816700117,
+  "final_message": "DNS gerarchico configurato: `pc2` root, `pc3` primario `test.`, `pc9` secondario via AXFR, `pc12` autoritativo `services.test.`, `pc11` resolver ricorsivo.\nCreati i file BIND in `pc{2,3,9,11,12}/etc/bind/`; nessun forwarder, DNS pubblico o `/etc/hosts`.\n`pc4` usa solo `192.168.34.138`; `pc6` solo `2001:db8:1200:5::10`.\nIn [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-3y8oxsiz/lab/lab.conf) sono state modificate esclusivamente le cinque direttive image dei nodi DNS.\nValidazione statica completata; i binari `named-checkconf`/`named-checkzone` non sono disponibili nell’ambiente host.",
+  "usage": {
+    "input_tokens": 185649,
+    "cached_input_tokens": 162816,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4898,
+    "reasoning_output_tokens": 1385
+  }
+}

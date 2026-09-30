@@ -1,0 +1,14 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,535,5,540,"1: Checking on `pc5` that `10.33.0.138` is the authority for domain `test`: named on pc5 is running but answered with SERVFAIL when quering for test
+2: Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.138 test. SOA +norecurse +comments +answer +noquestion +nostats | tr ""\n"" "" "" | grep -Eq ""flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"" && exit 0; sleep 1; done; exit 1'' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+3: Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.138 www.test. A +short | grep -Fqx ""10.33.1.138"" && exit 0; sleep 1; done; exit 1'' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+4: Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.138 www.test. AAAA +short | grep -Fqx ""2001:db8:1300:7::10"" && exit 0; sleep 1; done; exit 1'' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+5: Checking the exit code of the command 'sh -c 'for i in 1 2 3 4 5; do s1=""$(dig @10.33.0.74 test. SOA +short | awk ""{print \$3}"")""; s2=""$(dig @10.33.0.138 test. SOA +short | awk ""{print \$3}"")""; test -n ""$s1"" && test ""$s1"" = ""$s2"" && exit 0; sleep 1; done; exit 1'' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

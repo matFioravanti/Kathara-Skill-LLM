@@ -1,0 +1,10 @@
+2026-09-29T17:27:07.047056Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find expected lines in /private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-yxsfzxc9/lab/pc4/etc/bind/db.test:
+ns IN AAAA 2001:db8:1100:3::10
+
+www IN A 10.11.5.10
+www IN AAAA 2001:db8:1100:3::10
+portal IN CNAME www.test.
+@ IN MX 10 mail.services.test.
+mail IN AAAA 2001:db8:1100:3::10
+status IN AAAA 2001:db8:1100:2::10
+@ IN TXT "benchmark=dns-advanced"

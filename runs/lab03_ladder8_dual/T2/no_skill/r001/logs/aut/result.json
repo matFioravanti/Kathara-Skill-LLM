@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 120.60177733299497,
+  "final_message": "Completato il laboratorio DNS.\n\n- Impostate immagini `kathara/bind` solo per `pc1`, `pc3`, `pc5`, `pc7`, `pc9`.\n- Configurate root, `test.`, secondario AXFR limitato a `pc5`, e `services.test.`.\n- Configurato `pc9` come resolver ricorsivo con root hints interni, senza forwarder e con DNSSEC validation disabilitata.\n- Configurato `pc11` con il solo resolver `10.33.1.10`.\n- Nessuna modifica a topologia, indirizzi, gateway, routing o `/etc/hosts`.\n\nFile principali: [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-ltuakwl_/lab/lab.conf), [zona root](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-ltuakwl_/lab/pc1/etc/bind/db.root), [zona test](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-ltuakwl_/lab/pc3/etc/bind/db.test), [zona services](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-ltuakwl_/lab/pc7/etc/bind/db.services.test).",
+  "usage": {
+    "input_tokens": 343123,
+    "cached_input_tokens": 309504,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5217,
+    "reasoning_output_tokens": 1520
+  }
+}

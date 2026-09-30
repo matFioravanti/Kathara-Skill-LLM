@@ -1,0 +1,26 @@
+{
+  "files_created": 9,
+  "files_modified": 3,
+  "files_deleted": 0,
+  "files_changed": 12,
+  "lines_added": 106,
+  "lines_deleted": 5,
+  "created": [
+    "pc11/etc/bind/named.conf",
+    "pc11/etc/bind/root.hints",
+    "pc12/etc/bind/db.services.test",
+    "pc12/etc/bind/named.conf",
+    "pc2/etc/bind/db.root",
+    "pc2/etc/bind/named.conf",
+    "pc3/etc/bind/db.test",
+    "pc3/etc/bind/named.conf",
+    "pc9/etc/bind/named.conf"
+  ],
+  "modified": [
+    "lab.conf",
+    "pc4.startup",
+    "pc6.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}

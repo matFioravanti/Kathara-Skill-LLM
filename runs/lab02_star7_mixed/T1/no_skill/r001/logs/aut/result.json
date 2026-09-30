@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 150.16170087499995,
+  "final_message": "Configurazione DNS avanzata completata.\n\n- Ruoli BIND separati su `pc2`, `pc3`, `pc9` (slave via AXFR), `pc11` (resolver con soli root hints interni) e `pc12`.\n- Deleghe root → `test.` e `test.` → `services.test.` con i glue richiesti.\n- Record A, AAAA, CNAME, MX e TXT configurati.\n- `pc4` e `pc6` usano esclusivamente `pc11` nei rispettivi stack IPv4/IPv6.\n- In `lab.conf` sono state modificate solo le direttive `image` dei cinque nodi DNS.\n\nFile principali: [root DNS](./pc2/etc/bind/named.conf), [zona test](./pc3/etc/bind/db.test), [slave DNS](./pc9/etc/bind/named.conf), [resolver](./pc11/etc/bind/named.conf), [sottozona services](./pc12/etc/bind/db.services.test).\n\nI controlli statici sulle deleghe, assenza di forwarder e ruoli sono passati. Non ho potuto avviare Kathara perché il daemon Docker dell’ambiente non è accessibile.",
+  "usage": {
+    "input_tokens": 521816,
+    "cached_input_tokens": 474368,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6525,
+    "reasoning_output_tokens": 2042
+  }
+}

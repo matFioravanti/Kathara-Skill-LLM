@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 93.0897657500027,
+  "final_message": "Ruoli: root `pc2`; `test.` primario `pc4`, secondario `pc6`; `services.test.` `pc8`; resolver ricorsivo `pc10`.\nCreati i file BIND sotto `pc2`, `pc4`, `pc6`, `pc8`, `pc10`; avvio `named` aggiunto ai soli server e `pc12` usa solo `2001:db8:1100:4::10`.\nImmagini aggiornate esclusivamente per i cinque dispositivi DNS in `lab.conf`.\nRecord e deleghe AAAA seguono gli indirizzi IPv6 esistenti; `www.test.` ha A→`pc11` e AAAA→`pc8`, con alias `portal`.\nIl transfer di `test.` è consentito solo da `pc4` a `pc6`; resolver senza forwarder, con hints della root interna.\nAvvertenza: i comandi statici BIND non sono presenti nell’host; nessun comando Kathara è stato eseguito.",
+  "usage": {
+    "input_tokens": 154155,
+    "cached_input_tokens": 126464,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4244,
+    "reasoning_output_tokens": 576
+  }
+}

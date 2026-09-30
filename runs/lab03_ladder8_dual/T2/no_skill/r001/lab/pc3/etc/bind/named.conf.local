@@ -1,0 +1,7 @@
+zone "test" {
+        type master;
+        file "/etc/bind/db.test";
+        allow-transfer { 10.33.0.138; };
+        notify yes;
+        also-notify { 10.33.0.138; };
+};

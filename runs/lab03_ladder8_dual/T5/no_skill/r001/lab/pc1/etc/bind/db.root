@@ -1,0 +1,10 @@
+$TTL 300
+@   IN SOA a.root. hostmaster.root. (
+        2026092901 3600 900 604800 300 )
+    IN NS  a.root.
+a.root. IN A 10.33.0.10
+
+test. IN NS ns1.test.
+test. IN NS ns2.test.
+ns1.test. IN A 10.33.0.74
+ns2.test. IN A 10.33.0.138

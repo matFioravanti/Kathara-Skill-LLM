@@ -1,0 +1,42 @@
+{
+  "scenario": "lab03_ladder8_dual",
+  "scenario_id": "lab03_ladder8_dual",
+  "prompt_type": "T1",
+  "prompt_sha256": "aaacee26575eaaca4dd42669b284c64df1851bec5ca3eb13f70f9212bae1e987",
+  "prompt_sent_sha256": "aaacee26575eaaca4dd42669b284c64df1851bec5ca3eb13f70f9212bae1e987",
+  "skill_mode": "no_skill",
+  "skill_protocol": "explicit_read_v1",
+  "run_number": 1,
+  "replicate": 1,
+  "experiment_id": null,
+  "run_id": "lab03_ladder8_dual__T1__no_skill__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [],
+  "forced_skills": [],
+  "agent_success": true,
+  "status": "COMPLETED",
+  "timing": {
+    "agent_seconds": 135.82812620900222,
+    "checker_seconds": 68.70762429200113,
+    "total_seconds": 204.7621255000049
+  },
+  "tokens": {
+    "input": 352136,
+    "cached_input": 311296,
+    "output": 5846,
+    "reasoning": 1688,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 485,
+    "failed": 55,
+    "total": 540,
+    "pass_rate": 0.8981481481481481
+  },
+  "correction_sha256": "a0f76eedd989f2673e4d46300725f17ef741e85beb496515c1e9c11572c13795",
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
+}

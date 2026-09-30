@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 103.03456320799887,
+  "final_message": "Completato `lab01_ring6_dual`.\n\n- Ruoli: root→pc2; test master→pc4; test slave→pc6; services.test→pc8; resolver→pc10.\n- Modificate solo le immagini DNS in `lab.conf`; configurazioni BIND create sotto `pc{2,4,6,8,10}/etc/bind/`.\n- AXFR `test.` consentito esclusivamente da pc4 a pc6; resolver con hint verso root interna, senza forwarder.\n- `pc12` usa solo `2001:db8:1100:4::10`; record richiesti e deleghe dual-stack coerenti configurati.\n- Controlli statici sui vincoli: superati. Nessun comando Kathará dinamico eseguito.",
+  "usage": {
+    "input_tokens": 286663,
+    "cached_input_tokens": 250624,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4672,
+    "reasoning_output_tokens": 772
+  }
+}

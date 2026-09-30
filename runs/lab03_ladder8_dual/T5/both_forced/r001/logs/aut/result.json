@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 90.47175837500254,
+  "final_message": "Configurato DNS gerarchico completo:\n\n- Ruoli: root `pc1`; `test.` primario `pc3` e secondario `pc5`; `services.test.` `pc7`; resolver `pc9`.\n- Creati i file BIND in `pc1`, `pc3`, `pc5`, `pc7`, `pc9`; avvio di `named` aggiunto in coda ai rispettivi startup.\n- `pc11` usa esclusivamente `pc9` (`10.33.1.10`) come resolver IPv4.\n- Inclusi deleghe e glue, transfer primario→secondario, `www` A/AAAA, alias `portal`, MX, record mail/status e TXT `benchmark=dns-advanced`.\n- Nessuna modifica a topologia, indirizzi, routing o `lab.conf` (le immagini erano già `kathara/base`).\n- Verifica statica BIND non eseguibile localmente: `named-checkconf`/`named-checkzone` non sono installati; validazione runtime resta esterna come prescritto.",
+  "usage": {
+    "input_tokens": 247073,
+    "cached_input_tokens": 212224,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4270,
+    "reasoning_output_tokens": 1042
+  }
+}

@@ -1,0 +1,2 @@
+2026-09-29T19:51:14.411434Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find expected lines in /private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-h7lejiju/lab/pc2.startup:
+ip route replace default via 10.33.0.1 dev eth0

@@ -1,0 +1,21 @@
+{
+  "files_created": 0,
+  "files_modified": 8,
+  "files_deleted": 0,
+  "files_changed": 8,
+  "lines_added": 125,
+  "lines_deleted": 5,
+  "created": [],
+  "modified": [
+    "lab.conf",
+    "pc11.startup",
+    "pc12.startup",
+    "pc2.startup",
+    "pc3.startup",
+    "pc4.startup",
+    "pc6.startup",
+    "pc9.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 86.58632354099973,
+  "final_message": "Completato `lab03_ladder8_dual`.\n\n- Ruoli: root `pc1`; primario `test.` `pc3`; secondario `pc5`; `services.test.` `pc7`; resolver ricorsivo `pc9`.\n- Configurate deleghe, glue IPv4, AXFR consentito solo a `pc5`, root hints interni e nessun forwarder.\n- Pubblicati A/AAAA, CNAME, MX e TXT richiesti; `pc11` usa solo `10.33.1.10`.\n- Modificate in `lab.conf` soltanto le immagini dei cinque dispositivi DNS.\n- Controllo statico completato; i binari `named-checkconf`/`named-checkzone` non sono disponibili nell’host.",
+  "usage": {
+    "input_tokens": 182225,
+    "cached_input_tokens": 154880,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3950,
+    "reasoning_output_tokens": 573
+  }
+}

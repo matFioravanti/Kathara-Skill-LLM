@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 113.7139873749984,
+  "final_message": "Configurazione DNS completata.\n\n- Ruoli: root `pc2`; primario `test.` `pc4`; secondario `pc6`; autoritativo `services.test.` `pc8`; resolver ricorsivo `pc10`; client `pc12`.\n- Creati BIND config/zone/hints in `pc2`, `pc4`, `pc6`, `pc8`, `pc10`; aggiunti avvio `named` e resolver IPv6 su `pc12`.\n- Modificate solo le cinque direttive `[image]` DNS in `lab.conf`, impostate a `kathara/bind`.\n- Catena: root interna → delega ridondata `test.` → delega `services.test.`; nessun forwarder o DNS pubblico.\n- `www.test.`: A `10.11.5.10` (`pc11`), AAAA `2001:db8:1100:3::10` (`pc8`); MX/TXT e record richiesti inclusi.\n- Assunzione: i ruoli DNS sono solo IPv6, quindi glue, root hints e `pc12` usano IPv6; i checker BIND non sono disponibili localmente e la validazione dinamica Kathara è stata lasciata esterna come prescritto.",
+  "usage": {
+    "input_tokens": 254526,
+    "cached_input_tokens": 222208,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5243,
+    "reasoning_output_tokens": 1158
+  }
+}

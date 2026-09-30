@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 157.0837821660025,
+  "final_message": "Completato `lab03_ladder8_dual`.\n\n- Configurati root (`pc1`), primario (`pc3`), secondario (`pc5`), autoritativo `services.test.` (`pc7`) e resolver ricorsivo (`pc9`) con BIND.\n- Implementate deleghe interne, glue record, trasferimento consentito esclusivamente a `pc5`, root-hints solo interni e nessun forwarder.\n- Pubblicati record A/AAAA, CNAME, MX e TXT richiesti.\n- Impostato `pc11` con il solo resolver IPv4 `10.33.1.10`.\n- In [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-721e1ulr/lab/lab.conf) sono cambiate soltanto le cinque direttive `image` dei nodi DNS.\n- La verifica statica `kathara lstart --print` passa. L’avvio effettivo non è stato possibile perché il daemon Docker non è accessibile nell’ambiente.",
+  "usage": {
+    "input_tokens": 353713,
+    "cached_input_tokens": 311808,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6336,
+    "reasoning_output_tokens": 2320
+  }
+}

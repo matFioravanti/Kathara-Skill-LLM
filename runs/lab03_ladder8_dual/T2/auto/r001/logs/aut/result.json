@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 97.2183810419956,
+  "final_message": "Completato `lab03_ladder8_dual`.\n\n- Ruoli: root `pc1`; primario `test.` `pc3`; secondario `pc5`; autoritativo `services.test.` `pc7`; resolver ricorsivo `pc9`.\n- Configurati zone, deleghe e glue coerenti; AXFR di `test.` consentito dal primario solo a `pc5`.\n- `pc9` usa esclusivamente root hints interni, senza forwarder e con DNSSEC disabilitato.\n- `pc11` usa soltanto `10.33.1.10` come resolver.\n- Modificate solo le immagini BIND ammesse in `lab.conf`; nessuna topologia, rotta o indirizzo è stato toccato.\n- Verifica dinamica non eseguita: `named-checkconf`/`named-checkzone` non sono disponibili sull’host.",
+  "usage": {
+    "input_tokens": 153284,
+    "cached_input_tokens": 133376,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4586,
+    "reasoning_output_tokens": 912
+  }
+}

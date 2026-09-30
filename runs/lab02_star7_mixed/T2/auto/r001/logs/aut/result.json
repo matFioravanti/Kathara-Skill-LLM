@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 103.2005179589978,
+  "final_message": "Completata la gerarchia DNS richiesta.\n\n- Ruoli: `pc2` root, `pc3` primario `test.`, `pc9` secondario, `pc12` `services.test.`, `pc11` resolver ricorsivo.\n- Aggiornati solo gli `[image]` DNS in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-am43fbxl/lab/lab.conf).\n- Create configurazioni BIND, deleghe/glue, record richiesti e AXFR limitato a `pc9`.\n- `pc11` usa esclusivamente root hints interni, senza forwarder e con DNSSEC disabilitato.\n- `pc4` e `pc6` usano rispettivamente il resolver IPv4 e IPv6 in [pc4.startup](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-am43fbxl/lab/pc4.startup) e [pc6.startup](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-am43fbxl/lab/pc6.startup).\n- Verifica statica completata; `named-checkconf`/`named-checkzone` non sono disponibili nel workspace.",
+  "usage": {
+    "input_tokens": 177042,
+    "cached_input_tokens": 149760,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4695,
+    "reasoning_output_tokens": 970
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 110.42618858400238,
+  "final_message": "Configurato DNS gerarchico interno completo.\n\n- Ruoli: root `pc1`; master `test.` `pc3`; slave `test.` `pc5`; autoritativo `services.test.` `pc7`; resolver `pc9`.\n- Aggiornate solo le cinque direttive `[image]` DNS in `lab.conf`, impostandole a `kathara/bind`.\n- Creati i file BIND e gli avvii di `named`; `pc11` usa esclusivamente `10.33.1.10` in `/etc/resolv.conf`.\n- Inclusi deleghe/glue, trasferimento di zona master→slave, `www` A/AAAA, `portal` CNAME, MX, mail/status e TXT richiesto.\n- Verifiche statiche su record e vincoli completate; i controlli dinamici Kathara/BIND restano da eseguire all’avvio del lab.",
+  "usage": {
+    "input_tokens": 236587,
+    "cached_input_tokens": 206848,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5204,
+    "reasoning_output_tokens": 1272
+  }
+}

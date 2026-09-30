@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 97.84896808299527,
+  "final_message": "Completato `lab03_ladder8_dual` con root `pc1`, `test.` primario/secondario `pc3`/`pc5`, `services.test.` su `pc7`, resolver `pc9` e client `pc11`.\n\nCreati BIND config/zone files, transfer di `test.` limitato a `pc5`, root hints interni senza forwarder e DNSSEC disabilitato.\n\n`www.test.`: A `10.33.1.138` (`pc13`) e AAAA `2001:db8:1300:7::10` (`pc16`); `portal.test.` è CNAME. MX/TXT e record `services.test.` configurati.\n\nModificate solo le cinque direttive `image` DNS in `lab.conf`; nessun IP, routing o altra riga è stata alterata. Validator BIND non presenti sull’host; controllo strutturale completato.",
+  "usage": {
+    "input_tokens": 208198,
+    "cached_input_tokens": 178432,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4614,
+    "reasoning_output_tokens": 901
+  }
+}

@@ -1,0 +1,1133 @@
+# correction.yaml regenerated after validating kathara-lab-checker DNS/ip_mapping compatibility.
+# For dual-stack resolvers on one interface, ip_mapping can represent only one address for eth0;
+# the other family is therefore validated with custom_commands (address, resolv.conf and dig).
+lab_inline: 'pc1[0]="LAN01"
+
+  pc2[0]="LAN01"
+
+  pc3[0]="LAN02"
+
+  pc4[0]="LAN02"
+
+  pc5[0]="LAN03"
+
+  pc6[0]="LAN03"
+
+  pc7[0]="LAN04"
+
+  pc8[0]="LAN04"
+
+  pc9[0]="LAN05"
+
+  pc10[0]="LAN05"
+
+  pc11[0]="LAN06"
+
+  pc12[0]="LAN06"
+
+  pc13[0]="LAN07"
+
+  pc14[0]="LAN07"
+
+  pc15[0]="LAN08"
+
+  pc16[0]="LAN08"
+
+  r1[0]="LAN01"
+
+  r1[1]="P12_01"
+
+  r1[2]="P15_07"
+
+  r2[0]="LAN02"
+
+  r2[1]="P12_01"
+
+  r2[2]="P23_02"
+
+  r2[3]="P26_08"
+
+  r3[0]="LAN03"
+
+  r3[1]="P23_02"
+
+  r3[2]="P34_03"
+
+  r3[3]="P37_09"
+
+  r4[0]="LAN04"
+
+  r4[1]="P34_03"
+
+  r4[2]="P48_10"
+
+  r5[0]="LAN05"
+
+  r5[1]="P56_04"
+
+  r5[2]="P15_07"
+
+  r6[0]="LAN06"
+
+  r6[1]="P56_04"
+
+  r6[2]="P67_05"
+
+  r6[3]="P26_08"
+
+  r7[0]="LAN07"
+
+  r7[1]="P67_05"
+
+  r7[2]="P78_06"
+
+  r7[3]="P37_09"
+
+  r8[0]="LAN08"
+
+  r8[1]="P78_06"
+
+  r8[2]="P48_10"
+
+  '
+convergence_time: 10
+default_image: kathara/base
+test:
+  requiring_startup:
+  - pc1
+  - pc2
+  - pc3
+  - pc4
+  - pc5
+  - pc6
+  - pc7
+  - pc8
+  - pc9
+  - pc10
+  - pc11
+  - pc12
+  - pc13
+  - pc14
+  - pc15
+  - pc16
+  - r1
+  - r2
+  - r3
+  - r4
+  - r5
+  - r6
+  - r7
+  - r8
+  ip_mapping:
+    pc1:
+      '0': 10.33.0.10/26
+    pc2:
+      '0': 2001:db8:1300::10/64
+    pc3:
+      '0': 10.33.0.74/26
+    pc4:
+      '0': 2001:db8:1300:1::10/64
+    pc5:
+      '0': 10.33.0.138/26
+    pc6:
+      '0': 2001:db8:1300:2::10/64
+    pc7:
+      '0': 10.33.0.202/26
+    pc8:
+      '0': 2001:db8:1300:3::10/64
+    pc9:
+      '0': 10.33.1.10/26
+    pc10:
+      '0': 2001:db8:1300:4::10/64
+    pc11:
+      '0': 10.33.1.74/26
+    pc12:
+      '0': 2001:db8:1300:5::10/64
+    pc13:
+      '0': 10.33.1.138/26
+    pc14:
+      '0': 2001:db8:1300:6::10/64
+    pc15:
+      '0': 10.33.1.202/26
+    pc16:
+      '0': 2001:db8:1300:7::10/64
+    r1:
+      '0': 10.33.0.1/26
+      '1': 172.20.0.1/30
+      '2': 172.20.0.25/30
+    r2:
+      '0': 10.33.0.65/26
+      '1': 172.20.0.2/30
+      '2': 172.20.0.5/30
+      '3': 172.20.0.29/30
+    r3:
+      '0': 10.33.0.129/26
+      '1': 172.20.0.6/30
+      '2': 172.20.0.9/30
+      '3': 172.20.0.33/30
+    r4:
+      '0': 10.33.0.193/26
+      '1': 172.20.0.10/30
+      '2': 172.20.0.37/30
+    r5:
+      '0': 10.33.1.1/26
+      '1': 172.20.0.13/30
+      '2': 172.20.0.26/30
+    r6:
+      '0': 10.33.1.65/26
+      '1': 172.20.0.14/30
+      '2': 172.20.0.17/30
+      '3': 172.20.0.30/30
+    r7:
+      '0': 10.33.1.129/26
+      '1': 172.20.0.18/30
+      '2': 172.20.0.21/30
+      '3': 172.20.0.34/30
+    r8:
+      '0': 10.33.1.193/26
+      '1': 172.20.0.22/30
+      '2': 172.20.0.38/30
+  daemons:
+    pc1:
+    - named
+    pc2:
+    - '!named'
+    pc3:
+    - named
+    pc4:
+    - '!named'
+    pc5:
+    - named
+    pc6:
+    - '!named'
+    pc7:
+    - named
+    pc8:
+    - '!named'
+    pc9:
+    - named
+    pc10:
+    - '!named'
+    pc11:
+    - '!named'
+    pc12:
+    - '!named'
+    pc13:
+    - '!named'
+    pc14:
+    - '!named'
+    pc15:
+    - '!named'
+    pc16:
+    - '!named'
+    r1:
+    - '!named'
+    r2:
+    - '!named'
+    r3:
+    - '!named'
+    r4:
+    - '!named'
+    r5:
+    - '!named'
+    r6:
+    - '!named'
+    r7:
+    - '!named'
+    r8:
+    - '!named'
+  kernel_routes:
+    pc1:
+    - 0.0.0.0/0
+    pc3:
+    - 0.0.0.0/0
+    pc5:
+    - 0.0.0.0/0
+    pc7:
+    - 0.0.0.0/0
+    pc9:
+    - 0.0.0.0/0
+    pc11:
+    - 0.0.0.0/0
+    pc13:
+    - 0.0.0.0/0
+    pc15:
+    - 0.0.0.0/0
+    r1:
+    - 10.33.0.64/26
+    - 10.33.0.128/26
+    - 10.33.0.192/26
+    - 10.33.1.0/26
+    - 10.33.1.64/26
+    - 10.33.1.128/26
+    - 10.33.1.192/26
+    - 172.20.0.4/30
+    - 172.20.0.8/30
+    - 172.20.0.12/30
+    - 172.20.0.16/30
+    - 172.20.0.20/30
+    - 172.20.0.28/30
+    - 172.20.0.32/30
+    - 172.20.0.36/30
+    r2:
+    - 10.33.0.0/26
+    - 10.33.0.128/26
+    - 10.33.0.192/26
+    - 10.33.1.0/26
+    - 10.33.1.64/26
+    - 10.33.1.128/26
+    - 10.33.1.192/26
+    - 172.20.0.8/30
+    - 172.20.0.12/30
+    - 172.20.0.16/30
+    - 172.20.0.20/30
+    - 172.20.0.24/30
+    - 172.20.0.32/30
+    - 172.20.0.36/30
+    r3:
+    - 10.33.0.0/26
+    - 10.33.0.64/26
+    - 10.33.0.192/26
+    - 10.33.1.0/26
+    - 10.33.1.64/26
+    - 10.33.1.128/26
+    - 10.33.1.192/26
+    - 172.20.0.0/30
+    - 172.20.0.12/30
+    - 172.20.0.16/30
+    - 172.20.0.20/30
+    - 172.20.0.24/30
+    - 172.20.0.28/30
+    - 172.20.0.36/30
+    r4:
+    - 10.33.0.0/26
+    - 10.33.0.64/26
+    - 10.33.0.128/26
+    - 10.33.1.0/26
+    - 10.33.1.64/26
+    - 10.33.1.128/26
+    - 10.33.1.192/26
+    - 172.20.0.0/30
+    - 172.20.0.4/30
+    - 172.20.0.12/30
+    - 172.20.0.16/30
+    - 172.20.0.20/30
+    - 172.20.0.24/30
+    - 172.20.0.28/30
+    - 172.20.0.32/30
+    r5:
+    - 10.33.0.0/26
+    - 10.33.0.64/26
+    - 10.33.0.128/26
+    - 10.33.0.192/26
+    - 10.33.1.64/26
+    - 10.33.1.128/26
+    - 10.33.1.192/26
+    - 172.20.0.0/30
+    - 172.20.0.4/30
+    - 172.20.0.8/30
+    - 172.20.0.16/30
+    - 172.20.0.20/30
+    - 172.20.0.28/30
+    - 172.20.0.32/30
+    - 172.20.0.36/30
+    r6:
+    - 10.33.0.0/26
+    - 10.33.0.64/26
+    - 10.33.0.128/26
+    - 10.33.0.192/26
+    - 10.33.1.0/26
+    - 10.33.1.128/26
+    - 10.33.1.192/26
+    - 172.20.0.0/30
+    - 172.20.0.4/30
+    - 172.20.0.8/30
+    - 172.20.0.20/30
+    - 172.20.0.24/30
+    - 172.20.0.32/30
+    - 172.20.0.36/30
+    r7:
+    - 10.33.0.0/26
+    - 10.33.0.64/26
+    - 10.33.0.128/26
+    - 10.33.0.192/26
+    - 10.33.1.0/26
+    - 10.33.1.64/26
+    - 10.33.1.192/26
+    - 172.20.0.0/30
+    - 172.20.0.4/30
+    - 172.20.0.8/30
+    - 172.20.0.12/30
+    - 172.20.0.24/30
+    - 172.20.0.28/30
+    - 172.20.0.36/30
+    r8:
+    - 10.33.0.0/26
+    - 10.33.0.64/26
+    - 10.33.0.128/26
+    - 10.33.0.192/26
+    - 10.33.1.0/26
+    - 10.33.1.64/26
+    - 10.33.1.128/26
+    - 172.20.0.0/30
+    - 172.20.0.4/30
+    - 172.20.0.8/30
+    - 172.20.0.12/30
+    - 172.20.0.16/30
+    - 172.20.0.24/30
+    - 172.20.0.28/30
+    - 172.20.0.32/30
+  applications:
+    dns:
+      authoritative:
+        .:
+        - 10.33.0.10
+        test:
+        - 10.33.0.74
+        - 10.33.0.138
+        services.test:
+        - 10.33.0.202
+# Checker compatibility: only resolver addresses representable in ip_mapping are listed here.
+# Additional resolver family/client checks remain enforced in custom_commands.
+      local_ns:
+        10.33.1.10:
+        - pc11
+      records:
+        A:
+          www.test.:
+          - 10.33.1.138
+          mail.services.test.:
+          - 10.33.0.202
+          status.services.test.:
+          - 10.33.1.202
+        AAAA:
+          www.test.:
+          - 2001:db8:1300:7::10
+        MX:
+          test.:
+          - 10 mail.services.test.
+  reachability:
+    pc9:
+    - 10.33.0.10
+    - 10.33.0.74
+    - 10.33.0.138
+    - 10.33.0.202
+    pc5:
+    - 10.33.0.74
+    pc11:
+    - 10.33.1.10
+    - 10.33.1.138
+    - 10.33.1.202
+  custom_commands:
+    pc1:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.0\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.10 . SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"\.\"" | grep -Eq "type[[:space:]]+(master|primary);"'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do out="$(dig @10.33.0.10 test. NS +norecurse +noall +authority +additional)" || { sleep 1; continue; }; pns="$(printf "%s\n" "$out" | awk '"'"'$1=="test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$(printf "%s\n" "$pns" | sed '"'"'/^$/d'"'"' | wc -l)" -eq 2 || { sleep 1; continue; }; seen1=0; seen2=0; ok=1; for n in $pns; do v="$(printf "%s\n" "$out" | awk -v n="$n" '"'"'$1==n && $4=="A" {print $5}'"'"' | sort -u)"; case "$v" in "10.33.0.74") seen1=1 ;; "10.33.0.138") seen2=1 ;; *) ok=0 ;; esac; done; test "$ok" -eq 1 && test "$seen1" -eq 1 && test "$seen2" -eq 1 || { sleep 1; continue; }; child="$(dig @10.33.0.74 test. NS +norecurse +noall +answer)" || { sleep 1; continue; }; cns="$(printf "%s\n" "$child" | awk '"'"'$1=="test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$pns" = "$cns" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.10 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.10 test. SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'
+      exit_code: 0
+    pc2:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc3:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.0\.65[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\.?\"" | grep -Eq "type[[:space:]]+(master|primary);"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 www.test. A +short | grep -Fqx "10.33.1.138"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 www.test. AAAA +short | grep -Fqx "2001:db8:1300:7::10"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 portal.test. CNAME +short | grep -Fqx "www.test."'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 test. MX +short | grep -Fqx "10 mail.services.test."'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do out="$(dig @10.33.0.74 services.test. NS +norecurse +noall +authority +additional)" || { sleep 1; continue; }; pns="$(printf "%s\n" "$out" | awk '"'"'$1=="services.test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$(printf "%s\n" "$pns" | sed '"'"'/^$/d'"'"' | wc -l)" -eq 1 || { sleep 1; continue; }; v="$(printf "%s\n" "$out" | awk -v n="$pns" '"'"'$1==n && $4=="A" {print $5}'"'"' | sort -u)"; test "$v" = "10.33.0.202" || { sleep 1; continue; }; childout="$(dig @10.33.0.202 services.test. NS +norecurse +noall +answer)" || { sleep 1; continue; }; cns="$(printf "%s\n" "$childout" | awk '"'"'$1=="services.test." && $4=="NS" {print $5}'"'"' | sort -u)"; test "$pns" = "$cns" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 . SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.74 services.test. SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'
+      exit_code: 0
+    pc4:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:1::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc5:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.0\.129[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.138 test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"test\.?\"" | grep -Eq "type[[:space:]]+(secondary|slave);"'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.138 www.test. A +short | grep -Fqx "10.33.1.138" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.138 www.test. AAAA +short | grep -Fqx "2001:db8:1300:7::10" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do s1="$(dig @10.33.0.74 test. SOA +short | awk "{print \$3}")"; s2="$(dig @10.33.0.138 test. SOA +short | awk "{print \$3}")"; test -n "$s1" && test "$s1" = "$s2" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'for i in 1 2 3 4 5; do dig @10.33.0.74 test. AXFR +time=3 +tries=1 | grep -Eq "[[:space:]]SOA[[:space:]]" && exit 0; sleep 1; done; exit 1'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.138 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
+      exit_code: 0
+    pc6:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:2::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc7:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.0\.193[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.202 services.test. SOA +norecurse +comments +answer +noquestion +nostats | tr "\n" " " | grep -Eq "flags:.*[[:space:]]aa[[:space:];].*[[:space:]]SOA[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'named-checkconf -p 2>/dev/null | grep -A10 -E "zone \"services\.test\.?\"" | grep -Eq "type[[:space:]]+(master|primary);"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.202 mail.services.test. A +short | grep -Fqx "10.33.0.202"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.202 status.services.test. A +short | grep -Fqx "10.33.1.202"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.202 www.test. A +recurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]ra[[:space:];]"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.202 . SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.0.202 test. SOA +norecurse +comments +noquestion +nostats | grep "flags:" | grep -vqE "flags:.*[[:space:]]aa[[:space:];]"'
+      exit_code: 0
+    pc8:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:3::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc9:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.1\.1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'conf="$(named-checkconf -p 2>/dev/null)" || exit 1; printf "%s\n" "$conf" | awk '"'"'BEGIN{inside=0;bad=0} {line=$0; sub(/\/\/.*/,"",line); sub(/#.*/,"",line); if(!inside){if(line ~ /^[[:space:]]*forwarders[[:space:]]*\{/){sub(/^[^{]*\{/ ,"",line); inside=1}else next} if(inside){end=(line ~ /\}/); if(end) sub(/\}.*/,"",line); gsub(/[[:space:];]/,"",line); if(line!="") bad=1; if(end) inside=0}} END{exit bad}'"'"''
+      exit_code: 0
+    - command: sh -c 'grep -R -E "^[[:space:]]*dnssec-validation[[:space:]]+no[[:space:]]*;" /etc/bind/named.conf* /etc/bind/*.conf 2>/dev/null'
+      exit_code: 0
+    - command: sh -c 'conf="$(named-checkconf -p 2>/dev/null)" && printf "%s\n" "$conf" | grep -A8 -E "zone \"\.\"" | grep -Eq "type[[:space:]]+hint;" && f="$(printf "%s\n" "$conf" | awk '"'"'/zone "\."/{z=1} z && $1=="file"{gsub(/[";]/,"",$2); print $2; exit} z && /^};/{z=0}'"'"')" && test -n "$f" && if [ "${f#/}" = "$f" ]; then d="$(printf "%s\n" "$conf" | awk '"'"'$1=="directory"{gsub(/[";]/,"",$2); print $2; exit}'"'"')"; f="${d:-/etc/bind}/$f"; fi && test -r "$f" && awk '"'"'BEGIN{n=0;ok=0} /^[[:space:]]*($|;)/{next} {for(i=1;i<=NF;i++){if($i=="A"||$i=="AAAA"){n++; if($(i+1)=="10.33.0.10") ok++}}} END{exit !(n==1 && ok==1)}'"'"' "$f"'
+      exit_code: 0
+    - command: sh -c 'for z in . test. services.test.; do if dig @10.33.1.10 "$z" SOA +recurse +comments +noquestion +nostats | grep "flags:" | grep -qE "flags:.*[[:space:]]aa[[:space:];]"; then exit 1; fi; done; exit 0'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 www.test. A +short | grep -Fqx "10.33.1.138"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 www.test. AAAA +short | grep -Fqx "2001:db8:1300:7::10"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 portal.test. CNAME +short | grep -Fqx "www.test."'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 test. MX +short | grep -Fqx "10 mail.services.test."'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 mail.services.test. A +short | grep -Fqx "10.33.0.202"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 status.services.test. A +short | grep -Fqx "10.33.1.202"'
+      exit_code: 0
+    pc10:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:4::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc11:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.1\.65[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    - command: 'sh -c ''! dig @10.33.0.74 test. AXFR +time=3 +tries=1 2>/dev/null | grep -Eq "www\.test\..*[[:space:]](A|AAAA)[[:space:]]"'' '
+      exit_code: 0
+    - command: 'sh -c ''test "$(awk ''"''"''$1=="nameserver"{print $2}''"''"'' /etc/resolv.conf | wc -l)" -eq 1 && grep -Eq "^nameserver[[:space:]]+10\.33\.1\.10([[:space:]]|$)" /etc/resolv.conf'' '
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 www.test. A +short | grep -Fqx "10.33.1.138"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 www.test. AAAA +short | grep -Fqx "2001:db8:1300:7::10"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 portal.test. CNAME +short | grep -Fqx "www.test."'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 test. MX +short | grep -Fqx "10 mail.services.test."'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 test. TXT +short | grep -Fqx "\"benchmark=dns-advanced\""'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 mail.services.test. A +short | grep -Fqx "10.33.0.202"'
+      exit_code: 0
+    - command: sh -c 'dig @10.33.1.10 status.services.test. A +short | grep -Fqx "10.33.1.202"'
+      exit_code: 0
+    - command: sh -c '! grep -Eq "(^|[[:space:]])(www|portal)\.test\.?([[:space:]]|$)|(^|[[:space:]])(mail|status)\.services\.test\.?([[:space:]]|$)" /etc/hosts'
+      exit_code: 0
+    - command: sh -c '! ip -6 -o addr show scope global | grep -q .'
+      exit_code: 0
+    pc12:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:5::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc13:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.1\.129[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc14:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:6::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc15:
+    - command: sh -c 'ip route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+10\.33\.1\.193[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    pc16:
+    - command: sh -c 'ip -6 route show default | grep -Eq "^default[[:space:]]+via[[:space:]]+2001:db8:1300:7::1[[:space:]]+dev[[:space:]]+eth0([[:space:]]|$)"'
+      exit_code: 0
+    r1:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:6::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.26[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.4/30 | grep -Eq "^172\.20\.0\.4/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.8/30 | grep -Eq "^172\.20\.0\.8/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.12/30 | grep -Eq "^172\.20\.0\.12/30[[:space:]]+via[[:space:]]+172\.20\.0\.26[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.16/30 | grep -Eq "^172\.20\.0\.16/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.20/30 | grep -Eq "^172\.20\.0\.20/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.28/30 | grep -Eq "^172\.20\.0\.28/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.32/30 | grep -Eq "^172\.20\.0\.32/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.36/30 | grep -Eq "^172\.20\.0\.36/30[[:space:]]+via[[:space:]]+172\.20\.0\.2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:1::/64 | grep -Eq "^2001:db8:1301:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:2::/64 | grep -Eq "^2001:db8:1301:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:3::/64 | grep -Eq "^2001:db8:1301:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:4::/64 | grep -Eq "^2001:db8:1301:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:5::/64 | grep -Eq "^2001:db8:1301:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:7::/64 | grep -Eq "^2001:db8:1301:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:8::/64 | grep -Eq "^2001:db8:1301:8::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:9::/64 | grep -Eq "^2001:db8:1301:9::/64[[:space:]]+via[[:space:]]+2001:db8:1301::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    r2:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:1::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:1::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth3 | grep -Eq "[[:space:]]2001:db8:1301:7::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.30[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.8/30 | grep -Eq "^172\.20\.0\.8/30[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.12/30 | grep -Eq "^172\.20\.0\.12/30[[:space:]]+via[[:space:]]+172\.20\.0\.30[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.16/30 | grep -Eq "^172\.20\.0\.16/30[[:space:]]+via[[:space:]]+172\.20\.0\.30[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.20/30 | grep -Eq "^172\.20\.0\.20/30[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.24/30 | grep -Eq "^172\.20\.0\.24/30[[:space:]]+via[[:space:]]+172\.20\.0\.1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.32/30 | grep -Eq "^172\.20\.0\.32/30[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.36/30 | grep -Eq "^172\.20\.0\.36/30[[:space:]]+via[[:space:]]+172\.20\.0\.6[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::2[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:2::/64 | grep -Eq "^2001:db8:1301:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:3::/64 | grep -Eq "^2001:db8:1301:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::2[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:4::/64 | grep -Eq "^2001:db8:1301:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::2[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:5::/64 | grep -Eq "^2001:db8:1301:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:6::/64 | grep -Eq "^2001:db8:1301:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:8::/64 | grep -Eq "^2001:db8:1301:8::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:9::/64 | grep -Eq "^2001:db8:1301:9::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    r3:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:2::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301:1::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:2::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth3 | grep -Eq "[[:space:]]2001:db8:1301:8::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.34[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.0/30 | grep -Eq "^172\.20\.0\.0/30[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.12/30 | grep -Eq "^172\.20\.0\.12/30[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.16/30 | grep -Eq "^172\.20\.0\.16/30[[:space:]]+via[[:space:]]+172\.20\.0\.34[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.20/30 | grep -Eq "^172\.20\.0\.20/30[[:space:]]+via[[:space:]]+172\.20\.0\.34[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.24/30 | grep -Eq "^172\.20\.0\.24/30[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.28/30 | grep -Eq "^172\.20\.0\.28/30[[:space:]]+via[[:space:]]+172\.20\.0\.5[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.36/30 | grep -Eq "^172\.20\.0\.36/30[[:space:]]+via[[:space:]]+172\.20\.0\.10[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::2[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301::/64 | grep -Eq "^2001:db8:1301::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:3::/64 | grep -Eq "^2001:db8:1301:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:4::/64 | grep -Eq "^2001:db8:1301:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::2[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:5::/64 | grep -Eq "^2001:db8:1301:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::2[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:6::/64 | grep -Eq "^2001:db8:1301:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:7::/64 | grep -Eq "^2001:db8:1301:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:1::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:9::/64 | grep -Eq "^2001:db8:1301:9::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    r4:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:3::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301:2::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:9::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.38[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.0/30 | grep -Eq "^172\.20\.0\.0/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.4/30 | grep -Eq "^172\.20\.0\.4/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.12/30 | grep -Eq "^172\.20\.0\.12/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.16/30 | grep -Eq "^172\.20\.0\.16/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.20/30 | grep -Eq "^172\.20\.0\.20/30[[:space:]]+via[[:space:]]+172\.20\.0\.38[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.24/30 | grep -Eq "^172\.20\.0\.24/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.28/30 | grep -Eq "^172\.20\.0\.28/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.32/30 | grep -Eq "^172\.20\.0\.32/30[[:space:]]+via[[:space:]]+172\.20\.0\.9[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301::/64 | grep -Eq "^2001:db8:1301::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:1::/64 | grep -Eq "^2001:db8:1301:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:3::/64 | grep -Eq "^2001:db8:1301:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:4::/64 | grep -Eq "^2001:db8:1301:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:5::/64 | grep -Eq "^2001:db8:1301:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:6::/64 | grep -Eq "^2001:db8:1301:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:7::/64 | grep -Eq "^2001:db8:1301:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:8::/64 | grep -Eq "^2001:db8:1301:8::/64[[:space:]]+via[[:space:]]+2001:db8:1301:2::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    r5:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:4::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301:3::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:6::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.0/30 | grep -Eq "^172\.20\.0\.0/30[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.4/30 | grep -Eq "^172\.20\.0\.4/30[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.8/30 | grep -Eq "^172\.20\.0\.8/30[[:space:]]+via[[:space:]]+172\.20\.0\.25[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.16/30 | grep -Eq "^172\.20\.0\.16/30[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.20/30 | grep -Eq "^172\.20\.0\.20/30[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.28/30 | grep -Eq "^172\.20\.0\.28/30[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.32/30 | grep -Eq "^172\.20\.0\.32/30[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.36/30 | grep -Eq "^172\.20\.0\.36/30[[:space:]]+via[[:space:]]+172\.20\.0\.14[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301::/64 | grep -Eq "^2001:db8:1301::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:1::/64 | grep -Eq "^2001:db8:1301:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:2::/64 | grep -Eq "^2001:db8:1301:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:6::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:4::/64 | grep -Eq "^2001:db8:1301:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:5::/64 | grep -Eq "^2001:db8:1301:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:7::/64 | grep -Eq "^2001:db8:1301:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:8::/64 | grep -Eq "^2001:db8:1301:8::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:9::/64 | grep -Eq "^2001:db8:1301:9::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::2[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    r6:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:5::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301:3::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:4::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth3 | grep -Eq "[[:space:]]2001:db8:1301:7::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.0/30 | grep -Eq "^172\.20\.0\.0/30[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.4/30 | grep -Eq "^172\.20\.0\.4/30[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.8/30 | grep -Eq "^172\.20\.0\.8/30[[:space:]]+via[[:space:]]+172\.20\.0\.29[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.20/30 | grep -Eq "^172\.20\.0\.20/30[[:space:]]+via[[:space:]]+172\.20\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.24/30 | grep -Eq "^172\.20\.0\.24/30[[:space:]]+via[[:space:]]+172\.20\.0\.13[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.32/30 | grep -Eq "^172\.20\.0\.32/30[[:space:]]+via[[:space:]]+172\.20\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.36/30 | grep -Eq "^172\.20\.0\.36/30[[:space:]]+via[[:space:]]+172\.20\.0\.18[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301::/64 | grep -Eq "^2001:db8:1301::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:1::/64 | grep -Eq "^2001:db8:1301:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:2::/64 | grep -Eq "^2001:db8:1301:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:7::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:5::/64 | grep -Eq "^2001:db8:1301:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:6::/64 | grep -Eq "^2001:db8:1301:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:3::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:8::/64 | grep -Eq "^2001:db8:1301:8::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:9::/64 | grep -Eq "^2001:db8:1301:9::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    r7:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:6::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301:4::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:5::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth3 | grep -Eq "[[:space:]]2001:db8:1301:8::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.192/26 | grep -Eq "^10\.33\.1\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.0/30 | grep -Eq "^172\.20\.0\.0/30[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.4/30 | grep -Eq "^172\.20\.0\.4/30[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.8/30 | grep -Eq "^172\.20\.0\.8/30[[:space:]]+via[[:space:]]+172\.20\.0\.33[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.12/30 | grep -Eq "^172\.20\.0\.12/30[[:space:]]+via[[:space:]]+172\.20\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.24/30 | grep -Eq "^172\.20\.0\.24/30[[:space:]]+via[[:space:]]+172\.20\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.28/30 | grep -Eq "^172\.20\.0\.28/30[[:space:]]+via[[:space:]]+172\.20\.0\.17[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.36/30 | grep -Eq "^172\.20\.0\.36/30[[:space:]]+via[[:space:]]+172\.20\.0\.22[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:7::/64 | grep -Eq "^2001:db8:1300:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301::/64 | grep -Eq "^2001:db8:1301::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:1::/64 | grep -Eq "^2001:db8:1301:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:2::/64 | grep -Eq "^2001:db8:1301:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:8::1[[:space:]]+dev[[:space:]]+eth3([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:3::/64 | grep -Eq "^2001:db8:1301:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:6::/64 | grep -Eq "^2001:db8:1301:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:7::/64 | grep -Eq "^2001:db8:1301:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:4::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:9::/64 | grep -Eq "^2001:db8:1301:9::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::2[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    r8:
+    - command: sh -c 'ip -6 -o addr show dev eth0 | grep -Eq "[[:space:]]2001:db8:1300:7::1/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth1 | grep -Eq "[[:space:]]2001:db8:1301:5::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'ip -6 -o addr show dev eth2 | grep -Eq "[[:space:]]2001:db8:1301:9::2/64[[:space:]]"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv4.ip_forward | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'sysctl net.ipv6.conf.all.forwarding | grep -Eq "=[[:space:]]*1$"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.0/26 | grep -Eq "^10\.33\.0\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.64/26 | grep -Eq "^10\.33\.0\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.128/26 | grep -Eq "^10\.33\.0\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.0.192/26 | grep -Eq "^10\.33\.0\.192/26[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.0/26 | grep -Eq "^10\.33\.1\.0/26[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.64/26 | grep -Eq "^10\.33\.1\.64/26[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 10.33.1.128/26 | grep -Eq "^10\.33\.1\.128/26[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.0/30 | grep -Eq "^172\.20\.0\.0/30[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.4/30 | grep -Eq "^172\.20\.0\.4/30[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.8/30 | grep -Eq "^172\.20\.0\.8/30[[:space:]]+via[[:space:]]+172\.20\.0\.37[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.12/30 | grep -Eq "^172\.20\.0\.12/30[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.16/30 | grep -Eq "^172\.20\.0\.16/30[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.24/30 | grep -Eq "^172\.20\.0\.24/30[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.28/30 | grep -Eq "^172\.20\.0\.28/30[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip route show 172.20.0.32/30 | grep -Eq "^172\.20\.0\.32/30[[:space:]]+via[[:space:]]+172\.20\.0\.21[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300::/64 | grep -Eq "^2001:db8:1300::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:1::/64 | grep -Eq "^2001:db8:1300:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:2::/64 | grep -Eq "^2001:db8:1300:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:3::/64 | grep -Eq "^2001:db8:1300:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:4::/64 | grep -Eq "^2001:db8:1300:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:5::/64 | grep -Eq "^2001:db8:1300:5::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1300:6::/64 | grep -Eq "^2001:db8:1300:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301::/64 | grep -Eq "^2001:db8:1301::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:1::/64 | grep -Eq "^2001:db8:1301:1::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:2::/64 | grep -Eq "^2001:db8:1301:2::/64[[:space:]]+via[[:space:]]+2001:db8:1301:9::1[[:space:]]+dev[[:space:]]+eth2([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:3::/64 | grep -Eq "^2001:db8:1301:3::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:4::/64 | grep -Eq "^2001:db8:1301:4::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:6::/64 | grep -Eq "^2001:db8:1301:6::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:7::/64 | grep -Eq "^2001:db8:1301:7::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0
+    - command: sh -c 'ip -6 route show 2001:db8:1301:8::/64 | grep -Eq "^2001:db8:1301:8::/64[[:space:]]+via[[:space:]]+2001:db8:1301:5::1[[:space:]]+dev[[:space:]]+eth1([[:space:]]|$)"'
+      exit_code: 0

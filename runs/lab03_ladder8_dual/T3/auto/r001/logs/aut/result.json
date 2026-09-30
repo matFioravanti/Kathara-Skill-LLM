@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 99.37452391700208,
+  "final_message": "Configurato DNS gerarchico interno: `pc1` root, `pc3` primario `test.`, `pc5` secondario, `pc7` autoritativo `services.test.`, `pc9` resolver.\n\nAggiunti zone, deleghe/glue, trasferimento `pc3 → pc5`, root hints interni e client `pc11 → 10.33.1.10`; nessun forwarder o `/etc/hosts`.\n\nModificate solo le immagini BIND dei cinque nodi DNS in `lab.conf`; rete, IP, gateway e routing invariati.\n\nRecord inclusi: `www` A→pc13 e AAAA→pc16, `portal` CNAME, MX/TXT, `status` A→pc15. Assunzione necessaria: `mail.services.test.` AAAA→pc14 (`2001:db8:1300:6::10`).",
+  "usage": {
+    "input_tokens": 146919,
+    "cached_input_tokens": 128256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4728,
+    "reasoning_output_tokens": 1329
+  }
+}

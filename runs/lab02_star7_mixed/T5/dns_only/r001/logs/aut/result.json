@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 94.98937020799349,
+  "final_message": "Configurato DNS gerarchico: root→`pc2`, primario `test.`→`pc3`, secondario→`pc9`, `services.test.`→`pc12`, resolver→`pc11`.\n\nCreati i file BIND nelle rispettive directory; `pc4` usa `192.168.34.138` e `pc6` `2001:db8:1200:5::10` come unico resolver.\n\nImmagini cambiate esclusivamente per `pc2`, `pc3`, `pc9`, `pc11`, `pc12` in `kathara/bind`; nessun’altra riga di `lab.conf` è stata modificata.\n\nInclusi delega/glue IPv6 di `test.`, trasferimento primario-secondario, delega di `services.test.`, MX/TXT e tutti i record richiesti.\n\nAssunzione: `ns1.test.`, `ns2.test.` e `ns.services.test.` sono i nomi NS ricavati e assegnati ai server indicati. Non ho avviato Kathara né potuto eseguire `named-check*` (non disponibili nell’host).",
+  "usage": {
+    "input_tokens": 144289,
+    "cached_input_tokens": 123392,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4372,
+    "reasoning_output_tokens": 1013
+  }
+}

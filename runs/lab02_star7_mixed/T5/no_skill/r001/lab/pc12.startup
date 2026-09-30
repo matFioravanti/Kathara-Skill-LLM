@@ -1,0 +1,25 @@
+ip address replace 192.168.34.139/25 dev eth0
+ip route replace default via 192.168.34.129 dev eth0
+
+# Authoritative server for the delegated services.test. child zone.
+mkdir -p /etc/bind/zones
+tee /etc/bind/named.conf >/dev/null <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { any; };
+    listen-on-v6 { none; };
+    recursion no;
+    allow-query { any; };
+};
+zone "services.test" { type master; file "/etc/bind/zones/db.services.test"; };
+EOF
+tee /etc/bind/zones/db.services.test >/dev/null <<'EOF'
+$TTL 3600
+@ IN SOA ns.services.test. hostmaster.services.test. (2026092901 3600 900 604800 300)
+  IN NS ns.services.test.
+ns IN A 192.168.34.139
+mail IN A 192.168.34.139
+status IN A 192.168.32.10
+@ IN TXT "benchmark=dns-advanced"
+EOF
+named-checkconf && named-checkzone services.test /etc/bind/zones/db.services.test && named -c /etc/bind/named.conf

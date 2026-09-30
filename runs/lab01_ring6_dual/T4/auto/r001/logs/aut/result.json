@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 85.83558954100226,
+  "final_message": "Completato `lab01_ring6_dual`.\n\n- Ruoli: root `pc2`; primario `test.` `pc4`; secondario `pc6`; autoritativo `services.test.` `pc8`; resolver ricorsivo `pc10`.\n- Creata la gerarchia interna con glue IPv6, hint verso la root interna e nessun forwarder/DNS pubblico.\n- Configurati record `www`, `portal`, MX, TXT, `mail` e `status`; il trasferimento da `pc4` è autorizzato solo per `pc6`.\n- `pc12` usa esclusivamente `2001:db8:1100:4::10` in `/etc/resolv.conf`.\n- In `lab.conf` sono state modificate esclusivamente le immagini dei cinque nodi DNS.",
+  "usage": {
+    "input_tokens": 131753,
+    "cached_input_tokens": 105984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3971,
+    "reasoning_output_tokens": 800
+  }
+}

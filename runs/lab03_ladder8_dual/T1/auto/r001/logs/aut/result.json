@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 90.6062284159998,
+  "final_message": "Configurata gerarchia DNS interna completa:\n\n- Root: `pc1`; primario `test.`: `pc3`; secondario via AXFR: `pc5`; `services.test.`: `pc7`; resolver ricorsivo: `pc9`.\n- Create zone, deleghe/glue, record A/AAAA/CNAME/MX/TXT e root hint esclusivamente verso `10.33.0.10`.\n- `pc11` usa solo `10.33.1.10` come nameserver IPv4.\n- Modificate solo le immagini dei cinque nodi DNS in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-th1nr537/lab/lab.conf:57), oltre a startup e file BIND pertinenti.\n- Verifiche statiche: nessun forwarder, root pubblico o record proibito in `/etc/hosts`; gli strumenti `named-check*` non sono disponibili sull’host.",
+  "usage": {
+    "input_tokens": 151608,
+    "cached_input_tokens": 132352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4232,
+    "reasoning_output_tokens": 516
+  }
+}

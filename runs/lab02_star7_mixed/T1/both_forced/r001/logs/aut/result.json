@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 129.60549824999907,
+  "final_message": "Configurata la gerarchia DNS richiesta.\n\n- Ruoli: `pc2` root, `pc3` master `test.`, `pc9` slave `test.`, `pc12` master `services.test.`, `pc11` resolver con soli root hints interni.\n- Creati i file BIND in `pc2`, `pc3`, `pc9`, `pc11`, `pc12`; aggiunti riavvio `named` e resolver client a `pc4`/`pc6`.\n- `lab.conf` invariato: `kathara/base` già include BIND9.\n- Nessun forwarder, DNS pubblico, modifica a IP/rotte/topologia, o record applicativi in `/etc/hosts`.\n- Verifica statica completata; `named-checkconf` e `named-checkzone` non sono installati nell’ambiente locale.",
+  "usage": {
+    "input_tokens": 206518,
+    "cached_input_tokens": 178432,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4383,
+    "reasoning_output_tokens": 882
+  }
+}

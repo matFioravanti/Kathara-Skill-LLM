@@ -1,0 +1,38 @@
+sysctl -w net.ipv4.ip_forward=1 >/dev/null
+sysctl -w net.ipv6.conf.all.forwarding=1 >/dev/null
+ip address replace 10.33.0.1/26 dev eth0
+ip -6 address replace 2001:db8:1300::1/64 dev eth0
+ip address replace 172.20.0.1/30 dev eth1
+ip -6 address replace 2001:db8:1301::1/64 dev eth1
+ip address replace 172.20.0.25/30 dev eth2
+ip -6 address replace 2001:db8:1301:6::1/64 dev eth2
+ip route replace 10.33.0.64/26 via 172.20.0.2 dev eth1
+ip route replace 10.33.0.128/26 via 172.20.0.2 dev eth1
+ip route replace 10.33.0.192/26 via 172.20.0.2 dev eth1
+ip route replace 10.33.1.0/26 via 172.20.0.26 dev eth2
+ip route replace 10.33.1.64/26 via 172.20.0.2 dev eth1
+ip route replace 10.33.1.128/26 via 172.20.0.2 dev eth1
+ip route replace 10.33.1.192/26 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.4/30 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.8/30 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.12/30 via 172.20.0.26 dev eth2
+ip route replace 172.20.0.16/30 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.20/30 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.28/30 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.32/30 via 172.20.0.2 dev eth1
+ip route replace 172.20.0.36/30 via 172.20.0.2 dev eth1
+ip -6 route replace 2001:db8:1300:1::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1300:2::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1300:3::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1300:4::/64 via 2001:db8:1301:6::2 dev eth2
+ip -6 route replace 2001:db8:1300:5::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1300:6::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1300:7::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:1::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:2::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:3::/64 via 2001:db8:1301:6::2 dev eth2
+ip -6 route replace 2001:db8:1301:4::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:5::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:7::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:8::/64 via 2001:db8:1301::2 dev eth1
+ip -6 route replace 2001:db8:1301:9::/64 via 2001:db8:1301::2 dev eth1

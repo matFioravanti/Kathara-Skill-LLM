@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 104.86843433300237,
+  "final_message": "Completato il DNS gerarchico interno.\n\n- Ruoli: root `pc2`; `test.` primario `pc3` e secondario `pc9`; `services.test.` `pc12`; resolver `pc11`.\n- Configurati deleghe/glue, transfer IPv6 verso il secondario, root hints interne e BIND senza forwarder/DNS pubblici.\n- Aggiunti `www`, `portal` CNAME, MX, TXT, `mail` e `status` con gli indirizzi esistenti richiesti.\n- `pc4` usa il resolver IPv4; `pc6` quello IPv6.\n- In [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-p5hzbqgy/lab/lab.conf) sono state cambiate solo le cinque direttive immagine dei nodi DNS.",
+  "usage": {
+    "input_tokens": 179398,
+    "cached_input_tokens": 154880,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4929,
+    "reasoning_output_tokens": 1152
+  }
+}

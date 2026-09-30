@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 111.1362728330023,
+  "final_message": "Configurato: root→pc2; test primario→pc3; secondario→pc9; services.test→pc12; resolver→pc11.  \nCreati `named.conf`, zone file/hints nei cinque nodi DNS e avvio `named` append-only.  \npc4 usa `192.168.34.138`; pc6 usa `2001:db8:1200:5::10`.  \nDelega root→test con glue AAAA, test→services con glue A; transfer pc3→pc9 soltanto.  \nNessuna modifica a `lab.conf`, indirizzi, route o topologia; nessun forwarder/root hint pubblico.  \nAssunzione: `kathara/base` include BIND come ammesso dalla skill; controlli BIND locali non disponibili.",
+  "usage": {
+    "input_tokens": 162481,
+    "cached_input_tokens": 135680,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3974,
+    "reasoning_output_tokens": 813
+  }
+}

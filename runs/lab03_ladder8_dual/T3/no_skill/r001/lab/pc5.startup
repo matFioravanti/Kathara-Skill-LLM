@@ -1,0 +1,19 @@
+ip address replace 10.33.0.138/26 dev eth0
+ip route replace default via 10.33.0.129 dev eth0
+mkdir -p /etc/bind
+cat > /etc/bind/named.conf <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { any; };
+    listen-on-v6 { none; };
+    recursion no;
+    allow-query { any; };
+};
+zone "test." {
+    type slave;
+    masters { 10.33.0.74; };
+    file "/var/cache/bind/db.test.slave";
+    allow-query { any; };
+};
+EOF
+rndc reconfig || service named restart

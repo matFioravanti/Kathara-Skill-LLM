@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/opt/homebrew/bin/codex",
+    "exec",
+    "--json",
+    "--ephemeral",
+    "--sandbox",
+    "workspace-write",
+    "--skip-git-repo-check",
+    "-C",
+    "/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-721e1ulr/lab",
+    "--model",
+    "gpt-5.6-terra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-"
+  ],
+  "cwd": "/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-721e1ulr/lab",
+  "variant": "aut",
+  "execution_backend": "codex_cli",
+  "authentication": "local_chatgpt_login",
+  "api_key_used": false,
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low"
+}

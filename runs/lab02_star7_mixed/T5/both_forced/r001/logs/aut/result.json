@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 87.08088387499447,
+  "final_message": "Configurato DNS gerarchico: root→`pc2`, `test.` primario→`pc3`, secondario→`pc9`, `services.test.`→`pc12`, resolver→`pc11`.\n\nCreati i file BIND in `pc2`, `pc3`, `pc9`, `pc11`, `pc12`; aggiunti avvio `named` e resolver esclusivo per `pc4` (IPv4) e `pc6` (IPv6).\n\n`www.test.` punta a `pc7` (A) e `pc10` (AAAA); inclusi CNAME, MX, TXT, delega e glue.\n\nNessuna modifica a topologia, indirizzi, routing o `lab.conf` (le immagini `kathara/base` già includono BIND).\n\nValidazione statica eseguita; i comandi Kathará/DNS runtime non sono stati avviati, come prescritto dalla Skill DNS.",
+  "usage": {
+    "input_tokens": 169555,
+    "cached_input_tokens": 142848,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4156,
+    "reasoning_output_tokens": 1088
+  }
+}

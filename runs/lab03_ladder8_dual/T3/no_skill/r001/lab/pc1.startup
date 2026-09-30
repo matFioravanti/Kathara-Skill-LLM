@@ -1,0 +1,27 @@
+ip address replace 10.33.0.10/26 dev eth0
+ip route replace default via 10.33.0.1 dev eth0
+mkdir -p /etc/bind
+cat > /etc/bind/named.conf <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { any; };
+    listen-on-v6 { none; };
+    recursion no;
+    allow-query { any; };
+};
+zone "." {
+    type master;
+    file "/etc/bind/db.root";
+};
+EOF
+cat > /etc/bind/db.root <<'EOF'
+$TTL 300
+@ IN SOA ns.root. hostmaster.root. ( 1 300 120 604800 300 )
+  IN NS ns.root.
+ns.root. IN A 10.33.0.10
+test. IN NS ns1.test.
+test. IN NS ns2.test.
+ns1.test. IN A 10.33.0.74
+ns2.test. IN A 10.33.0.138
+EOF
+rndc reconfig || service named restart

@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 135.82812620900222,
+  "final_message": "Configurata la gerarchia DNS interna avanzata.\n\n- Aggiornati solo gli `image` DNS in [lab.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-6rs_s6ex/lab/lab.conf) per `pc1`, `pc3`, `pc5`, `pc7`, `pc9` a `kathara/bind`.\n- Creati BIND root autoritativo, primario `test.`, secondario con AXFR esclusivo da `pc3`, autoritativo `services.test.`, e resolver ricorsivo con soli root hints interni.\n- Aggiunti deleghe, glue, record A/AAAA/CNAME/MX/TXT richiesti.\n- Configurato [pc11/etc/resolv.conf](/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-6rs_s6ex/lab/pc11/etc/resolv.conf) verso `10.33.1.10`, senza inserire record in `/etc/hosts`.\n- Riavvio di BIND aggiunto solo agli startup dei cinque nodi DNS; indirizzi, gateway e route esistenti sono invariati.\n\nVerifica eseguita: `kathara lstart --print --noterminals` conferma che `lab.conf` è valido.",
+  "usage": {
+    "input_tokens": 352136,
+    "cached_input_tokens": 311296,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5846,
+    "reasoning_output_tokens": 1688
+  }
+}

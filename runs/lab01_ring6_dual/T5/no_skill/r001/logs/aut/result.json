@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 163.16864245800025,
+  "final_message": "Implementato il DNS interno gerarchico.\n\n- Ruoli DNS passati a `kathara/bind`: `pc2`, `pc4`, `pc6`, `pc8`, `pc10`.\n- Root interna su `pc2`, con delega e glue IPv6 per `test.`.\n- `pc4` primario e `pc6` secondario tramite zone transfer.\n- Delega `services.test.` a `pc8`.\n- Resolver ricorsivo su `pc10`, con root hints interni e senza forwarder.\n- `pc12` usa esclusivamente `2001:db8:1100:4::10` in `/etc/resolv.conf`.\n- Record richiesti inclusi: `www` A/AAAA, `portal` CNAME, MX 10, `mail`/`status` AAAA e TXT.\n\nConfigurazioni principali: [root](./pc2/etc/bind/db.root), [test](./pc4/etc/bind/db.test), [services.test](./pc8/etc/bind/db.services.test), [resolver](./pc10/etc/bind/named.conf).\n\nVerifica statica completata: `kathara lstart --print` conferma che `lab.conf` è valido. L’avvio effettivo non è eseguibile in questo ambiente perché il demone Docker non è accessibile.",
+  "usage": {
+    "input_tokens": 465789,
+    "cached_input_tokens": 426240,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6830,
+    "reasoning_output_tokens": 2541
+  }
+}

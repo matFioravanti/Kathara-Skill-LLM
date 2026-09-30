@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 135.5631234169996,
+  "final_message": "Completato `lab01_ring6_dual`.\n\n- Configurati root, delega ridondata `test.`, sottozona `services.test.`, trasferimento solo `pc4 → pc6` e resolver iterativo interno.\n- Pubblicati tutti i record richiesti, inclusi A/AAAA, CNAME, MX e TXT.\n- `pc12` usa esclusivamente il resolver IPv6 su `pc10`.\n- In `lab.conf` sono state modificate solo le immagini dei cinque nodi DNS.\n\nVerifica eseguita: `kathara lstart --print` conferma che `lab.conf` è valido.",
+  "usage": {
+    "input_tokens": 323835,
+    "cached_input_tokens": 284672,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5809,
+    "reasoning_output_tokens": 1634
+  }
+}

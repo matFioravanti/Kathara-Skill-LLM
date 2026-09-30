@@ -1,0 +1,35 @@
+ip -6 address replace 2001:db8:1200:1::10/64 dev eth0
+ip -6 route replace default via 2001:db8:1200:1::1 dev eth0
+
+# Primary authoritative server for test.; pc9 receives AXFR updates.
+mkdir -p /etc/bind/zones
+tee /etc/bind/named.conf >/dev/null <<'EOF'
+options {
+    directory "/var/cache/bind";
+    listen-on { none; };
+    listen-on-v6 { any; };
+    recursion no;
+    allow-query { any; };
+};
+zone "test" {
+    type master;
+    file "/etc/bind/zones/db.test";
+    allow-transfer { 2001:db8:1200:4::10; };
+    also-notify { 2001:db8:1200:4::10; };
+};
+EOF
+tee /etc/bind/zones/db.test >/dev/null <<'EOF'
+$TTL 3600
+@ IN SOA ns1.test. hostmaster.test. (2026092901 3600 900 604800 300)
+  IN NS ns1.test.
+  IN NS ns2.test.
+ns1 IN AAAA 2001:db8:1200:1::10
+ns2 IN AAAA 2001:db8:1200:4::10
+www IN A 192.168.33.138
+www IN AAAA 2001:db8:1200:4::11
+portal IN CNAME www.test.
+@ IN MX 10 mail.services.test.
+services IN NS ns.services.test.
+ns.services IN A 192.168.34.139
+EOF
+named-checkconf && named-checkzone test /etc/bind/zones/db.test && named -c /etc/bind/named.conf
