@@ -1,0 +1,56 @@
+{
+  "scenario": "lab00_five_router",
+  "scenario_id": "lab00_five_router",
+  "prompt_type": "T1",
+  "prompt_sha256": "dc48414415082fa2f51846098c1b7fd116ffb7687e01273fa3e5d7c5c060aca8",
+  "prompt_sent_sha256": "6f866569fd47f14c570680ed0803042e4b22a99e7fad0a70be6d893bb1d36281",
+  "skill_mode": "dns_only",
+  "skill_protocol": "explicit_read_v1",
+  "run_number": 1,
+  "replicate": 1,
+  "experiment_id": null,
+  "run_id": "lab00_five_router__T1__dns_only__r001",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-dns"
+  ],
+  "agent_success": true,
+  "status": "COMPLETED",
+  "execution_backend": "docker_sandbox",
+  "sandbox": {
+    "name": "kathara-lab00-five-router-r001-84942c3b",
+    "id": "✓ Created sandbox kathara-lab00-five-router-r001-84942c3b",
+    "sbx_version": "0.48.0",
+    "codex_sandbox_version": "0.149.1",
+    "cleanup_ok": true,
+    "cleanup_error": null
+  },
+  "timing": {
+    "agent_seconds": 99.58321708400035,
+    "sandbox_overhead_seconds": 7.555353375000777,
+    "checker_seconds": 28.56338929100093,
+    "total_seconds": 142.2897675839995
+  },
+  "tokens": {
+    "input": 109156,
+    "cached_input": 82688,
+    "output": 4243,
+    "reasoning": 1400,
+    "total": null,
+    "cache_write_input": 0
+  },
+  "checker": {
+    "passed": 132,
+    "failed": 0,
+    "total": 132,
+    "pass_rate": 1.0
+  },
+  "correction_sha256": "316f0a564b9f48f30a9fa9ea2d6452021081b2904e145120aa8944475ae64456",
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
+}

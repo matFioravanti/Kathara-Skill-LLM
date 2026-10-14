@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 99.58321708400035,
+  "sandbox_overhead_seconds": 7.555353375000777,
+  "final_message": "- Ruoli: `pc2` root autoritativa, `pc5` autoritativa `test.`, `pc3` resolver ricorsivo; `pc4` e `pc6` usano `pc3`.\n- Creati i file BIND sotto `pc2`, `pc3`, `pc5`: delega/glue interni, root hints solo `100.0.6.2`, nessun forwarder né AAAA root.\n- Cambiate solo le immagini DNS in `kathara/bind`; routing, IP e topologia invariati.\n- Avvio di `named` e configurazione `resolv.conf` aggiunti in coda agli startup; `pc1` avvia HTTP su porta 80.\n- Controllo statico completato; `named-checkconf`/`named-checkzone` non disponibili nell’host. La verifica dinamica (`dig`/HTTP 200) va eseguita esternamente dopo `kathara lstart`.",
+  "usage": {
+    "input_tokens": 109156,
+    "cached_input_tokens": 82688,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4243,
+    "reasoning_output_tokens": 1400
+  },
+  "error": null
+}
