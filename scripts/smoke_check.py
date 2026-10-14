@@ -24,6 +24,14 @@ def main():
     from benchmark_core.scenario_loader import discover_scenarios
     from benchmark_core.prompts import resolve_prompt
     from benchmark_core.workspace import component_versions, create_workspace, logical_run_id, tree_hash, write_json
+    from benchmark_core.docker_sandbox_runner import (
+        EXPECTED_SBX_VERSION,
+        SandboxError,
+        SandboxDaemonError,
+        SandboxAuthError,
+        _unique_sandbox_name,
+        _parse_events as sandbox_parse_events,
+    )
 
     for module in ("kathara_lab_checker", "pandas", "yaml"):
         importlib.import_module(module)
@@ -36,6 +44,21 @@ def main():
     validate_agent("codex")
     validate_agent("antigravity")
     print("OK backend supportati")
+
+    # Verifica docker_sandbox_runner (nessuna chiamata sbx/LLM)
+    assert EXPECTED_SBX_VERSION == "0.48.0"
+    sbx_name = _unique_sandbox_name("lab00_five_router", 1)
+    assert sbx_name.startswith("kathara-"), f"Nome sandbox non valido: {sbx_name}"
+    assert len(sbx_name.split("-")[-1]) == 8, "Suffisso UUID non ha 8 caratteri"
+    names = {_unique_sandbox_name("lab", i) for i in range(5)}
+    assert len(names) == 5, "I nomi sandbox non sono univoci"
+    msg, usage = sandbox_parse_events(
+        json.dumps({"item": {"type": "agent_message", "text": "Smoke OK"}}) + "\n"
+    )
+    assert msg == "Smoke OK" and usage is None
+    assert issubclass(SandboxDaemonError, SandboxError)
+    assert issubclass(SandboxAuthError, SandboxError)
+    print("OK docker_sandbox_runner: importato, nomi univoci, parse eventi JSONL")
 
     print("OK dispatch AUT per entrambi gli agenti")
 

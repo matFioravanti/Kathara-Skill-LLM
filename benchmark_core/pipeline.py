@@ -57,7 +57,12 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "run_directory": str(run.relative_to(config.root / "runs")),
         "agent": agent, "agent_version": config.data["aut"]["version"], "model": config.model(),
         "reasoning_effort": config.reasoning_effort(),
-        "execution_backend": f"{agent}_cli",
+        "execution_backend": (
+            "docker_sandbox"
+            if config.data.get("docker_sandbox", {}).get("execution_backend") == "docker_sandbox"
+               and agent == "codex"
+            else f"{agent}_cli"
+        ),
         "authentication": "local_chatgpt_login" if agent == "codex" else "local_google_login",
         "api_key_used": False,
         "skill_protocol": "explicit_read_v1" if agent == "codex" else None,

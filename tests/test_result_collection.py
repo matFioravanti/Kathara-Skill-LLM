@@ -89,7 +89,8 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(metrics["available_skills"], ["kathara-creation", "kathara-dns"])
             self.assertEqual(metrics["forced_skills"], [])
             self.assertEqual(metrics["timing"], {
-                "agent_seconds": 4.25, "checker_seconds": 3.0, "total_seconds": 10.5,
+                "agent_seconds": 4.25, "sandbox_overhead_seconds": None,
+                "checker_seconds": 3.0, "total_seconds": 10.5,
             })
             self.assertEqual(metrics["tokens"]["input"], 30)
             self.assertIsNone(metrics["tokens"]["total"])

@@ -102,6 +102,18 @@ def _duration(path: Path, key: str) -> float | None:
     return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
 
 
+def _sandbox_meta(logs: Path) -> dict:
+    """Legge sandbox_metadata.json se presente; restituisce dict vuoto altrimenti."""
+    path = logs / "sandbox_metadata.json"
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
 def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
                  checker_seconds: float | None, checker_outcome: dict | None) -> dict:
     logs = run / "logs/aut"
@@ -113,6 +125,8 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     else:
         tokens = codex_usage(events)
     agent_seconds = _duration(logs / "result.json", "duration_seconds")
+    sandbox_overhead = _duration(logs / "result.json", "sandbox_overhead_seconds")
+    sandbox_meta = _sandbox_meta(logs)
     status = metadata.get("pipeline_state", metadata.get("status"))
     agent_success = metadata.get("aut_execution_success")
     correction_sha = metadata.get("correction_sha256")
@@ -138,8 +152,17 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "forced_skills": forced,
         "agent_success": agent_success,
         "status": status,
+        "execution_backend": metadata.get("execution_backend"),
+        "sandbox": {
+            "name": sandbox_meta.get("sandbox_name"),
+            "id": sandbox_meta.get("sandbox_id"),
+            "sbx_version": sandbox_meta.get("sbx_version"),
+            "cleanup_ok": sandbox_meta.get("cleanup_ok"),
+            "cleanup_error": sandbox_meta.get("cleanup_error"),
+        } if sandbox_meta else None,
         "timing": {
             "agent_seconds": agent_seconds,
+            "sandbox_overhead_seconds": sandbox_overhead,
             "checker_seconds": checker_seconds,
             "total_seconds": total_seconds,
         },

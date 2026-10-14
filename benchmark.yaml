@@ -14,6 +14,16 @@ aut:
 sandbox:
   image: python:3.14.6-bookworm
 
+# Docker Sandbox (sbx) backend — abilita isolamento per-run tramite sbx v0.48.0.
+# Imposta execution_backend: docker_sandbox per attivarlo.
+# Con execution_backend assente o diverso da "docker_sandbox" si usa il backend host (default).
+docker_sandbox:
+  execution_backend: docker_sandbox  # "docker_sandbox" | assente = host
+  sbx_version: "0.48.0"             # versione sbx attesa (corrisponde a EXPECTED_SBX_VERSION)
+  auto_start_daemon: true            # avvia sbx daemon se spento (sbx daemon start --detach)
+  daemon_wait_seconds: 30            # secondi di attesa dopo l'avvio automatico
+  cleanup_on_error: true             # elimina il sandbox anche in caso di errore (sempre true)
+
 checker:
   no_cache: true
   report_type: csv

@@ -12,6 +12,13 @@ from .inspect_adapter import create_inspect_eval_log
 from .skill_modes import execution_prompt, prepare_skill_workspace
 
 
+def _use_docker_sandbox(config) -> bool:
+    """True se il backend configurato e' docker_sandbox."""
+    return (
+        config.data.get("docker_sandbox", {}).get("execution_backend") == "docker_sandbox"
+    )
+
+
 def validate_aut_workspace_isolation(workspace: Path, config_root: Path):
     if workspace.is_relative_to(config_root):
         raise RuntimeError(f"AUT workspace {workspace} is still inside config root {config_root}")
@@ -47,15 +54,44 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                 skill_mode = skill_mode or "dns_only"
                 prepare_skill_workspace(temp_lab, config, skill_mode)
                 prompt = execution_prompt(skill_mode, original_prompt)
-                run_codex(
-                    prompt=prompt,
-                    workspace=temp_lab,
-                    logs=aut_logs,
-                    timeout=config.data["benchmark"]["timeout_seconds"],
-                    model=config.model(),
-                    reasoning_effort=config.reasoning_effort(),
-                    variant="aut",
-                )
+                if _use_docker_sandbox(config):
+                    from .docker_sandbox_runner import (
+                        _unique_sandbox_name,
+                        run_codex_in_sandbox,
+                    )
+                    # Ricava run_number dall'ultimo componente del path run (rNNN)
+                    try:
+                        run_number = int(run.name[1:])
+                    except (ValueError, IndexError):
+                        run_number = 1
+                    scenario_id = run.parents[2].name  # runs/<scenario>/<prompt>/<mode>/rNNN
+                    sandbox_name = _unique_sandbox_name(scenario_id, run_number)
+                    run_codex_in_sandbox(
+                        prompt=prompt,
+                        workspace=temp_lab,
+                        logs=aut_logs,
+                        timeout=config.data["benchmark"]["timeout_seconds"],
+                        model=config.model(),
+                        reasoning_effort=config.reasoning_effort(),
+                        variant="aut",
+                        sandbox_name=sandbox_name,
+                        auto_start_daemon=bool(
+                            config.data.get("docker_sandbox", {}).get("auto_start_daemon", True)
+                        ),
+                        daemon_wait_seconds=int(
+                            config.data.get("docker_sandbox", {}).get("daemon_wait_seconds", 30)
+                        ),
+                    )
+                else:
+                    run_codex(
+                        prompt=prompt,
+                        workspace=temp_lab,
+                        logs=aut_logs,
+                        timeout=config.data["benchmark"]["timeout_seconds"],
+                        model=config.model(),
+                        reasoning_effort=config.reasoning_effort(),
+                        variant="aut",
+                    )
             elif agent == "antigravity":
                 original_skill = config.path(config.data["aut"]["dns_skill"])
                 temp_skill_dir = Path(temp_dir) / "antigravity_skills"
@@ -67,7 +103,7 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                     f"Configura direttamente i file del laboratorio nella directory corrente {temp_lab}. "
                     f"Leggi e segui la skill DNS in {temp_skill}. Non produrre JSON di modifiche, non delegare a Python "
                     "la scrittura dei file e non generare correction.yaml. Non avviare Kathara: "
-                    "il laboratorio sarà avviato dal checker dopo questa chiamata.\n\n"
+                    "il laboratorio sara' avviato dal checker dopo questa chiamata.\n\n"
                     "REQUISITI ORIGINALI:\n" + original_prompt
                 )
                 run_antigravity(

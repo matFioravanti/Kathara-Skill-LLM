@@ -9,6 +9,13 @@ from .agent_factory import validate_agent
 from .correction_input import correction_path, validate_correction
 
 
+def _is_docker_sandbox_backend(config) -> bool:
+    """Restituisce True se execution_backend è 'docker_sandbox'."""
+    return (
+        config.data.get("docker_sandbox", {}).get("execution_backend") == "docker_sandbox"
+    )
+
+
 def parse_cli_version(output: str) -> str:
     match = re.search(r"(?:v)?(\d+\.\d+\.\d+(?:-\w+)?)", output)
     if not match:
@@ -52,6 +59,22 @@ def preflight(config, agent: str, skill_mode: str | None = None,
             )
 
     validate_agent(agent)
+
+    # --- Docker Sandbox preflight (quando il backend è docker_sandbox) ---
+    if agent == "codex" and _is_docker_sandbox_backend(config):
+        from .docker_sandbox_runner import preflight_docker_sandbox, SandboxError
+        ds_cfg = config.data.get("docker_sandbox", {})
+        expected_sbx_ver = ds_cfg.get("sbx_version", "0.48.0")
+        auto_start = bool(ds_cfg.get("auto_start_daemon", True))
+        daemon_wait = int(ds_cfg.get("daemon_wait_seconds", 30))
+        try:
+            preflight_docker_sandbox(
+                expected_sbx_version=expected_sbx_ver,
+                auto_start_daemon=auto_start,
+                daemon_wait_seconds=daemon_wait,
+            )
+        except SandboxError as exc:
+            raise RuntimeError(str(exc)) from exc
 
     # Prerequisiti comuni: Docker, Kathara, checker.
     common_commands = [
