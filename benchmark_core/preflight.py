@@ -66,12 +66,16 @@ def preflight(config, agent: str, skill_mode: str | None = None,
         ds_cfg = config.data.get("docker_sandbox", {})
         expected_sbx_ver = ds_cfg.get("sbx_version", "0.48.0")
         auto_start = bool(ds_cfg.get("auto_start_daemon", True))
+        auto_start_docker = bool(ds_cfg.get("auto_start_docker", True))
         daemon_wait = int(ds_cfg.get("daemon_wait_seconds", 30))
+        docker_wait = int(ds_cfg.get("docker_wait_seconds", 45))
         try:
             preflight_docker_sandbox(
                 expected_sbx_version=expected_sbx_ver,
                 auto_start_daemon=auto_start,
+                auto_start_docker=auto_start_docker,
                 daemon_wait_seconds=daemon_wait,
+                docker_wait_seconds=docker_wait,
             )
         except SandboxError as exc:
             raise RuntimeError(str(exc)) from exc
@@ -84,33 +88,44 @@ def preflight(config, agent: str, skill_mode: str | None = None,
     ]
 
     if agent == "codex":
-        from .codex_cli_runner import codex_environment
-        
-        expected_version = config.data.get("aut", {}).get("version")
-        if not expected_version:
-            raise RuntimeError("aut.version is missing from configuration.")
+        if _is_docker_sandbox_backend(config):
+            from .docker_sandbox_runner import sbx_check_sandbox_codex, SandboxError
+            ds_cfg = config.data.get("docker_sandbox", {})
+            expected_version = ds_cfg.get("codex_version") or config.data.get("aut", {}).get("version")
+            verify_in_sandbox = ds_cfg.get("verify_sandbox_codex", True)
+            if verify_in_sandbox:
+                try:
+                    sbx_check_sandbox_codex(expected_version=expected_version)
+                except SandboxError as exc:
+                    raise RuntimeError(str(exc)) from exc
+        else:
+            from .codex_cli_runner import codex_environment
             
-        codex = shutil.which("codex")
-        if not codex:
-            raise RuntimeError("Codex CLI non trovata nel PATH.")
+            expected_version = config.data.get("aut", {}).get("version")
+            if not expected_version:
+                raise RuntimeError("aut.version is missing from configuration.")
+                
+            codex = shutil.which("codex")
+            if not codex:
+                raise RuntimeError("Codex CLI non trovata nel PATH.")
+                
+            environment = codex_environment()
             
-        environment = codex_environment()
-        
-        version_result = subprocess.run([codex, "--version"], capture_output=True, text=True, timeout=30, env=environment)
-        if version_result.returncode:
-            raise RuntimeError(f"Prerequisito non disponibile: {codex} --version\n{version_result.stderr.strip()}")
-            
-        actual_version = parse_cli_version(version_result.stdout)
-        if actual_version != expected_version:
-            raise RuntimeError(
-                f"Codex CLI version mismatch:\n"
-                f"expected {expected_version}\n"
-                f"actual {actual_version}"
-            )
-            
-        login_result = subprocess.run([codex, "login", "status"], capture_output=True, text=True, timeout=30, env=environment)
-        if login_result.returncode:
-            raise RuntimeError("Codex CLI is not authenticated. Run `codex` or `codex login` manually and authenticate with ChatGPT.")
+            version_result = subprocess.run([codex, "--version"], capture_output=True, text=True, timeout=30, env=environment)
+            if version_result.returncode:
+                raise RuntimeError(f"Prerequisito non disponibile: {codex} --version\n{version_result.stderr.strip()}")
+                
+            actual_version = parse_cli_version(version_result.stdout)
+            if actual_version != expected_version:
+                raise RuntimeError(
+                    f"Codex CLI version mismatch:\n"
+                    f"expected {expected_version}\n"
+                    f"actual {actual_version}"
+                )
+                
+            login_result = subprocess.run([codex, "login", "status"], capture_output=True, text=True, timeout=30, env=environment)
+            if login_result.returncode:
+                raise RuntimeError("Codex CLI is not authenticated. Run `codex` or `codex login` manually and authenticate with ChatGPT.")
             
     elif agent == "antigravity":
         expected_version = config.data.get("aut", {}).get("version")

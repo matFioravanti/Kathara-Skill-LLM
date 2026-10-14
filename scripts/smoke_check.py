@@ -4,6 +4,7 @@ from pathlib import Path
 import ast
 import importlib
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -166,7 +167,8 @@ def main():
         assert len(log_obj.samples[0].events) == 1
 
         # Verifica con CLI inspect log dump
-        dump_proc = subprocess.run(["inspect", "log", "dump", "--header-only", str(eval_path)],
+        inspect_bin = shutil.which("inspect") or str(Path(sys.executable).parent / "inspect")
+        dump_proc = subprocess.run([inspect_bin, "log", "dump", "--header-only", str(eval_path)],
                                   capture_output=True, text=True)
         assert dump_proc.returncode == 0, f"inspect log dump fallito: {dump_proc.stderr}"
 

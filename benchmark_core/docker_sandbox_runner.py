@@ -1,10 +1,16 @@
 """Esegue Codex tramite Docker Sandboxes (sbx) con sandbox monouso per ogni run.
 
 Architettura:
-- Ogni run crea un sandbox Codex con nome univoco, --skills=off, accesso
-  esclusivo alla copia temporanea del laboratorio.
+- Ogni run crea un sandbox Codex con nome univoco tramite `sbx create`, --skills=off,
+  accesso esclusivo alla copia temporanea del laboratorio.
+- I file del laboratorio sono montati direttamente nel sandbox: le modifiche
+  vengono scritte istantaneamente sull'host senza necessita' di `sbx cp`.
+- La memoria interna di Codex viene esplicitamente disabilitata (`--disable memories`,
+  `-c memories=false`, `-c memories.use_memories=false`, `-c memories.generate_memories=false`,
+  `-c features.memories=false`).
 - Al termine (successo, errore, timeout, interruzione) il sandbox viene
-  eliminato con `sbx rm --force`.
+  eliminato con `sbx rm --force` (con retry). Se il cleanup fallisce, la run
+  fallisce con `SandboxCleanupError`.
 - Il Kathara Lab Checker rimane sull'host: non e' mai montato nel sandbox.
 - Nessun fallback silenzioso verso l'esecuzione host.
 """
@@ -12,8 +18,11 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
+import sys
+import tempfile
 import time
 import uuid
 from dataclasses import dataclass
@@ -24,10 +33,11 @@ from .workspace import write_json
 
 
 # ---------------------------------------------------------------------------
-# Versione attesa di sbx
+# Versioni attese
 # ---------------------------------------------------------------------------
 
 EXPECTED_SBX_VERSION = "0.48.0"
+DEFAULT_CODEX_SANDBOX_VERSION = "0.149.1"
 
 
 # ---------------------------------------------------------------------------
@@ -47,7 +57,7 @@ class SandboxAuthError(SandboxError):
 
 
 class SandboxCleanupError(SandboxError):
-    """Il sandbox non e' stato eliminato correttamente (non blocca la run)."""
+    """Il sandbox non e' stato eliminato correttamente (blocca la run come fallita)."""
 
 
 # ---------------------------------------------------------------------------
@@ -63,7 +73,7 @@ class SandboxRun:
     stdout: str
     stderr: str
     codex_duration_seconds: float   # Solo Codex; non include overhead sbx
-    sandbox_overhead_seconds: float # Creazione + copia + eliminazione
+    sandbox_overhead_seconds: float # Creazione + eliminazione
     timed_out: bool
     cleanup_ok: bool
     cleanup_error: str | None
@@ -73,7 +83,7 @@ class SandboxRun:
 
     @property
     def success(self) -> bool:
-        return not self.timed_out and self.returncode == 0
+        return not self.timed_out and self.returncode == 0 and self.cleanup_ok
 
 
 # ---------------------------------------------------------------------------
@@ -167,17 +177,96 @@ def sbx_check_auth() -> None:
         )
 
 
-def sbx_check_docker_engine() -> None:
-    """Verifica che Docker Engine sia raggiungibile."""
+def sbx_check_docker_engine(*, auto_start: bool = True, wait_seconds: int = 45) -> None:
+    """Verifica che Docker Engine sia raggiungibile. Se spento e auto_start=True tenta l'avvio su macOS."""
     docker = shutil.which("docker")
     if not docker:
         raise SandboxError("Docker CLI non trovata nel PATH.")
-    result = subprocess.run([docker, "info"], capture_output=True, text=True, timeout=30)
-    if result.returncode:
+    result = subprocess.run([docker, "info"], capture_output=True, text=True, timeout=15)
+    if result.returncode == 0:
+        return
+
+    if not auto_start or sys.platform != "darwin":
         raise SandboxError(
             f"Docker Engine non raggiungibile (`docker info` fallito):\n{result.stderr.strip()}\n"
             "Avvia Docker Desktop e riprova."
         )
+
+    # Tenta l'avvio automatico di Docker Desktop su macOS
+    try:
+        subprocess.run(["open", "-a", "Docker"], capture_output=True, text=True, timeout=15)
+    except Exception as exc:
+        raise SandboxError(f"Impossibile avviare Docker Desktop tramite 'open -a Docker': {exc}")
+
+    deadline = time.monotonic() + wait_seconds
+    while time.monotonic() < deadline:
+        time.sleep(2)
+        probe = subprocess.run([docker, "info"], capture_output=True, text=True, timeout=10)
+        if probe.returncode == 0:
+            return
+
+    raise SandboxError(
+        f"Docker Engine non e' diventato raggiungibile entro {wait_seconds}s dopo l'avvio automatico di Docker Desktop."
+    )
+
+
+def sbx_check_sandbox_codex(*, expected_version: str | None = None) -> str:
+    """Verifica versione e autenticazione di Codex all'interno di un sandbox reale.
+
+    Crea un probe temporaneo con `sbx create codex`, monta auth.json (se presente),
+    esegue `codex --version` e `codex login status`, quindi elimina il sandbox.
+    Non consuma token LLM.
+    """
+    exe = sbx_executable()
+    probe_name = f"sbx-preflight-{uuid.uuid4().hex[:8]}"
+    host_auth = Path.home() / ".codex" / "auth.json"
+
+    with tempfile.TemporaryDirectory(prefix="sbx-preflight-ws-") as tmpdir:
+        create_cmd = [exe, "create", "codex", tmpdir]
+        if host_auth.is_file():
+            create_cmd.append(f"{host_auth.resolve()}:ro")
+        create_cmd.extend(["--name", probe_name, "--skills", "off"])
+
+        create_res = subprocess.run(create_cmd, capture_output=True, text=True, timeout=60)
+        if create_res.returncode != 0:
+            raise SandboxError(
+                f"Impossibile creare probe sandbox per verifica Codex:\n{create_res.stderr.strip() or create_res.stdout.strip()}"
+            )
+
+        try:
+            if host_auth.is_file():
+                subprocess.run(
+                    [exe, "exec", probe_name, "ln", "-sf", str(host_auth.resolve()), "/home/agent/.codex/auth.json"],
+                    capture_output=True, text=True, timeout=15, check=False,
+                )
+
+            # 1. Verifica versione Codex nel sandbox
+            ver_res = subprocess.run([exe, "exec", probe_name, "codex", "--version"], capture_output=True, text=True, timeout=30)
+            if ver_res.returncode != 0:
+                raise SandboxError(f"Verifica versione Codex nel sandbox fallita: {ver_res.stderr.strip()}")
+
+            match = re.search(r"(?:v)?(\d+\.\d+\.\d+(?:-\w+)?)", ver_res.stdout)
+            if not match:
+                raise SandboxError(f"Impossibile estrarre versione valida da output Codex sandbox: {ver_res.stdout!r}")
+            actual_ver = match.group(1)
+
+            if expected_version and actual_ver != expected_version:
+                raise SandboxError(
+                    f"Codex Sandbox version mismatch:\n"
+                    f"  attesa:   {expected_version}\n"
+                    f"  rilevata: {actual_ver}"
+                )
+
+            # 2. Verifica login status nel sandbox
+            login_res = subprocess.run([exe, "exec", probe_name, "codex", "login", "status"], capture_output=True, text=True, timeout=30)
+            if login_res.returncode != 0:
+                raise SandboxAuthError(
+                    "Codex non risulta autenticato all'interno del sandbox (`codex login status` fallito).\n"
+                    "Verifica che `~/.codex/auth.json` sia presente e valido sull'host oppure configura `sbx secret set openai`."
+                )
+            return actual_ver
+        finally:
+            _sbx_rm(probe_name)
 
 
 # ---------------------------------------------------------------------------
@@ -193,20 +282,25 @@ def _unique_sandbox_name(scenario_id: str, run_number: int) -> str:
 
 
 def _sbx_rm(sandbox_name: str, *, timeout: int = 30) -> tuple[bool, str | None]:
-    """Elimina il sandbox. Restituisce (ok, error_message)."""
+    """Elimina il sandbox con fino a 2 tentativi in caso di fallimento. Restituisce (ok, error_message)."""
     exe = sbx_executable()
-    try:
-        result = subprocess.run(
-            [exe, "rm", "--force", sandbox_name],
-            capture_output=True, text=True, timeout=timeout
-        )
-        if result.returncode:
-            return False, result.stderr.strip() or result.stdout.strip()
-        return True, None
-    except subprocess.TimeoutExpired:
-        return False, f"sbx rm --force {sandbox_name} scaduto dopo {timeout}s"
-    except Exception as exc:  # pragma: no cover
-        return False, str(exc)
+    last_err: str | None = None
+    for attempt in range(2):
+        try:
+            result = subprocess.run(
+                [exe, "rm", "--force", sandbox_name],
+                capture_output=True, text=True, timeout=timeout
+            )
+            if result.returncode == 0:
+                return True, None
+            last_err = result.stderr.strip() or result.stdout.strip()
+        except subprocess.TimeoutExpired:
+            last_err = f"sbx rm --force {sandbox_name} scaduto dopo {timeout}s"
+        except Exception as exc:  # pragma: no cover
+            last_err = str(exc)
+        if attempt == 0:
+            time.sleep(1)
+    return False, last_err
 
 
 # ---------------------------------------------------------------------------
@@ -246,11 +340,13 @@ def run_codex_in_sandbox(
     auto_start_daemon: bool = True,
     daemon_wait_seconds: int = 30,
 ) -> SandboxRun:
-    """Crea un sandbox Codex monouso, esegue il prompt, recupera i risultati, elimina il sandbox.
+    """Crea un sandbox Codex monouso, esegue il prompt, raccoglie i risultati ed elimina il sandbox.
 
-    Il Kathara Lab Checker NON viene montato nel sandbox.
-    workspace e' la temp_lab preparata dall'host (con .codex/skills inclusi).
-    Al termine i file modificati vengono copiati dal sandbox sull'host workspace.
+    - Usa `sbx create codex <workspace>` per creare il sandbox senza sessione interattiva.
+    - Il workspace host e' montato direttamente (bind mount): le modifiche sono subito su disco host.
+    - La memoria interna di Codex e' esplicitamente disabilitata per isolamento totale.
+    - Il Kathara Lab Checker NON viene montato nel sandbox.
+    - Cleanup garantito tramite try/finally. Un cleanup fallito genera SandboxCleanupError.
     """
     if not workspace.is_dir():
         raise SandboxError(f"Workspace non trovato: {workspace}")
@@ -265,19 +361,23 @@ def run_codex_in_sandbox(
 
     overhead_times: list[float] = []
     sandbox_id: str | None = None
+    host_auth = Path.home() / ".codex" / "auth.json"
 
     # ------------------------------------------------------------------
     # 1. Crea sandbox Codex con nome univoco e --skills=off
-    #    sbx run codex --detach --name <name> --skills off <workspace>
+    #    sbx create codex <workspace> [auth.json:ro] --name <name> --skills off
     # ------------------------------------------------------------------
     create_start = time.monotonic()
     create_cmd = [
-        exe, "run", "codex",
-        "--detach",
-        "--name", sandbox_name,
-        "--skills", "off",
+        exe, "create", "codex",
         str(workspace.resolve()),
     ]
+    if host_auth.is_file():
+        create_cmd.append(f"{host_auth.resolve()}:ro")
+    create_cmd.extend([
+        "--name", sandbox_name,
+        "--skills", "off",
+    ])
     create_result = subprocess.run(create_cmd, capture_output=True, text=True, timeout=120)
     overhead_times.append(time.monotonic() - create_start)
 
@@ -286,9 +386,16 @@ def run_codex_in_sandbox(
         raise SandboxError(
             f"Impossibile creare il sandbox {sandbox_name!r}:\n{stderr}"
         )
-    # L'ID e' sull'ultima riga non vuota dell'output
+    # L'ID/nome e' presente nell'output di creazione
     lines = [ln.strip() for ln in create_result.stdout.strip().splitlines() if ln.strip()]
     sandbox_id = lines[-1] if lines else None
+
+    # Se auth.json e' montato, linka in /home/agent/.codex/auth.json
+    if host_auth.is_file():
+        subprocess.run(
+            [exe, "exec", sandbox_name, "ln", "-sf", str(host_auth.resolve()), "/home/agent/.codex/auth.json"],
+            capture_output=True, text=True, timeout=15, check=False,
+        )
 
     # ------------------------------------------------------------------
     # Cleanup garantito tramite try/finally
@@ -307,15 +414,20 @@ def run_codex_in_sandbox(
     try:
         # --------------------------------------------------------------
         # 2. Esegui Codex non-interattivamente nel sandbox via sbx exec
-        #    sbx exec -i <name> codex exec --json --ephemeral -C /workspace -
+        #    sbx exec -w <workspace> -i <name> codex exec --json --ephemeral ... -C <workspace> -
         # --------------------------------------------------------------
         codex_args: list[str] = [
             "codex", "exec",
             "--json",
             "--ephemeral",
+            "--disable", "memories",
+            "-c", "memories=false",
+            "-c", "memories.use_memories=false",
+            "-c", "memories.generate_memories=false",
+            "-c", "features.memories=false",
             "--sandbox", "workspace-write",
             "--skip-git-repo-check",
-            "-C", "/workspace",
+            "-C", str(workspace.resolve()),
         ]
         if model:
             codex_args += ["--model", model]
@@ -323,9 +435,9 @@ def run_codex_in_sandbox(
             codex_args += ["-c", f'model_reasoning_effort="{reasoning_effort}"']
         codex_args.append("-")
 
-        full_command = tuple([exe, "exec", "-i", sandbox_name] + codex_args)
+        full_command = tuple([exe, "exec", "-w", str(workspace.resolve()), "-i", sandbox_name] + codex_args)
 
-        # Impedisce selezione via API key; forza login locale ChatGPT
+        # Impedisce selezione via API key; preserva login locale ChatGPT
         env = os.environ.copy()
         env.pop("OPENAI_API_KEY", None)
         env.pop("CODEX_API_KEY", None)
@@ -355,30 +467,16 @@ def run_codex_in_sandbox(
 
         final_message, usage = _parse_events(codex_stdout)
 
-        # --------------------------------------------------------------
-        # 3. Copia i file modificati dal sandbox verso l'host
-        #    sbx cp <name>:/workspace/. <workspace>/
-        # --------------------------------------------------------------
-        copy_out_start = time.monotonic()
-        copy_out = subprocess.run(
-            [exe, "cp", f"{sandbox_name}:/workspace/.", str(workspace.resolve()) + "/"],
-            capture_output=True, text=True, timeout=120,
-        )
-        overhead_times.append(time.monotonic() - copy_out_start)
-        if copy_out.returncode:
-            # Non blocca la run, ma segnala il warning nello stderr
-            codex_stderr += f"\n[sbx cp out warning] {copy_out.stderr.strip()}\n"
-
     finally:
         # --------------------------------------------------------------
-        # 4. Elimina sandbox (sempre: successo, errore, timeout, Ctrl-C)
+        # 3. Elimina sandbox (sempre: successo, errore, timeout, Ctrl-C)
         # --------------------------------------------------------------
         rm_start = time.monotonic()
         rm_ok, rm_err = _sbx_rm(sandbox_name)
         overhead_times.append(time.monotonic() - rm_start)
 
     # ------------------------------------------------------------------
-    # 5. Persisti artefatti di log
+    # 4. Persisti artefatti di log
     # ------------------------------------------------------------------
     (logs / "events.jsonl").write_text(codex_stdout, encoding="utf-8")
     (logs / "stderr.log").write_text(codex_stderr, encoding="utf-8")
@@ -435,10 +533,16 @@ def run_codex_in_sandbox(
         sbx_version=detected_version,
     )
 
-    if not result.success:
+    if codex_returncode != 0 or timed_out:
         detail = codex_stderr.strip() or "nessun dettaglio in stderr"
+        if not rm_ok:
+            detail += f" (Inoltre cleanup sandbox fallito: {rm_err})"
         raise SandboxError(
             f"Codex in Docker Sandbox fallito (exit {codex_returncode}): {detail}"
+        )
+    if not rm_ok:
+        raise SandboxCleanupError(
+            f"Cleanup del sandbox {sandbox_name} fallito: {rm_err}"
         )
     return result
 
@@ -450,7 +554,9 @@ def run_codex_in_sandbox(
 def preflight_docker_sandbox(
     *,
     auto_start_daemon: bool = True,
+    auto_start_docker: bool = True,
     daemon_wait_seconds: int = 30,
+    docker_wait_seconds: int = 45,
     expected_sbx_version: str = EXPECTED_SBX_VERSION,
 ) -> str:
     """Verifica e prepara l'ambiente Docker Sandbox.
@@ -458,7 +564,7 @@ def preflight_docker_sandbox(
     Controlla:
     1. sbx nel PATH
     2. Versione sbx == expected_sbx_version
-    3. Docker Engine raggiungibile
+    3. Docker Engine raggiungibile (tenta avvio Docker Desktop se auto_start_docker)
     4. Daemon sbx in esecuzione (avvia automaticamente se auto_start_daemon)
     5. Autenticazione Docker / sbx
 
@@ -476,9 +582,12 @@ def preflight_docker_sandbox(
             "Aggiorna o specifica la versione corretta in docker_sandbox.sbx_version."
         )
 
-    sbx_check_docker_engine()  # 3. Docker Engine
+    sbx_check_docker_engine(  # 3. Docker Engine
+        auto_start=auto_start_docker,
+        wait_seconds=docker_wait_seconds,
+    )
 
-    sbx_daemon_ensure_running(           # 4. Daemon
+    sbx_daemon_ensure_running(  # 4. Daemon
         auto_start=auto_start_daemon,
         wait_seconds=daemon_wait_seconds,
     )

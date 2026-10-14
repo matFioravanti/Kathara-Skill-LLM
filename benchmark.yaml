@@ -20,9 +20,13 @@ sandbox:
 docker_sandbox:
   execution_backend: docker_sandbox  # "docker_sandbox" | assente = host
   sbx_version: "0.48.0"             # versione sbx attesa (corrisponde a EXPECTED_SBX_VERSION)
+  codex_version: "0.149.1"          # versione codex nel template sandbox sbx
   auto_start_daemon: true            # avvia sbx daemon se spento (sbx daemon start --detach)
-  daemon_wait_seconds: 30            # secondi di attesa dopo l'avvio automatico
+  auto_start_docker: true            # avvia Docker Desktop se spento (open -a Docker su macOS)
+  daemon_wait_seconds: 30            # secondi di attesa dopo l'avvio automatico daemon
+  docker_wait_seconds: 45            # secondi di attesa dopo l'avvio automatico Docker Desktop
   cleanup_on_error: true             # elimina il sandbox anche in caso di errore (sempre true)
+  verify_sandbox_codex: true         # verifica versione e login di Codex dentro il sandbox in preflight
 
 checker:
   no_cache: true
