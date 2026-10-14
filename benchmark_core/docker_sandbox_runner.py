@@ -95,6 +95,8 @@ class SandboxRun:
     usage: dict[str, Any] | None
     sbx_version: str | None
     codex_version: str | None = None
+    codex_host_version: str | None = None
+    codex_sandbox_version: str | None = None
 
     @property
     def success(self) -> bool:
@@ -311,6 +313,46 @@ def sbx_check_network_policy(sandbox_name: str) -> None:
             )
 
 
+def sbx_get_sandbox_id(sandbox_name: str) -> str | None:
+    """Recupera l'ID reale (UUID) del sandbox tramite comandi sbx (es. `sbx ls --json`).
+
+    Se non disponibile, non trovato o se il valore e' un messaggio testuale,
+    restituisce None (salvato come null in JSON). Non usa mai stringhe del tipo '✓ Created sandbox ...'.
+    """
+    try:
+        exe = sbx_executable()
+        res = subprocess.run([exe, "ls", "--json"], capture_output=True, text=True, timeout=15)
+        if res.returncode == 0 and res.stdout.strip():
+            items = json.loads(res.stdout)
+            if isinstance(items, list):
+                for item in items:
+                    if isinstance(item, dict) and item.get("name") == sandbox_name:
+                        cand_id = item.get("id")
+                        if isinstance(cand_id, str):
+                            cand_id = cand_id.strip()
+                            if cand_id and not cand_id.startswith("✓") and "created" not in cand_id.lower():
+                                return cand_id
+    except Exception:
+        pass
+    return None
+
+
+def sbx_host_codex_version() -> str | None:
+    """Rileva la versione di Codex installata sull'host, se disponibile."""
+    codex_exe = shutil.which("codex")
+    if not codex_exe or not Path(codex_exe).name.startswith("codex"):
+        return None
+    try:
+        res = subprocess.run([codex_exe, "--version"], capture_output=True, text=True, timeout=10)
+        if res.returncode == 0:
+            match = re.search(r"(?:v)?(\d+\.\d+\.\d+(?:-\w+)?)", res.stdout)
+            if match:
+                return match.group(1)
+    except Exception:
+        pass
+    return None
+
+
 def sbx_check_sandbox_codex(*, expected_version: str | None = None) -> str:
     """Verifica versione, memoria e autenticazione di Codex all'interno di un sandbox reale.
 
@@ -452,6 +494,7 @@ def run_codex_in_sandbox(
     reasoning_effort: str | None,
     variant: str,
     sandbox_name: str,
+    codex_host_version: str | None = None,
     auto_start_daemon: bool = True,
     daemon_wait_seconds: int = 30,
 ) -> SandboxRun:
@@ -472,6 +515,7 @@ def run_codex_in_sandbox(
     exe = sbx_executable()
     detected_sbx_version: str | None = None
     detected_codex_version: str | None = None
+    detected_codex_host_version: str | None = codex_host_version or sbx_host_codex_version()
     try:
         detected_sbx_version = sbx_version()
     except SandboxError:
@@ -514,8 +558,8 @@ def run_codex_in_sandbox(
             raise SandboxError(
                 f"Impossibile creare il sandbox {sandbox_name!r}:\n{stderr}"
             )
-        lines = [ln.strip() for ln in create_result.stdout.strip().splitlines() if ln.strip()]
-        sandbox_id = lines[-1] if lines else None
+        # Recupera ID reale tramite sbx ls --json; se non disponibile, salva None/null (mai il messaggio di creazione)
+        sandbox_id = sbx_get_sandbox_id(sandbox_name)
 
         # 2. Leggi versione Codex effettiva all'interno del sandbox
         ver_proc = subprocess.run([exe, "exec", sandbox_name, "codex", "--version"], capture_output=True, text=True, timeout=30)
@@ -593,12 +637,22 @@ def run_codex_in_sandbox(
 
         sandbox_overhead = sum(overhead_times)
 
-        # Persisti SEMPRE gli artefatti di log e metadati
+        # Persisti SEMPRE gli artefatti di log e metadati senza nascondere silenziosamente errori
+        log_errors: list[str] = []
         try:
             (logs / "events.jsonl").write_text(codex_stdout, encoding="utf-8")
+        except Exception as exc:
+            log_errors.append(f"events.jsonl: {exc}")
+        try:
             (logs / "stderr.log").write_text(codex_stderr, encoding="utf-8")
+        except Exception as exc:
+            log_errors.append(f"stderr.log: {exc}")
+        try:
             (logs / "prompt_sent.md").write_text(prompt, encoding="utf-8")
+        except Exception as exc:
+            log_errors.append(f"prompt_sent.md: {exc}")
 
+        try:
             write_json(logs / "invocation.json", {
                 "command": list(full_command),
                 "cwd": str(workspace.resolve()),
@@ -611,8 +665,13 @@ def run_codex_in_sandbox(
                 "sandbox_name": sandbox_name,
                 "sandbox_id": sandbox_id,
                 "sbx_version": detected_sbx_version,
+                "codex_host_version": detected_codex_host_version,
                 "codex_sandbox_version": detected_codex_version,
             })
+        except Exception as exc:
+            log_errors.append(f"invocation.json: {exc}")
+
+        try:
             write_json(logs / "result.json", {
                 "returncode": codex_returncode,
                 "timed_out": timed_out,
@@ -622,10 +681,15 @@ def run_codex_in_sandbox(
                 "usage": usage,
                 "error": str(infra_error) if infra_error else None,
             })
+        except Exception as exc:
+            log_errors.append(f"result.json: {exc}")
+
+        try:
             write_json(logs / "sandbox_metadata.json", {
                 "sandbox_name": sandbox_name,
                 "sandbox_id": sandbox_id,
                 "sbx_version": detected_sbx_version,
+                "codex_host_version": detected_codex_host_version,
                 "codex_sandbox_version": detected_codex_version,
                 "execution_backend": "docker_sandbox",
                 "cleanup_ok": rm_ok,
@@ -634,8 +698,11 @@ def run_codex_in_sandbox(
                 "codex_duration_seconds": codex_duration,
                 "error": str(infra_error) if infra_error else None,
             })
-        except Exception:
-            pass
+        except Exception as exc:
+            log_errors.append(f"sandbox_metadata.json: {exc}")
+
+        if log_errors:
+            print(f"Avviso scrittura log sandbox in {logs}: {'; '.join(log_errors)}", file=sys.stderr)
 
     result = SandboxRun(
         sandbox_name=sandbox_name,
@@ -653,12 +720,18 @@ def run_codex_in_sandbox(
         usage=usage,
         sbx_version=detected_sbx_version,
         codex_version=detected_codex_version,
+        codex_host_version=detected_codex_host_version,
+        codex_sandbox_version=detected_codex_version,
     )
 
     if codex_returncode != 0 or timed_out:
         detail = codex_stderr.strip() or "nessun dettaglio in stderr"
         if not rm_ok:
             detail += f" (Inoltre cleanup sandbox fallito: {rm_err})"
+        if infra_error:
+            raise SandboxExecutionError(
+                f"Codex in Docker Sandbox fallito (exit {codex_returncode}): {detail}"
+            ) from infra_error
         raise SandboxExecutionError(
             f"Codex in Docker Sandbox fallito (exit {codex_returncode}): {detail}"
         )

@@ -75,6 +75,7 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                         reasoning_effort=config.reasoning_effort(),
                         variant="aut",
                         sandbox_name=sandbox_name,
+                        codex_host_version=config.data.get("aut", {}).get("version"),
                         auto_start_daemon=bool(
                             config.data.get("docker_sandbox", {}).get("auto_start_daemon", True)
                         ),
@@ -129,12 +130,17 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                 shutil.rmtree(persistent_lab)
             staging_lab.rename(persistent_lab)
 
-    # Step di telemetria Inspect AI: crea il log .eval nativo senza alterare l'esito dell'AUT
-    eval_log_path = create_inspect_eval_log(
-        logs=aut_logs,
-        run_id=run_id or run.name,
-        prompt=prompt,
-        agent=agent,
-        model=config.model(),
-    )
-    return eval_log_path or (aut_logs / "events.jsonl")
+            # Step di telemetria Inspect AI: garantito anche in caso di errore
+            try:
+                create_inspect_eval_log(
+                    logs=aut_logs,
+                    run_id=run_id or run.name,
+                    prompt=prompt,
+                    agent=agent,
+                    model=config.model(),
+                )
+            except Exception as exc:
+                print(f"Avviso telemetria Inspect su {run_id or run.name}: {exc}", file=sys.stderr)
+
+    eval_path = aut_logs / f"{run_id or run.name}.eval"
+    return eval_path if eval_path.exists() else (aut_logs / "events.jsonl")

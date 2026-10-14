@@ -43,7 +43,7 @@ class ResultCollectionTest(unittest.TestCase):
             with self.subTest(description=description):
                 self.assertEqual(_check_category(description), expected)
 
-    def test_usage_uses_only_the_last_turn_completed_and_does_not_infer_total(self):
+    def test_usage_uses_only_the_last_turn_completed_and_distinguishes_totals(self):
         events = [
             codex_event("turn.completed", usage={"input_tokens": 12, "output_tokens": 3}),
             codex_event("turn.completed", usage={
@@ -53,7 +53,8 @@ class ResultCollectionTest(unittest.TestCase):
         ]
         self.assertEqual(codex_usage(events), {
             "input": 100, "cached_input": 80, "cache_write_input": 2,
-            "output": 25, "reasoning": 7, "total": None,
+            "output": 25, "reasoning": 7, "total": 125,
+            "total_reported": None, "total_calculated": 125,
         })
         self.assertIsNone(codex_usage([])["input"])
 
@@ -93,7 +94,9 @@ class ResultCollectionTest(unittest.TestCase):
                 "checker_seconds": 3.0, "total_seconds": 10.5,
             })
             self.assertEqual(metrics["tokens"]["input"], 30)
-            self.assertIsNone(metrics["tokens"]["total"])
+            self.assertEqual(metrics["tokens"]["total"], 38)
+            self.assertIsNone(metrics["tokens"]["total_reported"])
+            self.assertEqual(metrics["tokens"]["total_calculated"], 38)
             self.assertEqual(metrics["checker"]["pass_rate"], 0.8)
 
 

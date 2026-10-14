@@ -48,9 +48,17 @@ def create_inspect_eval_log(
         stderr_path = logs / "stderr.log"
 
         if not result_path.exists():
-            return None
+            result = {
+                "returncode": 1,
+                "timed_out": False,
+                "duration_seconds": 0.0,
+                "final_message": "",
+                "usage": {},
+                "error": "result.json non presente",
+            }
+        else:
+            result = json.loads(result_path.read_text(encoding="utf-8"))
 
-        result = json.loads(result_path.read_text(encoding="utf-8"))
         invocation = json.loads(invocation_path.read_text(encoding="utf-8")) if invocation_path.exists() else {}
 
         raw_model = model or invocation.get("model") or "unknown"
@@ -60,7 +68,7 @@ def create_inspect_eval_log(
         returncode = result.get("returncode", 0)
         timed_out = result.get("timed_out", False)
         duration = float(result.get("duration_seconds", 0.0) or 0.0)
-        status = "success" if returncode == 0 and not timed_out else "error"
+        status = "success" if returncode == 0 and not timed_out and not result.get("error") else "error"
         final_message = result.get("final_message", "") or ""
 
         usage = result.get("usage") or {}
@@ -75,8 +83,8 @@ def create_inspect_eval_log(
             output_tokens = usage.get("output_tokens")
             reasoning_tokens = usage.get("reasoning_output_tokens")
             input_tokens_cache_read = usage.get("cached_input_tokens")
-            total_tokens = None
-            if isinstance(input_tokens, int) and isinstance(output_tokens, int):
+            total_tokens = usage.get("total_tokens")
+            if total_tokens is None and isinstance(input_tokens, int) and isinstance(output_tokens, int):
                 total_tokens = input_tokens + output_tokens
 
         model_usage = ModelUsage(
@@ -86,7 +94,7 @@ def create_inspect_eval_log(
             reasoning_tokens=reasoning_tokens or 0,
             input_tokens_cache_read=input_tokens_cache_read or 0,
             input_tokens_cache_write=0,
-            total_cost=0.0,
+            total_cost=None,  # costo monetario non disponibile se non misurabile
         )
 
         tool_events = []
@@ -144,9 +152,21 @@ def create_inspect_eval_log(
             tool_events = list(seen_tools.values())
 
         stderr_content = stderr_path.read_text(encoding="utf-8") if stderr_path.exists() else ""
+        error_msg = result.get("error") or stderr_content.strip()
         error_obj = None
-        if status != "success" and stderr_content.strip():
-            error_obj = EvalError(message=stderr_content.strip()[:1000])
+        if status != "success" and error_msg:
+            tb = stderr_content.strip() or str(error_msg)
+            error_obj = EvalError(
+                message=str(error_msg)[:1000],
+                traceback=tb[:4000],
+                traceback_ansi=tb[:4000],
+            )
+
+        auth_mode = invocation.get("authentication")
+        if not auth_mode:
+            auth_mode = "sbx_oauth_proxy" if invocation.get("execution_backend") == "docker_sandbox" else (
+                "local_chatgpt_login" if agent == "codex" else "local_google_login"
+            )
 
         eval_spec = EvalSpec(
             eval_id=run_id,
@@ -159,7 +179,11 @@ def create_inspect_eval_log(
             metadata={
                 "agent": agent,
                 "execution_backend": invocation.get("execution_backend", f"{agent}_cli"),
+                "authentication": auth_mode,
                 "reasoning_effort": invocation.get("reasoning_effort"),
+                "codex_host_version": invocation.get("codex_host_version"),
+                "codex_sandbox_version": invocation.get("codex_sandbox_version"),
+                "sbx_version": invocation.get("sbx_version"),
             },
         )
 

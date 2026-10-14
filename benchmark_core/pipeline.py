@@ -55,7 +55,9 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "replicate": replicate if replicate is not None else run_number,
         "scenario_id": scenario.scenario_id, "prompt_type": prompt_type, "repetition": run_number,
         "run_directory": str(run.relative_to(config.root / "runs")),
-        "agent": agent, "agent_version": config.data["aut"]["version"], "model": config.model(),
+        "agent": agent, "agent_version": config.data["aut"]["version"],
+        "codex_host_version": config.data["aut"]["version"] if agent == "codex" else None,
+        "model": config.model(),
         "reasoning_effort": config.reasoning_effort(),
         "execution_backend": (
             "docker_sandbox"
@@ -63,7 +65,12 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
                and agent == "codex"
             else f"{agent}_cli"
         ),
-        "authentication": "local_chatgpt_login" if agent == "codex" else "local_google_login",
+        "authentication": (
+            "sbx_oauth_proxy"
+            if config.data.get("docker_sandbox", {}).get("execution_backend") == "docker_sandbox"
+               and agent == "codex"
+            else ("local_chatgpt_login" if agent == "codex" else "local_google_login")
+        ),
         "api_key_used": False,
         "skill_protocol": "explicit_read_v1" if agent == "codex" else None,
         "skill_mode": skill_mode,
@@ -153,6 +160,8 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
                     if isinstance(_sbx_meta, dict):
                         manifest["codex_sandbox_version"] = _sbx_meta.get("codex_sandbox_version")
                         manifest["sbx_version"] = _sbx_meta.get("sbx_version")
+                        if _sbx_meta.get("codex_host_version"):
+                            manifest["codex_host_version"] = _sbx_meta.get("codex_host_version")
                 except Exception:
                     pass
             # Anche un AUT interrotto può aver modificato file: conserva il diff parziale.

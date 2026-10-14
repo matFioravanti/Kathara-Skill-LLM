@@ -23,7 +23,9 @@ def load_jsonl(path: Path) -> list[dict]:
 def codex_usage(events: list[dict]) -> dict:
     """Il runner supporta turn.completed.usage; l'ultimo usage è il totale finale.
 
-    Non somma turni completati e non ricava total_tokens dai componenti.
+    Rende coerente il conteggio dei token tra JSON, CSV, Excel e Inspect:
+    - Distingue il totale riportato dal modello da quello calcolato
+    - Non duplica i reasoning token (i reasoning token sono già un sottoinsieme di output_tokens)
     """
     final_usage = None
     for event in events:
@@ -32,15 +34,30 @@ def codex_usage(events: list[dict]) -> dict:
     if final_usage is None:
         return {
             "input": None, "cached_input": None, "output": None,
-            "reasoning": None, "total": None, "cache_write_input": None,
+            "reasoning": None, "total": None, "total_reported": None,
+            "total_calculated": None, "cache_write_input": None,
         }
+    input_tokens = _token_value(final_usage.get("input_tokens"))
+    cached_input = _token_value(final_usage.get("cached_input_tokens"))
+    output_tokens = _token_value(final_usage.get("output_tokens"))
+    reasoning_tokens = _token_value(final_usage.get("reasoning_output_tokens"))
+    total_reported = _token_value(final_usage.get("total_tokens"))
+    cache_write = _token_value(final_usage.get("cache_write_input_tokens"))
+    total_calculated = (
+        input_tokens + output_tokens
+        if (input_tokens is not None and output_tokens is not None)
+        else None
+    )
+    total = total_reported if total_reported is not None else total_calculated
     return {
-        "input": _token_value(final_usage.get("input_tokens")),
-        "cached_input": _token_value(final_usage.get("cached_input_tokens")),
-        "output": _token_value(final_usage.get("output_tokens")),
-        "reasoning": _token_value(final_usage.get("reasoning_output_tokens")),
-        "total": _token_value(final_usage.get("total_tokens")),
-        "cache_write_input": _token_value(final_usage.get("cache_write_input_tokens")),
+        "input": input_tokens,
+        "cached_input": cached_input,
+        "output": output_tokens,
+        "reasoning": reasoning_tokens,
+        "total": total,
+        "total_reported": total_reported,
+        "total_calculated": total_calculated,
+        "cache_write_input": cache_write,
     }
 
 
@@ -53,13 +70,27 @@ def antigravity_usage(events: list[dict]) -> dict:
                 final_usage = usage
     if final_usage is None:
         return codex_usage([])
+    input_tokens = _token_value(final_usage.get("input_tokens"))
+    cached_input = _token_value(final_usage.get("cache_read_tokens"))
+    output_tokens = _token_value(final_usage.get("output_tokens"))
+    reasoning_tokens = _token_value(final_usage.get("thinking_tokens"))
+    total_reported = _token_value(final_usage.get("total_tokens"))
+    cache_write = _token_value(final_usage.get("cache_write_tokens"))
+    total_calculated = (
+        input_tokens + output_tokens
+        if (input_tokens is not None and output_tokens is not None)
+        else None
+    )
+    total = total_reported if total_reported is not None else total_calculated
     return {
-        "input": _token_value(final_usage.get("input_tokens")),
-        "cached_input": _token_value(final_usage.get("cache_read_tokens")),
-        "output": _token_value(final_usage.get("output_tokens")),
-        "reasoning": _token_value(final_usage.get("thinking_tokens")),
-        "total": _token_value(final_usage.get("total_tokens")),
-        "cache_write_input": _token_value(final_usage.get("cache_write_tokens")),
+        "input": input_tokens,
+        "cached_input": cached_input,
+        "output": output_tokens,
+        "reasoning": reasoning_tokens,
+        "total": total,
+        "total_reported": total_reported,
+        "total_calculated": total_calculated,
+        "cache_write_input": cache_write,
     }
 
 
@@ -153,10 +184,16 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         "agent_success": agent_success,
         "status": status,
         "execution_backend": metadata.get("execution_backend"),
+        "authentication": metadata.get("authentication") or (
+            "sbx_oauth_proxy" if metadata.get("execution_backend") == "docker_sandbox" else None
+        ),
+        "codex_host_version": metadata.get("codex_host_version") or sandbox_meta.get("codex_host_version"),
+        "codex_sandbox_version": metadata.get("codex_sandbox_version") or sandbox_meta.get("codex_sandbox_version"),
         "sandbox": {
             "name": sandbox_meta.get("sandbox_name"),
             "id": sandbox_meta.get("sandbox_id"),
             "sbx_version": sandbox_meta.get("sbx_version"),
+            "codex_host_version": sandbox_meta.get("codex_host_version"),
             "codex_sandbox_version": sandbox_meta.get("codex_sandbox_version"),
             "cleanup_ok": sandbox_meta.get("cleanup_ok"),
             "cleanup_error": sandbox_meta.get("cleanup_error"),
