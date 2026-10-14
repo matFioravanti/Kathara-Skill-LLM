@@ -145,6 +145,16 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
                 manifest["prompt_sent_sha256"] = hashlib.sha256(
                     _prompt_sent_path.read_bytes()
                 ).hexdigest()
+            # Leggi metadati sandbox (es. codex_sandbox_version) se presenti
+            _sbx_meta_path = run / "logs/aut/sandbox_metadata.json"
+            if _sbx_meta_path.is_file():
+                try:
+                    _sbx_meta = json.loads(_sbx_meta_path.read_text(encoding="utf-8"))
+                    if isinstance(_sbx_meta, dict):
+                        manifest["codex_sandbox_version"] = _sbx_meta.get("codex_sandbox_version")
+                        manifest["sbx_version"] = _sbx_meta.get("sbx_version")
+                except Exception:
+                    pass
             # Anche un AUT interrotto può aver modificato file: conserva il diff parziale.
             try:
                 compute_diff(scenario.lab, run / "lab", run / "logs/diff.json")

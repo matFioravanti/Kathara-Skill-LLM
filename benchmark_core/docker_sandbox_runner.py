@@ -5,10 +5,12 @@ Architettura:
   accesso esclusivo alla copia temporanea del laboratorio.
 - I file del laboratorio sono montati direttamente nel sandbox: le modifiche
   vengono scritte istantaneamente sull'host senza necessita' di `sbx cp`.
+- Autenticazione: usa esclusivamente l'infrastruttura ufficiale di Docker Sandboxes
+  (OAuth token / secret gestito dal proxy sbx, nessun mount di credenziali file host).
 - La memoria interna di Codex viene esplicitamente disabilitata (`--disable memories`,
   `-c memories=false`, `-c memories.use_memories=false`, `-c memories.generate_memories=false`,
   `-c features.memories=false`).
-- Al termine (successo, errore, timeout, interruzione) il sandbox viene
+- Al termine (successo, errore, timeout, interruzione, o fallimento parziale) il sandbox viene
   eliminato con `sbx rm --force` (con retry). Se il cleanup fallisce, la run
   fallisce con `SandboxCleanupError`.
 - Il Kathara Lab Checker rimane sull'host: non e' mai montato nel sandbox.
@@ -53,7 +55,7 @@ class SandboxDaemonError(SandboxError):
 
 
 class SandboxAuthError(SandboxError):
-    """L'utente non e' autenticato con Docker / sbx."""
+    """L'utente non e' autenticato con Docker / sbx o OpenAI OAuth."""
 
 
 class SandboxCleanupError(SandboxError):
@@ -80,6 +82,7 @@ class SandboxRun:
     final_message: str | None
     usage: dict[str, Any] | None
     sbx_version: str | None
+    codex_version: str | None = None
 
     @property
     def success(self) -> bool:
@@ -119,7 +122,6 @@ def sbx_daemon_status() -> bool:
     combined = (result.stdout + result.stderr).lower()
     # "Status:  running" oppure "Status:  stopped"
     if "running" in combined:
-        # Evita falso positivo se "stopped" precede "running" nel testo
         idx_running = combined.find("running")
         idx_stopped = combined.find("stopped")
         return idx_stopped < 0 or idx_running < idx_stopped
@@ -127,10 +129,7 @@ def sbx_daemon_status() -> bool:
 
 
 def sbx_daemon_ensure_running(*, auto_start: bool = True, wait_seconds: int = 30) -> None:
-    """Verifica che il daemon sia attivo; se spento e auto_start=True lo avvia.
-
-    Non interagisce con l'utente. Se non e' possibile avviarlo lancia SandboxDaemonError.
-    """
+    """Verifica che il daemon sia attivo; se spento e auto_start=True lo avvia."""
     if sbx_daemon_status():
         return
     if not auto_start:
@@ -150,7 +149,6 @@ def sbx_daemon_ensure_running(*, auto_start: bool = True, wait_seconds: int = 30
             f"Impossibile avviare il daemon sbx automaticamente:\n{stderr}\n"
             "Avvialo manualmente con: sbx daemon start --detach"
         )
-    # Attendi che il daemon sia operativo
     deadline = time.monotonic() + wait_seconds
     while time.monotonic() < deadline:
         time.sleep(1)
@@ -162,19 +160,54 @@ def sbx_daemon_ensure_running(*, auto_start: bool = True, wait_seconds: int = 30
 
 
 def sbx_check_auth() -> None:
-    """Verifica che l'utente sia autenticato con Docker / sbx.
+    """Verifica che l'utente sia autenticato con Docker e Docker Sandboxes OAuth/Secret.
 
-    Usa `sbx ls` come proxy: se l'output contiene parole chiave di autenticazione
-    lancia SandboxAuthError.
+    Verifica sia l'accesso CLI sbx/Docker sia la presenza di credenziali OAuth/secret
+    per il servizio 'openai' senza esporre credenziali all'interno del filesystem del sandbox.
     """
     exe = sbx_executable()
     result = subprocess.run([exe, "ls"], capture_output=True, text=True, timeout=30)
     combined = (result.stdout + result.stderr).lower()
-    auth_keywords = ("login", "authenticate", "not logged", "unauthorized", "sign in")
+    auth_keywords = ("authenticate", "not logged", "unauthorized", "sign in")
     if any(kw in combined for kw in auth_keywords):
         raise SandboxAuthError(
             "sbx / Docker non autenticato. Esegui `sbx login` o `docker login` e riprova."
         )
+
+    # Verifica la presenza di credenziali/OAuth gestite da Docker Sandboxes
+    sec_res = subprocess.run([exe, "secret", "ls", "--json"], capture_output=True, text=True, timeout=15)
+    if sec_res.returncode == 0:
+        try:
+            data = json.loads(sec_res.stdout)
+            if isinstance(data, dict):
+                secrets = data.get("secrets", [])
+            elif isinstance(data, list):
+                secrets = data
+            else:
+                secrets = []
+            has_openai = any(
+                isinstance(s, dict) and (s.get("service") == "openai" or s.get("name") == "openai")
+                for s in secrets
+            )
+            # Se è presente nei secret salvati, la verifica ha successo
+            if has_openai:
+                return
+        except json.JSONDecodeError:
+            pass
+
+    # Se non presente in secret ls, controlla se sbx rileva login OAuth o secret attivo
+    # Se nè secret ls nè OAuth configurati, avvisa l'utente
+    sec_plain = subprocess.run([exe, "secret", "ls"], capture_output=True, text=True, timeout=15)
+    if "openai" in (sec_plain.stdout + sec_plain.stderr).lower():
+        return
+
+    # In assenza di secret sbx memorizzato, segnala chiaramente come autenticare sbx con OAuth
+    raise SandboxAuthError(
+        "Nessuna credenziale OAuth per OpenAI configurata in Docker Sandboxes.\n"
+        "Configura l'autenticazione ufficiale gestita da Docker Sandboxes con:\n"
+        "  sbx secret set openai --oauth\n"
+        "oppure fornisci la chiave con: sbx secret set openai"
+    )
 
 
 def sbx_check_docker_engine(*, auto_start: bool = True, wait_seconds: int = 45) -> None:
@@ -192,7 +225,6 @@ def sbx_check_docker_engine(*, auto_start: bool = True, wait_seconds: int = 45) 
             "Avvia Docker Desktop e riprova."
         )
 
-    # Tenta l'avvio automatico di Docker Desktop su macOS
     try:
         subprocess.run(["open", "-a", "Docker"], capture_output=True, text=True, timeout=15)
     except Exception as exc:
@@ -210,34 +242,51 @@ def sbx_check_docker_engine(*, auto_start: bool = True, wait_seconds: int = 45) 
     )
 
 
-def sbx_check_sandbox_codex(*, expected_version: str | None = None) -> str:
-    """Verifica versione e autenticazione di Codex all'interno di un sandbox reale.
+def sbx_check_network_policy(sandbox_name: str) -> None:
+    """Verifica che la policy di rete del sandbox consenta la comunicazione con il modello e blocchi il resto."""
+    exe = sbx_executable()
+    # Verifica che api.openai.com sia autorizzato
+    allowed_check = subprocess.run(
+        [exe, "policy", "check", "network", "--sandbox", sandbox_name, "api.openai.com:443"],
+        capture_output=True, text=True, timeout=15,
+    )
+    if allowed_check.returncode != 0:
+        raise SandboxError(
+            f"Policy di rete errata per {sandbox_name}: connessione a api.openai.com negata.\n"
+            f"{allowed_check.stderr or allowed_check.stdout}"
+        )
 
-    Crea un probe temporaneo con `sbx create codex`, monta auth.json (se presente),
-    esegue `codex --version` e `codex login status`, quindi elimina il sandbox.
+    # Verifica che destinazioni non autorizzate siano respinte
+    denied_check = subprocess.run(
+        [exe, "policy", "check", "network", "--sandbox", sandbox_name, "unauthorized-domain.com:443"],
+        capture_output=True, text=True, timeout=15,
+    )
+    if denied_check.returncode == 0:
+        raise SandboxError(
+            f"Policy di rete errata per {sandbox_name}: traffico verso host arbitrari non e' bloccato."
+        )
+
+
+def sbx_check_sandbox_codex(*, expected_version: str | None = None) -> str:
+    """Verifica versione, memoria e autenticazione di Codex all'interno di un sandbox reale.
+
+    Crea un probe monouso con `sbx create codex`, garantendo il cleanup immediato anche
+    in caso di fallimento della creazione parziale o dell'esecuzione.
+    Verifica che i flag di disabilitazione memoria siano pienamente supportati.
+    Non espone alcun file auth.json nel sandbox.
     Non consuma token LLM.
     """
     exe = sbx_executable()
     probe_name = f"sbx-preflight-{uuid.uuid4().hex[:8]}"
-    host_auth = Path.home() / ".codex" / "auth.json"
 
     with tempfile.TemporaryDirectory(prefix="sbx-preflight-ws-") as tmpdir:
-        create_cmd = [exe, "create", "codex", tmpdir]
-        if host_auth.is_file():
-            create_cmd.append(f"{host_auth.resolve()}:ro")
-        create_cmd.extend(["--name", probe_name, "--skills", "off"])
-
-        create_res = subprocess.run(create_cmd, capture_output=True, text=True, timeout=60)
-        if create_res.returncode != 0:
-            raise SandboxError(
-                f"Impossibile creare probe sandbox per verifica Codex:\n{create_res.stderr.strip() or create_res.stdout.strip()}"
-            )
+        create_cmd = [exe, "create", "codex", tmpdir, "--name", probe_name, "--skills", "off"]
 
         try:
-            if host_auth.is_file():
-                subprocess.run(
-                    [exe, "exec", probe_name, "ln", "-sf", str(host_auth.resolve()), "/home/agent/.codex/auth.json"],
-                    capture_output=True, text=True, timeout=15, check=False,
+            create_res = subprocess.run(create_cmd, capture_output=True, text=True, timeout=60)
+            if create_res.returncode != 0:
+                raise SandboxError(
+                    f"Impossibile creare probe sandbox per verifica Codex:\n{create_res.stderr.strip() or create_res.stdout.strip()}"
                 )
 
             # 1. Verifica versione Codex nel sandbox
@@ -257,14 +306,34 @@ def sbx_check_sandbox_codex(*, expected_version: str | None = None) -> str:
                     f"  rilevata: {actual_ver}"
                 )
 
-            # 2. Verifica login status nel sandbox
+            # 2. Verifica reale supporto flag di disabilitazione memoria nel binario interno
+            mem_test_cmd = [
+                exe, "exec", probe_name, "codex", "exec", "--help",
+                "--disable", "memories",
+                "-c", "memories=false",
+                "-c", "memories.use_memories=false",
+                "-c", "memories.generate_memories=false",
+                "-c", "features.memories=false",
+            ]
+            mem_test_res = subprocess.run(mem_test_cmd, capture_output=True, text=True, timeout=30)
+            if mem_test_res.returncode != 0:
+                raise SandboxError(
+                    f"I flag di disabilitazione memoria non sono supportati dalla versione Codex nel sandbox:\n"
+                    f"{mem_test_res.stderr.strip() or mem_test_res.stdout.strip()}"
+                )
+
+            # 3. Verifica policy di rete del sandbox
+            sbx_check_network_policy(probe_name)
+
+            # 4. Verifica login status nel sandbox (OAuth gestito da proxy sbx)
             login_res = subprocess.run([exe, "exec", probe_name, "codex", "login", "status"], capture_output=True, text=True, timeout=30)
             if login_res.returncode != 0:
                 raise SandboxAuthError(
-                    "Codex non risulta autenticato all'interno del sandbox (`codex login status` fallito).\n"
-                    "Verifica che `~/.codex/auth.json` sia presente e valido sull'host oppure configura `sbx secret set openai`."
+                    "Codex non risulta autenticato all'interno del sandbox tramite proxy sbx (`codex login status` fallito).\n"
+                    "Configura OAuth in Docker Sandboxes con: sbx secret set openai --oauth"
                 )
             return actual_ver
+
         finally:
             _sbx_rm(probe_name)
 
@@ -344,62 +413,27 @@ def run_codex_in_sandbox(
 
     - Usa `sbx create codex <workspace>` per creare il sandbox senza sessione interattiva.
     - Il workspace host e' montato direttamente (bind mount): le modifiche sono subito su disco host.
+    - Usa l'autenticazione OAuth ufficiale di sbx (nessun file auth.json montato nel sandbox).
     - La memoria interna di Codex e' esplicitamente disabilitata per isolamento totale.
-    - Il Kathara Lab Checker NON viene montato nel sandbox.
-    - Cleanup garantito tramite try/finally. Un cleanup fallito genera SandboxCleanupError.
+    - Verifica il corretto isolamento della policy di rete prima dell'esecuzione.
+    - Cleanup garantito tramite try/finally anche in caso di creazione parziale.
+    - Un cleanup fallito genera SandboxCleanupError.
     """
     if not workspace.is_dir():
         raise SandboxError(f"Workspace non trovato: {workspace}")
     logs.mkdir(parents=True, exist_ok=True)
 
     exe = sbx_executable()
-    detected_version: str | None = None
+    detected_sbx_version: str | None = None
+    detected_codex_version: str | None = None
     try:
-        detected_version = sbx_version()
+        detected_sbx_version = sbx_version()
     except SandboxError:
         pass
 
     overhead_times: list[float] = []
     sandbox_id: str | None = None
-    host_auth = Path.home() / ".codex" / "auth.json"
 
-    # ------------------------------------------------------------------
-    # 1. Crea sandbox Codex con nome univoco e --skills=off
-    #    sbx create codex <workspace> [auth.json:ro] --name <name> --skills off
-    # ------------------------------------------------------------------
-    create_start = time.monotonic()
-    create_cmd = [
-        exe, "create", "codex",
-        str(workspace.resolve()),
-    ]
-    if host_auth.is_file():
-        create_cmd.append(f"{host_auth.resolve()}:ro")
-    create_cmd.extend([
-        "--name", sandbox_name,
-        "--skills", "off",
-    ])
-    create_result = subprocess.run(create_cmd, capture_output=True, text=True, timeout=120)
-    overhead_times.append(time.monotonic() - create_start)
-
-    if create_result.returncode:
-        stderr = create_result.stderr.strip() or create_result.stdout.strip()
-        raise SandboxError(
-            f"Impossibile creare il sandbox {sandbox_name!r}:\n{stderr}"
-        )
-    # L'ID/nome e' presente nell'output di creazione
-    lines = [ln.strip() for ln in create_result.stdout.strip().splitlines() if ln.strip()]
-    sandbox_id = lines[-1] if lines else None
-
-    # Se auth.json e' montato, linka in /home/agent/.codex/auth.json
-    if host_auth.is_file():
-        subprocess.run(
-            [exe, "exec", sandbox_name, "ln", "-sf", str(host_auth.resolve()), "/home/agent/.codex/auth.json"],
-            capture_output=True, text=True, timeout=15, check=False,
-        )
-
-    # ------------------------------------------------------------------
-    # Cleanup garantito tramite try/finally
-    # ------------------------------------------------------------------
     rm_ok = True
     rm_err: str | None = None
     codex_duration = 0.0
@@ -411,11 +445,42 @@ def run_codex_in_sandbox(
     usage: dict[str, Any] | None = None
     full_command: tuple[str, ...] = ()
 
+    # ------------------------------------------------------------------
+    # Cleanup garantito tramite try/finally per l'intero ciclo di vita
+    # anche in caso di errore durante create o verifiche
+    # ------------------------------------------------------------------
     try:
-        # --------------------------------------------------------------
-        # 2. Esegui Codex non-interattivamente nel sandbox via sbx exec
-        #    sbx exec -w <workspace> -i <name> codex exec --json --ephemeral ... -C <workspace> -
-        # --------------------------------------------------------------
+        # 1. Crea sandbox Codex con nome univoco e --skills=off
+        #    sbx create codex <workspace> --name <name> --skills off
+        create_start = time.monotonic()
+        create_cmd = [
+            exe, "create", "codex",
+            str(workspace.resolve()),
+            "--name", sandbox_name,
+            "--skills", "off",
+        ]
+        create_result = subprocess.run(create_cmd, capture_output=True, text=True, timeout=120)
+        overhead_times.append(time.monotonic() - create_start)
+
+        if create_result.returncode:
+            stderr = create_result.stderr.strip() or create_result.stdout.strip()
+            raise SandboxError(
+                f"Impossibile creare il sandbox {sandbox_name!r}:\n{stderr}"
+            )
+        lines = [ln.strip() for ln in create_result.stdout.strip().splitlines() if ln.strip()]
+        sandbox_id = lines[-1] if lines else None
+
+        # 2. Leggi versione Codex effettiva all'interno del sandbox
+        ver_proc = subprocess.run([exe, "exec", sandbox_name, "codex", "--version"], capture_output=True, text=True, timeout=30)
+        if ver_proc.returncode == 0:
+            match = re.search(r"(?:v)?(\d+\.\d+\.\d+(?:-\w+)?)", ver_proc.stdout)
+            if match:
+                detected_codex_version = match.group(1)
+
+        # 3. Verifica policy di rete
+        sbx_check_network_policy(sandbox_name)
+
+        # 4. Esegui Codex non-interattivamente nel sandbox via sbx exec
         codex_args: list[str] = [
             "codex", "exec",
             "--json",
@@ -437,7 +502,6 @@ def run_codex_in_sandbox(
 
         full_command = tuple([exe, "exec", "-w", str(workspace.resolve()), "-i", sandbox_name] + codex_args)
 
-        # Impedisce selezione via API key; preserva login locale ChatGPT
         env = os.environ.copy()
         env.pop("OPENAI_API_KEY", None)
         env.pop("CODEX_API_KEY", None)
@@ -468,15 +532,13 @@ def run_codex_in_sandbox(
         final_message, usage = _parse_events(codex_stdout)
 
     finally:
-        # --------------------------------------------------------------
-        # 3. Elimina sandbox (sempre: successo, errore, timeout, Ctrl-C)
-        # --------------------------------------------------------------
+        # Cleanup garantito in qualunque caso
         rm_start = time.monotonic()
         rm_ok, rm_err = _sbx_rm(sandbox_name)
         overhead_times.append(time.monotonic() - rm_start)
 
     # ------------------------------------------------------------------
-    # 4. Persisti artefatti di log
+    # Persisti artefatti di log e metadati
     # ------------------------------------------------------------------
     (logs / "events.jsonl").write_text(codex_stdout, encoding="utf-8")
     (logs / "stderr.log").write_text(codex_stderr, encoding="utf-8")
@@ -489,13 +551,14 @@ def run_codex_in_sandbox(
         "cwd": str(workspace.resolve()),
         "variant": variant,
         "execution_backend": "docker_sandbox",
-        "authentication": "local_chatgpt_login",
+        "authentication": "sbx_oauth_proxy",
         "api_key_used": False,
         "model": model,
         "reasoning_effort": reasoning_effort,
         "sandbox_name": sandbox_name,
         "sandbox_id": sandbox_id,
-        "sbx_version": detected_version,
+        "sbx_version": detected_sbx_version,
+        "codex_sandbox_version": detected_codex_version,
     })
     write_json(logs / "result.json", {
         "returncode": codex_returncode,
@@ -508,7 +571,8 @@ def run_codex_in_sandbox(
     write_json(logs / "sandbox_metadata.json", {
         "sandbox_name": sandbox_name,
         "sandbox_id": sandbox_id,
-        "sbx_version": detected_version,
+        "sbx_version": detected_sbx_version,
+        "codex_sandbox_version": detected_codex_version,
         "execution_backend": "docker_sandbox",
         "cleanup_ok": rm_ok,
         "cleanup_error": rm_err,
@@ -530,7 +594,8 @@ def run_codex_in_sandbox(
         cleanup_error=rm_err,
         final_message=final_message,
         usage=usage,
-        sbx_version=detected_version,
+        sbx_version=detected_sbx_version,
+        codex_version=detected_codex_version,
     )
 
     if codex_returncode != 0 or timed_out:
@@ -566,7 +631,7 @@ def preflight_docker_sandbox(
     2. Versione sbx == expected_sbx_version
     3. Docker Engine raggiungibile (tenta avvio Docker Desktop se auto_start_docker)
     4. Daemon sbx in esecuzione (avvia automaticamente se auto_start_daemon)
-    5. Autenticazione Docker / sbx
+    5. Autenticazione Docker / sbx OAuth
 
     Restituisce la versione sbx rilevata.
     Lancia SandboxError (o sottoclasse) in caso di errore senza fallback host.

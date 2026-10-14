@@ -187,17 +187,23 @@ class TestDockerEngineAutoStart(unittest.TestCase):
 # Test: sbx_check_sandbox_codex (Verifica interna Codex nel sandbox)
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Test: sbx_check_sandbox_codex (Verifica interna Codex nel sandbox)
+# ---------------------------------------------------------------------------
+
 class TestCheckSandboxCodex(unittest.TestCase):
     @patch("benchmark_core.docker_sandbox_runner._sbx_rm", return_value=(True, None))
     @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
     @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
     def test_check_sandbox_codex_success(self, _which, mock_run, _rm):
-        # Create -> ln -> version -> login status
+        # 1: create probe, 2: codex --version, 3: mem_test, 4: policy check api.openai.com, 5: policy check unauthorized, 6: login status
         mock_run.side_effect = [
             _proc(returncode=0, stdout="Created sandbox sbx-probe"),
-            _proc(returncode=0),
             _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
-            _proc(returncode=0, stdout="Logged in using ChatGPT\n"),
+            _proc(returncode=0, stdout="Usage: codex exec ..."),  # mem flags supported
+            _proc(returncode=0),                                   # policy check api.openai.com allowed
+            _proc(returncode=1),                                   # policy check unauthorized-domain denied
+            _proc(returncode=0, stdout="Logged in using ChatGPT\n"), # login status
         ]
         ver = sbx_check_sandbox_codex(expected_version="0.149.1")
         self.assertEqual(ver, "0.149.1")
@@ -207,8 +213,7 @@ class TestCheckSandboxCodex(unittest.TestCase):
     @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
     def test_check_sandbox_codex_version_mismatch(self, _which, mock_run, _rm):
         mock_run.side_effect = [
-            _proc(returncode=0),
-            _proc(returncode=0),
+            _proc(returncode=0, stdout="Created sandbox sbx-probe"),
             _proc(returncode=0, stdout="codex-cli 0.148.0\n"),
         ]
         with self.assertRaises(SandboxError) as ctx:
@@ -218,15 +223,105 @@ class TestCheckSandboxCodex(unittest.TestCase):
     @patch("benchmark_core.docker_sandbox_runner._sbx_rm", return_value=(True, None))
     @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
     @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_check_sandbox_codex_memory_flags_unsupported(self, _which, mock_run, _rm):
+        mock_run.side_effect = [
+            _proc(returncode=0, stdout="Created sandbox sbx-probe"),
+            _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+            _proc(returncode=1, stderr="unrecognized argument --disable"),
+        ]
+        with self.assertRaises(SandboxError) as ctx:
+            sbx_check_sandbox_codex(expected_version="0.149.1")
+        self.assertIn("flag di disabilitazione memoria non sono supportati", str(ctx.exception))
+
+    @patch("benchmark_core.docker_sandbox_runner._sbx_rm", return_value=(True, None))
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
     def test_check_sandbox_codex_unauthenticated_raises(self, _which, mock_run, _rm):
         mock_run.side_effect = [
-            _proc(returncode=0),
-            _proc(returncode=0),
+            _proc(returncode=0, stdout="Created sandbox sbx-probe"),
             _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+            _proc(returncode=0, stdout="Usage: codex exec ..."),
+            _proc(returncode=0),
+            _proc(returncode=1),
             _proc(returncode=1, stderr="Not logged in\n"),
         ]
         with self.assertRaises(SandboxAuthError):
             sbx_check_sandbox_codex(expected_version="0.149.1")
+
+
+# ---------------------------------------------------------------------------
+# Test: sbx_check_auth (OAuth gestito da sbx)
+# ---------------------------------------------------------------------------
+
+class TestCheckAuth(unittest.TestCase):
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_auth_secret_json_openai(self, _which, mock_run):
+        mock_run.side_effect = [
+            _proc(returncode=0), # docker login status
+            _proc(returncode=0, stdout=json.dumps([{"name": "openai", "type": "oauth"}])), # sbx secret ls --json
+        ]
+        sbx_check_auth()
+
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_auth_secret_plain_openai(self, _which, mock_run):
+        mock_run.side_effect = [
+            _proc(returncode=0), # docker login status
+            _proc(returncode=1), # json fail
+            _proc(returncode=0, stdout="openai  secret  configured"), # plain
+        ]
+        sbx_check_auth()
+
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_auth_missing_raises(self, _which, mock_run):
+        mock_run.side_effect = [
+            _proc(returncode=0), # docker login
+            _proc(returncode=0, stdout="[]"), # empty json
+            _proc(returncode=0, stdout="No secrets"), # plain
+        ]
+        with self.assertRaises(SandboxAuthError):
+            sbx_check_auth()
+
+
+# ---------------------------------------------------------------------------
+# Test: sbx_check_network_policy
+# ---------------------------------------------------------------------------
+
+class TestNetworkPolicy(unittest.TestCase):
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_network_policy_ok(self, _which, mock_run):
+        mock_run.side_effect = [
+            _proc(returncode=0), # api.openai.com allowed
+            _proc(returncode=1), # unauthorized-domain denied
+        ]
+        from benchmark_core.docker_sandbox_runner import sbx_check_network_policy
+        sbx_check_network_policy("test-sbx")
+
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_network_policy_blocks_model_raises(self, _which, mock_run):
+        mock_run.side_effect = [
+            _proc(returncode=1, stderr="Denied"), # api.openai.com blocked
+        ]
+        from benchmark_core.docker_sandbox_runner import sbx_check_network_policy
+        with self.assertRaises(SandboxError) as ctx:
+            sbx_check_network_policy("test-sbx")
+        self.assertIn("connessione a api.openai.com negata", str(ctx.exception))
+
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_network_policy_allows_unauthorized_raises(self, _which, mock_run):
+        mock_run.side_effect = [
+            _proc(returncode=0), # api.openai.com allowed
+            _proc(returncode=0), # unauthorized-domain unexpectedly allowed
+        ]
+        from benchmark_core.docker_sandbox_runner import sbx_check_network_policy
+        with self.assertRaises(SandboxError) as ctx:
+            sbx_check_network_policy("test-sbx")
+        self.assertIn("traffico verso host arbitrari non e' bloccato", str(ctx.exception))
 
 
 # ---------------------------------------------------------------------------
@@ -320,7 +415,7 @@ class TestPreflightDockerSandbox(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
-# Test: run_codex_in_sandbox (Mock End-to-End con verifiche dei 5 problemi)
+# Test: run_codex_in_sandbox (Mock End-to-End con verifiche dei requisiti)
 # ---------------------------------------------------------------------------
 
 class TestRunCodexInSandbox(unittest.TestCase):
@@ -335,7 +430,7 @@ class TestRunCodexInSandbox(unittest.TestCase):
     @patch("benchmark_core.docker_sandbox_runner.sbx_version", return_value="0.48.0")
     @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
     def test_success_lifecycle_and_flags(self, mock_run, _ver, _which, _home):
-        """Verifica Problema A, B, C, E: path assoluto, sbx create, niente sbx cp, memoria disabilitata."""
+        """Verifica path assoluto, sbx create, niente sbx cp, memoria disabilitata, policy rete, versione."""
         with tempfile.TemporaryDirectory() as tmpdir:
             ws = self._make_workspace(Path(tmpdir))
             logs = Path(tmpdir) / "logs/aut"
@@ -344,12 +439,20 @@ class TestRunCodexInSandbox(unittest.TestCase):
                 json.dumps({"type": "turn.completed", "usage": {"input_tokens": 10, "output_tokens": 5}}) + "\n"
             )
 
-            # Chiamate attese: 1) sbx create, 2) sbx exec codex, 3) sbx rm
-            # NESSUN sbx cp!
+            # Chiamate attese:
+            # 1) sbx create codex
+            # 2) sbx exec codex --version
+            # 3) sbx policy check network api.openai.com
+            # 4) sbx policy check network unauthorized-domain
+            # 5) sbx exec codex exec
+            # 6) sbx rm --force
             mock_run.side_effect = [
                 _proc(returncode=0, stdout="Created sandbox kathara-test-r001-abcd1234"),
+                _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+                _proc(returncode=0), # policy check api.openai.com
+                _proc(returncode=1), # policy check unauthorized-domain
                 _proc(returncode=0, stdout=events_jsonl),
-                _proc(returncode=0),
+                _proc(returncode=0), # rm
             ]
 
             result = run_codex_in_sandbox(
@@ -367,18 +470,19 @@ class TestRunCodexInSandbox(unittest.TestCase):
             self.assertEqual(result.returncode, 0)
             self.assertTrue(result.cleanup_ok)
             self.assertEqual(result.final_message, "Done")
+            self.assertEqual(result.codex_version, "0.149.1")
 
             calls = [c[0][0] for c in mock_run.call_args_list]
 
-            # Problema B: usa `sbx create codex`
+            # Crea con `sbx create codex`
             create_cmd = calls[0]
             self.assertEqual(create_cmd[:3], ["/usr/bin/sbx", "create", "codex"])
             self.assertIn("--skills", create_cmd)
             self.assertIn("off", create_cmd)
 
-            # Problema A: path assoluto dell'host montato e passato a -C
+            # Path assoluto host
             self.assertIn(str(ws.resolve()), create_cmd)
-            exec_cmd = calls[1]
+            exec_cmd = calls[4]
             self.assertIn("-C", exec_cmd)
             c_idx = exec_cmd.index("-C")
             self.assertEqual(exec_cmd[c_idx + 1], str(ws.resolve()))
@@ -387,14 +491,14 @@ class TestRunCodexInSandbox(unittest.TestCase):
             self.assertEqual(exec_cmd[w_idx + 1], str(ws.resolve()))
             self.assertNotIn("/workspace", exec_cmd)
 
-            # Problema E: memoria Codex disabilitata
+            # Memoria Codex disabilitata
             self.assertIn("--disable", exec_cmd)
             dis_idx = exec_cmd.index("--disable")
             self.assertEqual(exec_cmd[dis_idx + 1], "memories")
             self.assertIn("memories=false", " ".join(exec_cmd))
             self.assertIn("memories.use_memories=false", " ".join(exec_cmd))
 
-            # Problema C: NESSUNA chiamata a sbx cp
+            # Nessun sbx cp
             cp_calls = [c for c in calls if "cp" in c]
             self.assertEqual(len(cp_calls), 0)
 
@@ -408,15 +512,18 @@ class TestRunCodexInSandbox(unittest.TestCase):
     @patch("benchmark_core.docker_sandbox_runner.sbx_version", return_value="0.48.0")
     @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
     def test_cleanup_failure_blocks_run(self, mock_run, _ver, _which, _home):
-        """Verifica Problema D: se il cleanup fallisce, solleva SandboxCleanupError."""
+        """Se il cleanup fallisce, solleva SandboxCleanupError."""
         with tempfile.TemporaryDirectory() as tmpdir:
             ws = self._make_workspace(Path(tmpdir))
             logs = Path(tmpdir) / "logs/aut"
             events_jsonl = json.dumps({"item": {"type": "agent_message", "text": "OK"}}) + "\n"
 
-            # 1: create ok, 2: exec ok, 3: rm fallisce (primo tentativo), 4: rm fallisce (retry)
+            # 1: create ok, 2: ver ok, 3: policy ok, 4: policy ok, 5: exec ok, 6: rm fallisce (retry 1), 7: rm fallisce (retry 2)
             mock_run.side_effect = [
                 _proc(returncode=0, stdout="Created sandbox test-rm-fail"),
+                _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+                _proc(returncode=0),
+                _proc(returncode=1),
                 _proc(returncode=0, stdout=events_jsonl),
                 _proc(returncode=1, stderr="container locked"),
                 _proc(returncode=1, stderr="container locked"),
@@ -447,6 +554,9 @@ class TestRunCodexInSandbox(unittest.TestCase):
 
             mock_run.side_effect = [
                 _proc(returncode=0, stdout="Created sandbox fail-run"),
+                _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+                _proc(returncode=0),
+                _proc(returncode=1),
                 _proc(returncode=1, stderr="codex internal error"),
                 _proc(returncode=0),  # rm
             ]
@@ -463,6 +573,37 @@ class TestRunCodexInSandbox(unittest.TestCase):
                     sandbox_name="fail-run",
                 )
             self.assertIn("fallito", str(ctx.exception))
+            calls = [c[0][0] for c in mock_run.call_args_list]
+            rm_calls = [c for c in calls if "rm" in c]
+            self.assertEqual(len(rm_calls), 1)
+
+    @patch("benchmark_core.docker_sandbox_runner.Path.home", return_value=Path("/nonexistent_home"))
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    @patch("benchmark_core.docker_sandbox_runner.sbx_version", return_value="0.48.0")
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    def test_cleanup_executed_on_partial_create_failure(self, mock_run, _ver, _which, _home):
+        """Il cleanup viene eseguito anche se la creazione fallisce o restituisce errore."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ws = self._make_workspace(Path(tmpdir))
+            logs = Path(tmpdir) / "logs/aut"
+
+            mock_run.side_effect = [
+                _proc(returncode=1, stderr="failed to initialize kit"),
+                _proc(returncode=0),  # rm in finally
+            ]
+
+            with self.assertRaises(SandboxError) as ctx:
+                run_codex_in_sandbox(
+                    prompt="test",
+                    workspace=ws,
+                    logs=logs,
+                    timeout=300,
+                    model=None,
+                    reasoning_effort=None,
+                    variant="aut",
+                    sandbox_name="fail-create",
+                )
+            self.assertIn("Impossibile creare il sandbox", str(ctx.exception))
             calls = [c[0][0] for c in mock_run.call_args_list]
             rm_calls = [c for c in calls if "rm" in c]
             self.assertEqual(len(rm_calls), 1)
