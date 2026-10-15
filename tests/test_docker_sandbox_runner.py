@@ -26,10 +26,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from benchmark_core.docker_sandbox_runner import (
     DEFAULT_CODEX_SANDBOX_VERSION,
     EXPECTED_SBX_VERSION,
+    SandboxArtifactError,
     SandboxAuthError,
     SandboxCleanupError,
     SandboxDaemonError,
     SandboxError,
+    SandboxExecutionError,
     SandboxRun,
     _parse_events,
     _sbx_rm,
@@ -776,6 +778,393 @@ class TestDockerSandboxMetadataAndMetricsHarden(unittest.TestCase):
             self.assertEqual(model_usage.total_tokens, 600)
             self.assertEqual(model_usage.reasoning_tokens, 30)
             self.assertIsNone(model_usage.total_cost)
+
+
+
+# ---------------------------------------------------------------------------
+# Test: Regressione affidabilità raccolta dati, sync lab, log write e cleanup
+# ---------------------------------------------------------------------------
+
+class TestReliabilityAndDiagnosticsRegression(unittest.TestCase):
+    """Test di regressione mirati all'affidabilità della raccolta dati:
+    1. Errori nella scrittura di file essenziali (result.json, events.jsonl, invocation.json, sandbox_metadata.json):
+       - Nessun falso successo se Codex ha avuto exit code 0: solleva SandboxArtifactError
+       - Preservazione degli artefatti disponibili (stderr.log, invocation.json, metadata)
+       - Preservazione dell'eccezione originale se Codex era già fallito (nessuna sovrascrittura)
+    2. Errori durante la sincronizzazione del laboratorio (staging_lab / rename / copytree):
+       - Generazione garantita del log Inspect AI (.eval) anche su fallimento sync
+       - Propagazione corretta dell'errore di sincronizzazione
+       - Preservazione dell'errore AUT originale in caso di doppio errore (AUT + sync)
+    3. Errori di cleanup del sandbox:
+       - Tracciamento diagnostico in sandbox_metadata.json, manifest.json e metrics.json
+    4. Pipeline end-to-end su fallimento:
+       - Tracciamento stato AUT_FAILED, pipeline_error, conservazione diff parziale e log Inspect .eval
+    """
+
+    def _make_workspace(self, tmp_path: Path) -> Path:
+        ws = tmp_path / "lab"
+        ws.mkdir()
+        (ws / "lab.conf").write_text("[pc1]\n")
+        return ws
+
+    @patch("benchmark_core.docker_sandbox_runner.Path.home", return_value=Path("/nonexistent_home"))
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    @patch("benchmark_core.docker_sandbox_runner.sbx_version", return_value="0.48.0")
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    def test_essential_artifact_write_failure_raises_sandbox_artifact_error_and_preserves_available(
+        self, mock_run, _ver, _which, _home
+    ):
+        """Se Codex ha exit code 0 ma fallisce la scrittura di un file essenziale (es. events.jsonl),
+        non deve produrre un falso successo: solleva SandboxArtifactError e preserva gli altri file."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ws = self._make_workspace(Path(tmpdir))
+            logs = Path(tmpdir) / "logs/aut"
+            events_content = json.dumps({"item": {"type": "agent_message", "text": "OK"}}) + "\n"
+
+            mock_run.side_effect = [
+                _proc(returncode=0, stdout="Created sandbox test-artifact-fail"),
+                _proc(returncode=0, stdout=json.dumps([{"name": "test-artifact-fail", "id": "uuid-art-fail"}])),
+                _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+                _proc(returncode=0, stdout=json.dumps({"allowed": True})),
+                _proc(returncode=0, stdout=json.dumps({"allowed": True})),
+                _proc(returncode=1, stdout=json.dumps({"allowed": False})),
+                _proc(returncode=1, stdout=json.dumps({"allowed": False})),
+                _proc(returncode=0, stdout=events_content),
+                _proc(returncode=0),  # rm
+            ]
+
+            original_write_text = Path.write_text
+
+            def fail_events_write_text(path_self, *args, **kwargs):
+                if getattr(path_self, "name", "").startswith("events.jsonl"):
+                    raise OSError("Simulazione disco pieno su events.jsonl")
+                return original_write_text(path_self, *args, **kwargs)
+
+            with patch.object(Path, "write_text", new=fail_events_write_text):
+                with self.assertRaises(SandboxArtifactError) as ctx:
+                    run_codex_in_sandbox(
+                        prompt="test prompt",
+                        workspace=ws,
+                        logs=logs,
+                        timeout=300,
+                        model=None,
+                        reasoning_effort=None,
+                        variant="aut",
+                        sandbox_name="test-artifact-fail",
+                    )
+
+            self.assertIn("events.jsonl", str(ctx.exception))
+            self.assertIn("Simulazione disco pieno", str(ctx.exception))
+
+            # Verifica preservazione degli artefatti disponibili
+            self.assertTrue((logs / "stderr.log").is_file())
+            self.assertTrue((logs / "prompt_sent.md").is_file())
+            self.assertTrue((logs / "invocation.json").is_file())
+            self.assertTrue((logs / "result.json").is_file())
+            self.assertTrue((logs / "sandbox_metadata.json").is_file())
+
+            res = json.loads((logs / "result.json").read_text(encoding="utf-8"))
+            self.assertIn("events.jsonl", res.get("error", ""))
+
+            meta = json.loads((logs / "sandbox_metadata.json").read_text(encoding="utf-8"))
+            self.assertFalse(meta.get("artifacts_ok"))
+            self.assertIn("events.jsonl", str(meta.get("artifact_errors")))
+
+    @patch("benchmark_core.docker_sandbox_runner.Path.home", return_value=Path("/nonexistent_home"))
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    @patch("benchmark_core.docker_sandbox_runner.sbx_version", return_value="0.48.0")
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    def test_essential_artifact_write_failure_preserves_original_execution_error(
+        self, mock_run, _ver, _which, _home
+    ):
+        """Se Codex è fallito con errore di esecuzione e contemporaneamente fallisce la scrittura
+        di un log, l'eccezione originale di esecuzione NON deve essere sovrascritta."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ws = self._make_workspace(Path(tmpdir))
+            logs = Path(tmpdir) / "logs/aut"
+
+            mock_run.side_effect = [
+                _proc(returncode=0, stdout="Created sandbox test-exec-fail"),
+                _proc(returncode=0, stdout=json.dumps([{"name": "test-exec-fail", "id": "uuid-exec-fail"}])),
+                _proc(returncode=0, stdout="codex-cli 0.149.1\n"),
+                _proc(returncode=0, stdout=json.dumps({"allowed": True})),
+                _proc(returncode=0, stdout=json.dumps({"allowed": True})),
+                _proc(returncode=1, stdout=json.dumps({"allowed": False})),
+                _proc(returncode=1, stdout=json.dumps({"allowed": False})),
+                _proc(returncode=1, stderr="Syntax error in router configuration"),
+                _proc(returncode=0),  # rm
+            ]
+
+            from benchmark_core import workspace as ws_mod
+            original_write_json = ws_mod.write_json
+
+            def fail_result_write_json(path_obj, data, *args, **kwargs):
+                if Path(path_obj).name == "result.json":
+                    raise OSError("Permesso negato su result.json")
+                return original_write_json(path_obj, data, *args, **kwargs)
+
+            with patch("benchmark_core.docker_sandbox_runner.write_json", side_effect=fail_result_write_json):
+                with self.assertRaises(SandboxExecutionError) as ctx:
+                    run_codex_in_sandbox(
+                        prompt="test prompt",
+                        workspace=ws,
+                        logs=logs,
+                        timeout=300,
+                        model=None,
+                        reasoning_effort=None,
+                        variant="aut",
+                        sandbox_name="test-exec-fail",
+                    )
+
+            # L'errore sollevato è SandboxExecutionError (l'errore originale, non SandboxArtifactError)
+            self.assertIn("Syntax error in router configuration", str(ctx.exception))
+            self.assertIn("persistenza artefatti fallita", str(ctx.exception))
+
+    def test_lab_sync_failure_still_generates_inspect_eval_log_and_raises(self):
+        """In inspect_runner.py, un fallimento nella sincronizzazione del laboratorio deve comunque
+        generare il log nativo Inspect AI (.eval) e sollevare l'errore di sincronizzazione."""
+        from benchmark_core.inspect_runner import run_aut
+        from benchmark_core.config import Config
+        from benchmark_core.scenario_loader import Scenario
+        from inspect_ai.log import read_eval_log
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            scenario_dir = root / "scenarios/lab_test"
+            (scenario_dir / "lab").mkdir(parents=True)
+            (scenario_dir / "lab/lab.conf").write_text("[pc1]\n")
+            scenario = Scenario("lab_test", scenario_dir)
+
+            run = root / "runs/lab_test/T1/dns_only/r001"
+            (run / "lab").mkdir(parents=True)
+            (run / "lab/lab.conf").write_text("[pc1]\n")
+            aut_logs = run / "logs/aut"
+            aut_logs.mkdir(parents=True)
+
+            # Prepara log AUT simulati
+            (aut_logs / "result.json").write_text(json.dumps({
+                "returncode": 0, "timed_out": False, "duration_seconds": 5.0,
+                "final_message": "Configured pc1", "usage": {"input_tokens": 100, "output_tokens": 20},
+            }), encoding="utf-8")
+            (aut_logs / "events.jsonl").write_text(json.dumps({"type": "turn.completed", "usage": {"input_tokens": 100, "output_tokens": 20}}) + "\n", encoding="utf-8")
+            (aut_logs / "invocation.json").write_text(json.dumps({
+                "model": "gpt-5.6-terra", "execution_backend": "docker_sandbox", "authentication": "sbx_oauth_proxy",
+            }), encoding="utf-8")
+
+            config = Config(root, {
+                "aut": {"version": "test", "model": "gpt-5.6-terra", "reasoning_effort": "low",
+                        "dns_skill": "skills/dns/SKILL.md", "creation_skill": "skills/creation/SKILL.md"},
+                "docker_sandbox": {"execution_backend": "host"},
+                "benchmark": {"timeout_seconds": 10},
+            })
+
+            real_copytree = shutil.copytree
+
+            def fail_sync_copytree(src, dst, *args, **kwargs):
+                if str(dst).endswith("lab.sync-tmp"):
+                    raise OSError("Errore I/O durante copia sync laboratorio")
+                return real_copytree(src, dst, *args, **kwargs)
+
+            with patch("benchmark_core.inspect_runner.run_codex"), \
+                 patch("benchmark_core.inspect_runner.prepare_skill_workspace"), \
+                 patch("benchmark_core.inspect_runner.shutil.copytree", side_effect=fail_sync_copytree):
+                with self.assertRaises(OSError) as ctx:
+                    run_aut(
+                        config=config,
+                        scenario=scenario,
+                        run=run,
+                        agent="codex",
+                        original_prompt="Configura pc1",
+                        skill_mode="dns_only",
+                        run_id="lab_test__T1__dns_only__r001",
+                    )
+
+            self.assertIn("Errore I/O durante copia sync laboratorio", str(ctx.exception))
+
+            # Verifica che il log Inspect .eval sia stato COMUNQUE generato nonostante l'errore di sync!
+            eval_path = aut_logs / "lab_test__T1__dns_only__r001.eval"
+            self.assertTrue(eval_path.is_file(), "Il log .eval di Inspect AI deve essere presente anche se la sincronizzazione fallisce!")
+
+            eval_log = read_eval_log(str(eval_path))
+            self.assertIsNotNone(eval_log)
+            self.assertEqual(eval_log.eval.run_id, "lab_test__T1__dns_only__r001")
+
+    def test_aut_failure_and_sync_failure_preserves_aut_error_and_generates_eval(self):
+        """Se sia l'AUT che la sincronizzazione falliscono, l'eccezione dell'AUT deve essere
+        preservata (non sovrascritta dal sync) e il log .eval deve essere generato."""
+        from benchmark_core.inspect_runner import run_aut
+        from benchmark_core.config import Config
+        from benchmark_core.scenario_loader import Scenario
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            scenario_dir = root / "scenarios/lab_test"
+            (scenario_dir / "lab").mkdir(parents=True)
+            (scenario_dir / "lab/lab.conf").write_text("[pc1]\n")
+            scenario = Scenario("lab_test", scenario_dir)
+
+            run = root / "runs/lab_test/T1/dns_only/r001"
+            (run / "lab").mkdir(parents=True)
+            (run / "lab/lab.conf").write_text("[pc1]\n")
+            aut_logs = run / "logs/aut"
+            aut_logs.mkdir(parents=True)
+
+            config = Config(root, {
+                "aut": {"version": "test", "model": "gpt-5.6-terra", "reasoning_effort": "low",
+                        "dns_skill": "skills/dns/SKILL.md", "creation_skill": "skills/creation/SKILL.md"},
+                "docker_sandbox": {"execution_backend": "host"},
+                "benchmark": {"timeout_seconds": 10},
+            })
+
+            real_copytree = shutil.copytree
+
+            def fail_sync_copytree(src, dst, *args, **kwargs):
+                if str(dst).endswith("lab.sync-tmp"):
+                    raise OSError("Errore secondario di sincronizzazione")
+                return real_copytree(src, dst, *args, **kwargs)
+
+            with patch("benchmark_core.inspect_runner.run_codex", side_effect=SandboxExecutionError("Errore primario AUT")), \
+                 patch("benchmark_core.inspect_runner.prepare_skill_workspace"), \
+                 patch("benchmark_core.inspect_runner.shutil.copytree", side_effect=fail_sync_copytree):
+                with self.assertRaises(SandboxExecutionError) as ctx:
+                    run_aut(
+                        config=config,
+                        scenario=scenario,
+                        run=run,
+                        agent="codex",
+                        original_prompt="Configura pc1",
+                        skill_mode="dns_only",
+                        run_id="lab_double_fail__r001",
+                    )
+
+            # L'errore primario dell'AUT non è stato mascherato
+            self.assertIn("Errore primario AUT", str(ctx.exception))
+
+            # Il log .eval è stato comunque generato
+            eval_path = aut_logs / "lab_double_fail__r001.eval"
+            self.assertTrue(eval_path.is_file())
+
+    def test_cleanup_failure_diagnostics_in_manifest_and_metrics(self):
+        """Verifica che il fallimento di cleanup sia tracciato nel manifest e nelle metriche."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            run = Path(tmpdir)
+            logs = run / "logs/aut"
+            logs.mkdir(parents=True)
+
+            # Scrive metadati sandbox con cleanup fallito
+            (logs / "sandbox_metadata.json").write_text(json.dumps({
+                "sandbox_name": "test-cleanup-diag",
+                "sandbox_id": "uuid-clean-diag",
+                "sbx_version": "0.48.0",
+                "codex_sandbox_version": "0.149.1",
+                "execution_backend": "docker_sandbox",
+                "cleanup_ok": False,
+                "cleanup_error": "daemon locked container",
+                "error": "CleanupError: daemon locked container",
+            }), encoding="utf-8")
+
+            (logs / "result.json").write_text(json.dumps({
+                "returncode": 0, "duration_seconds": 10.0,
+                "error": "CleanupError: daemon locked container",
+            }), encoding="utf-8")
+
+            manifest = {
+                "scenario_id": "test_scenario", "prompt_type": "T1", "skill_mode": "dns_only",
+                "run_number": 1, "run_id": "test_cleanup__r001", "agent": "codex",
+                "execution_backend": "docker_sandbox", "aut_execution_success": False,
+                "pipeline_state": "AUT_FAILED", "pipeline_error": "SandboxCleanupError: daemon locked container",
+                "sandbox_cleanup_ok": False, "sandbox_cleanup_error": "daemon locked container",
+                "sandbox_error": "CleanupError: daemon locked container",
+            }
+
+            metrics = make_metrics(run, manifest, total_seconds=15.0, checker_seconds=None, checker_outcome=None)
+
+            self.assertEqual(metrics["status"], "AUT_FAILED")
+            self.assertFalse(metrics["agent_success"])
+            self.assertEqual(metrics["pipeline_error"], "SandboxCleanupError: daemon locked container")
+            self.assertIsNotNone(metrics["sandbox"])
+            self.assertFalse(metrics["sandbox"]["cleanup_ok"])
+            self.assertEqual(metrics["sandbox"]["cleanup_error"], "daemon locked container")
+            self.assertEqual(metrics["sandbox"]["error"], "CleanupError: daemon locked container")
+
+    def test_pipeline_e2e_tracks_failures_preserves_partial_diff_and_eval_log(self):
+        """Esecuzione pipeline end-to-end con fallimento AUT: verifica transizione stato ad AUT_FAILED,
+        tracciamento errori in manifest/metrics, preservazione diff parziale e log Inspect .eval."""
+        from benchmark_core.config import Config
+        from benchmark_core.scenario_loader import Scenario
+        from benchmark_core import pipeline
+        from benchmark_core import skill_modes as _sm
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            scenario_dir = root / "scenarios/example_dns_001"
+            (scenario_dir / "lab").mkdir(parents=True)
+            (scenario_dir / "lab/lab.conf").write_text("[pc1]\n")
+            (scenario_dir / "lab/pc1.startup").write_text("initial config\n")
+            (root / "prompt/example_dns_001").mkdir(parents=True, exist_ok=True)
+            (root / "prompt/example_dns_001/T1.md").write_text("Configure pc1")
+            scenario = Scenario("example_dns_001", scenario_dir)
+
+            for rel, content in [
+                ("skills/dns/SKILL.md", "---\nname: kathara-dns\ndescription: DNS skill\n---\n# DNS\n"),
+                ("skills/creation/SKILL.md", "---\nname: kathara-creation\ndescription: Creation skill\n---\n# Creation\n"),
+                ("scenarios/example_dns_001/correction.yaml", "canonical correction"),
+            ]:
+                p = root / rel
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(content)
+
+            config = Config(root, {
+                "aut": {"version": "test", "model": "codex-default", "reasoning_effort": "medium",
+                        "dns_skill": "skills/dns/SKILL.md", "creation_skill": "skills/creation/SKILL.md"},
+                "sandbox": {"image": "fixture"},
+                "benchmark": {"timeout_seconds": 10},
+            })
+
+            def failing_run_aut(cfg, scn, run_dir, agent, prompt_text, skill_mode=None, run_id=None):
+                aut_logs = run_dir / "logs/aut"
+                aut_logs.mkdir(parents=True, exist_ok=True)
+                # Simula parziale modifica del lab prima del fallimento
+                (run_dir / "lab/pc1.startup").write_text("partial modified config\n")
+                (aut_logs / "prompt_sent.md").write_text(prompt_text, encoding="utf-8")
+                (aut_logs / "result.json").write_text(json.dumps({
+                    "returncode": 1, "timed_out": False, "duration_seconds": 3.0,
+                    "error": "Codex crashed during execution",
+                }), encoding="utf-8")
+                (aut_logs / f"{run_id}.eval").write_text("eval log content", encoding="utf-8")
+                raise SandboxExecutionError("Codex in Docker Sandbox fallito (exit 1): crash")
+
+            with patch.object(pipeline, "component_versions", return_value={}), \
+                 patch.object(pipeline, "run_aut", side_effect=failing_run_aut), \
+                 patch.object(pipeline, "read_correction", return_value=(b"canonical correction", "sha")), \
+                 patch.object(pipeline, "validate_correction", return_value="sha"), \
+                 patch.object(_sm, "validate_mode_sources", side_effect=lambda cfg, m: _sm.mode_details(m)):
+                run_result = pipeline.run_one(config, scenario, "codex", "T1", "dns_only")
+
+            # Verifica stato finale della pipeline
+            manifest = json.loads((run_result / "manifest.json").read_text(encoding="utf-8"))
+            metrics = json.loads((run_result / "evaluation/metrics.json").read_text(encoding="utf-8"))
+
+            self.assertEqual(manifest["pipeline_state"], "AUT_FAILED")
+            self.assertFalse(manifest["aut_execution_success"])
+            self.assertIsNone(manifest["task_success"])
+            self.assertIn("SandboxExecutionError", manifest["pipeline_error"])
+            self.assertEqual(manifest["state_history"][-1]["state"], "AUT_FAILED")
+
+            self.assertEqual(metrics["status"], "AUT_FAILED")
+            self.assertFalse(metrics["agent_success"])
+            self.assertIn("SandboxExecutionError", metrics["pipeline_error"])
+
+            # Verifica preservazione file di errore e diff parziale
+            self.assertTrue((run_result / "logs/pipeline_error.log").is_file())
+            self.assertTrue((run_result / "logs/diff.json").is_file())
+            diff = json.loads((run_result / "logs/diff.json").read_text(encoding="utf-8"))
+            # Il file pc1.startup è stato modificato prima del crash: il diff parziale deve registrarlo!
+            self.assertTrue(len(diff.get("modified", [])) > 0 or len(diff.get("added", [])) > 0)
+
+            # Verifica presenza del log Inspect
+            inspect_eval = run_result / f"logs/aut/{manifest['run_id']}.eval"
+            self.assertTrue(inspect_eval.is_file(), "Il log Inspect .eval deve essere preservato!")
 
 
 # ---------------------------------------------------------------------------

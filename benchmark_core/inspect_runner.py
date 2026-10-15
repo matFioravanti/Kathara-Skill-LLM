@@ -1,8 +1,9 @@
 """Esecuzione dell'AUT host e generazione del log di telemetria Inspect AI."""
 from pathlib import Path
 
-import subprocess
 import shutil
+import subprocess
+import sys
 import tempfile
 
 from .agent_factory import validate_agent
@@ -48,6 +49,8 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
         shutil.copytree(persistent_lab, temp_lab)
         validate_aut_workspace_isolation(temp_lab, config.root)
         prompt = ""
+        aut_error = None
+        sync_error = None
         
         try:
             if agent == "codex":
@@ -116,21 +119,26 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                     reasoning_effort=config.reasoning_effort(),
                     variant="aut",
                 )
+        except BaseException as exc:
+            aut_error = exc
         finally:
-            codex_dir = temp_lab / ".codex"
-            if codex_dir.exists():
-                shutil.rmtree(codex_dir)
+            try:
+                codex_dir = temp_lab / ".codex"
+                if codex_dir.exists():
+                    shutil.rmtree(codex_dir, ignore_errors=True)
 
-            staging_lab = run / "lab.sync-tmp"
-            if staging_lab.exists():
-                shutil.rmtree(staging_lab)
-            shutil.copytree(temp_lab, staging_lab)
-            
-            if persistent_lab.exists():
-                shutil.rmtree(persistent_lab)
-            staging_lab.rename(persistent_lab)
+                staging_lab = run / "lab.sync-tmp"
+                if staging_lab.exists():
+                    shutil.rmtree(staging_lab, ignore_errors=True)
+                shutil.copytree(temp_lab, staging_lab)
+                
+                if persistent_lab.exists():
+                    shutil.rmtree(persistent_lab)
+                staging_lab.rename(persistent_lab)
+            except BaseException as exc:
+                sync_error = exc
 
-            # Step di telemetria Inspect AI: garantito anche in caso di errore
+            # Step di telemetria Inspect AI: garantito anche in caso di errore AUT o sincronizzazione
             try:
                 create_inspect_eval_log(
                     logs=aut_logs,
@@ -141,6 +149,17 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                 )
             except Exception as exc:
                 print(f"Avviso telemetria Inspect su {run_id or run.name}: {exc}", file=sys.stderr)
+
+            # Preserva e propaga l'errore senza che la telemetria lo nasconda
+            if aut_error is not None:
+                if sync_error is not None:
+                    print(
+                        f"Avviso: fallita anche la sincronizzazione lab su {run_id or run.name}: {sync_error}",
+                        file=sys.stderr,
+                    )
+                raise aut_error
+            if sync_error is not None:
+                raise sync_error
 
     eval_path = aut_logs / f"{run_id or run.name}.eval"
     return eval_path if eval_path.exists() else (aut_logs / "events.jsonl")

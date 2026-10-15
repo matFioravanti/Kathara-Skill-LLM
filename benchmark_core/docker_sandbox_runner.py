@@ -74,6 +74,10 @@ class SandboxCleanupError(SandboxError):
     """Il sandbox non e' stato eliminato correttamente (blocca la run come fallita)."""
 
 
+class SandboxArtifactError(SandboxError):
+    """Fallimento nella scrittura o persistenza degli artefatti essenziali del sandbox."""
+
+
 # ---------------------------------------------------------------------------
 # Risultato della run sandbox
 # ---------------------------------------------------------------------------
@@ -97,10 +101,17 @@ class SandboxRun:
     codex_version: str | None = None
     codex_host_version: str | None = None
     codex_sandbox_version: str | None = None
+    artifacts_ok: bool = True
+    artifact_errors: tuple[str, ...] = ()
 
     @property
     def success(self) -> bool:
-        return not self.timed_out and self.returncode == 0 and self.cleanup_ok
+        return (
+            not self.timed_out
+            and self.returncode == 0
+            and self.cleanup_ok
+            and self.artifacts_ok
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -639,10 +650,12 @@ def run_codex_in_sandbox(
 
         # Persisti SEMPRE gli artefatti di log e metadati senza nascondere silenziosamente errori
         log_errors: list[str] = []
+        essential_errors: list[str] = []
         try:
             (logs / "events.jsonl").write_text(codex_stdout, encoding="utf-8")
         except Exception as exc:
             log_errors.append(f"events.jsonl: {exc}")
+            essential_errors.append(f"events.jsonl: {exc}")
         try:
             (logs / "stderr.log").write_text(codex_stderr, encoding="utf-8")
         except Exception as exc:
@@ -670,6 +683,21 @@ def run_codex_in_sandbox(
             })
         except Exception as exc:
             log_errors.append(f"invocation.json: {exc}")
+            essential_errors.append(f"invocation.json: {exc}")
+
+        recorded_error = (
+            str(infra_error)
+            if infra_error
+            else (
+                f"CleanupError: {rm_err}"
+                if not rm_ok
+                else (
+                    f"ArtifactPersistenceError: {'; '.join(essential_errors)}"
+                    if essential_errors
+                    else None
+                )
+            )
+        )
 
         try:
             write_json(logs / "result.json", {
@@ -679,10 +707,14 @@ def run_codex_in_sandbox(
                 "sandbox_overhead_seconds": sandbox_overhead,
                 "final_message": final_message,
                 "usage": usage,
-                "error": str(infra_error) if infra_error else None,
+                "error": recorded_error,
             })
         except Exception as exc:
             log_errors.append(f"result.json: {exc}")
+            essential_errors.append(f"result.json: {exc}")
+
+        if not recorded_error and essential_errors:
+            recorded_error = f"ArtifactPersistenceError: {'; '.join(essential_errors)}"
 
         try:
             write_json(logs / "sandbox_metadata.json", {
@@ -696,10 +728,13 @@ def run_codex_in_sandbox(
                 "cleanup_error": rm_err,
                 "overhead_seconds": sandbox_overhead,
                 "codex_duration_seconds": codex_duration,
-                "error": str(infra_error) if infra_error else None,
+                "error": recorded_error,
+                "artifacts_ok": len(essential_errors) == 0,
+                "artifact_errors": essential_errors if essential_errors else None,
             })
         except Exception as exc:
             log_errors.append(f"sandbox_metadata.json: {exc}")
+            essential_errors.append(f"sandbox_metadata.json: {exc}")
 
         if log_errors:
             print(f"Avviso scrittura log sandbox in {logs}: {'; '.join(log_errors)}", file=sys.stderr)
@@ -722,12 +757,16 @@ def run_codex_in_sandbox(
         codex_version=detected_codex_version,
         codex_host_version=detected_codex_host_version,
         codex_sandbox_version=detected_codex_version,
+        artifacts_ok=len(essential_errors) == 0,
+        artifact_errors=tuple(essential_errors),
     )
 
     if codex_returncode != 0 or timed_out:
         detail = codex_stderr.strip() or "nessun dettaglio in stderr"
         if not rm_ok:
             detail += f" (Inoltre cleanup sandbox fallito: {rm_err})"
+        if essential_errors:
+            detail += f" (Inoltre persistenza artefatti fallita: {'; '.join(essential_errors)})"
         if infra_error:
             raise SandboxExecutionError(
                 f"Codex in Docker Sandbox fallito (exit {codex_returncode}): {detail}"
@@ -736,8 +775,13 @@ def run_codex_in_sandbox(
             f"Codex in Docker Sandbox fallito (exit {codex_returncode}): {detail}"
         )
     if not rm_ok:
-        raise SandboxCleanupError(
-            f"Cleanup del sandbox {sandbox_name} fallito: {rm_err}"
+        cleanup_detail = f"Cleanup del sandbox {sandbox_name} fallito: {rm_err}"
+        if essential_errors:
+            cleanup_detail += f" (Inoltre persistenza artefatti fallita: {'; '.join(essential_errors)})"
+        raise SandboxCleanupError(cleanup_detail)
+    if essential_errors:
+        raise SandboxArtifactError(
+            f"Persistenza artefatti essenziali fallita in {logs}: {'; '.join(essential_errors)}"
         )
     return result
 

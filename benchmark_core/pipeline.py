@@ -162,6 +162,12 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
                         manifest["sbx_version"] = _sbx_meta.get("sbx_version")
                         if _sbx_meta.get("codex_host_version"):
                             manifest["codex_host_version"] = _sbx_meta.get("codex_host_version")
+                        if _sbx_meta.get("cleanup_ok") is not None:
+                            manifest["sandbox_cleanup_ok"] = _sbx_meta.get("cleanup_ok")
+                        if _sbx_meta.get("cleanup_error"):
+                            manifest["sandbox_cleanup_error"] = _sbx_meta.get("cleanup_error")
+                        if _sbx_meta.get("error"):
+                            manifest["sandbox_error"] = _sbx_meta.get("error")
                 except Exception:
                     pass
             # Anche un AUT interrotto può aver modificato file: conserva il diff parziale.
