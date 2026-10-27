@@ -1,68 +1,97 @@
 # Kathara Skill LLM Benchmark
 
-Benchmark riproducibile per valutare agenti LLM CLI che configurano DNS e servizi web in laboratori Kathara. Gli agenti supportati sono **Codex CLI** e **Antigravity CLI (agy)**, ciascuno con autenticazione rigorosamente locale.
+Benchmark riproducibile per valutare agenti LLM CLI che configurano DNS e servizi web in laboratori di emulazione di rete Kathara. Gli agenti supportati sono **Codex CLI** e **Antigravity CLI (agy)**, ciascuno con autenticazione rigorosamente locale. Per Codex è inoltre supportata l'esecuzione totalmente isolata all'interno di container effimeri gestiti tramite **Docker Sandboxes (`sbx`)**.
 
 ## Architettura
 
-Ogni scenario contiene soltanto un prompt e un laboratorio iniziale immutabile. Per ciascuna modalità Skill il runner alloca una run in `runs/<scenario>/<prompt_type>/<skill_mode>/rNNN`, conserva il baseline in `input/lab`, crea la copia modificabile in `lab` e avvia l'Agent Under Test (AUT) sul Mac host. I numeri delle run avanzano indipendentemente per scenario e modalità.
+Ogni scenario contiene un prompt di compito, un laboratorio iniziale immutabile (baseline) e una correction manuale canonica. Per ciascuna modalità Skill, il benchmark runner alloca una directory di run indipendente in `runs/<scenario>/<prompt_type>/<skill_mode>/rNNN`, conserva il baseline originale in `input/lab`, alloca la copia modificabile in `lab` e avvia l'Agent Under Test (AUT). I progressivi numerici delle run avanzano indipendentemente per scenario e modalità.
 
-L'**active agent** di una run è unico: lo stesso agente viene utilizzato come AUT. Non è possibile combinare agenti diversi nella stessa run.
+L'**active agent** di una run è unico: l'agente configurato agisce come AUT. Non è consentito combinare agenti differenti all'interno della medesima run.
 
-Terminata l'esecuzione AUT, il runner salva gli eventi, chiude la finestra di misurazione e calcola il diff rispetto al laboratorio originale. Il Kathara Lab Checker valuta poi il `lab/` della run usando la correction manuale canonica `scenarios/<scenario>/correction.yaml`. Una copia byte per byte viene salvata in `evaluation/correction.yaml` per riprodurre la valutazione. La correction resta fuori da `lab/` e non viene fornita all'AUT.
+Terminata l'esecuzione dell'AUT (con successo, per timeout o per errore), il runner chiude la finestra temporale di misurazione, salva gli eventi di telemetria, sincronizza i file risultanti e calcola il diff rispetto al laboratorio originale. Il Kathara Lab Checker valuta quindi il `lab/` della run usando la correction manuale canonica `scenarios/<scenario>/correction.yaml`. Uno snapshot byte per byte viene salvato in `evaluation/correction.yaml` per garantire la riproducibilità totale della valutazione. La correction rimane rigorosamente fuori da `lab/` e non entra mai a contatto con l'AUT.
 
-Il risultato finale deriva esclusivamente dal checker. Un'esecuzione AUT riuscita può quindi avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`. Se la correction o il checker falliscono per un problema infrastrutturale, `task_success` rimane nullo.
+Il verdetto finale del task deriva esclusivamente dal checker:
+- Una run conclusa con successo può avere `aut_execution_success=true`, `checker_execution_success=true` e `task_success=false`.
+- In caso di anomalie infrastrutturali o errori tecnici durante l'esecuzione dell'AUT o del checker, `task_success` rimane `null` e la run assume uno stato di errore pipeline (`AUT_FAILED`, `CHECKER_FAILED`, ecc.).
 
 ```text
 Prompt + Skill
       │
       ▼
-Codex / Antigravity CLI
+Backend di Esecuzione AUT
+  ├─ Host CLI: Codex / Antigravity CLI
+  └─ Docker Sandbox (sbx): Container Effimero
       │
       ├── result.json
-      └── events.jsonl
+      ├── events.jsonl
+      └── sandbox_metadata.json (sbx)
               │
               ▼
         Inspect Adapter
               │
-              └── run_id.eval
+              └── run_id.eval (Log nativo Inspect AI garantito)
 
-Laboratorio generato
+Laboratorio Generato (lab/)
       │
       ▼
 scenarios/<scenario>/correction.yaml
       │
       ▼
-evaluation/correction.yaml → Kathara Lab Checker
-      │
-      └── checker results
+evaluation/correction.yaml ──► Kathara Lab Checker
+                                      │
+                                      └── Risultati Checker (CSV)
 
-run_id.eval ───────┐
-                   ├── aggregation ──► runs.csv / checks.csv / summary.csv
-checker results ───┘
+run_id.eval ────────┐
+                    ├── aggregazione ──► runs.csv / checks.csv / summary.csv / benchmark.xlsx
+risultati checker ──┘
 ```
 
-### Backend Codex
+### Backend di Esecuzione Codex
 
-`codex exec --json --ephemeral --sandbox workspace-write --skip-git-repo-check -C <workspace> -` esegue Codex senza API key, passa il prompt via stdin e conserva tutti gli eventi JSONL.
+Codex supporta due backend di esecuzione, selezionabili in `benchmark.yaml`:
+
+1. **Backend Host CLI** (`execution_backend: codex_cli` o assente):
+   Esegue `codex exec --json --ephemeral --sandbox workspace-write --skip-git-repo-check -C <workspace> -` direttamente sulla macchina host in una directory temporanea isolata, inviando il prompt via stdin e registrando tutti gli eventi JSONL.
+2. **Backend Docker Sandbox (`sbx`)** (`execution_backend: docker_sandbox`):
+   Esegue Codex all'interno di un sandbox monouso isolato gestito da Docker Sandboxes (`sbx` v0.48.0).
+   - **Ciclo di vita effimero**: Ogni run alloca un sandbox dedicato con nome univoco (`kathara-<scenario>-r<repetition>-<uuid8>`) tramite `sbx create` con `--skills=off`. Al termine (successo, errore, timeout o interruzione), il sandbox viene distrutto con `sbx rm --force` (con retry). Se la rimozione fallisce, la run viene marcata con `SandboxCleanupError`.
+   - **Bind-mount diretto del laboratorio**: I file temporanei del laboratorio sono montati direttamente nel container: ogni modifica di Codex viene scritta istantaneamente sul disco host senza ricorrere a `sbx cp`.
+   - **Nessuna esposizione delle credenziali host**: L'autenticazione usa esclusivamente il proxy OAuth ufficiale di Docker Sandboxes. Nessun file di credenziali dell'host viene montato nel sandbox.
+   - **Network policy restrittiva in uscita**: L'accesso di rete è rigorosamente limitato agli endpoint autorizzati OAuth e API OpenAI; qualsiasi traffico non autorizzato viene bloccato.
+   - **Memoria interna disabilitata esplicitamente**: La memoria persistente di Codex viene disattivata con opzioni e flag multipli (`--disable memories`, `-c memories=false`, `-c memories.use_memories=false`, `-c memories.generate_memories=false`, `-c features.memories=false`) per prevenire contaminazioni tra run.
+   - **Isolamento del checker sull'host**: Kathara e Kathara Lab Checker operano esclusivamente sull'host e non vengono mai montati o eseguiti nel sandbox.
+   - **Nessun fallback silenzioso**: Errori tecnici del sandbox bloccano la run e non provocano mai un fallback trasparente all'host.
 
 ### Backend Antigravity
 
-`agy --add-dir <workspace> --dangerously-skip-permissions --output-format stream-json --model <model> --effort <effort> --print <prompt>` esegue Antigravity con autenticazione locale Google.
+`agy --add-dir <workspace> --dangerously-skip-permissions --output-format stream-json --model <model> --effort <effort> --print <prompt>` esegue Antigravity CLI con login Google locale all'interno di un workspace isolato.
 
-### Telemetria Inspect AI
+### Telemetria Inspect AI e Resilienza agli Errori
 
-Al termine dell'AUT, un adapter dedicato legge `result.json` ed `events.jsonl` e costruisce un file di log nativo Inspect AI (`runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/logs/aut/<scenario>__<skill_mode>__rNNN.eval`). Il log registra input/output tokens, reasoning tokens, `input_tokens_cache_read`, durata, tool calls, errori e metadata della run. Il file è ispezionabile con `inspect log dump` o `read_eval_log`.
+Al termine della sessione AUT, un adapter dedicato legge `result.json`, `events.jsonl` e gli eventuali metadati del sandbox per generare un log di telemetria nativo Inspect AI:
+```text
+runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/logs/aut/<scenario>__<prompt_type>__<skill_mode>__rNNN.eval
+```
+Il file traccia token in ingresso/uscita, token di reasoning, token in cache, durata, chiamate a tool, diagnostica degli errori e metadati. È ispezionabile con `inspect log dump` o `read_eval_log`.
 
-Inspect AI opera esclusivamente come sistema di telemetria: non avvolge la CLI dell'AUT, non legge, genera o influenza `correction.yaml`, e non partecipa alla valutazione del laboratorio. Kathara Lab Checker determina il superamento dei check in modo totalmente deterministico. I due sistemi rimangono separati e vengono associati solo in fase di aggregazione tramite l'identificatore univoco `run_id`.
+Inspect AI funge da puro osservatore di telemetria: non avvolge il subprocess AUT, non altera `correction.yaml` e non interviene nella valutazione del laboratorio.
+
+**Resilienza e Diagnostica:**
+- **Creazione del log garantita**: Il log `.eval` viene prodotto anche in caso di timeout, crash del processo AUT o errori nella sincronizzazione del workspace, evitando perdite di traccia.
+- **Preservazione dei diff parziali**: La sincronizzazione del laboratorio adotta uno staging temporaneo (`lab.sync-tmp` -> `lab`). Se l'AUT si interrompe dopo aver modificato alcuni file, le modifiche parziali vengono salvate e registrate in `logs/diff.json`.
+- **Tracciamento diagnostico**: In caso di fallimento infrastrutturale, stack trace e messaggi di errore sono registrati in `logs/pipeline_error.log`, `manifest.json` e `evaluation/metrics.json` nei campi `pipeline_error` e `sandbox`.
 
 ## Requisiti e installazione
 
-Servono Python 3.11 o successivo, Docker con daemon attivo e Kathara. In aggiunta, in base all'agente scelto:
+- **Python**: 3.11 o successivo
+- **Docker**: Daemon Docker attivo (Docker Desktop su macOS)
+- **Kathara**: Installato e funzionante per l'emulazione di rete
+- **Prerequisiti agente** (è richiesto solo l'agente configurato):
+  - **Codex (Host)**: Codex CLI installata e autenticata con ChatGPT (`codex --version`, `codex login status`).
+  - **Codex (Docker Sandbox)**: Docker Sandboxes CLI installata (`sbx version` v0.48.0), daemon sbx attivo o con avvio automatico, e Codex autenticato nel template sandbox.
+  - **Antigravity**: Antigravity CLI installata con login Google locale (`agy --version`).
 
-* **Codex**: Codex CLI installata e autenticata con ChatGPT (`codex --version`, `codex login status`).
-* **Antigravity**: Antigravity CLI installata con autenticazione locale Google (`agy --version`).
-
-Non è necessario avere entrambi installati: il preflight verifica solo i prerequisiti dell'agente configurato.
+Configurazione dell'ambiente virtuale:
 
 ```bash
 python3 -m venv .venv
@@ -70,24 +99,44 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-`requirements.txt` è il freeze dell'ambiente risolto. Le versioni centrali sono Inspect AI 0.3.266, Inspect SWE 0.2.71, kathara-lab-checker 0.1.14, Kathara 3.8.3, pandas 3.0.6 e PyYAML 6.0.3.
+`requirements.txt` è il freeze delle dipendenze verificate:
+Inspect AI 0.3.266, Inspect SWE 0.2.71, kathara-lab-checker 0.1.14, Kathara 3.8.3, pandas 3.0.6, PyYAML 6.0.3 e openai 3.16.2.
 
-Non impostare `OPENAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY` o `INSPECT_EVAL_MODEL`: il runner le rimuove soltanto dalla copia dell'environment passata al subprocess, senza modificare l'ambiente dell'utente.
+Non impostare `OPENAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY` o `INSPECT_EVAL_MODEL`: il runner le rimuove dall'ambiente subprocess per garantire l'uso dell'autenticazione locale.
 
 ## Configurazione
 
-Ogni agente ha il proprio file di configurazione dedicato:
+Ogni agente dispone del proprio file di configurazione:
 
 * `benchmark.yaml` — configurazione **Codex** (`gpt-5.6-terra`, reasoning effort `low`)
 * `benchmark_antigravity.yaml` — configurazione **Antigravity** (`gemini-3.8-flash`, reasoning effort `low`)
 
-L'agente è determinato dal campo `aut.agent` nel file di configurazione. Il flag `--agent` sulla CLI serve esclusivamente come verifica di coerenza: deve coincidere con `aut.agent` nel YAML, altrimenti il comando viene rifiutato. L'override cross-provider non è supportato.
+L'agente attivo è specificato in `aut.agent`. L'opzione CLI `--agent` funge da verifica di coerenza: deve coincidere con `aut.agent` nel file YAML, altrimenti il comando viene rifiutato.
 
-Ogni scenario ha una correction manuale in `scenarios/<scenario>/correction.yaml`, condivisa da tutti gli agenti, le modalità Skill e le ripetizioni dello scenario. Il preflight ne verifica presenza e validità prima di qualsiasi run modello; non viene copiata in `lab/` né fornita all'AUT. Il checker riceve esplicitamente il `lab/` della run e lo snapshot della correction. `--rerun-correction` usa la versione corrente nello scenario e sostituisce lo snapshot di ogni run selezionata.
+### Configurazione Docker Sandbox (`benchmark.yaml`)
+
+Per Codex, il blocco `docker_sandbox` controlla il backend sbx:
+
+```yaml
+docker_sandbox:
+  execution_backend: docker_sandbox  # "docker_sandbox" per abilitare sbx; assente/altro = host CLI
+  sbx_version: "0.48.0"              # versione sbx attesa (EXPECTED_SBX_VERSION)
+  codex_version: "0.149.1"           # versione codex nel template sandbox sbx
+  auto_start_daemon: true            # avvia automaticamente il daemon sbx se spento
+  auto_start_docker: true            # avvia Docker Desktop su macOS se spento
+  daemon_wait_seconds: 30            # timeout di attesa avvio daemon
+  docker_wait_seconds: 45            # timeout di attesa avvio Docker Desktop
+  cleanup_on_error: true             # elimina il container anche in caso di errore
+  verify_sandbox_codex: true         # verifica versione e login di Codex dentro il sandbox in preflight
+```
+
+### Correction degli scenari
+
+Ogni scenario adotta una correction canonica condivisa in `scenarios/<scenario>/correction.yaml`. Il preflight ne convalida presenza e correttezza sintattica prima di avviare qualsiasi chiamata modello. La correction non entra mai in `lab/` né viene fornita all'AUT.
 
 ## Skill richieste
 
-Il repository predispone le directory ma non inventa il contenuto delle Skill o delle correction, che deve essere fornito dall'esperimento:
+Il repository organizza le skill in `skills/`:
 
 ```text
 skills/kathara-creation/SKILL.md
@@ -97,169 +146,163 @@ skills/lab_checker/config-schema.md
 scenarios/<scenario>/correction.yaml
 ```
 
-La Creation Skill deve dichiarare `name: kathara-creation` e la DNS Skill `name: kathara-dns`; entrambe richiedono il campo `description`. Il contenuto della Creation Skill è fornito dall'esperimento. La skill checker e lo schema possono essere usati per scrivere le correction, ma il benchmark non esegue più un agente per generarle. Per verificare la DNS Skill:
+La Creation Skill deve dichiarare `name: kathara-creation` e la DNS Skill `name: kathara-dns`; entrambe richiedono il campo `description`. Per convalidare le skill:
 
 ```bash
 python scripts/run_benchmark.py --check-skills
 ```
 
-L'assenza delle Skill runtime o della correction di uno scenario produce un errore esplicito prima di qualsiasi chiamata modello.
+### Modalità Skill (Codex)
 
-Gli esperimenti Codex selezionano una modalità Skill con `--skill-mode`:
+Le run Codex selezionano una delle cinque modalità con `--skill-mode`:
 
-| Modalità        | Disponibili a Codex | Invocazione esplicita |
-|-----------------|---------------------|-----------------------|
-| `no_skill`      | nessuna             | nessuna               |
-| `creation_only` | Creation            | $kathara-creation     |
-| `dns_only`      | DNS                 | $kathara-dns          |
-| `both_forced`   | Creation e DNS      | entrambe              |
-| `auto`          | Creation e DNS      | nessuna               |
+| Modalità | Skill rese disponibili | Direttiva nel prompt |
+|---|---|---|
+| `no_skill` | Nessuna | Nessuna |
+| `creation_only` | Creation (`kathara-creation`) | `$kathara-creation` |
+| `dns_only` | DNS (`kathara-dns`) | `$kathara-dns` |
+| `both_forced` | Creation + DNS | Entrambe |
+| `auto` | Creation + DNS | Nessuna (scoperta autonoma) |
 
-"Invocazione esplicita" non equivale necessariamente a "totale aderenza ad ogni istruzione".
-La telemetria distingue:
-- disponibilità
-- invocazione esplicita
-- caricamento/lettura della skill osservata
-- risultato finale del task
+### Protocollo Skill
 
-La modalità predefinita è `dns_only`, come nel comportamento Codex precedente. Ogni run riceve solo le skill selezionate sotto `lab/.codex/skills/`. Copie omonime nello scope utente o nei parent interrompono il preflight per evitare run contaminate. Le modalità che includono Creation richiedono il file canonico `skills/kathara-creation/SKILL.md`.
+Il benchmark adotta il protocollo `explicit_read_v1` per Codex:
+- Nelle modalità forzate (`creation_only`, `dns_only`, `both_forced`), il runner aggiunge un'istruzione esplicita e standardizzata di lettura del file `SKILL.md` corrispondente oltre alla direttiva `$skill`.
+- Nella modalità `auto`, le skill vengono inserite in `lab/.codex/skills/` senza modifiche al prompt, lasciando agire la discovery nativa.
+- Nella modalità `no_skill`, non viene fornita alcuna skill.
 
-`--all-skill-modes` orchestra in sequenza le cinque modalità sopra. Prima verifica tutte le skill necessarie, poi crea una run indipendente per ogni modalità nell'ordine indicato. Il manifest di ogni run riporta la modalità effettiva.
+Il benchmark registra il trattamento effettivo:
+- `skill_mode`
+- `available_skills`
+- `forced_skills`
+- `skill_protocol`
 
-Per rivalutare in-place le run esistenti usando la correction canonica aggiornata, senza chiamate modello e senza consumare nuovi token LLM:
+Il runner non deduce l'aderenza alla skill dall'esecuzione dei comandi shell, poiché il caricamento nativo delle skill può non risultare osservabile nei comandi eseguiti. L'esito finale viene verificato in modo deterministico dal Kathara Lab Checker.
+
+Eseguire in sequenza tutte le cinque modalità:
+
+```bash
+python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --all-skill-modes
+```
+
+Rivalutare le run esistenti in-place con la correction canonica aggiornata, senza chiamate LLM:
 
 ```bash
 python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --rerun-correction
 ```
 
-Con `--all` vengono rivalutati tutti gli scenari esistenti. Una modalità `--skill-mode` specifica limita la rivalutazione a quella modalità; omettendola vengono selezionate tutte e cinque. Sono elaborate in ordine tutte le directory `rNNN` esistenti. In questa modalità `--repetitions` non è accettato.
-
-```bash
-python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --agent codex --skill-mode auto
-```
-
 ## Scenari
 
-Gli scenari vengono scoperti automaticamente sotto `scenarios/` e sono validi quando contengono:
+Gli scenari vengono scoperti automaticamente nella directory `scenarios/`:
 
 ```text
 scenarios/<scenario_id>/
 ├── correction.yaml
-├── correction.yaml
+├── metadata.yaml        # Metadati descrittivi facoltativi (topologia, difficoltà)
 └── lab/
     └── lab.conf
 ```
 
-Ogni scenario deve contenere `correction.yaml` e `lab/lab.conf`. I prompt vivono solo in `prompt/<scenario_id>/<prompt_type>.md` (T1–T6). La correction è manuale e condivisa tra agenti, modalità Skill e ripetizioni; resta nella root dello scenario, fuori da `lab/`, e non entra mai nel workspace AUT. Il prompt è la fonte normativa e il laboratorio viene copiato per ogni run.
-
-L’unica fonte dei prompt è `prompt/<scenario_id>/<prompt_type>.md`, selezionata con `--prompt-type T1`.
+I prompt risiedono esclusivamente in `prompt/<scenario_id>/<prompt_type>.md` (T1–T6).
 
 ```bash
+# Eseguire un singolo scenario con prompt T1
 python scripts/run_benchmark.py --scenario static-routing-5routers --prompt-type T1 --skill-mode dns_only
+
+# Eseguire tutte le modalità skill per uno scenario
 python scripts/run_benchmark.py --scenario static-routing-5routers --prompt-type T1 --all-skill-modes
+
+# Eseguire 5 ripetizioni di tutti gli scenari su tutte le modalità skill
 python scripts/run_benchmark.py --all --prompt-type T1 --all-skill-modes --repetitions 5
 ```
 
 ## Esecuzione
 
-Assicurati di aver attivato l'ambiente virtuale prima di eseguire qualsiasi comando:
+Attiva l'ambiente virtuale prima di ogni comando:
 
 ```bash
 source .venv/bin/activate
 ```
 
-Il preflight controlla skill, dipendenze dell'agente configurato, Docker, Compose, Kathara e checker senza fare chiamate al modello. Verifica solo l'agente specificato nel file di configurazione:
+### Preflight
+
+Il preflight controlla skill, autenticazione dell'agente, Docker, Kathara e checker senza spendere token:
 
 ```bash
-# Preflight Codex (non richiede agy)
+# Preflight Codex (valida Host CLI o Docker Sandbox sbx in base a benchmark.yaml)
 python scripts/run_benchmark.py --preflight --agent codex
 
-# Preflight Antigravity (non richiede codex)
+# Preflight Antigravity
 python scripts/run_benchmark.py --config benchmark_antigravity.yaml --preflight --agent antigravity
 ```
 
-Eseguire uno scenario:
+### Esecuzione delle run
 
 ```bash
-# Con Codex
+# Esecuzione con Codex
 python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --agent codex
 
-# Prompt personalizzato
-python scripts/run_benchmark.py --scenario example_dns_001 --prompt-type T1 --agent codex
-
-# Con Antigravity
+# Esecuzione con Antigravity
 python scripts/run_benchmark.py --config benchmark_antigravity.yaml --scenario example_dns_001 --prompt-type T1 --agent antigravity
 ```
 
-Eseguire cinque ripetizioni di tutti gli scenari:
-
-```bash
-# Con Codex
-python scripts/run_benchmark.py --all --prompt-type T1 --all-skill-modes --repetitions 5 --agent codex
-
-# Con Antigravity
-python scripts/run_benchmark.py --config benchmark_antigravity.yaml --all --prompt-type T1 --repetitions 5 --agent antigravity
-```
-
-`benchmark.continue_on_error` decide se continuare dopo una run infrastrutturalmente fallita. Una soluzione AUT valutata e bocciata dal checker è una run completata, non un errore del comando.
+L'impostazione `benchmark.continue_on_error` determina se proseguire dopo una run fallita a livello infrastrutturale. Un laboratorio valutato e bocciato dal checker è una run regolarmente conclusa, non un errore.
 
 ## Artefatti e stati
 
-Ogni run usa un ID logico leggibile, per esempio `example_dns_001__dns_only__r001`, e conserva:
+Ciascuna run archivia la documentazione completa in `runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/`:
 
 ```text
 runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/
 ├── manifest.json
 ├── input/
-│   ├── lab/          # baseline originale immutabile
+│   ├── lab/                  # Snapshot originale immutabile
 │   └── prompt.md
-├── lab/              # unica copia modificabile — before → after AUT
+├── lab/                      # Laboratorio modificato dopo l'AUT
 ├── evaluation/
-│   ├── correction.yaml  # snapshot dell'input di valutazione canonico
-│   └── metrics.json     # metriche elaborate e normalizzate della run
-├── results/          # report CSV del checker
+│   ├── correction.yaml       # Snapshot dell'input di valutazione canonico
+│   └── metrics.json          # Metriche normalizzate della run
+├── results/                  # Report CSV del Kathara Lab Checker
 └── logs/
-    ├── aut/          # events.jsonl, stderr.log, result.json, invocation.json, prompt_sent.md, <scenario>__<prompt_type>__<skill_mode>__rNNN.eval
-    ├── diff.json
+    ├── aut/                  # events.jsonl, result.json, invocation.json, prompt_sent.md,
+    │                         # sandbox_metadata.json (sbx), <run_id>.eval
+    ├── diff.json             # Diff rispetto al baseline iniziale
+    ├── pipeline_error.log    # Log di errore dettagliato (in caso di fallimento)
     ├── checker_invocation.json
     ├── checker_execution.json
     ├── checker_stdout.log
     └── checker_stderr.log
 ```
 
-`manifest.json` registra identificatori, timestamp, versioni, hash delle skill, stato e riferimenti agli artefatti. Registra la correction canonica, il suo digest SHA-256 e il percorso dello snapshot fornito al checker.
+### Metadati e metriche
 
-`runs/` è la fonte persistente. Ogni run conserva i dati elaborati in `evaluation/metrics.json`, insieme alla trace originale dell'agente e ai report del checker. `results/` contiene esattamente tre CSV derivati:
+- **`manifest.json`**: Registra timestamp, versioni (`codex_host_version`, `codex_sandbox_version`, `sbx_version`), backend di esecuzione (`codex_cli` o `docker_sandbox`), metadati del sandbox (`sandbox_name`, `sandbox_id`, `sandbox_cleanup_ok`), digest SHA-256 e cronologia degli stati pipeline.
+- **`evaluation/metrics.json`**: Record normalizzato contenente stato (`COMPLETED`, `AUT_FAILED`, `CHECKER_FAILED`), successo AUT, punteggi del checker, token e durate.
+- **Metriche temporali**:
+  - `agent_seconds`: Durata del processo LLM.
+  - `sandbox_overhead_seconds`: Tempo impiegato per creazione e rimozione del sandbox Docker.
+  - `checker_seconds`: Tempo di esecuzione di `kathara-lab-checker`.
+  - `total_seconds`: Durata totale della run dall'allocazione del workspace alla finalizzazione.
+- **Coerenza metrica dei token**:
+  - Estratti dall'ultimo evento `turn.completed` con blocco `usage`.
+  - `input_tokens`, `cached_input_tokens`, `cache_write_input_tokens`.
+  - `output_tokens`, `reasoning_output_tokens` (i reasoning token sono un sottoinsieme dei token di output e non vengono sommati due volte).
+  - `total_reported`: Totale comunicato direttamente dalle API del modello.
+  - `total_calculated`: Somma calcolata `input_tokens + output_tokens`.
+  - `total`: Valore effettivo che privilegia `total_reported` se presente, altrimenti `total_calculated`.
 
-* `runs.csv` — una riga per run con skill selezionate, stato, tempi, token, conteggi checker e digest della correction.
-* `checks.csv` — una riga per ogni test individuale del Kathara Lab Checker.
-* `summary.csv` — statistiche descrittive raggruppate per scenario e modalità Skill.
-
-I token provengono dall'ultimo evento Codex `turn.completed` che contiene `usage` in `logs/aut/events.jsonl`. La trace corrente espone `input_tokens`, `cached_input_tokens`, `cache_write_input_tokens`, `output_tokens` e `reasoning_output_tokens`; `total_tokens` resta null se assente. Gli usage dei turni precedenti non vengono sommati.
-
-Le metriche attuali relative alle skill sono:
-* `available_skills`: Skill rese disponibili all'AUT.
-* `forced_skills`: Skill esplicitamente forzate tramite direttiva a prompt.
-Il benchmark registra il trattamento assegnato tramite:
-- `skill_mode`
-- `available_skills`
-- `forced_skills`
-- `skill_protocol`
-
-ma NON tenta più di inferire dai command_execution se Codex abbia effettivamente caricato o utilizzato una Skill, perché il caricamento nativo può non essere osservabile tramite comandi shell.
-
-La correttezza del risultato resta valutata indipendentemente tramite Kathara Lab Checker.
-
-`agent_seconds` viene dalla durata del subprocess misurata dal runner AUT. `checker_seconds` misura `run_checker`, inclusi preparazione e parsing dei report. `total_seconds` misura il tempo da subito prima dell'allocazione del workspace fino al completamento delle fasi della run; esclude preflight e serializzazione finale delle metriche.
-
-## Aggregazione e analisi
+## Aggregazione e report
 
 ```bash
 python scripts/aggregate_results.py
 python scripts/analyze_results.py
 ```
 
-L'aggregatore legge soltanto le run nel formato `scenario/prompt_type/skill_mode/rNNN/evaluation/metrics.json` e i report checker già salvati. Non avvia Codex, Docker, Kathara o il checker e può essere rilanciato con `python scripts/aggregate_results.py`. Scrive `runs.csv`, `checks.csv` e `summary.csv`, più `benchmark.xlsx` con i fogli `Runs`, `Checks` e `Summary`. Il workbook raggruppa le righe per scenario con linee di separazione, intestazioni formattate, filtri e larghezze colonna adatte ai contenuti; gli altri file in `results/` restano intatti.
+L'aggregatore analizza i file `evaluation/metrics.json` e i report del checker presenti in `runs/`:
+- `results/runs.csv`: Una riga per run con identificatori, configurazione, stato, percentuale superamento, tempi, token e hash delle correction.
+- `results/checks.csv`: Una riga per ogni singola asserzione verificata dal checker.
+- `results/summary.csv`: Statistiche descrittive raggruppate per esperimento, scenario, prompt, modalità skill e modello.
+- `results/benchmark.xlsx`: Foglio di lavoro Excel formattato con i fogli `Runs`, `Checks` e `Summary`, corredato da filtri, righe separate per scenario e colonne dimensionate.
 
 ## Smoke check
 
@@ -267,13 +310,105 @@ L'aggregatore legge soltanto le run nel formato `scenario/prompt_type/skill_mode
 python scripts/smoke_check.py
 ```
 
-Lo smoke check convalida staticamente entrambi gli agent (`codex` e `antigravity`), verifica il dispatch AUT, testa il rifiuto dell'override cross-provider (`--agent antigravity` con `benchmark.yaml` e viceversa), e simula aggregazione e diff senza interagire con gli LLM.
+Lo smoke test convalida staticamente l'intero impianto senza chiamare gli LLM o avviare container:
+1. Convalida dipendenze e import (`inspect_ai`, `inspect_swe`, `kathara_lab_checker`, `pandas`, `yaml`, `openai`).
+2. Verifica discovery degli scenari e caricamento configurazioni.
+3. Verifica il dispatch per entrambi gli agenti (`codex` e `antigravity`).
+4. Valida staticamente `docker_sandbox_runner` (nomi univoci, suffissi UUID, parse eventi JSONL, gerarchia eccezioni).
+5. Verifica il rifiuto di combinazioni cross-provider non valide (es. `--agent antigravity` con `benchmark.yaml`).
+6. Testa la CLI `inspect log dump --header-only` su un log generato.
+7. Simula l'allocazione del workspace isolato, il calcolo del diff e l'aggregazione.
 
 ## Agent supportati
 
-| Agent | CLI | Config file | Modello verificato | Auth |
-|-------|-----|-------------|-------------------|------|
-| Codex | `codex` | `benchmark.yaml` | `gpt-5.6-terra` | ChatGPT login locale |
-| Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Google login locale |
+| Agente | CLI / Tool | File Config | Modello verificato | Autenticazione / Backend |
+|---|---|---|---|---|
+| Codex | `codex` / `sbx` | `benchmark.yaml` | `gpt-5.6-terra` | Login ChatGPT locale (Host CLI) / Docker Sandbox (`sbx` OAuth proxy) |
+| Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Login Google locale (Host CLI) |
 
-Entrambi gli agenti condividono la stessa architettura: l'agente altera i file del laboratorio invocato su linea di comando, e il Kathara Lab Checker valuta la correction canonica sul laboratorio modificato determinando il risultato finale senza alcun coinvolgimento dell'LLM nella valutazione.
+Entrambi gli agenti condividono i medesimi principi operativi: l'agente configura i file all'interno di un workspace isolato e il Kathara Lab Checker valuta la correction canonica sul laboratorio risultante in modo deterministico, senza alcun intervento dell'LLM nella fase di giudizio.
+
+## Strato Esperimenti (Experiment Layer)
+
+Lo strato esperimenti consente di orchestrare matrici complete di esecuzioni definite in file YAML, preservando la compatibilità con i comandi per singoli scenari.
+
+### Concetti chiave
+
+| Concetto | Significato |
+|---|---|
+| **scenario** | Laboratorio Kathara con baseline `lab/` e `correction.yaml` |
+| **prompt_type** | Variante del prompt (T1–T6) corrispondente a `prompt/<scenario>/<T>.md` |
+| **skill_mode** | Modalità skill: `no_skill`, `creation_only`, `dns_only`, `both_forced`, o `auto` |
+| **replicate** | Ripetizione statistica pianificata dall'esperimento |
+| **run_number** | Contatore fisico progressivo della directory (`rNNN`) |
+| **experiment** | Matrice formata da `scenario × prompt × skill_mode × replicate` |
+
+`replicate` e `run_number` coincidono normalmente. Divergono solo se una run fallisce per problemi infrastrutturali e viene ritentata: la nuova run assume un nuovo `run_number` soddisfacendo la medesima `replicate`.
+
+### File YAML dell'Esperimento
+
+Crea una configurazione in `experiments/` (es. `experiments/thesis_final.yaml`):
+
+```yaml
+experiment:
+  id: thesis_final
+
+scenarios:
+  - lab00_five_router
+  - lab01_ring6_dual
+
+prompt_types:
+  - T1
+  - T3
+
+skill_modes:
+  - no_skill
+  - dns_only
+
+repetitions: 3
+```
+
+### Eseguire un esperimento
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml
+```
+
+Prima di invocare qualsiasi modello, l'orchestratore valida staticamente l'esistenza di tutti gli scenari, la presenza dei file prompt, le modalità skill, la validità delle correction e i prerequisiti infrastrutturali.
+
+### Ripresa di esperimenti interrotti (`--resume`)
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --resume
+```
+
+Con l'opzione `--resume`, l'orchestratore:
+1. Esamina le run esistenti associate a `experiment_id`.
+2. Identifica le repliche già concluse con `pipeline_state: COMPLETED` e le salta.
+3. Esegue unicamente le repliche mancanti o quelle interrotte da errori infrastrutturali (`AUT_FAILED`, `CHECKER_FAILED`).
+4. Le run in cui l'agente ha completato l'esecuzione ma non ha superato i check del laboratorio (`task_success: false`) sono osservazioni sperimentali valide e **non** vengono rieseguite.
+
+### Rivalutazione delle correction a livello di esperimento
+
+Per riapplicare una correction aggiornata a tutte le run esistenti senza effettuare chiamate ai modelli e senza spendere token:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --rerun-correction
+```
+
+È possibile filtrare a un sottoinsieme specifico:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --rerun-correction \
+  --filter-scenario lab00_five_router --filter-prompt T1 --filter-skill-mode dns_only
+```
+
+Ogni rivalutazione incrementa il contatore `evaluation_revision` e aggiorna `last_reevaluated_at` nel manifest della run.
+
+### Anteprima del piano (`--dry-run`)
+
+Per visualizzare la matrice pianificata e lo stato di completamento senza eseguire nulla:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --resume --dry-run
+```
