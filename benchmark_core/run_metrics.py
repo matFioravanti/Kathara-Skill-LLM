@@ -184,8 +184,12 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     correction_sha = metadata.get("correction_sha256")
     forced = metadata.get("forced_skills") if isinstance(metadata.get("forced_skills"), list) else None
     
+    from .aut_observation import observe
+    internet, skill_compliance = observe(run, metadata, events)
     protocol = metadata.get("skill_protocol")
     return {
+        "internet": internet,
+        "skill_compliance": skill_compliance,
         "scenario": metadata.get("scenario_id", metadata.get("scenario")),
         "scenario_id": metadata.get("scenario_id", metadata.get("scenario")),
         "prompt_type": metadata.get("prompt_type"),

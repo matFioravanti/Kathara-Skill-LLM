@@ -42,5 +42,31 @@
   },
   "correction_sha256": "5fcad40f39a7de16785618001ba380b1fe4e45780164248a7c7f429c9a7a0154",
   "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "last_reevaluated_at": null,
+  "internet": {
+    "internet_used": null,
+    "status": "network_attempt_unconfirmed",
+    "web_search_calls": 0,
+    "web_search_attempts": 0,
+    "external_domains": [],
+    "shell_network_candidates": 1,
+    "network_policy": null,
+    "trace_available": true,
+    "detection_source": "aut_events"
+  },
+  "skill_compliance": {
+    "skill_mode": "dns_only",
+    "required_skills": [
+      "kathara-dns"
+    ],
+    "observed_read_skills": [
+      "kathara-dns"
+    ],
+    "skill_states": {
+      "kathara-creation": "not_required",
+      "kathara-dns": "observed"
+    },
+    "required_reads_observed": true,
+    "status": "verified"
+  }
 }

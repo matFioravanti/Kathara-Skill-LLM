@@ -101,8 +101,8 @@ def run_codex(*, prompt: str, workspace: Path, logs: Path, timeout: int,
                                    env=codex_environment(sampling_mode=sampling_mode), timeout=timeout, check=False)
         stdout, stderr, returncode, timed_out = completed.stdout or "", completed.stderr or "", completed.returncode, False
     except subprocess.TimeoutExpired as error:
-        stdout = error.stdout if isinstance(error.stdout, str) else ""
-        stderr = error.stderr if isinstance(error.stderr, str) else ""
+        stdout = error.stdout.decode("utf-8", errors="replace") if isinstance(error.stdout, bytes) else (error.stdout or "")
+        stderr = error.stderr.decode("utf-8", errors="replace") if isinstance(error.stderr, bytes) else (error.stderr or "")
         stderr += f"\nCodex timed out after {timeout}s.\n"
         returncode, timed_out = 124, True
     duration = time.monotonic() - started

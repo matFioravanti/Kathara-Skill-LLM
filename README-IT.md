@@ -434,3 +434,37 @@ Per visualizzare la matrice pianificata e lo stato di completamento senza esegui
 ```bash
 python scripts/run_experiment.py experiments/thesis_final.yaml --resume --dry-run
 ```
+
+### Osservazioni Internet e protocollo Skill
+
+Le metriche AUT includono `internet` e `skill_compliance`, indipendenti dal
+checker. Si analizzano soltanto gli eventi AUT: ricerche web completate e
+strumenti MCP web riconoscibili costituiscono evidenza; i comandi di rete sono
+solo candidati, anche se terminano con successo. I domini provengono dai
+risultati web riconosciuti. Il monitoraggio non è una cattura del traffico:
+assenza di eventi, log incompleti e letture native non registrate restano
+`null`/`unknown`, non indicano assenza di utilizzo o violazione. La lettura
+shell è verificata quando l'output identifica il contenuto della Skill;
+comandi senza contenuto riconoscibile restano non verificabili. Antigravity
+richiede la Skill DNS anche quando la modalità registrata è `no_skill`.
+La policy `restricted` indica il superamento dei controlli sandbox su due
+endpoint del modello e due destinazioni esterne: non prova il blocco di ogni
+possibile destinazione, né impedisce ricerche web svolte dal provider.
+
+Le percentuali nel Summary sono frazioni: `internet_confirmed_rate` usa tutte
+le run del gruppo, incluse quelle sconosciute; `skill_compliance_rate` usa le
+run con letture obbligatorie note, incluse quelle non verificabili. Il
+contatore `web_search_calls_denominator` indica il numero di trace disponibili
+usate per la media delle ricerche osservate; i log parziali possono sottostimarla.
+I dati storici senza nuove metriche rimangono vuoti fino alla ricostruzione:
+
+```bash
+.venv/bin/python scripts/backfill_observations.py --dry-run
+.venv/bin/python scripts/backfill_observations.py
+.venv/bin/python scripts/aggregate_results.py
+.venv/bin/python -m pytest -q
+```
+
+Il backfill non avvia AUT, Kathara o checker e non modifica i laboratori;
+in caso di eccezione ripristina i file di metriche e report preesistenti.
+Per una prova isolata usare `--runs` e `--output` su copie dei dati.

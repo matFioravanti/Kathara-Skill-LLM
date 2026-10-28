@@ -547,6 +547,7 @@ def run_codex_in_sandbox(
     usage: dict[str, Any] | None = None
     full_command: tuple[str, ...] = ()
     infra_error: Exception | None = None
+    network_policy = None
 
     # ------------------------------------------------------------------
     # Cleanup garantito tramite try/finally per l'intero ciclo di vita
@@ -582,6 +583,7 @@ def run_codex_in_sandbox(
 
         # 3. Verifica policy di rete
         sbx_check_network_policy(sandbox_name)
+        network_policy = "restricted"  # Endpoint modello consentiti; due destinazioni esterne bloccate.
 
         # 4. Esegui Codex non-interattivamente nel sandbox via sbx exec
         codex_args: list[str] = [
@@ -625,8 +627,8 @@ def run_codex_in_sandbox(
             codex_returncode = completed.returncode
             timed_out = False
         except subprocess.TimeoutExpired as exc:
-            codex_stdout = exc.stdout if isinstance(exc.stdout, str) else ""
-            codex_stderr = (exc.stderr if isinstance(exc.stderr, str) else "")
+            codex_stdout = exc.stdout.decode("utf-8", errors="replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
+            codex_stderr = exc.stderr.decode("utf-8", errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
             codex_stderr += f"\nCodex in sandbox timed out after {timeout}s.\n"
             codex_returncode = 124
             timed_out = True
@@ -739,6 +741,7 @@ def run_codex_in_sandbox(
                 "overhead_seconds": sandbox_overhead,
                 "codex_duration_seconds": codex_duration,
                 "error": recorded_error,
+                "network_policy": network_policy,
                 "artifacts_ok": len(essential_errors) == 0,
                 "artifact_errors": essential_errors if essential_errors else None,
             })

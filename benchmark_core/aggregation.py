@@ -32,6 +32,10 @@ RUN_COLUMNS = [
     # 3. SKILL
     "available_skills", "forced_skills",
 
+    "internet_used", "internet_status", "web_search_calls", "web_search_attempts",
+    "shell_network_candidates", "network_policy", "internet_trace_available",
+    "required_skills", "observed_read_skills", "required_reads_observed", "skill_compliance_status",
+
     # 4. TOKEN
     "input_tokens", "cached_input_tokens", "output_tokens",
     "reasoning_tokens", "total_tokens",
@@ -43,6 +47,10 @@ CHECK_COLUMNS = [
 ]
 SUMMARY_COLUMNS = [
     "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
+    "internet_confirmed_runs", "internet_confirmed_denominator", "internet_confirmed_rate",
+    "mean_web_search_calls", "web_search_calls_denominator", "internet_unknown_runs",
+    "skill_required_runs", "skill_verified_runs", "skill_unobserved_or_unknown_runs",
+    "skill_compliance_denominator", "skill_compliance_rate",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "sampling_observed_runs", "sampling_temperatures", "sampling_top_ps",
     "task_success_runs", "task_failed_runs", "task_success_rate",
@@ -214,6 +222,8 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     if not isinstance(forced_raw, list):
         forced_raw = manifest.get("forced_skills")
 
+    internet = metrics.get("internet") or {}
+    compliance = metrics.get("skill_compliance") or {}
     llm_sampling = metrics.get("llm_sampling") or manifest.get("llm_sampling") or {}
     temperature = _number(llm_sampling.get("temperature"))
     top_p = _number(llm_sampling.get("top_p"))
@@ -266,6 +276,17 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "correction_sha256": metrics.get("correction_sha256") or manifest.get("correction_sha256"),
         "evaluation_revision": metrics.get("evaluation_revision", manifest.get("evaluation_revision", 0)),
         "last_reevaluated_at": metrics.get("last_reevaluated_at") or manifest.get("last_reevaluated_at"),
+        "internet_used": internet.get("internet_used"),
+        "internet_status": internet.get("status"),
+        "web_search_calls": internet.get("web_search_calls"),
+        "web_search_attempts": internet.get("web_search_attempts"),
+        "shell_network_candidates": internet.get("shell_network_candidates"),
+        "network_policy": internet.get("network_policy"),
+        "internet_trace_available": internet.get("trace_available"),
+        "required_skills": _skill_list_str(compliance.get("required_skills")),
+        "observed_read_skills": _skill_list_str(compliance.get("observed_read_skills")),
+        "required_reads_observed": compliance.get("required_reads_observed"),
+        "skill_compliance_status": compliance.get("status"),
         "available_skills": _skill_list_str(avail_raw),
         "forced_skills": _skill_list_str(forced_raw),
 
@@ -345,8 +366,22 @@ def _summary_records(records: list[dict]) -> list[dict]:
             if column in ("pass_rate", "agent_seconds", "checker_seconds", "total_seconds", "total_tokens"):
                 stats[f"median_{column}"] = _median(values)
         
+        skill_required = [row for row in group if row.get("required_skills")]
+        skill_verified = sum(row.get("required_reads_observed") is True for row in skill_required)
+        internet_confirmed = sum(row.get("internet_used") is True for row in group)
         output.append({
             **dict(zip(group_fields, key)),
+            "internet_confirmed_runs": internet_confirmed,
+            "internet_confirmed_denominator": len(group),
+            "internet_confirmed_rate": internet_confirmed / len(group),
+            "internet_unknown_runs": sum(row.get("internet_used") is None for row in group),
+            "mean_web_search_calls": _mean(row.get("web_search_calls") for row in group),
+            "web_search_calls_denominator": sum(_number(row.get("web_search_calls")) is not None for row in group),
+            "skill_required_runs": len(skill_required),
+            "skill_verified_runs": skill_verified,
+            "skill_unobserved_or_unknown_runs": len(skill_required) - skill_verified,
+            "skill_compliance_denominator": len(skill_required),
+            "skill_compliance_rate": skill_verified / len(skill_required) if skill_required else None,
             "total_runs": len(group),
             "pipeline_completed_runs": sum(state is True for state in manifest_states),
             "checker_executed_runs": sum(row.get("checker_executed") is True for row in group),
