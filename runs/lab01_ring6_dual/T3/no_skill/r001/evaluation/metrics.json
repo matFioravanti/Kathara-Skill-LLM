@@ -45,7 +45,23 @@
     "web_search_calls": 2,
     "web_search_attempts": 2,
     "external_domains": [],
+    "search_result_domains": [
+      "academy-training-wiki-media.storage.googleapis.com",
+      "brianlinkletter.com",
+      "download.plaud.ai",
+      "en.wikipedia.org",
+      "fr.scribd.com",
+      "hub.docker.com",
+      "seedsecuritylabs.org",
+      "spar.isi.jhu.edu",
+      "www.kathara.org",
+      "www.linkedin.com",
+      "www.scribd.com"
+    ],
+    "visited_domains": [],
     "shell_network_candidates": 0,
+    "shell_network_local": 0,
+    "shell_network_uncertain": 0,
     "network_policy": null,
     "trace_available": true,
     "detection_source": "aut_events"

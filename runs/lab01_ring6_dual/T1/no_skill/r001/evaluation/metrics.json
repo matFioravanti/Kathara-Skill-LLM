@@ -45,7 +45,13 @@
     "web_search_calls": 1,
     "web_search_attempts": 1,
     "external_domains": [],
+    "search_result_domains": [
+      "github.com"
+    ],
+    "visited_domains": [],
     "shell_network_candidates": 0,
+    "shell_network_local": 0,
+    "shell_network_uncertain": 0,
     "network_policy": null,
     "trace_available": true,
     "detection_source": "aut_events"

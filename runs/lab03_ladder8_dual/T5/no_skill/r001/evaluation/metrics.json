@@ -42,10 +42,30 @@
   "internet": {
     "internet_used": true,
     "status": "external_web_search_observed",
-    "web_search_calls": 3,
-    "web_search_attempts": 3,
-    "external_domains": [],
+    "web_search_calls": 1,
+    "web_search_attempts": 1,
+    "external_domains": [
+      "github.com",
+      "raw.githubusercontent.com"
+    ],
+    "search_result_domains": [
+      "de.wikipedia.org",
+      "elhacker.info",
+      "es.wikipedia.org",
+      "github.com",
+      "hub.docker.com",
+      "lpic2book.github.io",
+      "q2dg.github.io",
+      "site.nasa.cs.nycu.edu.tw",
+      "www.kathara.org"
+    ],
+    "visited_domains": [
+      "github.com",
+      "raw.githubusercontent.com"
+    ],
     "shell_network_candidates": 0,
+    "shell_network_local": 0,
+    "shell_network_uncertain": 0,
     "network_policy": null,
     "trace_available": true,
     "detection_source": "aut_events"

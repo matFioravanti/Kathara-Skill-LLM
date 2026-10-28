@@ -440,8 +440,16 @@ python scripts/run_experiment.py experiments/thesis_final.yaml --resume --dry-ru
 Le metriche AUT includono `internet` e `skill_compliance`, indipendenti dal
 checker. Si analizzano soltanto gli eventi AUT: ricerche web completate e
 strumenti MCP web riconoscibili costituiscono evidenza; i comandi di rete sono
-solo candidati, anche se terminano con successo. I domini provengono dai
-risultati web riconosciuti. Il monitoraggio non è una cattura del traffico:
+solo candidati, anche se terminano con successo. `shell_network_candidates`
+conta gli eventi shell con una destinazione esterna identificabile;
+`shell_network_local` e `shell_network_uncertain` riportano separatamente
+destinazioni locali e casi non risolti. Il tokenizer shell non esegue espansioni
+e può non riconoscere script complessi. `search_result_domains` contiene URL
+dei risultati di ricerca; `visited_domains` contiene soltanto domini associati
+a pagine aperte con risultati riconoscibili. `external_domains` è mantenuto
+per compatibilità e coincide ora con `visited_domains`. Un risultato di ricerca
+non prova una visita. Le aperture e le operazioni web di altro tipo non sono
+conteggiate come ricerche. Il monitoraggio non è una cattura del traffico:
 assenza di eventi, log incompleti e letture native non registrate restano
 `null`/`unknown`, non indicano assenza di utilizzo o violazione. La lettura
 shell è verificata quando l'output identifica il contenuto della Skill;
@@ -452,9 +460,11 @@ endpoint del modello e due destinazioni esterne: non prova il blocco di ogni
 possibile destinazione, né impedisce ricerche web svolte dal provider.
 
 Le percentuali nel Summary sono frazioni: `internet_confirmed_rate` usa tutte
-le run del gruppo, incluse quelle sconosciute; `skill_compliance_rate` usa le
+le run del gruppo, incluse quelle sconosciute; `internet_observed_rate` è
+un alias esplicito della stessa proporzione osservata, non una stima della
+percentuale effettiva. `skill_compliance_rate` usa le
 run con letture obbligatorie note, incluse quelle non verificabili. Il
-contatore `web_search_calls_denominator` indica il numero di trace disponibili
+contatore `web_search_calls_denominator` indica il numero di trace non vuote
 usate per la media delle ricerche osservate; i log parziali possono sottostimarla.
 I dati storici senza nuove metriche rimangono vuoti fino alla ricostruzione:
 
@@ -466,5 +476,7 @@ I dati storici senza nuove metriche rimangono vuoti fino alla ricostruzione:
 ```
 
 Il backfill non avvia AUT, Kathara o checker e non modifica i laboratori;
-in caso di eccezione ripristina i file di metriche e report preesistenti.
+in caso di eccezione ripristina i file di metriche e report preesistenti
+tramite copie in memoria; non garantisce il ripristino dopo interruzioni
+brusche del processo o della macchina.
 Per una prova isolata usare `--runs` e `--output` su copie dei dati.

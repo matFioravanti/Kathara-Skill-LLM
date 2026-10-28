@@ -33,7 +33,8 @@ RUN_COLUMNS = [
     "available_skills", "forced_skills",
 
     "internet_used", "internet_status", "web_search_calls", "web_search_attempts",
-    "shell_network_candidates", "network_policy", "internet_trace_available",
+    "shell_network_candidates", "shell_network_local", "shell_network_uncertain",
+    "search_result_domains", "visited_domains", "network_policy", "internet_trace_available",
     "required_skills", "observed_read_skills", "required_reads_observed", "skill_compliance_status",
 
     # 4. TOKEN
@@ -48,6 +49,7 @@ CHECK_COLUMNS = [
 SUMMARY_COLUMNS = [
     "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
     "internet_confirmed_runs", "internet_confirmed_denominator", "internet_confirmed_rate",
+    "internet_observed_rate",
     "mean_web_search_calls", "web_search_calls_denominator", "internet_unknown_runs",
     "skill_required_runs", "skill_verified_runs", "skill_unobserved_or_unknown_runs",
     "skill_compliance_denominator", "skill_compliance_rate",
@@ -281,6 +283,10 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "web_search_calls": internet.get("web_search_calls"),
         "web_search_attempts": internet.get("web_search_attempts"),
         "shell_network_candidates": internet.get("shell_network_candidates"),
+        "shell_network_local": internet.get("shell_network_local"),
+        "shell_network_uncertain": internet.get("shell_network_uncertain"),
+        "search_result_domains": _skill_list_str(internet.get("search_result_domains")),
+        "visited_domains": _skill_list_str(internet.get("visited_domains")),
         "network_policy": internet.get("network_policy"),
         "internet_trace_available": internet.get("trace_available"),
         "required_skills": _skill_list_str(compliance.get("required_skills")),
@@ -374,6 +380,7 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "internet_confirmed_runs": internet_confirmed,
             "internet_confirmed_denominator": len(group),
             "internet_confirmed_rate": internet_confirmed / len(group),
+            "internet_observed_rate": internet_confirmed / len(group),
             "internet_unknown_runs": sum(row.get("internet_used") is None for row in group),
             "mean_web_search_calls": _mean(row.get("web_search_calls") for row in group),
             "web_search_calls_denominator": sum(_number(row.get("web_search_calls")) is not None for row in group),
