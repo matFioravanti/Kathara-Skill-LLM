@@ -57,6 +57,8 @@ def validate_aut_workspace_isolation(workspace: Path, config_root: Path):
 def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill_mode: str | None = None,
             run_id: str | None = None) -> Path:
     validate_agent(agent)
+    from .skill_gate import enforce_or_block
+    enforce_or_block(config, run, agent, skill_mode or ("dns_only" if agent == "codex" else "no_skill"))
     persistent_lab = run / "lab"
     aut_logs = run / "logs/aut"
     

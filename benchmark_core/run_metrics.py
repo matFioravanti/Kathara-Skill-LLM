@@ -187,7 +187,10 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     from .aut_observation import observe
     internet, skill_compliance = observe(run, metadata, events)
     protocol = metadata.get("skill_protocol")
+    from .skill_gate import read_gate_metrics
+    gate = read_gate_metrics(run)
     return {
+        **gate,
         "internet": internet,
         "skill_compliance": skill_compliance,
         "scenario": metadata.get("scenario_id", metadata.get("scenario")),

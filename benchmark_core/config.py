@@ -61,6 +61,11 @@ def load_config(path: Path) -> Config:
             value = data[section].get(key)
             if value is not None and (not isinstance(value, str) or not value.strip()):
                 raise ValueError(f"{section}.{key} deve essere null o una stringa non vuota.")
+        protocol = data[section].get("skill_protocol", "explicit_read_v2")
+        if protocol not in ("explicit_read_v2", "enforced_read_v1"):
+            raise ValueError("aut.skill_protocol deve essere explicit_read_v2 o enforced_read_v1.")
+        if protocol == "enforced_read_v1" and data[section].get("agent") != "codex":
+            raise ValueError("enforced_read_v1 è disponibile solo per Codex.")
         telemetry = data[section].get("sampling_telemetry")
         if telemetry is not None:
             if not isinstance(telemetry, dict):

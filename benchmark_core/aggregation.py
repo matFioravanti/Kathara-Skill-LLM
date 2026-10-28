@@ -12,6 +12,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 
 from .checker_runner import category as checker_category
 from .checker_runner import checker_test_rows
+from .skill_gate import FIELDS as SKILL_GATE_FIELDS
 
 RUN_COLUMNS = [
     # 1. IDENTIFICAZIONE
@@ -39,6 +40,7 @@ RUN_COLUMNS = [
     "required_skill_count", "required_read_attempt_count", "required_content_identified_count",
     "required_complete_read_count", "required_unverified_read_count",
     "required_reads_complete_before_modification", "protocol_compliance_observed", "skill_strict_status",
+    *SKILL_GATE_FIELDS,
 
     # 4. TOKEN
     "input_tokens", "cached_input_tokens", "output_tokens",
@@ -59,6 +61,11 @@ SUMMARY_COLUMNS = [
     "required_skill_count", "required_read_attempt_count", "required_content_identified_count",
     "required_complete_read_count", "required_unverified_read_count",
     "complete_before_modification_runs", "strict_verified_runs", "strict_compliance_denominator", "strict_observed_compliance_rate",
+    "skill_gate_enabled_runs", "skill_gate_blocked_runs", "skill_gate_unsupported_runs",
+    "skill_gate_passed_runs", "skill_gate_statuses", "skill_gate_required_skills", "skill_gate_verified_skills",
+    "skill_gate_backend_enforcements", "skill_gate_write_attempts_blocked",
+    "mean_skill_gate_read_seconds", "mean_skill_gate_verification_seconds",
+    "mean_skill_gate_input_tokens", "mean_skill_gate_output_tokens",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "sampling_observed_runs", "sampling_temperatures", "sampling_top_ps",
     "task_success_runs", "task_failed_runs", "task_success_rate",
@@ -240,6 +247,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     sampling_transport = llm_sampling.get("transport")
 
     return {
+        **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills") else metrics.get(field)) for field in SKILL_GATE_FIELDS},
         "experiment_id": experiment_id,
         "Lab": metrics.get("scenario") or manifest.get("scenario_id"),
         "T": metrics.get("prompt_type") or manifest.get("prompt_type"),
@@ -410,6 +418,19 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "skill_compliance_rate": skill_verified / len(skill_required) if skill_required else None,
             **{field: known_total(field) for field in ("required_skill_count", "required_read_attempt_count", "required_content_identified_count", "required_complete_read_count", "required_unverified_read_count")},
             "complete_before_modification_runs": sum(row.get("required_reads_complete_before_modification") is True for row in skill_required),
+            "skill_gate_enabled_runs": sum(row.get("skill_gate_enabled") is True for row in group),
+            "skill_gate_blocked_runs": sum(row.get("skill_gate_blocked") is True for row in group),
+            "skill_gate_unsupported_runs": sum(row.get("skill_gate_status") == "unsupported_backend" for row in group),
+            "skill_gate_passed_runs": sum(row.get("skill_gate_status") == "passed" for row in group),
+            "skill_gate_statuses": ";".join(sorted({row["skill_gate_status"] for row in group if row.get("skill_gate_status")})) or None,
+            "skill_gate_required_skills": ";".join(sorted({skill for row in group for skill in (row.get("skill_gate_required_skills") or "").split(";") if skill})) or None,
+            "skill_gate_verified_skills": ";".join(sorted({skill for row in group for skill in (row.get("skill_gate_verified_skills") or "").split(";") if skill})) or None,
+            "skill_gate_backend_enforcements": ";".join(sorted({row["skill_gate_backend_enforcement"] for row in group if row.get("skill_gate_backend_enforcement")})) or None,
+            "skill_gate_write_attempts_blocked": known_total("skill_gate_write_attempts_blocked"),
+            "mean_skill_gate_read_seconds": _mean(row.get("skill_gate_read_seconds") for row in group),
+            "mean_skill_gate_verification_seconds": _mean(row.get("skill_gate_verification_seconds") for row in group),
+            "mean_skill_gate_input_tokens": _mean(row.get("skill_gate_input_tokens") for row in group),
+            "mean_skill_gate_output_tokens": _mean(row.get("skill_gate_output_tokens") for row in group),
             "strict_verified_runs": strict_verified,
             "strict_compliance_denominator": len(skill_required),
             "strict_observed_compliance_rate": strict_verified / len(skill_required) if skill_required else None,

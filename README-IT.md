@@ -512,3 +512,36 @@ colonne `strict_*` indicano la verifica più rigorosa. Il denominatore di
 `strict_observed_compliance_rate` è il numero di run del gruppo con Skill
 obbligatorie, incluse quelle non verificabili. Il raggruppamento Summary
 include `skill_protocol`, per mantenere separati v1 e v2.
+
+### Skill Gate sperimentale (`enforced_read_v1`)
+
+È possibile selezionare il protocollo aggiungendo alla sezione `aut`:
+
+```yaml
+skill_protocol: enforced_read_v1
+```
+
+**Stato attuale: non è disponibile una fase di lettura protetta verificata.**
+Per `creation_only`, `dns_only` e `both_forced` il benchmark registra
+`unsupported_backend`, blocca l'AUT prima del suo avvio e non esegue il
+checker. Non c'è fallback a `explicit_read_v2`. `no_skill` e `auto` non
+richiedono il gate e continuano normalmente. Senza questa configurazione le
+nuove run mantengono `explicit_read_v2`; i risultati storici non sono cambiati.
+
+La CLI host espone un sandbox `read-only` per comandi generati; una prova
+locale ha respinto la creazione di un file temporaneo. Ciò non prova che tutte
+le operazioni e tutti gli strumenti dell'AUT siano confinati nello stesso
+ambiente. Il backend Docker Sandbox corrente monta il workspace in scrittura e
+non implementa un mount protetto della fase A. Nessuno dei due è quindi
+certificato per aprire il gate. `skill_gate_write_attempts_blocked` resta vuoto:
+non è disponibile un contatore attendibile.
+
+La funzione di valutazione delle evidenze controlla gli eventi e gli hash,
+ma da sola **non** abilita l'accesso in scrittura. Per completare il protocollo
+sono necessari un backend che isoli l'intero AUT, una fase A separata con
+raccolta affidabile degli eventi e un test d'integrazione che verifichi
+l'impossibilità di scrivere, anche attraverso strumenti diversi dalla shell.
+Una successiva fase B dovrebbe usare una sessione separata a meno che la
+continuità del contesto non venga supportata e verificata esplicitamente.
+Le colonne del gate sono disponibili in JSON, CSV e nei fogli Runs e Summary;
+tempi e token non misurati restano vuoti.
