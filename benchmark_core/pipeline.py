@@ -72,7 +72,7 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             else ("local_chatgpt_login" if agent == "codex" else "local_google_login")
         ),
         "api_key_used": False,
-        "skill_protocol": "explicit_read_v1" if agent == "codex" else None,
+        "skill_protocol": "explicit_read_v2" if agent == "codex" else None,
         "skill_mode": skill_mode,
         "available_skills": list(skill_selection.available_skills) if skill_selection else [],
         "forced_skills": list(skill_selection.forced_skills) if skill_selection else [],
@@ -89,7 +89,7 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "prompt_source": str(resolved_prompt.relative_to(config.root)),
         "dns_skill_sha256": (
             hashlib.sha256(paths["kathara-dns"].read_bytes()).hexdigest()
-            if "kathara-dns" in paths else None
+            if "kathara-dns" in paths else (hashlib.sha256(config.path(config.data["aut"]["dns_skill"]).read_bytes()).hexdigest() if agent == "antigravity" else None)
         ),
         "dns_skill_bundle_sha256": (
             tree_hash(paths["kathara-dns"].parent)

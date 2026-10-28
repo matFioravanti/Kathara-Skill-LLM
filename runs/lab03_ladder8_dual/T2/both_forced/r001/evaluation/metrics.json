@@ -72,6 +72,34 @@
       "kathara-dns": "unknown"
     },
     "required_reads_observed": null,
+    "skill_details": {
+      "kathara-creation": {
+        "required": true,
+        "read_attempt_observed": null,
+        "content_identified": null,
+        "complete_read_verified": null,
+        "dedicated_read": null,
+        "read_before_modification": null,
+        "verification_status": "unverified"
+      },
+      "kathara-dns": {
+        "required": true,
+        "read_attempt_observed": null,
+        "content_identified": null,
+        "complete_read_verified": null,
+        "dedicated_read": null,
+        "read_before_modification": null,
+        "verification_status": "unverified"
+      }
+    },
+    "required_skill_count": 2,
+    "required_read_attempt_count": 0,
+    "required_content_identified_count": 0,
+    "required_complete_read_count": 0,
+    "required_unverified_read_count": 2,
+    "required_reads_complete_before_modification": null,
+    "protocol_compliance_observed": null,
+    "strict_status": "unverified",
     "status": "unknown"
   }
 }

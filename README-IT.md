@@ -480,3 +480,35 @@ in caso di eccezione ripristina i file di metriche e report preesistenti
 tramite copie in memoria; non garantisce il ripristino dopo interruzioni
 brusche del processo o della macchina.
 Per una prova isolata usare `--runs` e `--output` su copie dei dati.
+
+### Protocollo di lettura Skill v2
+
+Le nuove run Codex registrano `skill_protocol: explicit_read_v2`; le run
+storiche conservano il protocollo indicato nel loro manifest. Le modalità e la
+preparazione delle Skill restano invariate. Nelle modalità forzate la direttiva
+chiede all'agente una lettura integrale dedicata per ogni Skill prima delle
+modifiche. Il runner non legge la Skill al posto dell'agente. Antigravity
+mantiene la propria direttiva DNS e il proprio protocollo non versionato.
+
+`skill_details` distingue tentativo, contenuto identificato, lettura completa,
+ordine e obbligatorietà per ciascuna Skill. La lettura completa richiede un
+confronto con l'hash SHA-256 della Skill registrato nel manifest: si confronta
+l'output completo oppure, se la copia canonica attuale ha lo stesso hash,
+il suo contenuto integrale con l'output. Letture in blocchi `sed` consecutivi
+possono essere ricostruite e confrontate con l'hash. In assenza dell'hash o
+in caso di output troncato la completezza resta non verificabile. Una copia
+locale della Skill serve solo come riferimento di confronto: non dimostra una
+lettura da parte dell'agente.
+
+L'ordine è una verifica **a posteriori** rispetto alla prima modifica
+riconoscibile nei log AUT; operazioni sovrapposte, senza evento iniziale o
+modifiche non visibili possono renderlo non verificabile. Una lettura completa
+senza modifiche osservate non prova l'ordine. `strict_status` e
+`protocol_compliance_observed` includono per v2 anche la richiesta di
+operazioni dedicate. L'assenza di prove non è una violazione dimostrata.
+Il vecchio `required_reads_observed` continua a indicare la precedente prova
+di contenuto identificato, non la lettura integrale; i nuovi campi e le nuove
+colonne `strict_*` indicano la verifica più rigorosa. Il denominatore di
+`strict_observed_compliance_rate` è il numero di run del gruppo con Skill
+obbligatorie, incluse quelle non verificabili. Il raggruppamento Summary
+include `skill_protocol`, per mantenere separati v1 e v2.

@@ -1,9 +1,10 @@
 """Osservazioni conservative dai soli eventi AUT, mai dal prompt o dal checker."""
+import hashlib
 import ipaddress
 import json
 import re
 import shlex
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
 from .skill_modes import SKILL_MODES
@@ -163,7 +164,12 @@ def _items(events):
         if not isinstance(item, dict):
             continue
         key = (namespace, item.get('id') or item.get('tool_call_id') or index)
-        old = items.setdefault(key, {})
+        old = items.setdefault(key, {'_start_index': None, '_end_index': None})
+        if phase in ('item.started', 'tool_call', 'tool_use') or (phase == 'step_update' and str(item.get('status', '')).lower() in ('running', 'started', 'pending', 'in_progress')):
+            if old['_start_index'] is None:
+                old['_start_index'] = index
+        if phase in ('item.completed', 'tool_result') or (phase == 'step_update' and str(item.get('status', '')).lower() in ('completed', 'complete', 'success', 'succeeded', 'done', 'failed', 'error')):
+            old['_end_index'] = index
         old.update({k: v for k, v in item.items() if v is not None})
         old['_event_type'] = phase
     return items.values()
@@ -187,6 +193,201 @@ def _output_text(value):
     if isinstance(value, list):
         return '\n'.join(_output_text(v) for v in value)
     return str(value) if value is not None else ''
+
+
+def _dedicated_read(command):
+    """Una sola operazione shell di lettura, senza pipeline o concatenazioni."""
+    if not isinstance(command, str):
+        return False
+    try:
+        words = shlex.split(command)
+        if words and PurePosixPath(words[0]).name in ('sh', 'bash', 'zsh', 'dash', 'ksh'):
+            for i, word in enumerate(words[1:], 1):
+                if word.startswith('-') and 'c' in word[1:] and i + 1 < len(words):
+                    return _dedicated_read(words[i + 1])
+            return False
+        lex = shlex.shlex(command, posix=True, punctuation_chars='|&;()<>\n')
+        lex.whitespace = ' \t\r'
+        lex.whitespace_split = True
+        lex.commenters = '#'
+        tokens = list(lex)
+        return bool(tokens and PurePosixPath(tokens[0]).name in READ and not any(t and all(c in '|&;()<>\n' for c in t) for t in tokens))
+    except ValueError:
+        return False
+
+
+def _lab_target(value):
+    if not isinstance(value, str) or not value or value.startswith(('-', '$', '/dev/', '.codex/')):
+        return False
+    return '/lab/' in value if value.startswith('/') else not value.startswith(('../', './.codex/'))
+
+
+def _shell_modifies_lab(command):
+    """Rileva solo forme shell semplici; altri script restano non verificabili."""
+    try:
+        words = shlex.split(command)
+        if words and PurePosixPath(words[0]).name in ('sh', 'bash', 'zsh', 'dash', 'ksh'):
+            for i, word in enumerate(words[1:], 1):
+                if word.startswith('-') and 'c' in word[1:] and i + 1 < len(words):
+                    return _shell_modifies_lab(words[i + 1])
+            return False
+        lex = shlex.shlex(command, posix=False, punctuation_chars='|&;()<>\n')
+        lex.whitespace = ' \t\r'
+        lex.whitespace_split = True
+        lex.commenters = '#'
+        tokens = list(lex)
+        for i, token in enumerate(tokens):
+            if token in ('>', '>>') and i + 1 < len(tokens) and _lab_target(tokens[i + 1].strip('\"\'')):
+                return True
+        at_start = True
+        for i, token in enumerate(tokens):
+            if token in (';', '&&', '||', '|', '&', '\n'):
+                at_start = True
+                continue
+            if at_start:
+                at_start = False
+                if PurePosixPath(token).name in ('mkdir', 'touch', 'rm', 'mv', 'cp', 'install', 'tee'):
+                    args = []
+                    for arg in tokens[i + 1:]:
+                        if arg in (';', '&&', '||', '|', '&', '\n'):
+                            break
+                        args.append(arg)
+                    if any(_lab_target(arg.strip('\"\'')) for arg in args):
+                        return True
+                if PurePosixPath(token).name == 'sed' and '-i' in tokens[i + 1:] and any(_lab_target(arg.strip('\"\'')) for arg in tokens[i + 2:]):
+                    return True
+        return False
+    except ValueError:
+        return False
+
+
+def _skill_verification(items, metadata, required, trace):
+    """Verifica stretta: l'output completo deve coincidere con l'hash del manifest.
+
+    L'ordine è riferito alla prima modifica *osservata*, non alle modifiche
+    non registrate. Operazioni sovrapposte o senza evento di inizio restano ignote.
+    """
+    reads = {name: [] for name in SKILLS}
+    modifications = []
+    modification_barriers = []
+    for item in items:
+        kind = str(item.get('type') or '').lower()
+        name = str(item.get('name') or item.get('tool_name') or item.get('tool') or '').lower()
+        status = str(item.get('status') or '').lower()
+        done = item.get('_end_index') is not None
+        success = done and status not in ('failed', 'error', 'cancelled') and item.get('error') is None and item.get('is_error') is not True and item.get('exit_code') in (None, 0)
+        inputs = item.get('input') or item.get('arguments') or item.get('inputs') or {}
+        input_text = json.dumps(inputs, ensure_ascii=False) if isinstance(inputs, (dict, list)) else str(inputs)
+        command = item.get('command') or (inputs.get('command') or inputs.get('cmd') or inputs.get('CommandLine') if isinstance(inputs, dict) else inputs if isinstance(inputs, str) else '')
+        commands, _ = _shell_commands(command) if isinstance(command, str) else ([], False)
+        raw_output = item.get('aggregated_output') or item.get('output') or item.get('outputs') or item.get('result') or ''
+        output = _output_text(raw_output)
+        changes = item.get('changes') if isinstance(item.get('changes'), list) else []
+        is_modification = (kind == 'file_change' and any(_lab_target(change.get('path')) for change in changes if isinstance(change, dict)))
+        if name in ('write_file', 'edit_file', 'apply_patch', 'replace_file') and isinstance(inputs, dict):
+            is_modification |= _lab_target(inputs.get('path') or inputs.get('file_path'))
+        if isinstance(command, str):
+            is_modification |= _shell_modifies_lab(command)
+        if is_modification:
+            modification_barriers.append(item.get('_start_index'))
+            if success:
+                modifications.append((item.get('_start_index'), item['_end_index']))
+        for skill in SKILLS:
+            target = skill + '/SKILL.md'
+            def matches(value):
+                return target in value or (skill == 'kathara-dns' and 'antigravity_skills/SKILL.md' in value)
+            explicit = matches(str(command)) or matches(input_text)
+            reader = any(exe in READ and any(matches(arg) for arg in args) for exe, args in commands) or name in ('read_file', 'view_file', 'readfile')
+            native = kind in ('skill', 'skill_invocation') and item.get('name') == skill
+            if (explicit and reader) or native:
+                reads[skill].append((item, output, commands, success, native, _dedicated_read(command) if reader and isinstance(command, str) and command else name in ('read_file', 'view_file', 'readfile') or native))
+    details = {}
+    for skill in SKILLS:
+        attempts = reads[skill]
+        marker = re.compile(r'(?m)^name:\s*["\']?' + re.escape(skill) + r'\s*["\']?\s*$')
+        identified = any(done.get('_end_index') is not None and marker.search(output) for done, output, _, _, _, _ in attempts)
+        expected_hash = metadata.get('creation_skill_sha256' if skill == 'kathara-creation' else 'dns_skill_sha256')
+        reference = None
+        # A current canonical file is usable only if its bytes match the run's
+        # immutable manifest hash; its presence alone is never evidence of a read.
+        source = Path(__file__).resolve().parent.parent / ('skills/dns/SKILL.md' if skill == 'kathara-dns' else 'skills/kathara-creation/SKILL.md')
+        try:
+            data = source.read_bytes()
+            if expected_hash and hashlib.sha256(data).hexdigest() == expected_hash:
+                reference = data.decode('utf-8')
+        except (OSError, UnicodeError):
+            pass
+        full = None
+        dedicated = None
+        # Combined output is accepted only on an exact checksum match; never store content.
+        chunks = ''
+        next_line = 1
+        chunks_dedicated = True
+        for item, output, commands, success, native, is_dedicated in attempts:
+            if not success or not output or not expected_hash:
+                continue
+            digest = lambda text: hashlib.sha256(text.encode('utf-8')).hexdigest()
+            if digest(output) == expected_hash or (reference is not None and reference in output):
+                full = item
+                dedicated = is_dedicated
+                break
+            if len(commands) == 1 and commands[0][0] == 'sed':
+                match = re.search(r'^(\d+),(\d+)p$', ' '.join(commands[0][1]))
+                if not match:
+                    match = next((re.fullmatch(r'(\d+),(\d+)p', arg) for arg in commands[0][1] if re.fullmatch(r'(\d+),(\d+)p', arg)), None)
+                if match and int(match.group(1)) == next_line and int(match.group(2)) >= next_line:
+                    chunks += output
+                    chunks_dedicated = chunks_dedicated and is_dedicated
+                    next_line = int(match.group(2)) + 1
+                    if digest(chunks) == expected_hash:
+                        full = item
+                        dedicated = chunks_dedicated
+                        break
+                    continue
+            chunks, next_line, chunks_dedicated = '', 1, True
+        before = None
+        if full is not None and modifications:
+            read_start, read_end = full.get('_start_index'), full.get('_end_index')
+            first_start = min((start for start in modification_barriers if start is not None), default=None)
+            first_end = min(end for start, end in modifications)
+            # All modification starts must be known, otherwise an earlier overlapping
+            # modification cannot be ruled out.
+            if all(start is not None for start in modification_barriers) and first_start is not None and read_end < first_start:
+                before = True
+            elif first_end < read_end:
+                before = False
+        is_required = None if required is None else skill in required
+        if is_required is False:
+            state = 'not_required'
+        elif full is not None and before is True and metadata.get('skill_protocol') == 'explicit_read_v2' and dedicated is False:
+            state = 'not_dedicated'
+        elif full is not None and before is True:
+            state = 'verified'
+        elif before is False:
+            state = 'read_after_modification'
+        else:
+            state = 'unverified' if trace else 'unknown'
+        details[skill] = {'required': is_required,
+                          'read_attempt_observed': True if attempts else None,
+                          'content_identified': True if identified else None,
+                          'complete_read_verified': True if full is not None else None,
+                          'dedicated_read': dedicated,
+                          'read_before_modification': before,
+                          'verification_status': state}
+    relevant = [details[s] for s in required] if required is not None else None
+    all_before = (True if relevant and all(x['complete_read_verified'] is True and x['read_before_modification'] is True for x in relevant)
+                  else False if relevant and any(x['complete_read_verified'] is True and x['read_before_modification'] is False for x in relevant)
+                  else None)
+    protocol_ok = (True if all_before is True and (metadata.get('skill_protocol') != 'explicit_read_v2' or all(x['dedicated_read'] is True for x in relevant)) else False if all_before is False or (all_before is True and metadata.get('skill_protocol') == 'explicit_read_v2' and any(x['dedicated_read'] is False for x in relevant)) else None)
+    return {'skill_details': details,
+            'required_skill_count': len(required) if required is not None else None,
+            'required_read_attempt_count': sum(x['read_attempt_observed'] is True for x in relevant) if relevant is not None and trace else None,
+            'required_content_identified_count': sum(x['content_identified'] is True for x in relevant) if relevant is not None and trace else None,
+            'required_complete_read_count': sum(x['complete_read_verified'] is True for x in relevant) if relevant is not None and trace else None,
+            'required_unverified_read_count': sum(x['complete_read_verified'] is not True for x in relevant) if relevant is not None else None,
+            'required_reads_complete_before_modification': all_before,
+            'protocol_compliance_observed': protocol_ok,
+            'strict_status': 'not_required' if relevant == [] else 'verified' if protocol_ok is True else 'read_after_modification' if all_before is False else 'not_dedicated' if protocol_ok is False else 'unverified' if trace else 'unknown'}
 
 
 def observe(run, metadata, events):
@@ -269,7 +470,11 @@ def observe(run, metadata, events):
         required = None
     states = {skill: ('observed' if skill in observed else 'unknown') if required is None or skill in required else 'not_required' for skill in SKILLS}
     all_observed = True if required and all(s in observed for s in required) else None
+    details = _skill_verification(list(_items(events)), metadata, required, trace)
     compliance = {'skill_mode': mode, 'required_skills': required, 'observed_read_skills': sorted(observed),
                   'skill_states': states, 'required_reads_observed': all_observed,
+                  **details,
                   'status': 'unknown' if required is None or (required and all_observed is None) else 'verified' if required else 'not_required'}
+    if metadata.get('skill_protocol') == 'explicit_read_v2':
+        compliance['status'] = details['strict_status']
     return internet, compliance

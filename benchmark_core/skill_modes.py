@@ -16,16 +16,16 @@ SKILL_MODES = {
     "no_skill": SkillMode((), (), ""),
     "creation_only": SkillMode(
         ("kathara-creation",), ("kathara-creation",),
-        "$kathara-creation\n\nPrima di procedere, leggi esplicitamente il file\n`.codex/skills/kathara-creation/SKILL.md`\ne segui le istruzioni contenute nella Skill.",
+        "$kathara-creation\n\nPrima di qualsiasi modifica al laboratorio, leggi integralmente `.codex/skills/kathara-creation/SKILL.md` con una operazione di lettura dedicata, senza concatenare inventario o verifiche. Se necessario leggi il file in blocchi consecutivi fino alla fine. Poi applica le istruzioni pertinenti.",
     ),
     "dns_only": SkillMode(
         ("kathara-dns",), ("kathara-dns",),
-        "$kathara-dns\n\nPrima di procedere, leggi esplicitamente il file\n`.codex/skills/kathara-dns/SKILL.md`\ne segui le istruzioni contenute nella Skill.",
+        "$kathara-dns\n\nPrima di qualsiasi modifica al laboratorio, leggi integralmente `.codex/skills/kathara-dns/SKILL.md` con una operazione di lettura dedicata, senza concatenare inventario o verifiche. Se necessario leggi il file in blocchi consecutivi fino alla fine. Poi applica le istruzioni pertinenti.",
     ),
     "both_forced": SkillMode(
         ("kathara-creation", "kathara-dns"),
         ("kathara-creation", "kathara-dns"),
-        "$kathara-creation\n$kathara-dns\n\nPrima di procedere, leggi esplicitamente entrambi i file:\n- `.codex/skills/kathara-creation/SKILL.md`\n- `.codex/skills/kathara-dns/SKILL.md`\n\nSegui le istruzioni contenute nelle Skill pertinenti alla richiesta.",
+        "$kathara-creation\n$kathara-dns\n\nPrima di qualsiasi modifica al laboratorio, leggi integralmente ciascuno dei seguenti file con una operazione di lettura dedicata per ogni Skill, senza concatenare inventario o verifiche:\n- `.codex/skills/kathara-creation/SKILL.md`\n- `.codex/skills/kathara-dns/SKILL.md`\nSe necessario leggi ciascun file in blocchi consecutivi fino alla fine. Poi applica le istruzioni pertinenti.",
     ),
     "auto": SkillMode(("kathara-creation", "kathara-dns"), (), ""),
 }

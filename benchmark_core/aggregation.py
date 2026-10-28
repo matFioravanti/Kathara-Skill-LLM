@@ -36,6 +36,9 @@ RUN_COLUMNS = [
     "shell_network_candidates", "shell_network_local", "shell_network_uncertain",
     "search_result_domains", "visited_domains", "network_policy", "internet_trace_available",
     "required_skills", "observed_read_skills", "required_reads_observed", "skill_compliance_status",
+    "required_skill_count", "required_read_attempt_count", "required_content_identified_count",
+    "required_complete_read_count", "required_unverified_read_count",
+    "required_reads_complete_before_modification", "protocol_compliance_observed", "skill_strict_status",
 
     # 4. TOKEN
     "input_tokens", "cached_input_tokens", "output_tokens",
@@ -53,6 +56,9 @@ SUMMARY_COLUMNS = [
     "mean_web_search_calls", "web_search_calls_denominator", "internet_unknown_runs",
     "skill_required_runs", "skill_verified_runs", "skill_unobserved_or_unknown_runs",
     "skill_compliance_denominator", "skill_compliance_rate",
+    "required_skill_count", "required_read_attempt_count", "required_content_identified_count",
+    "required_complete_read_count", "required_unverified_read_count",
+    "complete_before_modification_runs", "strict_verified_runs", "strict_compliance_denominator", "strict_observed_compliance_rate",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "sampling_observed_runs", "sampling_temperatures", "sampling_top_ps",
     "task_success_runs", "task_failed_runs", "task_success_rate",
@@ -293,6 +299,14 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "observed_read_skills": _skill_list_str(compliance.get("observed_read_skills")),
         "required_reads_observed": compliance.get("required_reads_observed"),
         "skill_compliance_status": compliance.get("status"),
+        "required_skill_count": compliance.get("required_skill_count"),
+        "required_read_attempt_count": compliance.get("required_read_attempt_count"),
+        "required_content_identified_count": compliance.get("required_content_identified_count"),
+        "required_complete_read_count": compliance.get("required_complete_read_count"),
+        "required_unverified_read_count": compliance.get("required_unverified_read_count"),
+        "required_reads_complete_before_modification": compliance.get("required_reads_complete_before_modification"),
+        "protocol_compliance_observed": compliance.get("protocol_compliance_observed"),
+        "skill_strict_status": compliance.get("strict_status"),
         "available_skills": _skill_list_str(avail_raw),
         "forced_skills": _skill_list_str(forced_raw),
 
@@ -375,6 +389,11 @@ def _summary_records(records: list[dict]) -> list[dict]:
         skill_required = [row for row in group if row.get("required_skills")]
         skill_verified = sum(row.get("required_reads_observed") is True for row in skill_required)
         internet_confirmed = sum(row.get("internet_used") is True for row in group)
+        strict_verified = sum(row.get("protocol_compliance_observed") is True for row in skill_required)
+        def known_total(field):
+            values = [_number(row.get(field)) for row in group]
+            values = [v for v in values if v is not None]
+            return sum(values) if values else None
         output.append({
             **dict(zip(group_fields, key)),
             "internet_confirmed_runs": internet_confirmed,
@@ -389,6 +408,11 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "skill_unobserved_or_unknown_runs": len(skill_required) - skill_verified,
             "skill_compliance_denominator": len(skill_required),
             "skill_compliance_rate": skill_verified / len(skill_required) if skill_required else None,
+            **{field: known_total(field) for field in ("required_skill_count", "required_read_attempt_count", "required_content_identified_count", "required_complete_read_count", "required_unverified_read_count")},
+            "complete_before_modification_runs": sum(row.get("required_reads_complete_before_modification") is True for row in skill_required),
+            "strict_verified_runs": strict_verified,
+            "strict_compliance_denominator": len(skill_required),
+            "strict_observed_compliance_rate": strict_verified / len(skill_required) if skill_required else None,
             "total_runs": len(group),
             "pipeline_completed_runs": sum(state is True for state in manifest_states),
             "checker_executed_runs": sum(row.get("checker_executed") is True for row in group),
