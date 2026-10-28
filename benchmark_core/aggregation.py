@@ -18,6 +18,8 @@ RUN_COLUMNS = [
     "ID", "Lab", "T",
     "experiment_id", "replicate", "run_number", "skill_mode", "skill_protocol",
     "agent", "model", "reasoning_effort",
+    "llm_temperature", "llm_top_p",
+    "sampling_source", "sampling_status", "sampling_transport",
 
     # 2. METRICHE
     "status", "pipeline_completed", "checker_executed", "task_success",
@@ -41,6 +43,7 @@ CHECK_COLUMNS = [
 SUMMARY_COLUMNS = [
     "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
+    "sampling_observed_runs", "sampling_temperatures", "sampling_top_ps",
     "task_success_runs", "task_failed_runs", "task_success_rate",
     "mean_checks_passed", "mean_checks_total", "mean_pass_rate", "median_pass_rate", "stdev_pass_rate",
     "mean_agent_seconds", "median_agent_seconds", "stdev_agent_seconds",
@@ -210,6 +213,13 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     if not isinstance(forced_raw, list):
         forced_raw = manifest.get("forced_skills")
 
+    llm_sampling = metrics.get("llm_sampling") or manifest.get("llm_sampling") or {}
+    temperature = _number(llm_sampling.get("temperature"))
+    top_p = _number(llm_sampling.get("top_p"))
+    sampling_source = llm_sampling.get("source")
+    sampling_status = llm_sampling.get("status")
+    sampling_transport = llm_sampling.get("transport")
+
     return {
         "experiment_id": experiment_id,
         "Lab": metrics.get("scenario") or manifest.get("scenario_id"),
@@ -221,6 +231,11 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "agent": metrics.get("agent") or manifest.get("agent"),
         "model": metrics.get("model") or manifest.get("model"),
         "reasoning_effort": metrics.get("reasoning_effort") or manifest.get("reasoning_effort"),
+        "llm_temperature": temperature,
+        "llm_top_p": top_p,
+        "sampling_source": sampling_source,
+        "sampling_status": sampling_status,
+        "sampling_transport": sampling_transport,
         "status": status,
         "pipeline_completed": manifest.get("pipeline_state", status) == "COMPLETED",
         "checker_executed": checker_executed,
@@ -294,6 +309,15 @@ def _summary_records(records: list[dict]) -> list[dict]:
         pass_rates = [row.get("pass_rate") for row in evaluated]
         manifest_states = [row.get("pipeline_completed") for row in group]
         checker_seconds = [row.get("checker_seconds") for row in group]
+        observed_sampling = [row for row in group if row.get("sampling_status") == "observed"]
+        observed_temps = sorted({
+            row["llm_temperature"] for row in observed_sampling if row.get("llm_temperature") is not None
+        })
+        observed_top_ps = sorted({
+            row["llm_top_p"] for row in observed_sampling if row.get("llm_top_p") is not None
+        })
+        sampling_temps_str = ";".join(str(t) for t in observed_temps) if observed_temps else None
+        sampling_top_ps_str = ";".join(str(p) for p in observed_top_ps) if observed_top_ps else None
         stats = {}
         for column, values in (
             ("pass_rate", pass_rates),
@@ -317,6 +341,9 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "pipeline_completed_runs": sum(state is True for state in manifest_states),
             "checker_executed_runs": sum(row.get("checker_executed") is True for row in group),
             "evaluated_runs": len(evaluated),
+            "sampling_observed_runs": len(observed_sampling),
+            "sampling_temperatures": sampling_temps_str,
+            "sampling_top_ps": sampling_top_ps_str,
             "task_success_runs": task_successes,
             "task_failed_runs": task_failures,
             "task_success_rate": task_successes / len(evaluated) if evaluated else None,
@@ -363,10 +390,14 @@ def _style_sheet(sheet, frame: pd.DataFrame, is_runs_sheet: bool = False) -> Non
         
         if is_runs_sheet:
             col_name_str = str(column_name)
-            # Determina il gruppo in base all'indice
+            # Determina il gruppo in base all'indice o nome
             if "token" in col_name_str.lower():
                 cell.fill = tokens_fill
-            elif column_index <= 10:  # Le prime 10 colonne sono identificazione
+            elif col_name_str in (
+                "ID", "Lab", "T", "experiment_id", "replicate", "run_number",
+                "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
+                "llm_temperature", "llm_top_p", "sampling_source", "sampling_status", "sampling_transport"
+            ):
                 cell.fill = id_fill
             else:  # Le colonne in mezzo sono metriche
                 cell.fill = metrics_fill
@@ -402,12 +433,15 @@ def _style_sheet(sheet, frame: pd.DataFrame, is_runs_sheet: bool = False) -> Non
                 cell.number_format = "0.00%"
             elif column == "cost":
                 cell.number_format = "$#,##0.0000"
+            elif column in ("llm_temperature", "llm_top_p"):
+                cell.number_format = "0.0#"
             elif "seconds" in column:
                 cell.number_format = "0.0"
             elif "tokens" in column or column in (
                 "repetition", "replicate", "run_number",
                 "checks_passed", "checks_total", "total_runs",
                 "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
+                "sampling_observed_runs",
                 "task_success_runs", "task_failed_runs", "run_count",
                 "scenarios", "prompt_types", "skill_modes", "replicates",
                 "infrastructure_failures", "completed_runs",

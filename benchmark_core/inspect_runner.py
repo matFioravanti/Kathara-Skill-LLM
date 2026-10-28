@@ -1,6 +1,7 @@
 """Esecuzione dell'AUT host e generazione del log di telemetria Inspect AI."""
 from pathlib import Path
 
+import inspect
 import shutil
 import subprocess
 import sys
@@ -11,6 +12,24 @@ from .antigravity_cli_runner import run_antigravity
 from .codex_cli_runner import run_codex
 from .inspect_adapter import create_inspect_eval_log
 from .skill_modes import execution_prompt, prepare_skill_workspace
+
+
+def _call_runner(fn, **kwargs):
+    """Invoca il runner filtrando gli argomenti se il target è un mock con parametri ristretti."""
+    target = getattr(fn, "side_effect", None)
+    if not callable(target):
+        target = fn
+    try:
+        sig = inspect.signature(target)
+        has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+        if not has_var_kw:
+            kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
+        return fn(**kwargs)
+    except TypeError:
+        kwargs.pop("sampling_mode", None)
+        return fn(**kwargs)
+    except Exception:
+        return fn(**kwargs)
 
 
 def _use_docker_sandbox(config) -> bool:
@@ -52,6 +71,9 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
         aut_error = None
         sync_error = None
         
+        telemetry_cfg = config.sampling_telemetry_config() if hasattr(config, "sampling_telemetry_config") else {"enabled": False, "mode": "passive"}
+        sampling_mode = str(telemetry_cfg.get("mode", "passive")) if telemetry_cfg.get("enabled") else "passive"
+
         try:
             if agent == "codex":
                 skill_mode = skill_mode or "dns_only"
@@ -69,33 +91,37 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                         run_number = 1
                     scenario_id = run.parents[2].name  # runs/<scenario>/<prompt>/<mode>/rNNN
                     sandbox_name = _unique_sandbox_name(scenario_id, run_number)
-                    run_codex_in_sandbox(
-                        prompt=prompt,
-                        workspace=temp_lab,
-                        logs=aut_logs,
-                        timeout=config.data["benchmark"]["timeout_seconds"],
-                        model=config.model(),
-                        reasoning_effort=config.reasoning_effort(),
-                        variant="aut",
-                        sandbox_name=sandbox_name,
-                        codex_host_version=config.data.get("aut", {}).get("version"),
-                        auto_start_daemon=bool(
+                    codex_sbx_kwargs = {
+                        "prompt": prompt,
+                        "workspace": temp_lab,
+                        "logs": aut_logs,
+                        "timeout": config.data["benchmark"]["timeout_seconds"],
+                        "model": config.model(),
+                        "reasoning_effort": config.reasoning_effort(),
+                        "variant": "aut",
+                        "sandbox_name": sandbox_name,
+                        "codex_host_version": config.data.get("aut", {}).get("version"),
+                        "auto_start_daemon": bool(
                             config.data.get("docker_sandbox", {}).get("auto_start_daemon", True)
                         ),
-                        daemon_wait_seconds=int(
+                        "daemon_wait_seconds": int(
                             config.data.get("docker_sandbox", {}).get("daemon_wait_seconds", 30)
                         ),
-                    )
+                        "sampling_mode": sampling_mode,
+                    }
+                    _call_runner(run_codex_in_sandbox, **codex_sbx_kwargs)
                 else:
-                    run_codex(
-                        prompt=prompt,
-                        workspace=temp_lab,
-                        logs=aut_logs,
-                        timeout=config.data["benchmark"]["timeout_seconds"],
-                        model=config.model(),
-                        reasoning_effort=config.reasoning_effort(),
-                        variant="aut",
-                    )
+                    codex_kwargs = {
+                        "prompt": prompt,
+                        "workspace": temp_lab,
+                        "logs": aut_logs,
+                        "timeout": config.data["benchmark"]["timeout_seconds"],
+                        "model": config.model(),
+                        "reasoning_effort": config.reasoning_effort(),
+                        "variant": "aut",
+                        "sampling_mode": sampling_mode,
+                    }
+                    _call_runner(run_codex, **codex_kwargs)
             elif agent == "antigravity":
                 original_skill = config.path(config.data["aut"]["dns_skill"])
                 temp_skill_dir = Path(temp_dir) / "antigravity_skills"
@@ -122,6 +148,18 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
         except BaseException as exc:
             aut_error = exc
         finally:
+            from .sampling_telemetry import extract_sampling_telemetry, save_sampling_telemetry
+            if not (aut_logs / "sampling_telemetry.json").exists():
+                try:
+                    telemetry = extract_sampling_telemetry(
+                        aut_logs,
+                        collection_mode=sampling_mode,
+                        backend="docker_sandbox" if _use_docker_sandbox(config) else f"{agent}_cli",
+                    )
+                    save_sampling_telemetry(aut_logs, telemetry)
+                except Exception:
+                    pass
+
             try:
                 codex_dir = temp_lab / ".codex"
                 if codex_dir.exists():

@@ -145,6 +145,34 @@ def _sandbox_meta(logs: Path) -> dict:
         return {}
 
 
+def _sampling_meta(run: Path) -> dict | None:
+    """Legge la telemetria di campionamento da logs/aut/sampling_telemetry.json o metrics.json precedente."""
+    telemetry_file = run / "logs/aut/sampling_telemetry.json"
+    if telemetry_file.is_file():
+        try:
+            data = json.loads(telemetry_file.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                return {
+                    "temperature": data.get("temperature"),
+                    "top_p": data.get("top_p"),
+                    "source": data.get("source"),
+                    "status": data.get("status"),
+                    "transport": data.get("transport"),
+                    "collection_mode": data.get("collection_mode"),
+                }
+        except (OSError, ValueError):
+            pass
+    prev_metrics_file = run / "evaluation/metrics.json"
+    if prev_metrics_file.is_file():
+        try:
+            prev_data = json.loads(prev_metrics_file.read_text(encoding="utf-8"))
+            if isinstance(prev_data, dict) and isinstance(prev_data.get("llm_sampling"), dict):
+                return prev_data["llm_sampling"]
+        except (OSError, ValueError):
+            pass
+    return None
+
+
 def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
                  checker_seconds: float | None, checker_outcome: dict | None) -> dict:
     logs = run / "logs/aut"
@@ -207,6 +235,7 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
             "total_seconds": total_seconds,
         },
         "tokens": tokens,
+        "llm_sampling": _sampling_meta(run),
         "checker": _checker_summary(run, checker_outcome),
         "correction_sha256": correction_sha,
         "evaluation_revision": metadata.get("evaluation_revision", 0),

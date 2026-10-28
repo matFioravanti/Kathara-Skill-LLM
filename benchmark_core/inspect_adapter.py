@@ -168,6 +168,14 @@ def create_inspect_eval_log(
                 "local_chatgpt_login" if agent == "codex" else "local_google_login"
             )
 
+        sampling_path = logs / "sampling_telemetry.json"
+        sampling_meta = {}
+        if sampling_path.is_file():
+            try:
+                sampling_meta = json.loads(sampling_path.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+
         eval_spec = EvalSpec(
             eval_id=run_id,
             run_id=run_id,
@@ -184,6 +192,11 @@ def create_inspect_eval_log(
                 "codex_host_version": invocation.get("codex_host_version"),
                 "codex_sandbox_version": invocation.get("codex_sandbox_version"),
                 "sbx_version": invocation.get("sbx_version"),
+                "llm_temperature": sampling_meta.get("temperature"),
+                "llm_top_p": sampling_meta.get("top_p"),
+                "sampling_source": sampling_meta.get("source"),
+                "sampling_status": sampling_meta.get("status"),
+                "sampling_transport": sampling_meta.get("transport"),
             },
         )
 

@@ -20,6 +20,15 @@ class Config:
     def reasoning_effort(self, section: str = "aut") -> str | None:
         return self.data[section].get("reasoning_effort") or self.data["aut"].get("reasoning_effort")
 
+    def sampling_telemetry_config(self) -> dict:
+        """Configurazione per la telemetria dei parametri di campionamento LLM."""
+        telemetry = self.data.get("aut", {}).get("sampling_telemetry")
+        if not isinstance(telemetry, dict):
+            return {"enabled": False, "mode": "passive"}
+        enabled = bool(telemetry.get("enabled", True))
+        mode = str(telemetry.get("mode") or "passive")
+        return {"enabled": enabled, "mode": mode}
+
 
 def load_config(path: Path) -> Config:
     path = path.resolve()
@@ -52,6 +61,14 @@ def load_config(path: Path) -> Config:
             value = data[section].get(key)
             if value is not None and (not isinstance(value, str) or not value.strip()):
                 raise ValueError(f"{section}.{key} deve essere null o una stringa non vuota.")
+        telemetry = data[section].get("sampling_telemetry")
+        if telemetry is not None:
+            if not isinstance(telemetry, dict):
+                raise ValueError("aut.sampling_telemetry deve essere un mapping YAML.")
+            if "enabled" in telemetry and not isinstance(telemetry["enabled"], bool):
+                raise ValueError("aut.sampling_telemetry.enabled deve essere booleano.")
+            if "mode" in telemetry and telemetry["mode"] not in ("passive", "http_trace"):
+                raise ValueError("aut.sampling_telemetry.mode deve essere 'passive' o 'http_trace'.")
     config = Config(path.parent, data)
     output = config.path(data["results"]["directory"])
     # Impedisce che gli aggregati sovrascrivano dati grezzi o scenari.

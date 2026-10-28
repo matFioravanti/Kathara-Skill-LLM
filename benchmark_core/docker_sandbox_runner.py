@@ -508,6 +508,7 @@ def run_codex_in_sandbox(
     codex_host_version: str | None = None,
     auto_start_daemon: bool = True,
     daemon_wait_seconds: int = 30,
+    sampling_mode: str = "passive",
 ) -> SandboxRun:
     """Crea un sandbox Codex monouso, esegue il prompt, raccoglie i risultati ed elimina il sandbox.
 
@@ -665,6 +666,13 @@ def run_codex_in_sandbox(
         except Exception as exc:
             log_errors.append(f"prompt_sent.md: {exc}")
 
+        from .sampling_telemetry import extract_sampling_telemetry, save_sampling_telemetry
+        try:
+            sampling_telemetry = extract_sampling_telemetry(logs, collection_mode=sampling_mode, backend="docker_sandbox")
+            save_sampling_telemetry(logs, sampling_telemetry)
+        except Exception as exc:
+            log_errors.append(f"sampling_telemetry.json: {exc}")
+
         try:
             write_json(logs / "invocation.json", {
                 "command": list(full_command),
@@ -675,6 +683,8 @@ def run_codex_in_sandbox(
                 "api_key_used": False,
                 "model": model,
                 "reasoning_effort": reasoning_effort,
+                "sampling_collection_mode": sampling_mode,
+                "sampling_transport": None,
                 "sandbox_name": sandbox_name,
                 "sandbox_id": sandbox_id,
                 "sbx_version": detected_sbx_version,

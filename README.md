@@ -290,6 +290,40 @@ runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/
   - `total_reported`: Token total reported directly by the provider API.
   - `total_calculated`: `input_tokens + output_tokens`.
   - `total`: Resolves to `total_reported` if available, otherwise `total_calculated`.
+- **LLM Sampling Telemetry (`temperature`, `top_p`)**:
+  - Automatically captures server-reported sampling parameters (`temperature`, `top_p`) from model responses.
+  - Dedicated artifact: `logs/aut/sampling_telemetry.json`.
+  - Stored in `evaluation/metrics.json` under `llm_sampling` (kept strictly separate from token and scoring metrics).
+  - Propagated to Inspect AI `.eval` log metadata (`llm_temperature`, `llm_top_p`, `sampling_source`, `sampling_status`, `sampling_transport`).
+
+### LLM Sampling Telemetry Configuration & Methodology
+
+To configure sampling telemetry in `benchmark.yaml`:
+
+```yaml
+aut:
+  sampling_telemetry:
+    enabled: true
+    mode: passive  # "passive" | "http_trace"
+```
+
+#### Collection Modes
+
+- **`passive` (default)**: Operates non-invasively, reading whatever telemetry is exposed by the default transport and backend without changing endpoints, authentication, or providers. If parameters are not exposed by the service, status is recorded as `unavailable`.
+- **`http_trace`**: Explicitly activates trace logging (`codex_api::sse::responses=trace`) and HTTP responses transport (`chatgpt-http` temporary provider via ephemeral `-c` CLI options without modifying `~/.codex/config.toml`).
+
+#### Backend Compatibility
+
+- **Host CLI (`codex_cli`)**: Fully compatible with both `passive` and `http_trace` modes.
+- **Docker Sandbox (`docker_sandbox` via `sbx`)**: Supports `passive` mode. `http_trace` is **unsupported** because overriding providers or transports conflicts with Docker Sandboxes' OAuth proxy. If configured on `docker_sandbox`, the system explicitly records `status: "unsupported_backend"` without breaking lab execution.
+
+#### Methodological Notes
+
+- **Server-Reported Parameters**: The value recorded is what the server states in response metadata. It represents external observational evidence, not an infallible guarantee of internal sampler mechanics.
+- **Null vs Zero**: An absent or unavailable parameter is kept strictly `null` (empty cell in CSV/Excel). In LLM sampling, `temperature: 0.0` denotes greedy/deterministic argmax decoding, which is fundamentally different from an unobserved parameter. Coercing missing values to zero would corrupt scientific reproducibility.
+- **Multi-response Coherence**: If multiple model turns return conflicting values within a single run, the status is marked as `inconsistent` and distinct values are preserved in `distinct_temperatures`.
+- **Server Verification**: To verify that the server returned values, inspect `logs/aut/sampling_telemetry.json` (`status: "observed"`) and `logs/aut/stderr.log` for SSE events.
+- **Regenerating Historical CSVs**: Run `python scripts/aggregate_results.py` to regenerate CSVs and `benchmark.xlsx` without re-running LLM calls. Historic runs without sampling data will aggregate cleanly with `null` fields.
 
 ## Aggregation and Reporting
 
