@@ -9,14 +9,19 @@ import json
 
 from .aut_observation import observe
 from .skill_modes import mode_details
-from .workspace import write_json
+from .workspace import utc_now, write_json
 
 PROTOCOL = 'enforced_read_v1'
 FIELDS = ('skill_gate_enabled', 'skill_gate_status', 'skill_gate_required_skills',
           'skill_gate_verified_skills', 'skill_gate_read_seconds',
           'skill_gate_verification_seconds', 'skill_gate_blocked',
           'skill_gate_write_attempts_blocked', 'skill_gate_backend_enforcement',
-          'skill_gate_input_tokens', 'skill_gate_output_tokens')
+          'skill_gate_input_tokens', 'skill_gate_output_tokens',
+          'skill_gate_write_seconds', 'skill_gate_total_seconds',
+          'write_phase_input_tokens', 'write_phase_output_tokens',
+          'skill_gate_isolation_verified', 'skill_gate_isolation_violations',
+          'skill_gate_context_strategy', 'skill_gate_backend',
+          'skill_gate_protocol_version', 'skill_gate_state_history')
 
 
 class SkillGateError(RuntimeError):
@@ -37,7 +42,13 @@ def gate_record(required, backend):
             'skill_gate_read_seconds': None, 'skill_gate_verification_seconds': None,
             'skill_gate_blocked': bool(required), 'skill_gate_write_attempts_blocked': None,
             'skill_gate_backend_enforcement': f'{backend}:unverified' if required else None,
-            'skill_gate_input_tokens': None, 'skill_gate_output_tokens': None}
+            'skill_gate_input_tokens': None, 'skill_gate_output_tokens': None,
+            'skill_gate_write_seconds': None, 'skill_gate_total_seconds': None,
+            'write_phase_input_tokens': None, 'write_phase_output_tokens': None,
+            'skill_gate_isolation_verified': None, 'skill_gate_isolation_violations': None,
+            'skill_gate_context_strategy': None, 'skill_gate_backend': backend,
+            'skill_gate_protocol_version': PROTOCOL,
+            'skill_gate_state_history': [{'status': 'unsupported_backend' if required else 'not_required', 'timestamp': utc_now()}]}
 
 
 def enforce_or_block(config, run: Path, agent: str, mode: str):
@@ -65,12 +76,14 @@ def evaluate_read_evidence(run: Path, metadata: dict, events: list[dict], *, ret
     required = list(mode_details(metadata['skill_mode']).forced_skills)
     if not required:
         return {'status': 'not_required', 'verified_skills': [], 'blocked': False}
-    if timed_out or returncode != 0 or not any(e.get('type') == 'turn.completed' for e in events):
+    if timed_out:
+        return {'status': 'read_phase_timeout', 'verified_skills': [], 'blocked': True}
+    if returncode != 0 or not any(e.get('type') == 'turn.completed' for e in events):
         return {'status': 'read_phase_failed', 'verified_skills': [], 'blocked': True}
     _, compliance = observe(run, metadata, events)
     details = compliance['skill_details']
     verified = [s for s in required if details[s]['complete_read_verified'] is True and details[s]['dedicated_read'] is True]
-    return {'status': 'evidence_verified' if len(verified) == len(required) else 'unverified',
+    return {'status': 'evidence_verified' if len(verified) == len(required) else 'verification_failed',
             'verified_skills': verified, 'blocked': len(verified) != len(required)}
 
 

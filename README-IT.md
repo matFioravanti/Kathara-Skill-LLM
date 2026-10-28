@@ -545,3 +545,31 @@ Una successiva fase B dovrebbe usare una sessione separata a meno che la
 continuità del contesto non venga supportata e verificata esplicitamente.
 Le colonne del gate sono disponibili in JSON, CSV e nei fogli Runs e Summary;
 tempi e token non misurati restano vuoti.
+
+La versione `sbx` 0.48.0 installata supporta un secondo workspace con suffisso
+`:ro`. È stato verificato con un processo deterministico `nobody`, lanciato
+con `setpriv --no-new-privs`: scritture shell e Python, creazione, rimozione,
+cambio permessi e scrittura attraverso un link simbolico sono state negate;
+la connessione al socket Docker è stata negata. Il test verifica anche una
+cartella di lavoro separata scrivibile. Per ripeterlo, con Docker Desktop e
+`sbx daemon` attivi:
+
+```bash
+RUN_SBX_ISOLATION_TESTS=1 .venv/bin/python -m pytest -q tests/test_skill_gate_sbx_integration.py
+```
+
+Questo è un test del filesystem e dei privilegi del processo di prova. Non
+certifica il runner Codex: il template standard usa l'utente `agent`, che può
+usare `sudo` e accedere al socket Docker interno, e configura un gateway MCP.
+Il gateway MCP del template può essere disabilitato con un override Codex,
+verificato mediante `codex mcp list --json` senza chiamare un modello; anche
+`codex login status` riesce con l'utente limitato. Questo non verifica ancora
+l'esecuzione effettiva della fase A né esclude strumenti configurati da altre
+fonti. In una prova il comando di rimontaggio eseguito come root ha riportato `rw`,
+mentre la scrittura sul file di prova era ancora rifiutata dal filesystem
+sottostante. È necessario verificare l'intero percorso Codex con utente non
+privilegiato, l'isolamento di tutti gli strumenti e l'autenticazione proxy,
+oltre a implementare e testare la transizione A → gate → B; per questo il
+backend di produzione resta `unsupported_backend`. La documentazione Codex
+prevede `codex exec resume`, ma la conservazione del contesto attraverso due
+sandbox con mount diversi non è stata verificata.

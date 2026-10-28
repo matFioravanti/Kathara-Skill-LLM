@@ -66,6 +66,9 @@ SUMMARY_COLUMNS = [
     "skill_gate_backend_enforcements", "skill_gate_write_attempts_blocked",
     "mean_skill_gate_read_seconds", "mean_skill_gate_verification_seconds",
     "mean_skill_gate_input_tokens", "mean_skill_gate_output_tokens",
+    "skill_gate_pass_denominator", "skill_gate_pass_rate", "skill_gate_isolation_violations",
+    "mean_skill_gate_write_seconds", "mean_skill_gate_total_seconds",
+    "mean_write_phase_input_tokens", "mean_write_phase_output_tokens",
     "total_runs", "pipeline_completed_runs", "checker_executed_runs", "evaluated_runs",
     "sampling_observed_runs", "sampling_temperatures", "sampling_top_ps",
     "task_success_runs", "task_failed_runs", "task_success_rate",
@@ -247,7 +250,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     sampling_transport = llm_sampling.get("transport")
 
     return {
-        **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills") else metrics.get(field)) for field in SKILL_GATE_FIELDS},
+        **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills") else json.dumps(metrics[field], ensure_ascii=False) if field == "skill_gate_state_history" and metrics.get(field) is not None else metrics.get(field)) for field in SKILL_GATE_FIELDS},
         "experiment_id": experiment_id,
         "Lab": metrics.get("scenario") or manifest.get("scenario_id"),
         "T": metrics.get("prompt_type") or manifest.get("prompt_type"),
@@ -398,6 +401,8 @@ def _summary_records(records: list[dict]) -> list[dict]:
         skill_verified = sum(row.get("required_reads_observed") is True for row in skill_required)
         internet_confirmed = sum(row.get("internet_used") is True for row in group)
         strict_verified = sum(row.get("protocol_compliance_observed") is True for row in skill_required)
+        gate_enabled = sum(row.get("skill_gate_enabled") is True for row in group)
+        gate_passed = sum(row.get("skill_gate_status") in ("passed", "write_phase_running", "completed") for row in group)
         def known_total(field):
             values = [_number(row.get(field)) for row in group]
             values = [v for v in values if v is not None]
@@ -421,7 +426,10 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "skill_gate_enabled_runs": sum(row.get("skill_gate_enabled") is True for row in group),
             "skill_gate_blocked_runs": sum(row.get("skill_gate_blocked") is True for row in group),
             "skill_gate_unsupported_runs": sum(row.get("skill_gate_status") == "unsupported_backend" for row in group),
-            "skill_gate_passed_runs": sum(row.get("skill_gate_status") == "passed" for row in group),
+            "skill_gate_passed_runs": gate_passed,
+            "skill_gate_pass_denominator": gate_enabled,
+            "skill_gate_pass_rate": gate_passed / gate_enabled if gate_enabled else None,
+            "skill_gate_isolation_violations": known_total("skill_gate_isolation_violations"),
             "skill_gate_statuses": ";".join(sorted({row["skill_gate_status"] for row in group if row.get("skill_gate_status")})) or None,
             "skill_gate_required_skills": ";".join(sorted({skill for row in group for skill in (row.get("skill_gate_required_skills") or "").split(";") if skill})) or None,
             "skill_gate_verified_skills": ";".join(sorted({skill for row in group for skill in (row.get("skill_gate_verified_skills") or "").split(";") if skill})) or None,
@@ -429,6 +437,10 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "skill_gate_write_attempts_blocked": known_total("skill_gate_write_attempts_blocked"),
             "mean_skill_gate_read_seconds": _mean(row.get("skill_gate_read_seconds") for row in group),
             "mean_skill_gate_verification_seconds": _mean(row.get("skill_gate_verification_seconds") for row in group),
+            "mean_skill_gate_write_seconds": _mean(row.get("skill_gate_write_seconds") for row in group),
+            "mean_skill_gate_total_seconds": _mean(row.get("skill_gate_total_seconds") for row in group),
+            "mean_write_phase_input_tokens": _mean(row.get("write_phase_input_tokens") for row in group),
+            "mean_write_phase_output_tokens": _mean(row.get("write_phase_output_tokens") for row in group),
             "mean_skill_gate_input_tokens": _mean(row.get("skill_gate_input_tokens") for row in group),
             "mean_skill_gate_output_tokens": _mean(row.get("skill_gate_output_tokens") for row in group),
             "strict_verified_runs": strict_verified,

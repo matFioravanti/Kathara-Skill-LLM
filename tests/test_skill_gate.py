@@ -93,14 +93,20 @@ def test_gate_reports_json_csv_excel(tmp_path):
     run.joinpath('manifest.json').write_text(json.dumps(manifest))
     data = make_metrics(run, manifest, total_seconds=2, checker_seconds=None, checker_outcome=None)
     assert data['skill_gate_status'] == 'unsupported_backend' and data['skill_gate_input_tokens'] is None
+    assert data['skill_gate_protocol_version'] == 'enforced_read_v1'
+    assert data['skill_gate_isolation_verified'] is None and data['skill_gate_write_seconds'] is None
+    assert data['skill_gate_state_history'][0]['status'] == 'unsupported_backend'
     (run / 'evaluation').mkdir()
     (run / 'evaluation/metrics.json').write_text(json.dumps(data))
     rows, _, summary = aggregate(runs, tmp_path / 'results')
     assert bool(rows.iloc[0]['skill_gate_blocked']) is True
     assert summary.iloc[0]['skill_gate_unsupported_runs'] == 1
+    assert summary.iloc[0]['skill_gate_pass_denominator'] == 1
+    assert summary.iloc[0]['skill_gate_pass_rate'] == 0
     book = openpyxl.load_workbook(tmp_path / 'results/benchmark.xlsx', read_only=True)
     assert 'skill_gate_status' in [c.value for c in next(book['Runs'].iter_rows())]
     assert 'skill_gate_blocked_runs' in [c.value for c in next(book['Summary'].iter_rows())]
+    assert 'skill_gate_pass_denominator' in [c.value for c in next(book['Summary'].iter_rows())]
 
 
 def test_pipeline_fails_closed_before_checker(tmp_path, monkeypatch):
