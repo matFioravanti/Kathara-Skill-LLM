@@ -19,7 +19,8 @@ RUN_COLUMNS = [
     "experiment_id", "replicate", "run_number", "skill_mode", "skill_protocol",
     "agent", "model", "reasoning_effort",
     "llm_temperature", "llm_top_p",
-    "sampling_source", "sampling_status", "sampling_transport",
+    "sampling_source", "sampling_status", "sampling_transport", "sampling_collection_mode",
+    "sampling_temperature_status", "sampling_top_p_status", "sampling_distinct_temperatures", "sampling_distinct_top_p",
 
     # 2. METRICHE
     "status", "pipeline_completed", "checker_executed", "task_success",
@@ -236,6 +237,11 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "sampling_source": sampling_source,
         "sampling_status": sampling_status,
         "sampling_transport": sampling_transport,
+        "sampling_collection_mode": llm_sampling.get("collection_mode"),
+        "sampling_temperature_status": llm_sampling.get("temperature_status"),
+        "sampling_top_p_status": llm_sampling.get("top_p_status"),
+        "sampling_distinct_temperatures": json.dumps(llm_sampling["distinct_temperatures"]) if "distinct_temperatures" in llm_sampling else None,
+        "sampling_distinct_top_p": json.dumps(llm_sampling["distinct_top_p"]) if "distinct_top_p" in llm_sampling else None,
         "status": status,
         "pipeline_completed": manifest.get("pipeline_state", status) == "COMPLETED",
         "checker_executed": checker_executed,
@@ -309,12 +315,16 @@ def _summary_records(records: list[dict]) -> list[dict]:
         pass_rates = [row.get("pass_rate") for row in evaluated]
         manifest_states = [row.get("pipeline_completed") for row in group]
         checker_seconds = [row.get("checker_seconds") for row in group]
-        observed_sampling = [row for row in group if row.get("sampling_status") == "observed"]
+        observed_sampling = [row for row in group if row.get("sampling_status") in ("observed", "partial")]
         observed_temps = sorted({
-            row["llm_temperature"] for row in observed_sampling if row.get("llm_temperature") is not None
+            row["llm_temperature"] for row in group if row.get("llm_temperature") is not None
+            and (row.get("sampling_temperature_status") == "observed" or
+                 (row.get("sampling_temperature_status") is None and row.get("sampling_status") == "observed"))
         })
         observed_top_ps = sorted({
-            row["llm_top_p"] for row in observed_sampling if row.get("llm_top_p") is not None
+            row["llm_top_p"] for row in group if row.get("llm_top_p") is not None
+            and (row.get("sampling_top_p_status") == "observed" or
+                 (row.get("sampling_top_p_status") is None and row.get("sampling_status") == "observed"))
         })
         sampling_temps_str = ";".join(str(t) for t in observed_temps) if observed_temps else None
         sampling_top_ps_str = ";".join(str(p) for p in observed_top_ps) if observed_top_ps else None

@@ -290,40 +290,28 @@ runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/
   - `total_reported`: Token total reported directly by the provider API.
   - `total_calculated`: `input_tokens + output_tokens`.
   - `total`: Resolves to `total_reported` if available, otherwise `total_calculated`.
-- **LLM Sampling Telemetry (`temperature`, `top_p`)**:
-  - Automatically captures server-reported sampling parameters (`temperature`, `top_p`) from model responses.
-  - Dedicated artifact: `logs/aut/sampling_telemetry.json`.
-  - Stored in `evaluation/metrics.json` under `llm_sampling` (kept strictly separate from token and scoring metrics).
-  - Propagated to Inspect AI `.eval` log metadata (`llm_temperature`, `llm_top_p`, `sampling_source`, `sampling_status`, `sampling_transport`).
+- **LLM sampling telemetry** is stored in `logs/aut/sampling_telemetry.json`, `evaluation/metrics.json`, Inspect metadata and aggregate reports. It does not affect scores, token counts or timing.
 
-### LLM Sampling Telemetry Configuration & Methodology
-
-To configure sampling telemetry in `benchmark.yaml`:
+### LLM sampling telemetry: configuration and evidence
 
 ```yaml
 aut:
   sampling_telemetry:
     enabled: true
-    mode: passive  # "passive" | "http_trace"
+    mode: passive  # passive | http_trace
 ```
 
-#### Collection Modes
+Omitting this section, or setting `enabled: false`, disables collection. A disabled run records `disabled` and does not read sampling logs or add diagnostic settings. Older configurations remain valid.
 
-- **`passive` (default)**: Operates non-invasively, reading whatever telemetry is exposed by the default transport and backend without changing endpoints, authentication, or providers. If parameters are not exposed by the service, status is recorded as `unavailable`.
-- **`http_trace`**: Explicitly activates trace logging (`codex_api::sse::responses=trace`) and HTTP responses transport (`chatgpt-http` temporary provider via ephemeral `-c` CLI options without modifying `~/.codex/config.toml`).
+`passive` uses the existing provider, endpoint, authentication and transport. It inspects only response SSE from the recognizable Codex response trace, if already available; it does not enable tracing. Ordinary JSONL events, arbitrary JSON, prompt text, agent and tool output are not evidence of a server response. `http_trace` is opt-in for the host CLI: it enables trace logging and configures the `chatgpt-http` provider and HTTP transport. This changes experimental conditions relative to the standard path; compare or combine such runs only with that difference explicitly accounted for. Trace logs can contain sensitive content and should be protected.
 
-#### Backend Compatibility
+Docker Sandbox keeps its normal OAuth proxy and execution path in `passive`; `http_trace` is recorded as `unsupported_backend` and does not alter the sandbox. [Docker's credential documentation](https://docs.docker.com/ai/sandboxes/configuration/credentials/) describes proxy-managed authentication, not a supported non-invasive interface for retrieving sampling response metadata. No real-backend availability is established by the simulated tests. If the normal logs do not expose verifiable response traces, the values stay `null`.
 
-- **Host CLI (`codex_cli`)**: Fully compatible with both `passive` and `http_trace` modes.
-- **Docker Sandbox (`docker_sandbox` via `sbx`)**: Supports `passive` mode. `http_trace` is **unsupported** because overriding providers or transports conflicts with Docker Sandboxes' OAuth proxy. If configured on `docker_sandbox`, the system explicitly records `status: "unsupported_backend"` without breaking lab execution.
+The client-requested values, values declared by the server in a response, and values actually applied inside the sampler are distinct. This collector only records values declared in recognizable response traces; those declarations do not prove the internal sampling procedure. It never infers values from model, reasoning effort, or assumed defaults. Numeric finite values are required: temperature must be nonnegative, top_p must be in [0, 1]; provider-specific limits must be checked separately against the actual provider and model. Zero is a number, while `null` means no usable value (CSV/Excel show an empty cell).
 
-#### Methodological Notes
+`temperature_status` and `top_p_status` are independent: `observed`, `not_reported`, `explicit_null`, `invalid`, `inconsistent`, `unavailable`, `disabled`, or `unsupported_backend`. The overall status is `observed` only when both are observed, `partial` when their states differ, or otherwise reflects the common state or an error. Distinct valid values and response count are retained; disagreements yield a null scalar and `inconsistent`. Historical runs retain their original fields and can be aggregated without invented statuses.
 
-- **Server-Reported Parameters**: The value recorded is what the server states in response metadata. It represents external observational evidence, not an infallible guarantee of internal sampler mechanics.
-- **Null vs Zero**: An absent or unavailable parameter is kept strictly `null` (empty cell in CSV/Excel). In LLM sampling, `temperature: 0.0` denotes greedy/deterministic argmax decoding, which is fundamentally different from an unobserved parameter. Coercing missing values to zero would corrupt scientific reproducibility.
-- **Multi-response Coherence**: If multiple model turns return conflicting values within a single run, the status is marked as `inconsistent` and distinct values are preserved in `distinct_temperatures`.
-- **Server Verification**: To verify that the server returned values, inspect `logs/aut/sampling_telemetry.json` (`status: "observed"`) and `logs/aut/stderr.log` for SSE events.
-- **Regenerating Historical CSVs**: Run `python scripts/aggregate_results.py` to regenerate CSVs and `benchmark.xlsx` without re-running LLM calls. Historic runs without sampling data will aggregate cleanly with `null` fields.
+For scientific use, inspect the raw `stderr.log` trace and response IDs alongside the telemetry artifact, check each parameter's status, range and consistency across responses, identify the backend and transport, and retain the experimental configuration. A simulated event or a configured trace mode alone does not establish acquisition, nor does a server declaration establish the actual internal setting. Missing IDs prevent reliable deduplication. Re-aggregate with `python scripts/aggregate_results.py` without rerunning agents.
 
 ## Aggregation and Reporting
 

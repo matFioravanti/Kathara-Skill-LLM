@@ -197,6 +197,11 @@ def create_inspect_eval_log(
                 "sampling_source": sampling_meta.get("source"),
                 "sampling_status": sampling_meta.get("status"),
                 "sampling_transport": sampling_meta.get("transport"),
+                "sampling_temperature_status": sampling_meta.get("temperature_status"),
+                "sampling_top_p_status": sampling_meta.get("top_p_status"),
+                "sampling_distinct_temperatures": sampling_meta.get("distinct_temperatures"),
+                "sampling_distinct_top_p": sampling_meta.get("distinct_top_p"),
+                "sampling_collection_mode": sampling_meta.get("collection_mode"),
             },
         )
 

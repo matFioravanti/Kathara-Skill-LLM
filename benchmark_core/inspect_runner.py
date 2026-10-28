@@ -21,15 +21,12 @@ def _call_runner(fn, **kwargs):
         target = fn
     try:
         sig = inspect.signature(target)
-        has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
-        if not has_var_kw:
-            kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
-        return fn(**kwargs)
-    except TypeError:
-        kwargs.pop("sampling_mode", None)
-        return fn(**kwargs)
-    except Exception:
-        return fn(**kwargs)
+    except (TypeError, ValueError):
+        sig = None
+    if sig is not None and not any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()):
+        kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters and
+                  sig.parameters[k].kind in (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY)}
+    return fn(**kwargs)
 
 
 def _use_docker_sandbox(config) -> bool:
@@ -72,7 +69,7 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
         sync_error = None
         
         telemetry_cfg = config.sampling_telemetry_config() if hasattr(config, "sampling_telemetry_config") else {"enabled": False, "mode": "passive"}
-        sampling_mode = str(telemetry_cfg.get("mode", "passive")) if telemetry_cfg.get("enabled") else "passive"
+        sampling_mode = str(telemetry_cfg.get("mode", "passive")) if telemetry_cfg.get("enabled") else "disabled"
 
         try:
             if agent == "codex":

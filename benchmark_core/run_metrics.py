@@ -152,14 +152,7 @@ def _sampling_meta(run: Path) -> dict | None:
         try:
             data = json.loads(telemetry_file.read_text(encoding="utf-8"))
             if isinstance(data, dict):
-                return {
-                    "temperature": data.get("temperature"),
-                    "top_p": data.get("top_p"),
-                    "source": data.get("source"),
-                    "status": data.get("status"),
-                    "transport": data.get("transport"),
-                    "collection_mode": data.get("collection_mode"),
-                }
+                return data
         except (OSError, ValueError):
             pass
     prev_metrics_file = run / "evaluation/metrics.json"

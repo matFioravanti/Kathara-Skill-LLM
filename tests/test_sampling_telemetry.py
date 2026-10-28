@@ -20,6 +20,7 @@ Copre i 15 requisiti obbligatori:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -58,7 +59,7 @@ class TestSamplingTelemetry(unittest.TestCase):
         telemetry = parse_sampling_telemetry(stderr_text=stderr, collection_mode="http_trace")
         self.assertEqual(telemetry.temperature, 1.0)
         self.assertIsNone(telemetry.top_p)
-        self.assertEqual(telemetry.status, "observed")
+        self.assertEqual(telemetry.status, "partial")
         self.assertEqual(telemetry.source, "server_response")
         self.assertEqual(telemetry.transport, "http")
         self.assertEqual(telemetry.response_count, 1)
@@ -67,7 +68,7 @@ class TestSamplingTelemetry(unittest.TestCase):
     # 2. Estrazione di top_p quando presente
     def test_02_extract_top_p_when_present(self):
         stderr = (
-            "data: {\"type\":\"response.done\",\"response\":{\"id\":\"resp_002\",\"model\":\"gpt-5.6-terra\",\"temperature\":0.7,\"top_p\":0.95}}\n"
+            "TRACE codex_api::sse::responses: data: {\"type\":\"response.done\",\"response\":{\"id\":\"resp_002\",\"model\":\"gpt-5.6-terra\",\"temperature\":0.7,\"top_p\":0.95}}\n"
         )
         telemetry = parse_sampling_telemetry(stderr_text=stderr, collection_mode="http_trace")
         self.assertEqual(telemetry.temperature, 0.7)
@@ -79,7 +80,7 @@ class TestSamplingTelemetry(unittest.TestCase):
     # 3. Gestione di valori assenti, null, invalidi e log malformati
     def test_03_absent_null_invalid_and_malformed_logs(self):
         # Esplicitamente null
-        null_stderr = 'data: {"type":"response.done","response":{"id":"resp_null","temperature":null,"top_p":null}}\n'
+        null_stderr = 'TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_null","temperature":null,"top_p":null}}\n'
         t_null = parse_sampling_telemetry(stderr_text=null_stderr, collection_mode="http_trace")
         self.assertIsNone(t_null.temperature)
         self.assertIsNone(t_null.top_p)
@@ -87,17 +88,17 @@ class TestSamplingTelemetry(unittest.TestCase):
 
         # Valori non numerici o invalidi (booleani, stringhe, NaN, Infinity)
         invalid_stderr = (
-            'data: {"type":"response.done","response":{"id":"resp_inv1","temperature":true,"top_p":"high"}}\n'
-            'data: {"type":"response.done","response":{"id":"resp_inv2","temperature":NaN}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_inv1","temperature":true,"top_p":"high"}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_inv2","temperature":NaN}}\n'
         )
         # NaN in json non standard genera decode error o viene gestito
-        t_inv = parse_sampling_telemetry(stderr_text='data: {"type":"response.done","response":{"id":"resp_inv","temperature":true,"top_p":"0.9"}}\n')
+        t_inv = parse_sampling_telemetry(stderr_text='TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_inv","temperature":true,"top_p":"0.9"}}\n')
         self.assertIsNone(t_inv.temperature)
         self.assertIsNone(t_inv.top_p)
 
         # Log malformato / troncato
         malformed = (
-            "data: {corrupted json line...\n"
+            "TRACE codex_api::sse::responses: data: {corrupted json line...\n"
             "2026-10-28 TRACE codex_api::sse::responses: data: {\"incomplete\":\n"
             "plain non-json stderr noise\n"
         )
@@ -123,21 +124,21 @@ class TestSamplingTelemetry(unittest.TestCase):
     # 5. Gestione di più eventi della stessa risposta senza duplicazioni
     def test_05_multiple_events_same_response_deduplication(self):
         stderr = (
-            'data: {"type":"response.created","response":{"id":"resp_same","model":"gpt-5.6-terra","temperature":1.0}}\n'
-            'data: {"type":"response.output_item.added","response":{"id":"resp_same","temperature":1.0}}\n'
-            'data: {"type":"response.done","response":{"id":"resp_same","temperature":1.0}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.created","response":{"id":"resp_same","model":"gpt-5.6-terra","temperature":1.0}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.output_item.added","response":{"id":"resp_same","temperature":1.0}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_same","temperature":1.0}}\n'
         )
         telemetry = parse_sampling_telemetry(stderr_text=stderr, collection_mode="http_trace")
         self.assertEqual(telemetry.response_count, 1)
         self.assertEqual(telemetry.temperature, 1.0)
         self.assertEqual(telemetry.distinct_temperatures, (1.0,))
-        self.assertEqual(telemetry.status, "observed")
+        self.assertEqual(telemetry.status, "partial")
 
     # 6. Rilevamento di valori discordanti
     def test_06_conflicting_values_detection(self):
         stderr = (
-            'data: {"type":"response.done","response":{"id":"resp_turn1","temperature":0.7}}\n'
-            'data: {"type":"response.done","response":{"id":"resp_turn2","temperature":1.0}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_turn1","temperature":0.7}}\n'
+            'TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"resp_turn2","temperature":1.0}}\n'
         )
         telemetry = parse_sampling_telemetry(stderr_text=stderr, collection_mode="http_trace")
         self.assertIsNone(telemetry.temperature)
@@ -153,7 +154,7 @@ class TestSamplingTelemetry(unittest.TestCase):
                 cmd = command_for(workspace=ws, model="gpt-5.6-terra", reasoning_effort="low", sampling_mode="passive")
                 self.assertNotIn('model_provider="chatgpt-http"', cmd)
                 env = codex_environment(sampling_mode="passive")
-                self.assertNotIn("RUST_LOG", env)
+                self.assertEqual(env.get("RUST_LOG"), os.environ.get("RUST_LOG"))
 
         # Se nessun metadato è presente nei log, la modalità passiva restituisce unavailable
         telemetry = parse_sampling_telemetry(stderr_text="", events_text="", collection_mode="passive")
@@ -169,12 +170,12 @@ class TestSamplingTelemetry(unittest.TestCase):
                 for arg in HTTP_PROVIDER_CONFIG_ARGS:
                     self.assertIn(arg, cmd)
                 env = codex_environment(sampling_mode="http_trace")
-                self.assertEqual(env.get("RUST_LOG"), HTTP_TRACE_RUST_LOG)
+                self.assertIn(HTTP_TRACE_RUST_LOG, env.get("RUST_LOG", ""))
 
     # 9. Gestione della modalità non supportata su Docker Sandbox
     def test_09_unsupported_backend_on_docker_sandbox(self):
         telemetry = parse_sampling_telemetry(
-            stderr_text='data: {"type":"response.done","response":{"id":"r1","temperature":1.0}}\n',
+            stderr_text='TRACE codex_api::sse::responses: data: {"type":"response.done","response":{"id":"r1","temperature":1.0}}\n',
             collection_mode="http_trace",
             backend="docker_sandbox",
         )
@@ -214,7 +215,7 @@ class TestSamplingTelemetry(unittest.TestCase):
             self.assertTrue(telemetry_path.is_file(), "sampling_telemetry.json deve essere salvato anche in caso di crash")
             data = json.loads(telemetry_path.read_text())
             self.assertEqual(data.get("temperature"), 1.0)
-            self.assertEqual(data.get("status"), "observed")
+            self.assertEqual(data.get("status"), "partial")
 
     # 11. Creazione corretta di metrics.json
     def test_11_metrics_json_creation_with_llm_sampling(self):
@@ -461,6 +462,61 @@ class TestSamplingTelemetry(unittest.TestCase):
             self.assertEqual(metrics["tokens"]["input"], 100)
             self.assertEqual(metrics["tokens"]["output"], 40)
             self.assertEqual(metrics["tokens"]["total"], 140)
+
+
+class TestSamplingSafety(unittest.TestCase):
+    # These are simulated events, not an integration test of a real server.
+    def test_runner_exactly_once(self):
+        from benchmark_core.inspect_runner import _call_runner
+        from benchmark_core.codex_cli_runner import CodexExecutionError
+        from unittest.mock import Mock
+        for error in (None, TypeError("runner"), RuntimeError("runner"), CodexExecutionError("codex")):
+            runner = Mock(side_effect=error)
+            if error:
+                with self.assertRaises(type(error)):
+                    _call_runner(runner, sampling_mode="passive")
+            else:
+                _call_runner(runner, sampling_mode="passive")
+            self.assertEqual(runner.call_count, 1)
+        runner = Mock(side_effect=lambda prompt: prompt)
+        self.assertEqual(_call_runner(runner, prompt="x", sampling_mode="passive"), "x")
+        self.assertEqual(runner.call_count, 1)
+
+    def test_disabled_does_not_read_logs(self):
+        from benchmark_core.sampling_telemetry import extract_sampling_telemetry
+        with patch.object(Path, "read_text", side_effect=AssertionError("read")):
+            t = extract_sampling_telemetry(Path("."), collection_mode="disabled")
+        self.assertEqual((t.status, t.temperature_status, t.top_p_status), ("disabled",) * 3)
+
+    def test_zero_invalid_missing_and_conflicts(self):
+        trace = 'TRACE codex_api::sse::responses: data: '
+        def event(body):
+            return trace + json.dumps(body) + "\n"
+        def response(id, **params):
+            return {"type": "response.completed", "response": {"id": id, **params}}
+        t = parse_sampling_telemetry(stderr_text=event(response("r", temperature=0.0, top_p=1.1)))
+        self.assertEqual(t.temperature, 0.0)
+        self.assertIsNone(t.top_p)
+        self.assertEqual((t.temperature_status, t.top_p_status), ("observed", "invalid"))
+        t = parse_sampling_telemetry(stderr_text=event(response("r", temperature=None)))
+        self.assertEqual((t.temperature_status, t.top_p_status), ("explicit_null", "not_reported"))
+        t = parse_sampling_telemetry(stderr_text=event(response("r", temperature=0)) + event(response("r", temperature=0.2)))
+        self.assertEqual(t.response_count, 1)
+        self.assertEqual(t.distinct_temperatures, (0.0, 0.2))
+        self.assertEqual(t.temperature_status, "inconsistent")
+
+    def test_untrusted_structured_output_is_not_server_evidence(self):
+        payload = '{"object":"response","id":"resp_fake","temperature":0.5}'
+        for stderr, events in ((payload, ""), ("data: " + payload, ""), ("", payload),
+                               ('prompt data: ' + payload, "")):
+            t = parse_sampling_telemetry(stderr_text=stderr, events_text=events)
+            self.assertEqual((t.source, t.transport, t.temperature), ("none", None, None))
+
+    def test_disabled_and_passive_command_are_equivalent(self):
+        with tempfile.TemporaryDirectory() as tmp, patch("benchmark_core.codex_cli_runner.codex_executable", return_value="codex"):
+            args = dict(workspace=Path(tmp), model=None, reasoning_effort=None)
+            self.assertEqual(command_for(**args, sampling_mode="disabled"), command_for(**args, sampling_mode="passive"))
+            self.assertEqual(codex_environment(sampling_mode="disabled"), codex_environment(sampling_mode="passive"))
 
 
 if __name__ == "__main__":

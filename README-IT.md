@@ -290,40 +290,28 @@ runs/<scenario>/<prompt_type>/<skill_mode>/rNNN/
   - `total_reported`: Totale comunicato direttamente dalle API del modello.
   - `total_calculated`: Somma calcolata `input_tokens + output_tokens`.
   - `total`: Valore effettivo che privilegia `total_reported` se presente, altrimenti `total_calculated`.
-- **Telemetria dei parametri di campionamento LLM (`temperature`, `top_p`)**:
-  - Acquisizione automatica dei parametri di campionamento dichiarati dal server LLM (server-reported) durante la run.
-  - Artefatto dedicato: `logs/aut/sampling_telemetry.json`.
-  - Persistenza in `evaluation/metrics.json` sotto la sezione `llm_sampling` (separata da token, durate e punteggi).
-  - Integrazione nei metadati del log Inspect AI `.eval` (`llm_temperature`, `llm_top_p`, `sampling_source`, `sampling_status`, `sampling_transport`).
+- **Telemetria di campionamento LLM**: salvata in `logs/aut/sampling_telemetry.json`, `evaluation/metrics.json`, metadati Inspect e report aggregati; non modifica punteggi, token o tempi.
 
-### Configurazione e metodologia della telemetria di campionamento
-
-Configurazione in `benchmark.yaml`:
+### Configurazione ed evidenza della telemetria di campionamento
 
 ```yaml
 aut:
   sampling_telemetry:
     enabled: true
-    mode: passive  # "passive" | "http_trace"
+    mode: passive  # passive | http_trace
 ```
 
-#### Modalità di acquisizione
+Se la sezione è assente o `enabled: false`, la raccolta è disabilitata. La run registra `disabled` senza leggere i log di sampling né aggiungere impostazioni diagnostiche. Le configurazioni precedenti restano valide.
 
-- **`passive` (predefinita)**: Opera in modo non invasivo, leggendo unicamente la telemetria esposta dal trasporto e dal backend standard, senza modificare endpoint, provider o autenticazione. Se i parametri non sono riportati dal servizio, lo stato registrato è `unavailable`.
-- **`http_trace`**: Attiva esplicitamente il logging diagnostico TRACE (`codex_api::sse::responses=trace`) e la configurazione HTTP Responses (`chatgpt-http` tramite argomenti effimeri CLI `-c`, senza modificare permanentemente `~/.codex/config.toml`).
+`passive` usa provider, endpoint, autenticazione e trasporto esistenti. Esamina soltanto gli SSE di risposta nella traccia Codex riconoscibile, se già presente, senza attivare il tracing. Eventi JSONL ordinari, JSON generico, prompt, messaggi dell'agente e risultati dei tool non dimostrano una risposta del server. `http_trace` è esplicita e disponibile per la CLI host: attiva la traccia e configura il provider `chatgpt-http` e il trasporto HTTP. Questo cambia le condizioni sperimentali rispetto al percorso standard: confrontare o combinare le run tenendo conto della differenza. I log di traccia possono contenere dati sensibili e vanno protetti.
 
-#### Compatibilità dei backend
+Docker Sandbox mantiene il normale proxy OAuth e percorso di esecuzione in `passive`; `http_trace` viene registrata come `unsupported_backend` senza modificare il sandbox. La [documentazione Docker sulle credenziali](https://docs.docker.com/ai/sandboxes/configuration/credentials/) descrive l'autenticazione tramite proxy, non un'interfaccia supportata e non invasiva per ottenere i metadati di sampling. I test simulati non dimostrano la disponibilità su un backend reale. Se i log ordinari non contengono tracce di risposta verificabili, i valori rimangono `null`.
 
-- **Host CLI (`codex_cli`)**: Pienamente compatibile sia con `passive` che con `http_trace`.
-- **Docker Sandbox (`docker_sandbox` tramite `sbx`)**: Supporta la modalità `passive`. La modalità `http_trace` **non è supportata** poiché la modifica del provider o del trasporto HTTP entra in conflitto con il proxy OAuth interno di Docker Sandboxes. In caso di selezione, il sistema registra esplicitamente `status: "unsupported_backend"` senza interrompere l'esecuzione del laboratorio.
+I parametri richiesti dal client, quelli dichiarati dal server e quelli effettivamente applicati dal campionatore sono distinti. Il raccoglitore registra soltanto quelli dichiarati in tracce di risposta riconoscibili; tali dichiarazioni non dimostrano il funzionamento interno del campionatore. Non deduce valori dal modello, dal reasoning effort o da default ipotizzati. I valori devono essere numerici e finiti: temperatura non negativa, top_p in [0, 1]; i limiti specifici del provider vanno verificati separatamente per provider e modello effettivi. Zero è un numero; `null` indica assenza di un valore utilizzabile (celle vuote in CSV/Excel).
 
-#### Considerazioni metodologiche e scientifiche
+`temperature_status` e `top_p_status` sono indipendenti: `observed`, `not_reported`, `explicit_null`, `invalid`, `inconsistent`, `unavailable`, `disabled` o `unsupported_backend`. Lo stato complessivo è `observed` solo se entrambi sono osservati, `partial` se gli stati differiscono, altrimenti riflette lo stato comune o un errore. Sono conservati i valori validi distinti e il conteggio delle risposte; valori discordanti producono uno scalare null e `inconsistent`. Le run storiche conservano i propri campi e sono aggregabili senza inventare stati.
 
-- **Parametri riportati dal server (Server-Reported)**: Il valore registrato riflette quanto dichiarato nei metadati di risposta dell'API LLM. Costituisce un'evidenza osservativa esterna e non una garanzia assoluta del comportamento interno del campionatore.
-- **Distinzione tra Null e Zero**: Un parametro non osservato o non disponibile rimane rigorosamente `null` (cella vuota in CSV ed Excel). Nel campionamento dei modelli linguistici, `temperature: 0.0` denota decoding deterministico/greedy (argmax), radicalmente diverso dall'assenza del dato. Coercizzare a zero valori mancanti falsificherebbe la riproducibilità scientifica.
-- **Coerenza multi-risposta**: Qualora più turni del modello restituiscano valori differenti nella stessa run, lo stato viene contrassegnato come `inconsistent` e i valori distinti vengono preservati in `distinct_temperatures`.
-- **Verifica dell'acquisizione**: È possibile verificare la ricezione esaminando `logs/aut/sampling_telemetry.json` (`status: "observed"`) e `logs/aut/stderr.log` per la presenza di eventi SSE.
-- **Rigenerazione dei CSV da run storiche**: Il comando `python scripts/aggregate_results.py` rigenera i CSV e `benchmark.xlsx` senza rieseguire le chiamate LLM. Le run storiche prive di telemetria vengono aggregate lasciando i nuovi campi a `null`.
+Per un uso scientifico verificare la traccia in `stderr.log`, gli ID di risposta e l'artefatto di telemetria, lo stato di ogni parametro, gli intervalli, la coerenza fra risposte, backend e trasporto, conservando la configurazione sperimentale. Un evento simulato o la sola attivazione della traccia non dimostrano l'acquisizione; la dichiarazione del server non prova il valore interno applicato. In assenza di ID non è possibile deduplicare con certezza. Rigenerare gli aggregati con `python scripts/aggregate_results.py` senza rieseguire gli agenti.
 
 ## Aggregazione e report
 

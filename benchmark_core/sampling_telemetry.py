@@ -6,9 +6,10 @@ ed evitando falsi positivi da prompt, output testuali o messaggi di errore.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +34,8 @@ class SamplingTelemetry:
     status: str                 # "observed" | "not_reported" | "explicit_null" | "inconsistent" | "unavailable" | "unsupported_backend"
     transport: str | None       # "http" | "websocket" | None
     collection_mode: str        # "passive" | "http_trace"
+    temperature_status: str | None = None
+    top_p_status: str | None = None
     response_count: int = 0
     distinct_temperatures: tuple[float, ...] = ()
     distinct_top_p: tuple[float, ...] = ()
@@ -48,6 +51,8 @@ class SamplingTelemetry:
             "status": self.status,
             "transport": self.transport,
             "collection_mode": self.collection_mode,
+            "temperature_status": self.temperature_status,
+            "top_p_status": self.top_p_status,
             "response_count": self.response_count,
             "distinct_temperatures": list(self.distinct_temperatures),
             "distinct_top_p": list(self.distinct_top_p),
@@ -58,14 +63,7 @@ class SamplingTelemetry:
 
     def to_metrics_dict(self) -> dict[str, Any]:
         """Versione compatta per evaluation/metrics.json."""
-        return {
-            "temperature": self.temperature,
-            "top_p": self.top_p,
-            "source": self.source,
-            "status": self.status,
-            "transport": self.transport,
-            "collection_mode": self.collection_mode,
-        }
+        return self.to_dict()
 
 
 def _validate_numeric(val: Any) -> float | None:
@@ -73,259 +71,109 @@ def _validate_numeric(val: Any) -> float | None:
     if val is None or isinstance(val, bool):
         return None
     if isinstance(val, (int, float)):
-        if math.isfinite(val):
-            return float(val)
+        try:
+            if math.isfinite(val):
+                return float(val)
+        except OverflowError:
+            pass
     return None
 
 
-def _is_response_payload(obj: dict[str, Any]) -> tuple[bool, dict[str, Any], str | None]:
-    """Determina se un oggetto JSON rappresenta un oggetto di risposta del modello.
-
-    Restituisce (is_response, response_obj, response_id).
-    Rifiuta esplicitamente agent_message, comandi di shell, output di tool o strutture generiche.
-    """
+def _is_response_payload(obj: Any) -> tuple[bool, dict[str, Any], str | None]:
+    """Recognize only complete response objects inside a trusted response stream."""
     if not isinstance(obj, dict):
         return False, {}, None
-
-    # Rifiuta eventi agent/tool noti di Codex ed Inspect
-    if obj.get("type") in ("agent_message", "command_execution", "file_change", "mcp_tool_call", "web_search"):
+    if obj.get("type") in ("response.created", "response.completed", "response.done", "response.incomplete", "response.failed"):
+        response = obj.get("response")
+    elif obj.get("object") in ("response", "chat.completion"):
+        response = obj
+    else:
         return False, {}, None
-    item = obj.get("item")
-    if isinstance(item, dict) and item.get("type") in ("agent_message", "command_execution", "file_change"):
+    if not isinstance(response, dict):
         return False, {}, None
-
-    # Caso 1: Evento SSE di Responses API (es. response.created, response.done, response.completed)
-    event_type = obj.get("type")
-    if isinstance(event_type, str) and event_type.startswith("response."):
-        resp = obj.get("response")
-        if isinstance(resp, dict):
-            resp_id = resp.get("id") or obj.get("id") or obj.get("response_id")
-            return True, resp, str(resp_id) if resp_id else None
-
-    # Caso 2: Oggetto con campo "response" innestato
-    resp = obj.get("response")
-    if isinstance(resp, dict) and ("temperature" in resp or "top_p" in resp or resp.get("object") == "response"):
-        resp_id = resp.get("id") or obj.get("id")
-        return True, resp, str(resp_id) if resp_id else None
-
-    # Caso 3: Oggetto top-level con object="response" o "chat.completion" o "chat.completion.chunk"
-    obj_type = obj.get("object")
-    if isinstance(obj_type, str) and obj_type in ("response", "chat.completion", "chat.completion.chunk"):
-        resp_id = obj.get("id")
-        return True, obj, str(resp_id) if resp_id else None
-
-    # Caso 4: Oggetto con id "resp_..." o "chatcmpl-..." e campi di risposta
-    cand_id = obj.get("id")
-    if isinstance(cand_id, str) and (cand_id.startswith("resp_") or cand_id.startswith("chatcmpl-")):
-        if any(k in obj for k in ("temperature", "top_p", "model", "status", "output", "choices", "usage")):
-            return True, obj, cand_id
-
-    # Caso 5: Oggetto con temperature/top_p e modello, senza tracce di comandi o output
-    if ("temperature" in obj or "top_p" in obj) and "model" in obj:
-        if not any(k in obj for k in ("command", "aggregated_output", "exit_code", "text")):
-            return True, obj, str(cand_id) if cand_id else None
-
-    return False, {}, None
+    response_id = response.get("id")
+    return True, response, response_id if isinstance(response_id, str) and response_id else None
 
 
-def parse_sampling_telemetry(
-    stderr_text: str = "",
-    events_text: str = "",
-    collection_mode: str = "passive",
-    backend: str = "codex_cli",
-) -> SamplingTelemetry:
-    """Estrae i parametri di campionamento dai log stdout/stderr con parsing strutturato."""
-    # Gestione preventiva per backend non supportati in modalità http_trace
-    if backend == "docker_sandbox" and collection_mode == "http_trace":
-        return SamplingTelemetry(
-            temperature=None,
-            top_p=None,
-            source="unsupported",
-            status="unsupported_backend",
-            transport=None,
-            collection_mode=collection_mode,
-            details="La modalità http_trace non è supportata su backend docker_sandbox per incompatibilità con il proxy OAuth.",
-        )
+def parse_sampling_telemetry(stderr_text: str = "", events_text: str = "",
+                             collection_mode: str = "passive", backend: str = "codex_cli") -> SamplingTelemetry:
+    """Parse response SSE from Codex's response trace, never generic CLI output.
 
-    transport_detected: str | None = None
-    if "codex_api::sse" in stderr_text or "data:" in stderr_text:
-        transport_detected = "http"
-
-    # responses: response_id -> { "temperature": (present, value, is_null), "top_p": (present, value, is_null) }
-    responses: dict[str, dict[str, Any]] = {}
-    anon_counter = 0
-
-    def _process_candidate(payload: Any) -> None:
-        nonlocal anon_counter, transport_detected
-        if not isinstance(payload, dict):
-            return
-        is_resp, resp_obj, resp_id = _is_response_payload(payload)
-        if not is_resp:
-            return
-
-        transport_detected = transport_detected or "http"
-        if not resp_id:
-            anon_counter += 1
-            resp_id = f"anon_resp_{anon_counter}"
-
-        has_temp = "temperature" in resp_obj
-        raw_temp = resp_obj.get("temperature")
-        valid_temp = _validate_numeric(raw_temp)
-        temp_is_null = has_temp and (raw_temp is None)
-
-        has_top_p = "top_p" in resp_obj
-        raw_top_p = resp_obj.get("top_p")
-        valid_top_p = _validate_numeric(raw_top_p)
-        top_p_is_null = has_top_p and (raw_top_p is None)
-
-        entry = responses.setdefault(resp_id, {
-            "has_temp": False, "temp": None, "temp_null": False,
-            "has_top_p": False, "top_p": None, "top_p_null": False,
-        })
-        # Se lo stesso response_id compare in più eventi SSE (es. response.created e response.done),
-        # aggiorna o conserva senza duplicare.
-        if has_temp:
-            entry["has_temp"] = True
-            if valid_temp is not None:
-                entry["temp"] = valid_temp
-            elif temp_is_null:
-                entry["temp_null"] = True
-        if has_top_p:
-            entry["has_top_p"] = True
-            if valid_top_p is not None:
-                entry["top_p"] = valid_top_p
-            elif top_p_is_null:
-                entry["top_p_null"] = True
-
-    # 1. Parsing di stderr.log (in particolare tracce SSE e log diagnostici Rust)
-    for raw_line in stderr_text.splitlines():
-        line = raw_line.strip()
-        if not line:
+    The log channel is the provenance boundary: arbitrary JSON, agent output and
+    unlabelled `data:` lines cannot establish that a server sent a response.
+    """
+    if collection_mode == "disabled":
+        return SamplingTelemetry(None, None, "none", "disabled", None, collection_mode,
+                                 temperature_status="disabled", top_p_status="disabled")
+    if backend not in ("codex_cli", "docker_sandbox") or (backend == "docker_sandbox" and collection_mode == "http_trace"):
+        return SamplingTelemetry(None, None, "unsupported", "unsupported_backend", None, collection_mode,
+                                 temperature_status="unsupported_backend", top_p_status="unsupported_backend",
+                                 details=f"Sampling collection unavailable for {backend} in {collection_mode} mode.")
+    responses: dict[str, dict[str, list[Any]]] = {}
+    anonymous = 0
+    for line in stderr_text.splitlines():
+        # Only the known Codex response trace supplies provenance. JSONL events,
+        # shell output and bare SSE text may contain arbitrary user-controlled text.
+        match = re.match(r"^(?:\S+\s+)?TRACE\s+codex_api::sse::responses:\s*data:\s*(.*)$", line.strip())
+        if not match:
             continue
-        # Estrai eventuale frammento SSE "data: ..."
-        if "data:" in line:
-            idx = line.find("data:")
-            candidate_str = line[idx + 5:].strip()
-            if candidate_str.startswith("{") and candidate_str.endswith("}"):
-                try:
-                    payload = json.loads(candidate_str)
-                    _process_candidate(payload)
-                except json.JSONDecodeError:
-                    pass
-        elif line.startswith("{") and line.endswith("}"):
-            try:
-                payload = json.loads(line)
-                _process_candidate(payload)
-            except json.JSONDecodeError:
-                pass
-
-    # 2. Parsing di events.jsonl (eventi strutturati di Codex / Inspect)
-    for raw_line in events_text.splitlines():
-        line = raw_line.strip()
-        if not line or not (line.startswith("{") and line.endswith("}")):
-            continue
+        data = match.group(1)
         try:
-            event = json.loads(line)
-        except json.JSONDecodeError:
+            payload = json.loads(data.strip())
+        except (ValueError, TypeError):
             continue
-        if isinstance(event, dict):
-            _process_candidate(event)
+        accepted, response, response_id = _is_response_payload(payload)
+        if not accepted:
+            continue
+        if response_id is None:
+            anonymous += 1
+            response_id = f"__anonymous_{anonymous}"
+        entry = responses.setdefault(response_id, {"temperature": [], "top_p": []})
+        for name in entry:
+            if name in response:
+                entry[name].append(response[name])
 
-    # Sintesi dei valori osservati
-    observed_temps: list[float] = []
-    has_temp_null = False
-    has_temp_present = False
+    def summarize(name: str) -> tuple[float | None, str, tuple[float, ...]]:
+        values: set[float] = set()
+        invalid = null = False
+        for entry in responses.values():
+            for raw in entry[name]:
+                if raw is None:
+                    null = True
+                    continue
+                number = _validate_numeric(raw)
+                # General constraints only: provider-specific temperature ceilings
+                # differ, and no provider-specific limit is inferred here.
+                if number is None or number < 0 or (name == "top_p" and number > 1):
+                    invalid = True
+                else:
+                    values.add(number)
+        distinct = tuple(sorted(values))
+        if len(distinct) > 1:
+            return None, "inconsistent", distinct
+        if invalid:
+            return None, "invalid", distinct
+        if distinct:
+            return distinct[0], "observed", distinct
+        if null:
+            return None, "explicit_null", distinct
+        return None, "not_reported" if responses else "unavailable", distinct
 
-    observed_top_ps: list[float] = []
-    has_top_p_null = False
-    has_top_p_present = False
-
-    for resp in responses.values():
-        if resp["has_temp"]:
-            has_temp_present = True
-            if resp["temp"] is not None:
-                observed_temps.append(resp["temp"])
-            elif resp["temp_null"]:
-                has_temp_null = True
-        if resp["has_top_p"]:
-            has_top_p_present = True
-            if resp["top_p"] is not None:
-                observed_top_ps.append(resp["top_p"])
-            elif resp["top_p_null"]:
-                has_top_p_null = True
-
-    distinct_temps = tuple(sorted(set(observed_temps)))
-    distinct_top_ps = tuple(sorted(set(observed_top_ps)))
-
-    # Valutazione temperature
-    temp_status: str
-    final_temp: float | None = None
-    if len(distinct_temps) == 1:
-        final_temp = distinct_temps[0]
-        temp_status = "observed"
-    elif len(distinct_temps) > 1:
-        final_temp = None
-        temp_status = "inconsistent"
-    elif has_temp_null:
-        temp_status = "explicit_null"
-    elif has_temp_present:
-        temp_status = "not_reported"
+    temperature, ts, temps = summarize("temperature")
+    top_p, ps, top_ps = summarize("top_p")
+    if "inconsistent" in (ts, ps):
+        status = "inconsistent"
+    elif "invalid" in (ts, ps):
+        status = "invalid"
+    elif ts == ps:
+        status = ts
     else:
-        temp_status = "unavailable"
-
-    # Valutazione top_p
-    top_p_status: str
-    final_top_p: float | None = None
-    if len(distinct_top_ps) == 1:
-        final_top_p = distinct_top_ps[0]
-        top_p_status = "observed"
-    elif len(distinct_top_ps) > 1:
-        final_top_p = None
-        top_p_status = "inconsistent"
-    elif has_top_p_null:
-        top_p_status = "explicit_null"
-    elif has_top_p_present:
-        top_p_status = "not_reported"
-    else:
-        top_p_status = "unavailable"
-
-    # Stato globale
-    if temp_status == "inconsistent" or top_p_status == "inconsistent":
-        overall_status = "inconsistent"
-        source = "server_response"
-        details = f"Rilevati valori discordanti: temperature={list(distinct_temps)}, top_p={list(distinct_top_ps)}"
-    elif temp_status == "observed" or top_p_status == "observed":
-        overall_status = "observed"
-        source = "server_response"
-        details = "Parametri di campionamento server-reported estratti dalla risposta del modello."
-    elif temp_status == "explicit_null" or top_p_status == "explicit_null":
-        overall_status = "explicit_null"
-        source = "server_response"
-        details = "Il server ha esplicitamente restituito null per i parametri di campionamento."
-    elif temp_status == "not_reported" or top_p_status == "not_reported":
-        overall_status = "not_reported"
-        source = "server_response"
-        details = "Risposta del modello ricevuta, ma i parametri di campionamento non compaiono nei metadati."
-    else:
-        overall_status = "unavailable"
-        source = "none"
-        if collection_mode == "passive":
-            details = "Dati di campionamento non esposti dal backend in modalità passive."
-        else:
-            details = "Nessun dato di campionamento osservabile nei log."
-
-    return SamplingTelemetry(
-        temperature=final_temp,
-        top_p=final_top_p,
-        source=source,
-        status=overall_status,
-        transport=transport_detected,
-        collection_mode=collection_mode,
-        response_count=len(responses),
-        distinct_temperatures=distinct_temps,
-        distinct_top_p=distinct_top_ps,
-        details=details,
-    )
+        status = "partial"
+    return SamplingTelemetry(temperature, top_p, "server_response" if responses else "none", status,
+                             "http" if responses else None, collection_mode,
+                             temperature_status=ts, top_p_status=ps, response_count=len(responses),
+                             distinct_temperatures=temps, distinct_top_p=top_ps,
+                             details="Valori discordanti tra risposte." if status == "inconsistent" else None)
 
 
 def extract_sampling_telemetry(
@@ -334,13 +182,12 @@ def extract_sampling_telemetry(
     backend: str = "codex_cli",
 ) -> SamplingTelemetry:
     """Estrae la telemetria di campionamento leggendo i log in logs_dir."""
+    if collection_mode == "disabled":
+        return parse_sampling_telemetry(collection_mode=collection_mode, backend=backend)
     stderr_file = logs_dir / "stderr.log"
-    events_file = logs_dir / "events.jsonl"
     stderr_text = stderr_file.read_text(encoding="utf-8", errors="replace") if stderr_file.is_file() else ""
-    events_text = events_file.read_text(encoding="utf-8", errors="replace") if events_file.is_file() else ""
     return parse_sampling_telemetry(
         stderr_text=stderr_text,
-        events_text=events_text,
         collection_mode=collection_mode,
         backend=backend,
     )
@@ -373,6 +220,8 @@ def load_sampling_telemetry(logs_dir: Path) -> SamplingTelemetry | None:
             status=str(data.get("status") or "unavailable"),
             transport=data.get("transport"),
             collection_mode=str(data.get("collection_mode") or "passive"),
+            temperature_status=data.get("temperature_status"),
+            top_p_status=data.get("top_p_status"),
             response_count=int(data.get("response_count") or 0),
             distinct_temperatures=tuple(data.get("distinct_temperatures") or ()),
             distinct_top_p=tuple(data.get("distinct_top_p") or ()),
