@@ -1,0 +1,16 @@
+{
+  "base_commit": "115a21feb7e889383c3d5b78594f895b88aff865",
+  "subsequent_commits": [],
+  "sha256": {
+    "benchmark.yaml": "f221e24e35cf20fb5ea56506ed57a5b7e13a6e109935b772801d043760fb0795",
+    "benchmark_core/skill_gate.py": "22c593e387270f2f4c0ad0e34ea3740a56c2366b600cdeac68831d95a1b58f08",
+    "benchmark_core/docker_sandbox_runner.py": "612cb434ccfa2b0b06644e76f6dc0865050c55ad40aaa521bdaa7ca0ad65fc4e",
+    "benchmark_core/inspect_runner.py": "93dc44c680942f603162e10002720af23f7c888c0b5466d335b245b082daba3d",
+    "benchmark_core/config.py": "edef5cb4b3086ad1dceefff15fd6e64c002e61ac868d3f1ba932a9f7df8cb478",
+    "benchmark_core/run_metrics.py": "c6e451dd8794b04b13e644ad290351c5b29de210c95831d5b6f2e5cd23640c97",
+    "benchmark_core/aggregation.py": "3b0356f6826edcf7009ebd342374b364549d08517a765e2edfe71b3c20ca1dc2",
+    "scripts/skill_gate_pilot.py": "cc37f57719da632bf2ea5cb927fe8362dac4a3eef842530b0030e5a1d15ea46b",
+    "tests/test_skill_gate_recovery.py": "37df89e8d8ccfe74d39c374752da4d16a08ac9b03ac04343bf46a8c270bc4c8c",
+    "tests/test_skill_gate_sbx_integration.py": "7be3ecdf2b1bf03984030ef848f88ae1937e936cc5aec9c9f81cc6e9388188af"
+  }
+}

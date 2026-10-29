@@ -1,239 +1,213 @@
-# Validazione di `enforced_read_v1` — 29 ottobre 2026
+# Skill Gate con recupero automatico — validazione del 29 ottobre 2026
 
-## Esito complessivo: PARTIALLY_VERIFIED
+## Esito
 
-Il pilota isolato ha dimostrato una lettura completa verificata, il blocco reale
-di una scrittura anticipata e la ripresa della **stessa sessione Codex** in un
-secondo ambiente scrivibile, seguita da una modifica riuscita. Il controllo
-negativo ha bloccato il gate senza avviare B. Questo non certifica il protocollo
-di produzione: manca l'integrazione dell'orchestrazione nel runner ordinario e
-la verifica completa di tutti i possibili canali alternativi del template.
-`enforce_or_block()` rimane intenzionalmente fail-closed con `unsupported_backend`.
-Non è stato eseguito un checker su una run completa del nuovo protocollo.
+**CERTIFIED per la consegna `enforced_read_v1` + `recovery_v1`, nel backend e nelle versioni testate.** Il runner ordinario esegue ora A protetta → verifica → eventuali retry → eventuale caricamento integrale → B nella stessa sessione → checker. Una mancata lettura autonoma non scarta la run. Errori di isolamento, hash, processo, autenticazione, continuità o consegna impediscono lo sblocco.
 
-La certificazione distingue `CERTIFIED` (tutte le componenti verificate),
-`PARTIALLY_VERIFIED` (componenti superate e verifiche mancanti), `FAILED`
-(violazione o errore dimostrato) e `NOT_RUN` (nessuna componente verificata).
-Una lettura integrale osservata dimostra la restituzione dei byte attesi, non
-la comprensione né la corretta applicazione della Skill a un laboratorio DNS.
+La run DNS reale su copia di `lab00_five_router`, prompt T1 e correction originali, ha terminato la pipeline con **132 controlli superati, 0 falliti**, `task_success=true`. La Skill è stata verificata al primo tentativo. Questa è una valutazione funzionale separata dal gate: la consegna dei byte non dimostra comprensione e non garantisce il successo di altre configurazioni.
 
-## Codice e ambiente
+La certificazione è riferita all'ambiente locale descritto e ai confini verificati: mount, identità, capability, configurazione degli strumenti, continuità e transizione. Non si estende al backend host, ad altre versioni/configurazioni o al vecchio protocollo strettamente bloccante senza `recovery_v1`, che conserva `unsupported_backend`.
 
-Commit di partenza: `594bed43349b48cb373dd602eac33bb70de08aa4`, più le modifiche
-locali di questa validazione, senza commit o push automatici. Le versioni finali
-dei file modificati sono identificate da `skill_gate_code_versions.json`.
-Il precedente rapporto è conservato in `skill_gate_validation_previous.md`;
-i vecchi log in `skill_gate_pilot/` non sono stati riscritti.
+## Stato iniziale e versione
 
-- macOS, Python globale e virtualenv 3.14.6; pytest 9.1.1; `.venv` del progetto.
-- Codex host 0.157.1, Codex nel template 0.149.1.
-- Docker Engine 29.8.0; sbx client/daemon 0.48.0, daemon operativo.
-- Immagine `docker/sandbox-templates:codex-docker` disponibile e utilizzata;
-  template shell disponibile per il test di ciclo di vita della suite.
-- Backend configurato: `docker_sandbox`; modello configurato e usato:
-  `gpt-5.6-terra`, reasoning `low`.
-- Login host ChatGPT disponibile; login proxy sbx verificato con UID `nobody`.
-  Nessuna nuova API key, nessun acquisto e nessuna credenziale stampata.
-- Skill canoniche DNS e Creation presenti. Integrità dei file canonici verificata.
+`HEAD` iniziale e commit di riferimento: `115a21feb7e889383c3d5b78594f895b88aff865`. Nessun commit successivo, working tree inizialmente pulito. Esaminati i file richiesti, la cronologia e gli esperimenti precedenti. Il codice testato è quel commit più le modifiche locali elencate in `skill_gate_recovery_code_versions.json`, con SHA-256 dei file. Nessun commit o push automatico.
 
-Il primo tentativo della suite dentro il sandbox dell'agente ha prodotto
-212 passed, 1 failed, 2 skipped: il test reale non poteva raggiungere il servizio
-Docker login/socket. La riesecuzione autorizzata fuori da quel sandbox ha dato
-213 passed, 0 failed, 2 skipped. Il preflight del progetto
-`preflight_docker_sandbox()` ha poi restituito `0.48.0`; non è stato necessario
-avviare Docker Desktop o il daemon. `sbx --version` non è supportato: la versione
-è stata rilevata con il comando corretto `sbx version`.
+Il rapporto precedente è conservato in `skill_gate_validation_before_recovery.md`; i precedenti log e rapporti di validazione non sono stati riscritti.
 
-## Test e conteggi
+Ambiente effettivo:
 
-I conteggi delle categorie si sovrappongono e non vanno sommati. Le righe del
-pilota contano casi sperimentali, non test pytest. I 12 sottotest della suite
-sono riportati separatamente dal numero dei test principali.
+- macOS; Python e virtualenv 3.14.6, pytest 9.1.1.
+- Codex host 0.157.1; Codex sbx 0.149.1; help reale di `exec resume` verificato.
+- Docker Engine 29.8.0; sbx client/daemon 0.48.0, operativi.
+- Template `docker/sandbox-templates:codex-docker`; immagine `kathara/base` già disponibile.
+- Kathara 3.8.3; Kathara Lab Checker 0.1.14.
+- Modello già configurato `gpt-5.6-terra`, reasoning `low`.
+- Login/proxy esistenti; nessuna nuova chiave, nessuna credenziale esportata nei log.
 
-| Categoria | Superati | Falliti | Saltati | Esito |
-|---|---:|---:|---:|---|
-| Test unitari mirati | 51 | 0 | 0 | 18 Skill Gate + 33 osservazioni |
-| Isolamento filesystem | 2 | 0 | 0 | Confronto reale rw/ro e probe ro |
-| Docker Sandbox | 2 | 0 | 0 | Gli stessi due test opt-in, cleanup riuscito |
-| Verifica Skill | 18 | 0 | 0 | File test_skill_gate.py; include casi negativi e classificazione |
-| Codex reale | 2 | 0 | 0 | Un caso positivo e un negativo; 3 turni totali |
-| Fase A → Gate → B | 1 | 0 | 0 | Pilota positivo; produzione NOT_RUN |
-| Statistiche | 1 | 0 | 0 | Test JSON/CSV/Excel incluso nei 18 test del gate |
-| Regressione | 221 | 0 | 2 | Suite finale; ulteriori 12 sottotest superati |
+## Implementazione nel runner ordinario
 
-I due skip della suite ordinaria sono esclusivamente i test opt-in
-`test_skill_gate_sbx_integration.py` e `test_skill_gate_mount_comparison.py`,
-entrambi eseguiti separatamente con `RUN_SBX_ISOLATION_TESTS=1` e superati.
-I risultati finali sono conservati nei tre file JUnit
-`skill_gate_validation_suite.xml`, `skill_gate_validation_targeted.xml` e
-`skill_gate_validation_isolation.xml`. La suite emette tre warning di
-deprecazione `pkg_resources`, senza errori.
+`inspect_runner.run_aut()` prepara la copia isolata e le Skill delle sole modalità previste, poi seleziona `run_recovery_gate()` quando sono configurati `enforced_read_v1` e `recovery_v1` e ci sono Skill obbligatorie. Il backend host resta escluso.
 
-Comandi eseguiti, dalla radice del repository:
+L'orchestrazione è in `benchmark_core/skill_gate.py`; il ciclo di vita utilizza `ProtectedCodexSession` in `docker_sandbox_runner.py`, riutilizzando gli helper sbx esistenti per eseguibile, network policy e cleanup con retry limitato. Il pilota usa questo stesso runner, non una seconda implementazione del gate.
 
-```bash
-.venv/bin/python -m pytest -q
-.venv/bin/python -m pytest -v tests/test_skill_gate.py tests/test_aut_observation.py \
-  --junitxml=reports/skill_gate_validation_targeted.xml
-RUN_SBX_ISOLATION_TESTS=1 .venv/bin/python -m pytest -v \
-  tests/test_skill_gate_sbx_integration.py tests/test_skill_gate_mount_comparison.py \
-  --junitxml=reports/skill_gate_validation_isolation.xml
-.venv/bin/python -m pytest -q --junitxml=reports/skill_gate_validation_suite.xml
-.venv/bin/python scripts/skill_gate_pilot.py
-.venv/bin/python scripts/aggregate_results.py --runs runs \
-  --output /private/tmp/tesi-gate-validation-v2-final
+### A protetta e lettura iniziale
+
+Il laboratorio è esportato `:ro`; l'unico altro export host è la directory temporanea dello stato Codex. Il primo prompt richiede soltanto la lettura completa, una operazione dedicata per Skill, senza configurare il laboratorio. Nessun prompt funzionale viene inviato in A.
+
+Prima della chiamata vengono confrontati i byte canonici, la copia staged e gli hash registrati nel manifest. Il verificatore controlla file corretto, contenuto integrale, hash, comando completato con exit 0, lettura dedicata e turno riuscito. Una dichiarazione dell'assistente non costituisce evidenza.
+
+### Retry nella stessa sessione
+
+Per impostazione predefinita sono consentiti **2 tentativi aggiuntivi**, configurabili con `aut.skill_gate_max_retries` tra 0 e 10. I limiti non interi, booleani o fuori intervallo sono rifiutati. Non esistono cicli illimitati.
+
+Ogni sollecito elenca soltanto le Skill ancora mancanti. Le letture verificate vengono conservate individualmente e non richieste nuovamente. Ogni turno usa `codex exec resume ID`, controlla `thread.started` e richiede lo stesso ID; non usa `--last` o `--ephemeral`. Tentativi e sessioni sono contatori distinti. Non viene allocata una nuova `rNNN`.
+
+Un comando di lettura fallito/incompleto resta una mancata lettura e attiva il recupero. Timeout del processo Codex, errore del turno, ID mancante/diverso o alterazione del baseline sono errori tecnici e non attivano un nuovo thread indipendente.
+
+### Fallback deterministico
+
+Esauriti i tentativi, Python rilegge **solo le Skill mancanti** dai file canonici, ricontrolla i byte e gli SHA-256 registrati, quindi costruisce un messaggio separato dal prompt funzionale. Ogni `SKILL.md` è incluso integralmente tra delimitatori, senza riscritture, riassunti o normalizzazione dei newline.
+
+Il payload UTF-8 viene salvato prima dell'avvio e consegnato come byte allo stdin del processo. Vengono registrati lunghezza, SHA-256 e comando; sono richiesti completamento positivo e ID invariato. Il file salvato deve coincidere esattamente con il payload e contenere tutti i byte delle Skill previste. Troncamenti locali o cambiamenti degli hash bloccano il gate. I test includono newline CRLF.
+
+Il fallback rimane nella fase protetta. Il gate registra per ciascuna Skill:
+
+- `read_verified`: lettura tramite tool al primo turno;
+- `retry_verified`: lettura tramite tool dopo sollecito;
+- `preloaded_fallback`: contenuto integrale caricato dall'orchestratore.
+
+Il terzo metodo prova la disponibilità nell'input consegnato al processo, non una lettura autonoma, né comprensione o applicazione. Le metriche di osservazione delle letture escludono il contenuto del fallback.
+
+### Sblocco e B
+
+Il baseline, comprese le Skill staged, viene ricontrollato dopo i turni e prima dello sblocco; i file canonici non devono essere cambiati. Il sandbox A viene eliminato prima di creare il sandbox B scrivibile. Lo stato persistente della CLI conserva la stessa sessione.
+
+B riceve **il prompt funzionale originale**, senza reinserire tutte le Skill. Il runner conserva anche le modifiche parziali quando B fallisce. La sincronizzazione usa `copy_lab()` senza dereferenziare link esterni. La pipeline ordinaria prosegue normalmente verso il checker dopo un AUT riuscito; gli errori tecnici conservano il comportamento di errore preesistente.
+
+L'orchestratore non genera configurazioni DNS/routing e non corregge l'output dell'agente.
+
+## Isolamento verificato
+
+Ogni processo è avviato con UID/GID non privilegiati corrispondenti al proprietario della copia temporanea, senza gruppi supplementari, `NoNewPrivs=1` e capability effettive, permesse, ereditabili, ambient e bounding tutte nulle. Nell'ambiente testato UID 501/GID 20. Il launcher root serve esclusivamente ad applicare irrevocabilmente queste restrizioni prima dell'esecuzione di Codex.
+
+Un wrapper fidato emette l'attestazione dell'identità immediatamente prima di `exec` nello stesso processo; UID e capability vengono controllati anche nei turni reali. Non è una dichiarazione generata dal modello. La policy interna Codex rimane attiva (`read-only` in A, `workspace-write` in B, approvazioni `never`); non si usa il bypass della sandbox per far passare il flusso.
+
+La configurazione del template viene ridotta al solo provider proxy necessario all'autenticazione. Non vengono ereditati MCP, hook, plugin o istruzioni del template. Il login è verificato con l'identità ristretta; i collegamenti alla configurazione/auth del proxy restano interni al sandbox. `codex mcp list --json` deve risultare privo di server abilitati.
+
+Il probe indipendente, eseguito con lo stesso launcher:
+
+- legge `lab.conf`, verifica negazione di scrittura con `EROFS` in A e scrittura possibile in B;
+- verifica directory dello stato scrivibile e baseline invariato;
+- controlla UID, tutti i set di capability e no-new-privileges;
+- nega `sudo -n true`, accesso a tre socket Docker/containerd e porte Docker locali 2375/2376;
+- controlla dalla mount table che gli unici export host siano laboratorio corrente e stato;
+- verifica configurazione MCP, autenticazione e policy di rete prevista dal progetto.
+
+Il confronto reale preesistente rw/ro usa due sandbox indipendenti, identici permessi Unix scrivibili e lo stesso utente. Scritture shell/Python, creazione, eliminazione, modifica startup e accesso tramite symlink riescono sul mount scrivibile e sono negate sul mount ro; chmod, chown e rimontaggio non aggirano la protezione. Gli hash confermano laboratorio ro invariato e rw cambiato. La sintassi sbx scrivibile è il mount predefinito senza suffisso, non `:rw`.
+
+Questi sono controlli concreti del confine configurato, non una prova contro vulnerabilità del kernel o ogni servizio/configurazione immaginabile. Nel nuovo pilota il prompt A richiede soltanto lettura: non si attribuisce al modello un tentativo di scrittura che non appare nei suoi eventi. La negazione nel nuovo launcher è misurata dal probe indipendente; il precedente pilota conserva inoltre un tentativo reale Codex negato. Non vengono confusi test simulati e isolamento reale.
+
+## Evidenze separate e compatibilità
+
+Ogni run conserva:
+
+```text
+logs/aut/skill_gate.json
+logs/aut/phase_a/{events.jsonl,prompt_sent.md,result.json,stderr.log,invocation.json}
+logs/aut/retries/attempt_01/...
+logs/aut/retries/attempt_02/...
+logs/aut/fallback/...
+logs/aut/phase_b/...
+logs/aut/isolation_protected.json
+logs/aut/isolation_writable.json
 ```
 
-Sono state eseguite anche compilazione Python dello script, `git diff --check`,
-verifica degli header CSV/Excel e confronto degli oggetti Git dei file protetti.
-Tutti i test deterministici iniziali, comprese le due integrazioni reali, erano
-superati prima del primo turno con modello. Nessun retry del modello: un turno A
-positivo, un turno B ripreso e un turno A negativo. Le successive modifiche
-riguardano classificazione, metadati, vincoli del verificatore e test; le evidenze
-salvate del pilota sono state rivalutate senza richiamare il modello.
+L'evidenza di un tentativo deve coincidere con il relativo artefatto salvato. Il verificatore accetta solo A o un percorso retry autorizzato, mai B/fallback o il vecchio stream aggregato come sostituto. Le letture B non possono sbloccare retroattivamente A.
 
-## Confronto reale rw/ro
+Per Inspect e i consumatori storici sono prodotti anche `events.jsonl`, `result.json`, `invocation.json`, `stderr.log` e `prompt_sent.md` al livello superiore. Nel solo stream aggregato gli ID dei tool sono prefissati dalla fase: Codex riavvia la numerazione a ogni turno e altrimenti le osservazioni precedenti verrebbero sovrascritte. I log grezzi per turno rimangono invariati. Gli aggregati del primo esperimento esplorativo sono stati rigenerati dai log grezzi dopo questa correzione, senza richiamare il modello.
 
-Due Docker Sandbox indipendenti, stesso UID non privilegiato, directory 0777 e
-file 0666. Il mount scrivibile usa la sintassi predefinita sbx senza suffisso;
-`:rw` non è una sintassi supportata da questa versione. Il mount protetto usa
-`:ro`. Il controllo scrivibile prova che non sono i permessi Unix a negare
-l'operazione.
+`no_skill` e `auto` mantengono il runner ordinario senza gate obbligatorio. Le modalità obbligatorie mantengono esattamente le Skill richieste: Creation, DNS oppure entrambe. `explicit_read_v2` conserva il proprio percorso. La versione di recupero è una dimensione di raggruppamento distinta: non viene aggregata con il vecchio protocollo bloccante.
 
-Sul mount scrivibile sono riuscite scritture shell/Python, creazione,
-eliminazione, modifiche a `lab.conf` e `r1.startup` e scrittura tramite symlink.
-Sul mount ro le stesse operazioni sono state negate, così come `chmod`, `chown`
-e rimontaggio. Il socket Docker non è utilizzabile dall'utente di prova;
-la directory di lavoro separata è scrivibile. SHA-256 del laboratorio ro
-invariato e del laboratorio rw cambiato. Nessun mock in queste prove.
+## Test eseguiti
 
-## Pilota reale e continuità
+Tutti i test deterministici e i tre test reali di isolamento sono passati **prima** dei piloti con modello. Eseguite ulteriori regressioni dopo le correzioni.
 
-Evidenze in `skill_gate_pilot_v2/positive/` e `skill_gate_pilot_v2/negative/`.
-Ogni fase conserva separatamente `events.jsonl`, `stderr.log`, prompt e risultato
-in `logs/aut/phase_a/` oppure `logs/aut/phase_b/`. Questi log non sostituiscono
-quelli storici. Le directory temporanee del laboratorio e dello stato Codex
-sono state eliminate; sono conservati eventi, audit, risultati e verdetti.
+| Categoria | Superati | Falliti | Saltati | Evidenza |
+|---|---:|---:|---:|---|
+| Suite finale | 250 | 0 | 3 | `skill_gate_recovery_suite.xml`; altri 12 sottotest passati |
+| Gate, recupero, osservazioni mirati | 80 | 0 | 0 | `skill_gate_recovery_targeted.xml` |
+| Nuovi test recupero/launcher/pipeline | 29 | 0 | 0 | Inclusi negli 80 e nei 250 |
+| Isolamento Docker reale | 3 | 0 | 0 | `skill_gate_recovery_isolation.xml` |
+| Casi Codex reali | 5 | 0 | 0 | Quattro casi richiesti più esplorazione iniziale conservata |
+| Checker DNS reale | 132 | 0 | 0 | Controlli funzionali, non test pytest |
 
-La documentazione ufficiale descrive `codex exec resume SESSION_ID` per continuare
-una sessione non interattiva: [Non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode).
-L'help delle CLI 0.157.1 e 0.149.1 conferma la disponibilità dell'interfaccia.
-La documentazione da sola non è stata trattata come prova del trasferimento.
+Le categorie si sovrappongono e non vanno sommate. I tre skip della suite sono i test opt-in: probe ro, launcher di produzione A/B e comparazione rw/ro. Eseguiti separatamente con `RUN_SBX_ISOLATION_TESTS=1`, tutti passati. Tre warning preesistenti di deprecazione `pkg_resources`.
 
-Il pilota positivo ha persistito lo stato della sessione in una directory di
-lavoro temporanea condivisa tra A e B. Ha rimosso il primo sandbox ro e creato un
-secondo sandbox rw sullo stesso piccolo laboratorio. Il processo B usa
-`exec resume` con l'ID esplicito, senza `--last` e senza `--ephemeral`.
-ID A e B coincidono: `01a186e1-3619-71d0-9f0b-293778db9b24`.
-Un valore casuale fornito solo nel prompt A è stato scritto correttamente in
-`lab.conf` in B; il log B contiene un unico comando `printf` di scrittura e
-nessun comando di recupero da file. Il prompt B non contiene quel valore né
-il contenuto della Skill. È una prova concreta di continuità per questa
-configurazione, non una seconda sessione indipendente dichiarata equivalente.
+I test unitari usano sessioni/processi deterministici e checker simulati per verificare la macchina a stati. Non costituiscono prove del kernel/mount. Verificano letture complete, mancanti, parziali, errate, troncate, exit errato, hash errato, due Skill e caricamento misto; retry limitati, richieste delle sole Skill mancanti, fallback integro/troncato, continuità mancante/diversa, timeout, identità privilegiata, baseline/canonico alterato e mancato avvio di B sugli errori. Tre integrazioni deterministiche verificano il runner ordinario fino al checker simulato nelle modalità obbligatorie. Le altre modalità e i protocolli precedenti sono coperti dalla regressione esistente.
 
-A ha eseguito un audit mediante un tool shell effettivo e poi un `cat` dedicato
-con exit 0 e contenuto integrale della Skill temporanea. Il confronto SHA-256
-in `evaluate_read_evidence()` restituisce `evidence_verified`. La rivalutazione
-con metadato `skill_protocol=enforced_read_v1` è in `gate_recheck.json`.
-Il baseline è rimasto invariato fino all'apertura del gate.
+Problemi individuati e corretti:
 
-Nel controllo negativo Codex ha eseguito l'audit ma nessuna lettura della Skill;
-il verificatore restituisce `verification_failed`, `blocked=true`,
-`phase_b_started=false` e `negative_control_passed=true`. Un blocco atteso del
-controllo negativo non costituisce un errore del test.
+1. Una fixture normalizzava CRLF con `read_text()`, facendo fallire correttamente l'hash: la simulazione ora restituisce i byte effettivi come un `cat`.
+2. Nel primo caso reale Codex aveva concatenato `wc` e lettura. Il gate ha rifiutato la lettura non dedicata e il retry è riuscito. Il prompt è stato reso esplicito su `cat` separato e divieto di concatenazione; una sola nuova verifica ha dimostrato lettura immediata.
+3. ID dei tool riutilizzati tra turni: risolto il rischio di perdita delle osservazioni nel log compatibile.
+4. I tempi dei turni falliti vengono ricavati anche dai risultati parziali; nessuna misura mancante diventa automaticamente zero.
+5. L'export iniziale dei piloti restituiva zero righe perché le copie `case/run` non hanno il layout `scenario/T/mode/rNNN`: aggiunto adattatore temporaneo che verifica esplicitamente il numero delle righe esportate.
+6. Il postprocessore distingueva male i file di prompt controllato dalle directory retry: ora seleziona solo directory.
 
-### Sicurezza osservata sul vero Codex
+Un comando mirato indicava inizialmente un file test inesistente e non ha eseguito test; è stato corretto usando i file effettivi. Non viene contato come test superato. Tutti gli errori risolvibili sopra sono stati corretti e verificati; nessun fallimento finale.
 
-L'audit restituito dal tool include `/proc` del processo Codex antenato,
-non soltanto quello del probe deterministico: UID effettivo 65534,
-`CapEff=0`, `CapPrm=0`, `CapAmb=0`, `NoNewPrivs=1`. La tabella dei mount mostra
-il laboratorio `ro,nosuid,nodev` e la directory di lavoro separata rw.
-La scrittura anticipata su `lab.conf` è fallita con `Errno 30: Read-only file system`;
-la scrittura in `/etc` con `Permission denied`; il percorso host alternativo
-provato non esiste. `sudo -n true` e connessione al socket Docker falliscono.
-`codex mcp list --json` non riporta server abilitati dopo l'override del gateway.
-Il login proxy funziona con questo stesso utente.
+## Piloti reali
 
-Per rendere osservabile il tentativo reale è stata disattivata la policy interna
-Codex, mantenendo l'enforcement esterno tramite UID, no-new-privileges e mount ro.
-Non si attribuisce quindi il blocco al solo flag `--sandbox read-only`.
+Evidenze complete in `skill_gate_recovery_pilot/`; la verifica diretta dopo la correzione del prompt è in `skill_gate_recovery_direct_after_fix/`. Tutte le invocazioni usano Codex reale e il login/proxy esistente. **15 turni complessivi**, senza retry automatici dei casi già eseguiti; il pilota rifiuta directory di caso esistenti e impone un budget di chiamate per invocazione.
 
-Queste prove non enumerano tutti gli altri socket, servizi di rete, filesystem
-e possibili strumenti del template; non verificano ogni possibile percorso
-alternativo o configurazione MCP. Gli output dell'audit vengono da un tool
-invocato dal modello e non costituiscono un attestatore indipendente completo.
-Per questo `validation.json` distingue `probe_outcome` dai
-`certification_checks`: l'isolamento completo resta sconosciuto e la
-certificazione complessiva del caso positivo è **PARTIALLY_VERIFIED**.
+| Caso | Intervento controllato | Metodo registrato | Turni | Esito |
+|---|---|---|---:|---|
+| Prima esplorazione della lettura immediata | Nessuno; lettura concatenata rifiutata | `retry_verified` | 3 | B completata, run conservata |
+| Lettura immediata dopo correzione | Nessuno | `read_verified` | 2 | B completata |
+| Omissione iniziale | Primo prompt sostituito esplicitamente con istruzione di non leggere | `retry_verified` | 3 | Sollecito e B nella stessa run |
+| Fallback | I tre turni di lettura ricevono l'istruzione controllata di non leggere | `preloaded_fallback` | 5 | Byte caricati, hash/consegna verificati, B completata |
+| DNS reale | Nessuno; Skill, prompt T1 e correction originali | `read_verified` | 2 | Pipeline e checker completati, 132/132 |
 
-### Consumi osservati
+Nei casi controllati sono salvati sia il prompt richiesto dal gate sia quello effettivamente inviato. L'omissione è un intervento sperimentale dichiarato; non sono simulati output del modello, verifiche, caricamento fallback, ripresa o checker. Il fallback non viene conteggiato come lettura autonoma. Tutti gli ID iniziali, di retry/fallback e di B coincidono entro ciascun caso; 1 sessione per caso.
 
-| Caso/fase | Secondi processo | Token input | Token output |
-|---|---:|---:|---:|
-| Positivo A | 66.0364 | 35416 | 3644 |
-| Positivo B | 9.5830 | 32853 | 208 |
-| Negativo A | 21.8373 | 22310 | 3604 |
+Per la run DNS: ID `01a18712-354b-78f2-a42c-58bd9bf64541`; A 8,0551 s; processi Codex complessivi 161,0107 s; overhead sandbox 49,0160 s; gate completo 210,6047 s; checker 22,0135 s; pipeline totale 232,7688 s. Token input 165.737, output 5.194, totale calcolato 170.931; cached input 137.984 già compreso nell'input. Nessuna somma aggiuntiva dei cached/reasoning token.
 
-Ogni usage viene da un solo `turn.completed`; input cached incluso nell'input,
-non sommato nuovamente. Somma delle due durate positive: 75.6194 secondi di
-processo, non tempo totale end-to-end. Overhead e tempo del verificatore del
-pilota non sono stati misurati separatamente: rimangono non disponibili, non zero.
-Non sono state inserite metriche del pilota nelle 76 run ufficiali.
+## Metriche e aggregati
 
-## Correzioni e compatibilità
+Le metriche richieste vengono salvate in `skill_gate.json`, copiate nel manifest dalla pipeline, esportate in `evaluation/metrics.json`, CSV Runs/Summary ed Excel. Comprendono metodi per Skill, tentativi/retry, fallback e relativi hash/consegna, sessione/continuità, isolamento, stato/certificazione, tutti i tempi e i token delle fasi. I valori non osservati restano `null`. Il risultato compatibile contiene la somma dei turni distinti, non l'ultimo usage di B.
 
-- Il verificatore accetta solo fase A; rifiuta esplicitamente B.
-- Per `enforced_read_v1` richiede `phase_a/events.jsonl`; non ricade sul log
-  storico aggregato. Con artefatti di fase presenti, richiede identità esatta
-  tra gli eventi forniti e quelli salvati in A. File mancante, JSON incompleto
-  o eventi B scambiati per A bloccano la verifica.
-- `observe()` può usare il percorso della traccia A senza richiedere un falso
-  log aggregato. Il percorso predefinito storico resta invariato.
-- Aggiunta classificazione dei quattro esiti, con valori sconosciuti `None`.
-  Nuove metriche: `skill_gate_certification` e
-  `skill_gate_context_continuity_verified`. Le run bloccate prima del processo
-  riportano `NOT_RUN` e continuità `null`.
-- Lo stato del gate viene copiato nel manifest anche quando l'AUT fallisce;
-  il test della pipeline verifica manifest e metriche coerenti.
-- Aggiunto pilota limitato senza retry, con login esistente, ripresa esplicita,
-  log separati e cleanup per entrambe le fasi.
+Summary distingue politica di recupero e metodi di consegna, con conteggi e percentuali delle run con gate di recupero abilitato. Una run mista può apparire in più categorie di metodo; le categorie non sono necessariamente esclusive. Per il vecchio protocollo, privo di classificazione del metodo, il denominatore di consegna è zero e le percentuali sono nulle. Le medie delle fasi sono esportate separatamente.
 
-I test coprono letture complete/parziali, hash errati, Skill sbagliate,
-nessuna lettura, dichiarazioni non osservate, lettura dopo modifica,
-troncamento, timeout, exit errato o mancante, turn fallito, entrambe le Skill,
-modifiche osservate e blocco prima di AUT/checker. Aggiunti otto casi pytest
-per separazione delle fasi e classificazione. Nessuna aspettativa precedente
-è stata indebolita per far passare i test.
+`skill_gate_recovery_results/` contiene **5 run, 132 check e 5 gruppi**, senza ID duplicati. Header CSV uguali ai fogli Runs/Checks/Summary del workbook. Le misure dei tre piccoli casi AUT sono derivate dai log reali; non essendo stati eseguiti con il checker, durata totale di pipeline e misure checker restano nulle.
 
-Le cinque modalità restano: `no_skill` nessuna Skill; `creation_only` Creation
-obbligatoria; `dns_only` DNS obbligatoria; `both_forced` entrambe obbligatorie;
-`auto` entrambe disponibili senza lettura imposta. Nessuna modifica ai prompt
-funzionali o alle istruzioni DNS. I test di osservazione mantengono distinta la
-semantica v1/v2; il selettore di esecuzione preesistente accetta
-`explicit_read_v2` e `enforced_read_v1`, non è stata aggiunta un'esecuzione
-`explicit_read_v1` che prima non esisteva.
+L'aggregazione storica è stata rigenerata solo in `/private/tmp/tesi-skill-gate-recovery-historical-results`: **76 run, 32.257 check, 76 gruppi**, con header CSV/Excel coerenti. Evidenza: `skill_gate_recovery_export_validation.json`.
 
-## Statistiche, integrità e limiti residui
+Confrontati **5.476 file tracciati** sotto runs, scenarios, skills, results e prompt con gli oggetti Git: **0 modifiche**, 76 manifest storici. Evidenza: `skill_gate_recovery_integrity.json`. Checker e correction non sono stati modificati. Dopo i piloti `sbx ls --json` restituisce `[]`; nessun container Kathara residuo.
 
-Il test sintetico verifica `skill_gate.json`, manifest di pipeline, metriche,
-CSV ed Excel, null delle misure non osservabili, conteggio delle run bloccate e
-denominatore delle sole run con gate abilitato. I nuovi campi si propagano
-attraverso `FIELDS` agli output per-run. Tempi/token reali di un protocollo
-integrato di produzione restano **NOT_RUN**; nessuna prova sintetica è presentata
-come validazione di questi consumi reali.
+## File modificati e limiti
 
-L'aggregazione temporanea ha letto 76 run, 32.257 check e 76 gruppi;
-header CSV uguali ai corrispondenti fogli Excel Runs, Checks e Summary.
-Evidenza: `skill_gate_aggregation_validation.json`. L'output è esclusivamente
-in `/private/tmp/tesi-gate-validation-v2-final`.
-Confrontati 5.476 file tracciati sotto runs, scenarios, skills, results e prompt
-con gli oggetti Git: nessuna variazione. Evidenza: `skill_gate_integrity.json`.
-Checker, correction, baseline e 76 run storiche non sono stati modificati.
-`sbx ls --json` dopo il pilota e i test ha restituito `[]`.
+Modificati `benchmark.yaml`, `skill_gate.py`, `docker_sandbox_runner.py`, `inspect_runner.py`, `config.py`, `run_metrics.py`, `aggregation.py`, lo script pilota e il test sbx; aggiunto `tests/test_skill_gate_recovery.py`. `pipeline.py`, `skill_modes.py`, `workspace.py`, runner host e codice del checker sono riutilizzati senza modifica in questa implementazione.
 
-Per certificare il protocollo completo restano necessari: integrare nel runner
-ordinario la macchina a stati sperimentata, rendere indipendente e completa
-l'attestazione dell'isolamento per tutti i canali accessibili, registrare i tempi
-mancanti, verificare i consumi integrati e completare una run con checker.
-Il solo successo del pilota non autorizza a rimuovere `unsupported_backend`:
-la protezione di produzione rimane chiusa e **non viene dichiarata completata**.
+Limiti: il backend supportato è esclusivamente Docker Sandbox nelle versioni provate; la ripresa richiede stato persistente leggibile e stesso thread ID. Un payload non accettato per limiti tecnici del modello/CLI termina con errore infrastrutturale, senza fingere una nuova sessione equivalente. Non si misura la comprensione e non si garantisce che un modello applichi correttamente le istruzioni. Le modalità Creation e Both sono integrate e verificate deterministicamente fino al checker simulato; il solo pilota funzionale con checker reale è DNS, come richiesto. Non è stato rieseguito il benchmark completo.
+
+## Comandi
+
+Configurazione ordinaria già impostata in `benchmark.yaml`:
+
+```yaml
+aut:
+  skill_protocol: enforced_read_v1
+  skill_gate_recovery_policy: recovery_v1
+  skill_gate_max_retries: 2
+```
+
+Avvio ordinario, che crea una nuova run senza riscrivere quelle storiche:
+
+```bash
+.venv/bin/python scripts/run_benchmark.py --scenario lab00_five_router \
+  --prompt-type T1 --skill-mode dns_only --repetitions 1
+```
+
+Verifiche eseguite:
+
+```bash
+.venv/bin/python -m pytest -q --junitxml=reports/skill_gate_recovery_suite.xml
+.venv/bin/python -m pytest -v tests/test_skill_gate_recovery.py \
+  tests/test_skill_gate.py tests/test_aut_observation.py \
+  --junitxml=reports/skill_gate_recovery_targeted.xml
+RUN_SBX_ISOLATION_TESTS=1 .venv/bin/python -m pytest -v \
+  tests/test_skill_gate_sbx_integration.py tests/test_skill_gate_mount_comparison.py \
+  --junitxml=reports/skill_gate_recovery_isolation.xml
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case immediate
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case retry
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case fallback
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case dns_real
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case immediate \
+  --output reports/skill_gate_recovery_direct_after_fix
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --export-only \
+  --include reports/skill_gate_recovery_direct_after_fix
+.venv/bin/python scripts/aggregate_results.py --runs runs \
+  --output /private/tmp/tesi-skill-gate-recovery-historical-results
+```
+
+I comandi con modello non vanno ripetuti automaticamente: i risultati sono già conservati e lo script rifiuta casi esistenti. L'export-only non chiama il modello. Per tornare a `explicit_read_v2`, impostare quel protocollo e rimuovere la politica di recupero; per mantenere la vecchia semantica strettamente bloccante, usare `enforced_read_v1` senza `skill_gate_recovery_policy`.

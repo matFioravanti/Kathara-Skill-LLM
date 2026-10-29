@@ -189,6 +189,19 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     protocol = metadata.get("skill_protocol")
     from .skill_gate import read_gate_metrics
     gate = read_gate_metrics(run)
+    if gate.get('skill_gate_recovery_policy_version') == 'recovery_v1':
+        # The compatibility stream contains several turns; its last usage is
+        # only phase B. The runner result holds their non-overlapping sum.
+        try:
+            result_usage = json.loads((logs / 'result.json').read_text()).get('usage')
+        except (OSError, ValueError):
+            result_usage = None
+        tokens = codex_usage([{'type': 'turn.completed', 'usage': result_usage}])
+        protected = [e for e in events if e.get('_skill_gate_phase') == 'phase_a'
+                     or str(e.get('_skill_gate_phase', '')).startswith('retries/')]
+        # Network observations include all phases; autonomous reading metrics
+        # exclude both fallback input and all reads after unlocking.
+        _, skill_compliance = observe(run, metadata, protected, trace_path=logs / 'phase_a/events.jsonl')
     return {
         **gate,
         "internet": internet,

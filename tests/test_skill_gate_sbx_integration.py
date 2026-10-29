@@ -101,3 +101,27 @@ print(json.dumps(result))
             if result.returncode == 0:
                 cleanup = call('sbx', 'rm', '--force', name)
                 assert cleanup.returncode == 0, cleanup.stderr
+
+
+def test_production_gate_session_preflight_and_transition():
+    """Real production launcher; deterministic, no model invocation."""
+    from types import SimpleNamespace
+    from benchmark_core.docker_sandbox_runner import ProtectedCodexSession
+    with tempfile.TemporaryDirectory(prefix='tesi-recovery-',dir='/private/tmp') as directory:
+        root=Path(directory); root.chmod(0o755)
+        lab=root/'lab'; lab.mkdir(); (lab/'lab.conf').write_text('baseline\n')
+        state=root/'state'; logs=root/'logs'
+        session=ProtectedCodexSession(workspace=lab,state=state,logs=logs,
+                                     config=SimpleNamespace(model=lambda:None,reasoning_effort=lambda:None))
+        try:
+            session.create(readonly=True)
+            probe=json.loads((logs/'isolation_protected.json').read_text())
+            assert probe['secure'] and probe['lab_errno']==30
+            assert 'CapBnd:\t0000000000000000' in probe['status']
+            session.close()
+            session.create(readonly=False)
+            assert json.loads((logs/'isolation_writable.json').read_text())['secure']
+            assert (lab/'lab.conf').read_text()=='baseline\n'
+        finally:
+            session.close()
+        assert all(c['ok'] for c in session.cleanup)

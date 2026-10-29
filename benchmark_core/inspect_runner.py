@@ -78,7 +78,13 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                 skill_mode = skill_mode or "dns_only"
                 prepare_skill_workspace(temp_lab, config, skill_mode)
                 prompt = execution_prompt(skill_mode, original_prompt)
-                if _use_docker_sandbox(config):
+                from .skill_gate import recovery_enabled, run_recovery_gate
+                from .skill_modes import mode_details
+                if recovery_enabled(config) and mode_details(skill_mode).forced_skills:
+                    prompt = original_prompt
+                    run_recovery_gate(config=config, run=run, workspace=temp_lab,
+                                      original_prompt=original_prompt, mode=skill_mode)
+                elif _use_docker_sandbox(config):
                     from .docker_sandbox_runner import (
                         _unique_sandbox_name,
                         run_codex_in_sandbox,
@@ -161,13 +167,16 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
 
             try:
                 codex_dir = temp_lab / ".codex"
-                if codex_dir.exists():
+                if codex_dir.is_symlink():
+                    codex_dir.unlink()
+                elif codex_dir.exists():
                     shutil.rmtree(codex_dir, ignore_errors=True)
 
                 staging_lab = run / "lab.sync-tmp"
                 if staging_lab.exists():
                     shutil.rmtree(staging_lab, ignore_errors=True)
-                shutil.copytree(temp_lab, staging_lab)
+                from .workspace import copy_lab
+                copy_lab(temp_lab, staging_lab)
                 
                 if persistent_lab.exists():
                     shutil.rmtree(persistent_lab)

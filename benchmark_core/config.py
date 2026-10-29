@@ -75,6 +75,9 @@ def load_config(path: Path) -> Config:
             if "mode" in telemetry and telemetry["mode"] not in ("passive", "http_trace"):
                 raise ValueError("aut.sampling_telemetry.mode deve essere 'passive' o 'http_trace'.")
     config = Config(path.parent, data)
+    from .skill_gate import recovery_enabled
+    if recovery_enabled(config) and data.get('docker_sandbox', {}).get('execution_backend') != 'docker_sandbox':
+        raise ValueError('recovery_v1 requires docker_sandbox execution_backend')
     output = config.path(data["results"]["directory"])
     # Impedisce che gli aggregati sovrascrivano dati grezzi o scenari.
     for protected in (config.root, config.root / "runs", config.root / "scenarios", config.root / "skills"):

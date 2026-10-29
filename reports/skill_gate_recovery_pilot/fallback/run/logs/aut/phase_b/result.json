@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 8.48316658299973,
+  "usage": {
+    "input_tokens": 21010,
+    "cached_input_tokens": 18944,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 221,
+    "reasoning_output_tokens": 62
+  },
+  "final_message": "Creato `pilot.result` con `PILOT_READY`. `lab.conf` non è stato modificato.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1870f-9fd4-7231-a6ae-b9e6596f9b6b"
+}

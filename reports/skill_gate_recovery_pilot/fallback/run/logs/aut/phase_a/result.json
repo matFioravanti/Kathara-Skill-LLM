@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 2.562354083000173,
+  "usage": {
+    "input_tokens": 9331,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5,
+    "reasoning_output_tokens": 0
+  },
+  "final_message": "READY",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1870f-9fd4-7231-a6ae-b9e6596f9b6b"
+}

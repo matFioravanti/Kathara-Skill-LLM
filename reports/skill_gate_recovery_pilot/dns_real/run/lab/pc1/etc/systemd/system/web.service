@@ -1,0 +1,10 @@
+[Unit]
+Description=Simple HTTP service for pc1
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -m http.server 80 --directory /var/www/html
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

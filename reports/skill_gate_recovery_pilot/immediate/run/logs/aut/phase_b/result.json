@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 17.76312437500019,
+  "usage": {
+    "input_tokens": 44410,
+    "cached_input_tokens": 39936,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 499,
+    "reasoning_output_tokens": 81
+  },
+  "final_message": "Scritto `PILOT_READY` in [pilot.result](/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-e0_zraof/lab/pilot.result). `lab.conf` è rimasto invariato.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1870d-400c-70d2-8f56-78a515083f73"
+}

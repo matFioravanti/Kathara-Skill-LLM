@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 21.903292625000176,
+  "sandbox_overhead_seconds": 47.44854804099941,
+  "usage": {
+    "input_tokens": 40212,
+    "output_tokens": 341,
+    "cached_input_tokens": 27904,
+    "reasoning_output_tokens": 53,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Creato `pilot.result` con `PILOT_READY`. `lab.conf` non è stato modificato.",
+  "error": null
+}

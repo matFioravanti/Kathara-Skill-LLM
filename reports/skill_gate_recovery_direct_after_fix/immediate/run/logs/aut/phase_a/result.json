@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 7.7408687079996525,
+  "usage": {
+    "input_tokens": 19042,
+    "cached_input_tokens": 8960,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 142,
+    "reasoning_output_tokens": 0
+  },
+  "final_message": "Skill letta integralmente. Nessuna configurazione o modifica eseguita.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a18712-2e6f-7621-b27e-7b2edd42843b"
+}

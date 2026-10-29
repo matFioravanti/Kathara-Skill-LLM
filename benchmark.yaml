@@ -5,6 +5,10 @@ benchmark:
 
 aut:
   agent: codex
+  # Le mancate letture attivano retry e poi caricamento integrale nella stessa sessione.
+  skill_protocol: enforced_read_v1
+  skill_gate_recovery_policy: recovery_v1
+  skill_gate_max_retries: 2
   model: gpt-5.6-terra # verificato con la CLI locale 0.157.1 e login ChatGPT
   reasoning_effort: low
   version: "0.157.1"

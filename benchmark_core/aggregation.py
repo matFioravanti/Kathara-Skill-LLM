@@ -14,6 +14,13 @@ from .checker_runner import category as checker_category
 from .checker_runner import checker_test_rows
 from .skill_gate import FIELDS as SKILL_GATE_FIELDS
 
+RECOVERY_MEAN_FIELDS = (
+    'skill_gate_initial_read_seconds', 'skill_gate_retry_seconds', 'skill_gate_fallback_seconds',
+    'skill_gate_initial_input_tokens', 'skill_gate_initial_output_tokens',
+    'skill_gate_retry_input_tokens', 'skill_gate_retry_output_tokens',
+    'skill_gate_fallback_input_tokens', 'skill_gate_fallback_output_tokens',
+    'skill_gate_read_attempts', 'skill_gate_retry_count')
+
 RUN_COLUMNS = [
     # 1. IDENTIFICAZIONE
     "ID", "Lab", "T",
@@ -53,6 +60,10 @@ CHECK_COLUMNS = [
 ]
 SUMMARY_COLUMNS = [
     "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
+    "skill_gate_recovery_policy_version", "skill_gate_delivery_denominator",
+    "skill_gate_direct_runs", "skill_gate_direct_rate",
+    "skill_gate_retry_runs", "skill_gate_retry_rate", "skill_gate_fallback_runs", "skill_gate_fallback_rate",
+    *(f'mean_{field}' for field in RECOVERY_MEAN_FIELDS),
     "internet_confirmed_runs", "internet_confirmed_denominator", "internet_confirmed_rate",
     "internet_observed_rate",
     "mean_web_search_calls", "web_search_calls_denominator", "internet_unknown_runs",
@@ -250,7 +261,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     sampling_transport = llm_sampling.get("transport")
 
     return {
-        **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills") else json.dumps(metrics[field], ensure_ascii=False) if field == "skill_gate_state_history" and metrics.get(field) is not None else metrics.get(field)) for field in SKILL_GATE_FIELDS},
+        **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills", "skill_gate_fallback_skills") else json.dumps(metrics[field], ensure_ascii=False) if isinstance(metrics.get(field), (dict, list)) else metrics.get(field)) for field in SKILL_GATE_FIELDS},
         "experiment_id": experiment_id,
         "Lab": metrics.get("scenario") or manifest.get("scenario_id"),
         "T": metrics.get("prompt_type") or manifest.get("prompt_type"),
@@ -355,7 +366,7 @@ def _check_records(run: Path, record: dict) -> list[dict]:
 
 def _summary_records(records: list[dict]) -> list[dict]:
     groups = {}
-    group_fields = ("experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort")
+    group_fields = ("experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort", "skill_gate_recovery_policy_version")
     for record in records:
         key = tuple(record.get(field) for field in group_fields)
         groups.setdefault(key, []).append(record)
@@ -403,12 +414,27 @@ def _summary_records(records: list[dict]) -> list[dict]:
         strict_verified = sum(row.get("protocol_compliance_observed") is True for row in skill_required)
         gate_enabled = sum(row.get("skill_gate_enabled") is True for row in group)
         gate_passed = sum(row.get("skill_gate_status") in ("passed", "write_phase_running", "completed") for row in group)
+        delivery = [row for row in group if row.get('skill_gate_enabled') is True
+                    and row.get('skill_gate_recovery_policy_version') == 'recovery_v1']
+        def has_method(row, method):
+            value = row.get('skill_gate_load_methods')
+            if isinstance(value, str):
+                value = json.loads(value)
+            return isinstance(value, dict) and method in value.values()
+        methods = {}
+        for label, method in [('direct', 'read_verified'), ('retry', 'retry_verified'), ('fallback', 'preloaded_fallback')]:
+            count = sum(has_method(row, method) for row in delivery)
+            methods[f'skill_gate_{label}_runs'] = count
+            methods[f'skill_gate_{label}_rate'] = count / len(delivery) if delivery else None
         def known_total(field):
             values = [_number(row.get(field)) for row in group]
             values = [v for v in values if v is not None]
             return sum(values) if values else None
         output.append({
             **dict(zip(group_fields, key)),
+            **methods,
+            **{f'mean_{field}': _mean(row.get(field) for row in group) for field in RECOVERY_MEAN_FIELDS},
+            'skill_gate_delivery_denominator': len(delivery),
             "internet_confirmed_runs": internet_confirmed,
             "internet_confirmed_denominator": len(group),
             "internet_confirmed_rate": internet_confirmed / len(group),

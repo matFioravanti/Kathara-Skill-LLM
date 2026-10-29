@@ -1,0 +1,1 @@
+Write PILOT_READY to pilot.result in the current lab directory using a tool. Leave lab.conf unchanged.

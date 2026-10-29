@@ -847,3 +847,203 @@ def preflight_docker_sandbox(
     sbx_check_auth()  # 5. Autenticazione
 
     return detected
+
+
+class ProtectedCodexSession:
+    """Two sbx environments, one persisted Codex thread, no host execution fallback.
+
+    Extends the existing sbx lifecycle/authentication helpers. No project, logs,
+    checker, original lab or host credentials are mounted in the AUT.
+    """
+
+    def __init__(self, *, workspace, state, logs, config):
+        self.workspace, self.state, self.logs = map(Path, (workspace, state, logs))
+        self.config = config
+        self.name = None
+        self.thread_id = None
+        self.uid = os.getuid() if os.getuid() else 65534
+        self.gid = os.getgid() if os.getuid() else 65534
+        self.cleanup = []
+        self.commands = []
+        self.turns = []
+        self.readonly = True
+        self.overhead = 0.0
+        self.version = None
+
+    def checked(self, args, timeout=90):
+        result = subprocess.run(args, capture_output=True, text=True, timeout=timeout,
+                                env=self.environment())
+        if result.returncode:
+            # Do not print template config/auth content or environment.
+            raise SandboxError(f'{args[:3]} failed: {result.stderr.strip()}')
+        return result.stdout
+
+    @staticmethod
+    def environment():
+        from .codex_cli_runner import codex_environment
+        return codex_environment()
+
+    def prefix(self):
+        return [sbx_executable(), 'exec', '-i', '-u', 'root', '-w', str(self.workspace),
+                '-e', 'HOME=/tmp/gate-user', '-e', 'CODEX_HOME='+str(self.state), self.name,
+                'setpriv', '--reuid='+str(self.uid), '--regid='+str(self.gid),
+                '--clear-groups', '--no-new-privs', '--bounding-set=-all',
+                '--inh-caps=-all', '--ambient-caps=-all']
+
+    def create(self, *, readonly):
+        started = time.monotonic()
+        if self.name:
+            raise SandboxError('Cannot create a second live gate environment')
+        self.readonly = readonly
+        self.name = 'kathara-gate-' + uuid.uuid4().hex[:12]
+        self.state.mkdir(parents=True, exist_ok=True)
+        self.checked([sbx_executable(), 'create', 'codex', str(self.state),
+                      str(self.workspace)+(':ro' if readonly else ''), '--name', self.name,
+                      '--skills', 'off', '--pull', 'missing'], timeout=120)
+        # Keep only the proxy provider configuration, never MCP, hooks, plugins,
+        # inherited model instructions or exec policies. No secret is logged.
+        setup = r'''
+import pathlib,tomllib,json,os,sys
+state=pathlib.Path(sys.argv[1]); uid,gid=map(int,sys.argv[2:])
+home=pathlib.Path('/tmp/gate-user'); home.mkdir(exist_ok=True); os.chown(home,uid,gid)
+source=tomllib.loads(pathlib.Path('/home/agent/.codex/config.toml').read_text())
+provider=source.get('model_provider')
+if not isinstance(provider,str) or provider not in source.get('model_providers',{}):
+ raise RuntimeError('Missing sandbox proxy provider')
+lines=['model_provider = '+json.dumps(provider),'cli_auth_credentials_store = "file"','[model_providers.'+json.dumps(provider)+']']
+for key,value in source['model_providers'][provider].items():
+ if not isinstance(value,(str,bool,int,float)): raise RuntimeError('Unsupported proxy config value')
+ lines.append(json.dumps(key)+' = '+json.dumps(value))
+root=pathlib.Path('/tmp/gate-config'); root.mkdir(exist_ok=True)
+conf=root/'config.toml'; conf.write_text('\n'.join(lines)+'\n'); conf.chmod(0o444)
+for name,target in [('config.toml',str(conf)),('auth.json','/home/agent/.codex/auth.json')]:
+ link=state/name
+ if link.is_symlink() or link.is_file(): link.unlink()
+ elif link.exists(): raise RuntimeError('Invalid session config path')
+ link.symlink_to(target)
+'''
+        self.checked([sbx_executable(),'exec','-u','root',self.name,'python3','-c',setup,
+                      str(self.state),str(self.uid),str(self.gid)])
+        self.version = self.checked([sbx_executable(),'exec',self.name,'codex','--version']).strip()
+        sbx_check_network_policy(self.name)
+        self.probe()
+        self.overhead += time.monotonic()-started
+
+    def probe(self):
+        """Independent probe under exactly the UID/capability policy used by Codex."""
+        code = r'''
+import pathlib,os,json,subprocess,socket,sys,errno
+lab,state=map(pathlib.Path,sys.argv[1:3]); readonly=sys.argv[3]=='True'
+r={'uid':os.geteuid(),'status':pathlib.Path('/proc/self/status').read_text(),
+   'mountinfo':pathlib.Path('/proc/self/mountinfo').read_text()}
+r['lab_readable']=(lab/'lab.conf').is_file() and bool((lab/'lab.conf').read_bytes())
+p=lab/('.gate-write-probe-'+str(os.getpid()))
+try: p.write_text('probe'); p.unlink(); r['lab_writable']=True
+except OSError as e: r['lab_writable']=False; r['lab_errno']=e.errno
+p=state/'.state-probe'; p.write_text('ok'); p.unlink(); r['state_writable']=True
+r['sudo_denied']=subprocess.run(['sudo','-n','true'],capture_output=True).returncode!=0
+r['docker_sockets']={}
+for path in ('/var/run/docker.sock','/run/docker.sock','/run/containerd/containerd.sock'):
+ s=socket.socket(socket.AF_UNIX)
+ try: s.connect(path); r['docker_sockets'][path]=True
+ except OSError: r['docker_sockets'][path]=False
+ finally: s.close()
+r['docker_tcp']={}
+for port in (2375,2376):
+ s=socket.socket(); s.settimeout(.3)
+ try: s.connect(('127.0.0.1',port)); r['docker_tcp'][str(port)]=True
+ except OSError: r['docker_tcp'][str(port)]=False
+ finally: s.close()
+print(json.dumps(r))
+'''
+        data = json.loads(self.checked(self.prefix()+['python3','-c',code,str(self.workspace),str(self.state),str(self.readonly)]))
+        status = data['status']
+        secure = (data['uid'] != 0 and 'NoNewPrivs:\t1' in status and
+                  all(f'{key}:\t0000000000000000' in status for key in ('CapEff','CapPrm','CapInh','CapAmb','CapBnd')) and
+                  data['lab_readable'] and data['state_writable'] and data['sudo_denied'] and
+                  not any(data['docker_sockets'].values()) and not any(data['docker_tcp'].values()) and
+                  data['lab_writable'] == (not self.readonly))
+        if self.readonly:
+            secure = secure and data.get('lab_errno') == 30
+        # The only host filesystem exports must be the state and current lab.
+        exports = []
+        for line in data['mountinfo'].splitlines():
+            if ' - virtiofs host ' in line:
+                exports.append(line.split()[4])
+        secure = secure and set(exports) == {str(self.workspace), str(self.state)}
+        servers = json.loads(self.checked(self.prefix()+['codex','mcp','list','--json']))
+        secure = secure and isinstance(servers,list) and not any(s.get('enabled') for s in servers)
+        self.checked(self.prefix()+['codex','login','status'])
+        data['mcp_servers_enabled'] = [s.get('name') for s in servers if s.get('enabled')]
+        data['secure'] = bool(secure)
+        phase = 'protected' if self.readonly else 'writable'
+        write_json(self.logs / f'isolation_{phase}.json',data)
+        if not secure:
+            raise SandboxProbeError('Gate isolation probe failed; see isolation_'+phase+'.json')
+
+    def turn(self, *, prompt: bytes, directory: Path, timeout: int):
+        """Persist exact UTF-8 stdin before starting; verify explicit thread ID."""
+        from .codex_cli_runner import parse_events
+        directory.mkdir(parents=True, exist_ok=False)
+        (directory/'prompt_sent.md').write_bytes(prompt)
+        if (directory/'prompt_sent.md').read_bytes() != prompt:
+            raise SandboxArtifactError('Prompt changed before delivery')
+        args = ['codex','exec'] + (['resume',self.thread_id] if self.thread_id else [])
+        args += ['--json','--skip-git-repo-check','--disable','memories',
+                 '-c','features.memories=false','-c','approval_policy="never"',
+                 '-c','sandbox_mode='+json.dumps('read-only' if self.readonly else 'workspace-write'),
+                 '-c','sandbox_workspace_write.writable_roots='+json.dumps([str(self.workspace),str(self.state)])]
+        if self.config.model(): args += ['--model',self.config.model()]
+        if self.config.reasoning_effort(): args += ['-c','model_reasoning_effort='+json.dumps(self.config.reasoning_effort())]
+        args += ['-']
+        # This trusted wrapper reports the actual pre-exec identity. exec cannot
+        # regain privilege because every capability and no-new-privs are set.
+        wrapper = "import os,pathlib,json,sys; print(json.dumps({'type':'skill_gate.process_attestation','uid':os.geteuid(),'status':pathlib.Path('/proc/self/status').read_text()}),flush=True); os.execvp(sys.argv[1],sys.argv[1:])"
+        command = self.prefix()+['python3','-c',wrapper]+args
+        self.commands.append(command)
+        write_json(directory/'invocation.json',{'command':command,'stdin_bytes':len(prompt),
+                  'stdin_sha256':__import__('hashlib').sha256(prompt).hexdigest(),'session_expected':self.thread_id})
+        started=time.monotonic(); timed_out=False
+        try:
+            process=subprocess.run(command,input=prompt,capture_output=True,timeout=timeout,env=self.environment())
+            out,err,code=process.stdout,process.stderr,process.returncode
+        except subprocess.TimeoutExpired as e:
+            out,err,code,timed_out=e.stdout or b'',e.stderr or b'',124,True
+        duration=time.monotonic()-started
+        (directory/'events.jsonl').write_bytes(out); (directory/'stderr.log').write_bytes(err)
+        message,usage=parse_events(out.decode('utf-8',errors='replace'))
+        result={'returncode':code,'timed_out':timed_out,'duration_seconds':duration,
+                'usage':usage,'final_message':message,'stdin_delivery_verified':False}
+        self.turns.append((directory,result))
+        try:
+            events=[json.loads(line) for line in out.decode('utf-8').splitlines() if line.strip()]
+            if not events or events[0].get('type') != 'skill_gate.process_attestation' or events[0].get('uid') != self.uid:
+                raise SandboxProbeError('Missing real process attestation')
+            attestation=events[0]['status']
+            if 'NoNewPrivs:\t1' not in attestation or any(f'{key}:\t0000000000000000' not in attestation for key in ('CapEff','CapPrm','CapBnd','CapAmb')):
+                raise SandboxProbeError('Codex process privilege mismatch')
+            ids=[e.get('thread_id') for e in events if e.get('type')=='thread.started']
+            if code or timed_out or len(ids)!=1 or not isinstance(ids[0],str) or not ids[0]:
+                raise SandboxExecutionError('Codex turn failed or missing thread ID')
+            if self.thread_id is not None and ids[0]!=self.thread_id:
+                raise SandboxExecutionError('Codex session continuity lost')
+            self.thread_id=ids[0]
+            if not any(e.get('type')=='turn.completed' for e in events) or any(e.get('type') in ('turn.failed','error') for e in events):
+                raise SandboxExecutionError('Codex did not complete the turn')
+            result['stdin_delivery_verified']=True; result['session_id']=self.thread_id
+            return events,result
+        except Exception as e:
+            result['error']=str(e)
+            raise
+        finally:
+            write_json(directory/'result.json',result)
+
+    def close(self):
+        if self.name:
+            started=time.monotonic()
+            name=self.name
+            ok,error=_sbx_rm(name)
+            self.cleanup.append({'name':name,'ok':ok,'error':error})
+            self.overhead+=time.monotonic()-started
+            if not ok: raise SandboxCleanupError(f'Gate cleanup failed: {error}')
+            self.name=None

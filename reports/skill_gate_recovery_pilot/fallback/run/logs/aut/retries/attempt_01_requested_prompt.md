@@ -1,0 +1,3 @@
+La lettura delle seguenti Skill non risulta verificata. Ripeti soltanto queste letture.
+- `.codex/skills/kathara-dns/SKILL.md`
+Usa una operazione di lettura dedicata per ciascun file. Se lungo, leggilo in blocchi consecutivi fino alla fine. Usa `cat .codex/skills/NOME/SKILL.md` in un comando separato per ciascuna Skill. Non concatenare wc, inventario, echo o altri comandi alla lettura. Il laboratorio rimane protetto. Non modificare file e non configurare il laboratorio. Termina dopo la lettura.

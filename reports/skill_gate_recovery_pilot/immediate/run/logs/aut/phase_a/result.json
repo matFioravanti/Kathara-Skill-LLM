@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 9.079962374999923,
+  "usage": {
+    "input_tokens": 18989,
+    "cached_input_tokens": 8960,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 189,
+    "reasoning_output_tokens": 16
+  },
+  "final_message": "Skill letta integralmente. Nessun file è stato modificato e il laboratorio non è stato configurato.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1870d-400c-70d2-8f56-78a515083f73"
+}

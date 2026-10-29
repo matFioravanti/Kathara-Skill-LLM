@@ -1,7 +1,8 @@
-"""Bounded experimental probe, not a production backend or certification.
+"""Bounded validation of the legacy pilot and ordinary recovery runner.
 
-Run after deterministic tests. Exactly one positive and one negative case;
-no model retries. Only temporary labs, existing sbx proxy authentication.
+Run after deterministic tests. The default preserves the legacy two-case probe;
+--recovery validates direct reading, recovery, fallback and the real checker.
+Only isolated copies and existing sbx proxy authentication. No automatic reruns.
 """
 import hashlib
 import json
@@ -155,9 +156,155 @@ print(json.dumps(r))
     return record
 
 
+def finalize_recovery_aut_artifacts(run, *, case, model, reasoning_effort, experiment_id='recovery_pilot'):
+    """Derive telemetry from saved real turns, without another model call."""
+    from benchmark_core.run_metrics import make_metrics
+    from benchmark_core.skill_gate import read_gate_metrics
+    gate=read_gate_metrics(run)
+    metadata=json.loads((run/'manifest.json').read_text())
+    metadata.update(agent='codex',model=model,reasoning_effort=reasoning_effort,
+        scenario_id='pilot',prompt_type='T1',run_number=1,skill_mode='dns_only',
+        skill_protocol='enforced_read_v1',experiment_id=experiment_id+'_'+case,
+        run_id=experiment_id+'_'+case,execution_backend='docker_sandbox',
+        available_skills=['kathara-dns'],forced_skills=['kathara-dns'],
+        pipeline_state='AUT_COMPLETED',aut_execution_success=True,
+        checker_execution_success=None,task_success=None,**gate)
+    write_json(run/'manifest.json',metadata)
+    # Namespace compatibility IDs even for the exploratory run preceding this
+    # correction. Raw phase artifacts and model inputs remain unchanged.
+    logs=run/'logs/aut'; events=[]
+    phases=[logs/'phase_a']+sorted(p for p in (logs/'retries').glob('attempt_*') if p.is_dir())
+    phases += [logs/p for p in ('fallback','phase_b') if (logs/p).is_dir()]
+    for path in phases:
+        for line in (path/'events.jsonl').read_text().splitlines():
+            e=json.loads(line); name=str(path.relative_to(logs));e['_skill_gate_phase']=name
+            if isinstance(e.get('item'),dict) and e['item'].get('id'):
+                e['item']={**e['item'],'id':name+':'+e['item']['id']}
+            events.append(e)
+    (logs/'events.jsonl').write_text(''.join(json.dumps(e,ensure_ascii=False)+'\n' for e in events))
+    write_json(run/'evaluation/metrics.json',make_metrics(run,metadata,total_seconds=None,
+        checker_seconds=None,checker_outcome=None))
+
+
+def export_recovery_pilot(outputs, results):
+    """Adapt retained case artifacts to the existing four-level run layout."""
+    import shutil
+    from benchmark_core.aggregation import aggregate
+    sources=[p for output in outputs for p in output.glob('*/run') if (p/'evaluation/metrics.json').is_file()]
+    if not sources: raise ValueError('No completed pilot metrics available for export')
+    with tempfile.TemporaryDirectory(prefix='tesi-recovery-export-',dir='/private/tmp') as temporary:
+        root=Path(temporary)
+        for index,source in enumerate(sources):
+            target=root/f'case_{index:02d}'/'T1/dns_only/r001';target.mkdir(parents=True)
+            for relative in ('manifest.json','evaluation/metrics.json'):
+                (target/relative).parent.mkdir(parents=True,exist_ok=True)
+                shutil.copy2(source/relative,target/relative)
+            if (source/'results').is_dir(): shutil.copytree(source/'results',target/'results')
+        rows,checks,summary=aggregate(root,results)
+        if len(rows)!=len(sources): raise RuntimeError('Pilot export silently omitted runs')
+        print(json.dumps({'exported_runs':len(rows),'checks':len(checks),'summary_groups':len(summary),'output':str(results)}),flush=True)
+
+
+def run_recovery_pilot():
+    """Four bounded real-model cases through the ordinary runner.
+
+    Only omitted read prompts are controlled interventions. No model output,
+    gate decision, fallback delivery, continuity or checker result is mocked.
+    """
+    import copy
+    import shutil
+    from unittest.mock import patch
+    from benchmark_core.config import Config
+    from benchmark_core.docker_sandbox_runner import ProtectedCodexSession
+    from benchmark_core.inspect_runner import run_aut
+    from benchmark_core.pipeline import run_one
+    from benchmark_core.scenario_loader import Scenario
+    from benchmark_core.skill_modes import SKILL_CONFIG_KEYS
+    import argparse
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--recovery',action='store_true')
+    parser.add_argument('--case',choices=['immediate','retry','fallback','dns_real','all'],default='all')
+    parser.add_argument('--output',type=Path,default=OUT.parent/'skill_gate_recovery_pilot')
+    parser.add_argument('--export-only',action='store_true')
+    parser.add_argument('--include',action='append',type=Path,default=[])
+    parser.add_argument('--results',type=Path,default=OUT.parent/'skill_gate_recovery_results')
+    args=parser.parse_args()
+    repo=Path(__file__).resolve().parents[1]
+    output=args.output.resolve(); output.mkdir(parents=True,exist_ok=True)
+    if args.export_only:
+        export_recovery_pilot([output]+args.include,args.results)
+        return
+    calls=0
+    class PilotSession(ProtectedCodexSession):
+        def turn(self,*,prompt,directory,timeout):
+            nonlocal calls
+            calls+=1
+            if calls>16: raise RuntimeError('Pilot model-call budget exhausted')
+            omit=(case=='retry' and directory.name=='phase_a') or (case=='fallback' and (directory.name=='phase_a' or directory.parent.name=='retries'))
+            if omit:
+                # Explicit experimental intervention; preserve requested input.
+                directory.parent.mkdir(parents=True,exist_ok=True)
+                (directory.parent/(directory.name+'_requested_prompt.md')).write_bytes(prompt)
+                prompt=b'CONTROLLED READING OMISSION: Do not open files or call any tools in this turn. Reply READY and stop. The next turn will supply further instructions.'
+            print(json.dumps({'case':case,'turn':str(directory.name),'controlled_omission':omit,'model_call':calls}),flush=True)
+            return super().turn(prompt=prompt,directory=directory,timeout=timeout)
+    cases=['immediate','retry','fallback','dns_real'] if args.case=='all' else [args.case]
+    for case in cases:
+        target=output/case
+        if target.exists(): raise RuntimeError('Refusing automatic rerun of existing case: '+str(target))
+        target.mkdir()
+        summary={'case':case,'controlled_omission':case in ('retry','fallback'),'status':'NOT_RUN'}
+        calls_before=calls
+        with tempfile.TemporaryDirectory(prefix='tesi-recovery-pilot-',dir='/private/tmp') as temporary:
+            root=Path(temporary); root.chmod(0o755)
+            data=copy.deepcopy(yaml.safe_load((repo/'benchmark.yaml').read_text()))
+            data['aut'].update(skill_protocol='enforced_read_v1',skill_gate_recovery_policy='recovery_v1',skill_gate_max_retries=2)
+            scenario_id='lab00_five_router' if case=='dns_real' else 'pilot'
+            scenario_root=root/'scenarios'/scenario_id
+            try:
+                if case=='dns_real':
+                    shutil.copytree(repo/'scenarios'/scenario_id,scenario_root)
+                    shutil.copytree(repo/'prompt'/scenario_id,root/'prompt'/scenario_id)
+                    shutil.copytree(repo/'skills',root/'skills')
+                    # Keep every source/expected instruction byte unchanged.
+                    cfg=Config(root,data)
+                    with patch('benchmark_core.docker_sandbox_runner.ProtectedCodexSession',PilotSession):
+                        run=run_one(cfg,Scenario(scenario_id,scenario_root),'codex','T1','dns_only',experiment_id='recovery_v1_pilot')
+                    manifest=json.loads((run/'manifest.json').read_text())
+                    summary.update(status=manifest['pipeline_state'],checker_executed=manifest['checker_execution_success'],task_success=manifest['task_success'],error=manifest.get('pipeline_error'))
+                else:
+                    lab=scenario_root/'lab'; lab.mkdir(parents=True)
+                    (lab/'lab.conf').write_text('r1[0]="A"\n')
+                    skill=root/'skills/dns/SKILL.md'; skill.parent.mkdir(parents=True)
+                    skill.write_text('---\nname: kathara-dns\ndescription: Tiny isolated recovery pilot instructions.\n---\nAfter the gate opens, write the literal text PILOT_READY to pilot.result if requested.\n')
+                    data['aut']['dns_skill']='skills/dns/SKILL.md'
+                    cfg=Config(root,data)
+                    from benchmark_core.workspace import create_workspace
+                    prompt='Write PILOT_READY to pilot.result in the current lab directory using a tool. Leave lab.conf unchanged.'
+                    run=create_workspace(root/'runs',Scenario(scenario_id,scenario_root),'T1','dns_only',prompt)
+                    write_json(run/'manifest.json',{'agent':'codex','skill_mode':'dns_only','skill_protocol':'enforced_read_v1','dns_skill_sha256':hashlib.sha256(skill.read_bytes()).hexdigest()})
+                    with patch('benchmark_core.docker_sandbox_runner.ProtectedCodexSession',PilotSession):
+                        run_aut(cfg,Scenario(scenario_id,scenario_root),run,'codex',prompt,skill_mode='dns_only')
+                    summary.update(status='COMPLETED',configured=(run/'lab/pilot.result').read_text().strip()=='PILOT_READY')
+                    finalize_recovery_aut_artifacts(run,case=case,model=cfg.model(),reasoning_effort=cfg.reasoning_effort(),experiment_id=output.name)
+                shutil.copytree(run,target/'run')
+                summary['gate']=json.loads((run/'logs/aut/skill_gate.json').read_text())
+                if case=='dns_real': summary['metrics']=json.loads((run/'evaluation/metrics.json').read_text())
+            except Exception as error:
+                summary.update(status='FAILED',error=f'{type(error).__name__}: {error}')
+                found=list((root/'runs').glob('*/*/*/r*'))
+                if found and not (target/'run').exists(): shutil.copytree(found[0],target/'run')
+            summary['model_calls']=calls-calls_before
+            write_json(target/'validation.json',summary)
+            print(json.dumps({k:v for k,v in summary.items() if k not in ('gate','metrics')},ensure_ascii=False),flush=True)
+
+
 if __name__=='__main__':
-    OUT.mkdir(parents=True,exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix='tesi-gate-pilot-',dir='/private/tmp') as d:
-        root=Path(d); root.chmod(0o755)
-        for positive in (True,False):
-            print(json.dumps(run_case(root,positive)),flush=True)
+    if '--recovery' in sys.argv:
+        run_recovery_pilot()
+    else:
+        OUT.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='tesi-gate-pilot-',dir='/private/tmp') as d:
+            root=Path(d); root.chmod(0o755)
+            for positive in (True,False):
+                print(json.dumps(run_case(root,positive)),flush=True)

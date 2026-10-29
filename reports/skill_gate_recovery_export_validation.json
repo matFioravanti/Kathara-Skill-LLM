@@ -1,0 +1,30 @@
+{
+  "reports/skill_gate_recovery_results": {
+    "runs": {
+      "rows": 5,
+      "headers_match": true
+    },
+    "checks": {
+      "rows": 132,
+      "headers_match": true
+    },
+    "summary": {
+      "rows": 5,
+      "headers_match": true
+    }
+  },
+  "/private/tmp/tesi-skill-gate-recovery-historical-results": {
+    "runs": {
+      "rows": 76,
+      "headers_match": true
+    },
+    "checks": {
+      "rows": 32257,
+      "headers_match": true
+    },
+    "summary": {
+      "rows": 76,
+      "headers_match": true
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "skill_gate_enabled": true,
+  "skill_gate_status": "completed",
+  "skill_gate_required_skills": [
+    "kathara-dns"
+  ],
+  "skill_gate_verified_skills": [
+    "kathara-dns"
+  ],
+  "skill_gate_read_seconds": 15.850229874999968,
+  "skill_gate_verification_seconds": 0.004082624000147916,
+  "skill_gate_blocked": false,
+  "skill_gate_write_attempts_blocked": null,
+  "skill_gate_backend_enforcement": "docker_sandbox:ro_nonroot_zero_caps_no_mcp",
+  "skill_gate_input_tokens": 38651,
+  "skill_gate_output_tokens": 345,
+  "skill_gate_write_seconds": 17.76312437500019,
+  "skill_gate_total_seconds": 58.10776870799964,
+  "write_phase_input_tokens": 44410,
+  "write_phase_output_tokens": 499,
+  "skill_gate_isolation_verified": true,
+  "skill_gate_isolation_violations": 0,
+  "skill_gate_context_strategy": "explicit_resume_shared_state",
+  "skill_gate_backend": "docker_sandbox",
+  "skill_gate_protocol_version": "enforced_read_v1",
+  "skill_gate_state_history": [
+    {
+      "status": "unsupported_backend",
+      "timestamp": "2026-10-29T09:45:43.177914+00:00"
+    },
+    {
+      "status": "preparing",
+      "timestamp": "2026-10-29T09:45:43.177939+00:00"
+    },
+    {
+      "status": "initial_read",
+      "timestamp": "2026-10-29T09:45:54.038884+00:00"
+    },
+    {
+      "status": "retry_read",
+      "timestamp": "2026-10-29T09:46:03.123100+00:00"
+    },
+    {
+      "status": "passed",
+      "timestamp": "2026-10-29T09:46:09.897172+00:00"
+    },
+    {
+      "status": "write_phase_running",
+      "timestamp": "2026-10-29T09:46:22.873888+00:00"
+    },
+    {
+      "status": "completed",
+      "timestamp": "2026-10-29T09:46:40.638007+00:00"
+    }
+  ],
+  "skill_gate_certification": "CERTIFIED",
+  "skill_gate_context_continuity_verified": true,
+  "skill_gate_load_methods": {
+    "kathara-dns": "retry_verified"
+  },
+  "skill_gate_read_attempts": 2,
+  "skill_gate_retry_count": 1,
+  "skill_gate_fallback_used": false,
+  "skill_gate_fallback_skills": [],
+  "skill_gate_fallback_sha256_verified": null,
+  "skill_gate_context_delivery_verified": true,
+  "skill_gate_initial_read_seconds": 9.079962374999923,
+  "skill_gate_retry_seconds": 6.770267500000045,
+  "skill_gate_fallback_seconds": 0.0,
+  "skill_gate_initial_input_tokens": 18989,
+  "skill_gate_initial_output_tokens": 189,
+  "skill_gate_retry_input_tokens": 19662,
+  "skill_gate_retry_output_tokens": 156,
+  "skill_gate_fallback_input_tokens": null,
+  "skill_gate_fallback_output_tokens": null,
+  "skill_gate_recovery_policy_version": "recovery_v1",
+  "skill_gate_session_id": "01a1870d-400c-70d2-8f56-78a515083f73",
+  "skill_gate_session_count": 1,
+  "internet": {
+    "internet_used": null,
+    "status": "unknown",
+    "web_search_calls": 0,
+    "web_search_attempts": 0,
+    "external_domains": [],
+    "search_result_domains": [],
+    "visited_domains": [],
+    "shell_network_candidates": 0,
+    "shell_network_local": 0,
+    "shell_network_uncertain": 1,
+    "network_policy": null,
+    "trace_available": true,
+    "detection_source": "aut_events"
+  },
+  "skill_compliance": {
+    "skill_mode": "dns_only",
+    "required_skills": [
+      "kathara-dns"
+    ],
+    "observed_read_skills": [
+      "kathara-dns"
+    ],
+    "skill_states": {
+      "kathara-creation": "not_required",
+      "kathara-dns": "observed"
+    },
+    "required_reads_observed": true,
+    "skill_details": {
+      "kathara-creation": {
+        "required": false,
+        "read_attempt_observed": null,
+        "content_identified": null,
+        "complete_read_verified": null,
+        "dedicated_read": null,
+        "read_before_modification": null,
+        "verification_status": "not_required"
+      },
+      "kathara-dns": {
+        "required": true,
+        "read_attempt_observed": true,
+        "content_identified": true,
+        "complete_read_verified": true,
+        "dedicated_read": true,
+        "read_before_modification": null,
+        "verification_status": "unverified"
+      }
+    },
+    "required_skill_count": 1,
+    "required_read_attempt_count": 1,
+    "required_content_identified_count": 1,
+    "required_complete_read_count": 1,
+    "required_unverified_read_count": 0,
+    "required_reads_complete_before_modification": null,
+    "protocol_compliance_observed": null,
+    "strict_status": "unverified",
+    "status": "verified"
+  },
+  "scenario": "pilot",
+  "scenario_id": "pilot",
+  "prompt_type": "T1",
+  "prompt_sha256": null,
+  "prompt_sent_sha256": null,
+  "skill_mode": "dns_only",
+  "skill_protocol": "enforced_read_v1",
+  "run_number": 1,
+  "replicate": null,
+  "experiment_id": "skill_gate_recovery_pilot_immediate",
+  "run_id": "skill_gate_recovery_pilot_immediate",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "low",
+  "available_skills": [
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-dns"
+  ],
+  "agent_success": true,
+  "status": "AUT_COMPLETED",
+  "execution_backend": "docker_sandbox",
+  "authentication": "sbx_oauth_proxy",
+  "codex_host_version": null,
+  "codex_sandbox_version": "codex-cli 0.149.1",
+  "sandbox": {
+    "name": null,
+    "id": null,
+    "sbx_version": null,
+    "codex_host_version": null,
+    "codex_sandbox_version": "codex-cli 0.149.1",
+    "cleanup_ok": true,
+    "cleanup_error": null,
+    "error": null
+  },
+  "pipeline_error": null,
+  "timing": {
+    "agent_seconds": 33.61335425000016,
+    "sandbox_overhead_seconds": 24.464592084001197,
+    "checker_seconds": null,
+    "total_seconds": null
+  },
+  "tokens": {
+    "input": 83061,
+    "cached_input": 66816,
+    "output": 844,
+    "reasoning": 97,
+    "total": 83905,
+    "total_reported": null,
+    "total_calculated": 83905,
+    "cache_write_input": 0
+  },
+  "llm_sampling": {
+    "temperature": null,
+    "top_p": null,
+    "source": "none",
+    "status": "unavailable",
+    "transport": null,
+    "collection_mode": "passive",
+    "temperature_status": "unavailable",
+    "top_p_status": "unavailable",
+    "response_count": 0,
+    "distinct_temperatures": [],
+    "distinct_top_p": [],
+    "client_requested_temperature": null,
+    "client_requested_top_p": null,
+    "details": null
+  },
+  "checker": {
+    "passed": null,
+    "failed": null,
+    "total": null,
+    "pass_rate": null
+  },
+  "correction_sha256": null,
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
+}
