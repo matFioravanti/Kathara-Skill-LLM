@@ -1,0 +1,16 @@
+{
+  "temperature": null,
+  "top_p": null,
+  "source": "none",
+  "status": "unavailable",
+  "transport": null,
+  "collection_mode": "passive",
+  "temperature_status": "unavailable",
+  "top_p_status": "unavailable",
+  "response_count": 0,
+  "distinct_temperatures": [],
+  "distinct_top_p": [],
+  "client_requested_temperature": null,
+  "client_requested_top_p": null,
+  "details": null
+}

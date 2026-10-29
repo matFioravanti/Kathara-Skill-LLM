@@ -1,0 +1,8 @@
+$TTL 3600
+@ IN SOA ns.net. hostmaster.net. ( 2026102901 3600 900 604800 3600 )
+  IN NS ns.net.
+ns IN A 10.14.1.13
+lab IN NS ns.lab.net.
+ns.lab IN A 10.14.2.12
+tools IN NS ns.tools.net.
+ns.tools IN A 10.14.2.13

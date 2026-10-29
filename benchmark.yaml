@@ -27,7 +27,7 @@ sandbox:
 docker_sandbox:
   execution_backend: docker_sandbox  # "docker_sandbox" | assente = host
   sbx_version: "0.48.0"             # versione sbx attesa (corrisponde a EXPECTED_SBX_VERSION)
-  codex_version: "0.149.1"          # versione codex nel template sandbox sbx
+  codex_version: "0.165.0"          # versione codex nel template sandbox sbx
   auto_start_daemon: true            # avvia sbx daemon se spento (sbx daemon start --detach)
   auto_start_docker: true            # avvia Docker Desktop se spento (open -a Docker su macOS)
   daemon_wait_seconds: 30            # secondi di attesa dopo l'avvio automatico daemon

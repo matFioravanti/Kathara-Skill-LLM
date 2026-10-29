@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 9.40798016700137,
+  "usage": {
+    "input_tokens": 22203,
+    "cached_input_tokens": 8960,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 150,
+    "reasoning_output_tokens": 0
+  },
+  "final_message": "Skill `kathara-dns` letta integralmente. Non sono state apportate modifiche al laboratorio.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a189c9-ae3f-70a1-82c8-4ed5ac246b9a"
+}

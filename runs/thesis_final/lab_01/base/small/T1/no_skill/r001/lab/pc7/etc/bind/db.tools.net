@@ -1,0 +1,8 @@
+$TTL 3600
+@ IN SOA ns.tools.net. hostmaster.tools.net. ( 2026102901 3600 900 604800 3600 )
+  IN NS ns.tools.net.
+ns IN A 10.14.2.13
+mail IN A 10.14.2.13
+@ IN MX 10 mail.tools.net.
+ci IN NS ns.ci.tools.net.
+ns.ci IN A 10.14.4.11

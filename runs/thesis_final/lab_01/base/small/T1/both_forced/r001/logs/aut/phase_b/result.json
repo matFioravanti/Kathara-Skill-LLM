@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 128.94639054100116,
+  "usage": {
+    "input_tokens": 266836,
+    "cached_input_tokens": 224768,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 6787,
+    "reasoning_output_tokens": 471
+  },
+  "final_message": "Configurazione DNS completata.\n\n- 13 zone autoritative su `pc1`–`pc13`, con 12 deleghe, NS e glue record.\n- `pc14` è il resolver ricorsivo con root hint verso `pc1`.\n- `pc16`–`pc20` usano `pc14` tramite `resolv.conf`.\n- A record per servizi, `www.example.com` e MX/A record richiesti configurati.\n- Topologia, IP e rotte esistenti preservati; nessuna immagine modificata (`kathara/base` include BIND).\n- Controlli statici superati. Non sono stati eseguiti comandi Kathará o test dinamici, come previsto dalla Skill.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a189ce-51f3-7ba1-983e-ab960aed0cee"
+}
