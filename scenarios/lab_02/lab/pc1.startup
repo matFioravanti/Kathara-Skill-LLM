@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+# IPv4 e instradamento statico; le interfacce Kathara sono già attive.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.12.1.11/24 ' || ip address add 10.12.1.11/24 dev eth0
+
+ip route replace default via 10.12.1.1 dev eth0
+
+# Cache ARP statica per soli vicini dello stesso dominio L2 (riduce ICMP iniziali).
+ip -4 neigh replace 10.12.1.1 lladdr 02:00:00:0a:01:01 nud permanent dev eth0
+ip -4 neigh replace 10.12.1.12 lladdr 02:00:00:0a:01:03 nud permanent dev eth0
+ip -4 neigh replace 10.12.1.13 lladdr 02:00:00:0a:01:04 nud permanent dev eth0
+ip -4 neigh replace 10.12.1.14 lladdr 02:00:00:0a:01:05 nud permanent dev eth0

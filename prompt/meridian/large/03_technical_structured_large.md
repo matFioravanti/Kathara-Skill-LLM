@@ -1,0 +1,94 @@
+Generate the DNS configuration for the existing Kathara laboratory without changing the topology, IP addresses, or previously configured routes.
+
+- **Hierarchy:** Configure a DNS hierarchy consisting of the root domain `.`, eight TLDs (digital, network, science, region, foundation, platform, public, and press), sixteen main domains, and their respective delegated subzones. The hierarchy must contain a total of **49 authoritative zones and 48 DNS delegations**, assigned to the existing machines as follows:
+  - Root domain `.` → [pc38]
+  - TLD digital → [pc17]
+  - TLD network → [pc35]
+  - TLD science → [pc1]
+  - TLD region → [pc2]
+  - Zone meridian.digital → [pc10]
+  - Zone vantage.digital → [pc48]
+  - Zone vertex.digital → [pc5]
+  - Zone cipher.network → [pc40]
+  - Zone gateway.network → [pc33]
+  - Zone oakridge.science → [pc37]
+  - Zone lighthouse.science → [pc7]
+  - Zone solstice.region → [pc28]
+  - Zone meadow.region → [pc30]
+  - Zone valley.region → [pc25]
+  - Zone market.meridian.digital → [pc22]
+  - Zone journal.meridian.digital → [pc23]
+  - Zone teams.vantage.digital → [pc29]
+  - Zone office.vantage.digital → [pc43]
+  - Zone interface.vertex.digital → [pc6]
+  - Zone testing.cipher.network → [pc24]
+  - Zone neural.testing.cipher.network → [pc47]
+  - Zone records.testing.cipher.network → [pc27]
+  - Zone staging.cipher.network → [pc4]
+  - Zone pipeline.gateway.network → [pc3]
+  - Zone tunnel.oakridge.science → [pc44]
+  - Zone classes.oakridge.science → [pc11]
+  - Zone dashboard.lighthouse.science → [pc46]
+  - Zone learners.solstice.region → [pc45]
+  - Zone forms.meadow.region → [pc8]
+  - Zone metrics.valley.region → [pc39]
+  - TLD foundation → [pc16]
+  - TLD platform → [pc20]
+  - TLD public → [pc31]
+  - TLD press → [pc34]
+  - Zone bridge.foundation → [pc49]
+  - Zone horizon.foundation → [pc36]
+  - Zone sprout.platform → [pc13]
+  - Zone helix.platform → [pc9]
+  - Zone central.public → [pc21]
+  - Zone bulletin.press → [pc18]
+  - Zone collections.bridge.foundation → [pc41]
+  - Zone guides.horizon.foundation → [pc19]
+  - Zone functions.sprout.platform → [pc26]
+  - Zone uptime.helix.platform → [pc32]
+  - Zone opendata.central.public → [pc42]
+  - Zone support.central.public → [pc14]
+  - Zone district.bulletin.press → [pc15]
+  - Zone broadcast.bulletin.press → [pc12]
+
+- **Delegations:** Configure the following authoritative delegations:
+  - `.` delegates `digital`, `network`, `science`, `region`, `foundation`, `platform`, `public` and `press`.
+  - `digital` delegates `meridian.digital`, `vantage.digital` and `vertex.digital`.
+  - `network` delegates `cipher.network` and `gateway.network`.
+  - `science` delegates `oakridge.science` and `lighthouse.science`.
+  - `region` delegates `solstice.region`, `meadow.region` and `valley.region`.
+  - `meridian.digital` delegates `market.meridian.digital` and `journal.meridian.digital`.
+  - `vantage.digital` delegates `teams.vantage.digital` and `office.vantage.digital`.
+  - `vertex.digital` delegates `interface.vertex.digital`.
+  - `cipher.network` delegates `testing.cipher.network` and `staging.cipher.network`.
+  - `gateway.network` delegates `pipeline.gateway.network`.
+  - `testing.cipher.network` delegates `neural.testing.cipher.network` and `records.testing.cipher.network`.
+  - `oakridge.science` delegates `tunnel.oakridge.science` and `classes.oakridge.science`.
+  - `lighthouse.science` delegates `dashboard.lighthouse.science`.
+  - `solstice.region` delegates `learners.solstice.region`.
+  - `meadow.region` delegates `forms.meadow.region`.
+  - `valley.region` delegates `metrics.valley.region`.
+  - `foundation` delegates `bridge.foundation` and `horizon.foundation`.
+  - `platform` delegates `sprout.platform` and `helix.platform`.
+  - `public` delegates `central.public`.
+  - `press` delegates `bulletin.press`.
+  - `bridge.foundation` delegates `collections.bridge.foundation`.
+  - `horizon.foundation` delegates `guides.horizon.foundation`.
+  - `sprout.platform` delegates `functions.sprout.platform`.
+  - `helix.platform` delegates `uptime.helix.platform`.
+  - `central.public` delegates `opendata.central.public` and `support.central.public`.
+  - `bulletin.press` delegates `district.bulletin.press` and `broadcast.bulletin.press`.
+  - Configure all required NS records and any necessary glue records to enable correct name resolution throughout the hierarchy.
+
+- **Local resolution:** Configure a local name server on an existing machine not assigned to any authoritative zone. Client resolvers must send DNS queries to this server, which must be able to query the name servers of the hierarchy when needed, starting from the root and following delegations to the requested zone. All existing clients must be able to use the resolution service.
+
+- **Services:** Configure DNS records so that all domain names and delegated subzones shown in the hierarchy resolve correctly to the IP addresses of their corresponding machines. In particular, `market.meridian.digital`, `journal.meridian.digital`, `teams.vantage.digital`, `office.vantage.digital`, `interface.vertex.digital`, `neural.testing.cipher.network`, `records.testing.cipher.network`, `staging.cipher.network`, `pipeline.gateway.network`, `tunnel.oakridge.science`, `classes.oakridge.science`, `dashboard.lighthouse.science`, `learners.solstice.region`, `forms.meadow.region`, `metrics.valley.region`, `collections.bridge.foundation`, `guides.horizon.foundation`, `functions.sprout.platform`, `uptime.helix.platform`, `opendata.central.public`, `support.central.public`, `district.bulletin.press` and `broadcast.bulletin.press` must be reachable by name. Also provide DNS references for email at the specified main domains and deeper delegated subzones.
+
+- **Mail records:** Configure the following MX records:
+  - `vantage.digital` → MX priority 10, mail server `mailhub.vantage.digital`, with an A record pointing to the existing IP address of [pc48].
+  - `oakridge.science` → MX priority 10, mail server `mailhub.oakridge.science`, with an A record pointing to the existing IP address of [pc37].
+  - `teams.vantage.digital` → MX priority 10, mail server `mailhub.teams.vantage.digital`, with an A record pointing to the existing IP address of [pc29].
+  - `support.central.public` → MX priority 10, mail server `mailhub.support.central.public`, with an A record pointing to the existing IP address of [pc14].
+  - Each MX record must refer to the full name of its mail server, and that name must resolve through its corresponding A record. Use only IP addresses already present in the laboratory; do not introduce dedicated mail machines.
+
+- **Machine assignments:** Preserve the correspondence between each DNS zone and the machine listed in square brackets. All 49 machines assigned to authoritative zones above must act as the authoritative servers for their respective zones. Select the local name server and clients from the other existing machines. Do not add devices or alter network links, IP addresses, or existing routing.

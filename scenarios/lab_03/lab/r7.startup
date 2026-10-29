@@ -1,0 +1,43 @@
+#!/bin/sh
+set -eu
+# Interfacce Kathara gia attive: indirizzamento IPv4 statico.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.13.9.1/24 ' || ip address add 10.13.9.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 10.13.10.1/24 ' || ip address add 10.13.10.1/24 dev eth1
+ip -4 address show dev eth2 | grep -Fq 'inet 172.23.1.22/30 ' || ip address add 172.23.1.22/30 dev eth2
+ip -4 address show dev eth3 | grep -Fq 'inet 172.23.1.25/30 ' || ip address add 172.23.1.25/30 dev eth3
+
+# Solo rotte ip route statiche, nessun demone di routing.
+ip route replace 10.13.1.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.2.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.3.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.4.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.5.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.6.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.7.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.8.0/24 via 172.23.1.21 dev eth2
+ip route replace 10.13.11.0/24 via 172.23.1.26 dev eth3
+ip route replace 10.13.12.0/24 via 172.23.1.26 dev eth3
+ip route replace 10.13.13.0/24 via 172.23.1.26 dev eth3
+ip route replace 10.13.14.0/24 via 172.23.1.26 dev eth3
+ip route replace 10.13.15.0/24 via 172.23.1.26 dev eth3
+ip route replace 172.23.1.0/30 via 172.23.1.21 dev eth2
+ip route replace 172.23.1.4/30 via 172.23.1.21 dev eth2
+ip route replace 172.23.1.8/30 via 172.23.1.21 dev eth2
+ip route replace 172.23.1.12/30 via 172.23.1.21 dev eth2
+ip route replace 172.23.1.16/30 via 172.23.1.21 dev eth2
+ip route replace 172.23.1.28/30 via 172.23.1.26 dev eth3
+ip route replace 172.23.1.32/30 via 172.23.1.26 dev eth3
+ip route replace 172.23.1.36/30 via 172.23.1.26 dev eth3
+ip route replace 172.23.1.40/30 via 172.23.1.26 dev eth3
+
+# Cache ARP statica verso dispositivi sullo stesso segmento Ethernet.
+ip -4 neigh replace 10.13.9.11 lladdr 02:00:00:0a:09:02 nud permanent dev eth0
+ip -4 neigh replace 10.13.9.12 lladdr 02:00:00:0a:09:03 nud permanent dev eth0
+ip -4 neigh replace 10.13.9.13 lladdr 02:00:00:0a:09:04 nud permanent dev eth0
+ip -4 neigh replace 10.13.9.14 lladdr 02:00:00:0a:09:05 nud permanent dev eth0
+ip -4 neigh replace 10.13.10.11 lladdr 02:00:00:0a:0a:02 nud permanent dev eth1
+ip -4 neigh replace 10.13.10.12 lladdr 02:00:00:0a:0a:03 nud permanent dev eth1
+ip -4 neigh replace 10.13.10.13 lladdr 02:00:00:0a:0a:04 nud permanent dev eth1
+ip -4 neigh replace 10.13.10.14 lladdr 02:00:00:0a:0a:05 nud permanent dev eth1
+ip -4 neigh replace 172.23.1.21 lladdr 02:00:00:0b:67:06 nud permanent dev eth2
+ip -4 neigh replace 172.23.1.26 lladdr 02:00:00:0b:78:08 nud permanent dev eth3

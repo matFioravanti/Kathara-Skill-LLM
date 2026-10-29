@@ -1,0 +1,94 @@
+Generate the DNS configuration for the existing Kathara laboratory without changing the topology, IP addresses, or previously configured routes.
+
+- **Hierarchy:** Configure a DNS hierarchy consisting of the root domain `.`, eight TLDs (innovation, infrastructure, learning, territory, nonprofit, compute, services, and journal), sixteen main domains, and their respective delegated subzones. The hierarchy must contain a total of **49 authoritative zones and 48 DNS delegations**, assigned to the existing machines as follows:
+  - Root domain `.` → [pc37]
+  - TLD innovation → [pc3]
+  - TLD infrastructure → [pc15]
+  - TLD learning → [pc29]
+  - TLD territory → [pc28]
+  - Zone aster.innovation → [pc14]
+  - Zone pinnacle.innovation → [pc39]
+  - Zone vector.innovation → [pc6]
+  - Zone cascade.infrastructure → [pc1]
+  - Zone compass.infrastructure → [pc9]
+  - Zone northstar.learning → [pc22]
+  - Zone equinox.learning → [pc21]
+  - Zone helios.territory → [pc33]
+  - Zone brookfield.territory → [pc24]
+  - Zone sierra.territory → [pc7]
+  - Zone catalog.aster.innovation → [pc27]
+  - Zone stories.aster.innovation → [pc38]
+  - Zone units.pinnacle.innovation → [pc5]
+  - Zone private.pinnacle.innovation → [pc31]
+  - Zone integration.vector.innovation → [pc11]
+  - Zone studies.cascade.infrastructure → [pc43]
+  - Zone agents.studies.cascade.infrastructure → [pc42]
+  - Zone warehouse.studies.cascade.infrastructure → [pc30]
+  - Zone prototype.cascade.infrastructure → [pc41]
+  - Zone automation.compass.infrastructure → [pc36]
+  - Zone remote.northstar.learning → [pc16]
+  - Zone lectures.northstar.learning → [pc46]
+  - Zone homepage.equinox.learning → [pc45]
+  - Zone scholars.helios.territory → [pc48]
+  - Zone assistance.brookfield.territory → [pc26]
+  - Zone indicators.sierra.territory → [pc2]
+  - TLD nonprofit → [pc4]
+  - TLD compute → [pc35]
+  - TLD services → [pc17]
+  - TLD journal → [pc49]
+  - Zone alliance.nonprofit → [pc23]
+  - Zone blueprint.nonprofit → [pc32]
+  - Zone ember.compute → [pc12]
+  - Zone krypton.compute → [pc47]
+  - Zone federal.services → [pc19]
+  - Zone chronicle.journal → [pc40]
+  - Zone history.alliance.nonprofit → [pc34]
+  - Zone references.blueprint.nonprofit → [pc44]
+  - Zone microservice.ember.compute → [pc8]
+  - Zone monitor.krypton.compute → [pc20]
+  - Zone disclosure.federal.services → [pc10]
+  - Zone serviceshub.federal.services → [pc13]
+  - Zone neighborhood.chronicle.journal → [pc18]
+  - Zone channels.chronicle.journal → [pc25]
+
+- **Delegations:** Configure the following authoritative delegations:
+  - `.` delegates `innovation`, `infrastructure`, `learning`, `territory`, `nonprofit`, `compute`, `services` and `journal`.
+  - `innovation` delegates `aster.innovation`, `pinnacle.innovation` and `vector.innovation`.
+  - `infrastructure` delegates `cascade.infrastructure` and `compass.infrastructure`.
+  - `learning` delegates `northstar.learning` and `equinox.learning`.
+  - `territory` delegates `helios.territory`, `brookfield.territory` and `sierra.territory`.
+  - `aster.innovation` delegates `catalog.aster.innovation` and `stories.aster.innovation`.
+  - `pinnacle.innovation` delegates `units.pinnacle.innovation` and `private.pinnacle.innovation`.
+  - `vector.innovation` delegates `integration.vector.innovation`.
+  - `cascade.infrastructure` delegates `studies.cascade.infrastructure` and `prototype.cascade.infrastructure`.
+  - `compass.infrastructure` delegates `automation.compass.infrastructure`.
+  - `studies.cascade.infrastructure` delegates `agents.studies.cascade.infrastructure` and `warehouse.studies.cascade.infrastructure`.
+  - `northstar.learning` delegates `remote.northstar.learning` and `lectures.northstar.learning`.
+  - `equinox.learning` delegates `homepage.equinox.learning`.
+  - `helios.territory` delegates `scholars.helios.territory`.
+  - `brookfield.territory` delegates `assistance.brookfield.territory`.
+  - `sierra.territory` delegates `indicators.sierra.territory`.
+  - `nonprofit` delegates `alliance.nonprofit` and `blueprint.nonprofit`.
+  - `compute` delegates `ember.compute` and `krypton.compute`.
+  - `services` delegates `federal.services`.
+  - `journal` delegates `chronicle.journal`.
+  - `alliance.nonprofit` delegates `history.alliance.nonprofit`.
+  - `blueprint.nonprofit` delegates `references.blueprint.nonprofit`.
+  - `ember.compute` delegates `microservice.ember.compute`.
+  - `krypton.compute` delegates `monitor.krypton.compute`.
+  - `federal.services` delegates `disclosure.federal.services` and `serviceshub.federal.services`.
+  - `chronicle.journal` delegates `neighborhood.chronicle.journal` and `channels.chronicle.journal`.
+  - Configure all required NS records and any necessary glue records to enable correct name resolution throughout the hierarchy.
+
+- **Local resolution:** Configure a local name server on an existing machine not assigned to any authoritative zone. Client resolvers must send DNS queries to this server, which must be able to query the name servers of the hierarchy when needed, starting from the root and following delegations to the requested zone. All existing clients must be able to use the resolution service.
+
+- **Services:** Configure DNS records so that all domain names and delegated subzones shown in the hierarchy resolve correctly to the IP addresses of their corresponding machines. In particular, `catalog.aster.innovation`, `stories.aster.innovation`, `units.pinnacle.innovation`, `private.pinnacle.innovation`, `integration.vector.innovation`, `agents.studies.cascade.infrastructure`, `warehouse.studies.cascade.infrastructure`, `prototype.cascade.infrastructure`, `automation.compass.infrastructure`, `remote.northstar.learning`, `lectures.northstar.learning`, `homepage.equinox.learning`, `scholars.helios.territory`, `assistance.brookfield.territory`, `indicators.sierra.territory`, `history.alliance.nonprofit`, `references.blueprint.nonprofit`, `microservice.ember.compute`, `monitor.krypton.compute`, `disclosure.federal.services`, `serviceshub.federal.services`, `neighborhood.chronicle.journal` and `channels.chronicle.journal` must be reachable by name. Also provide DNS references for email at the specified main domains and deeper delegated subzones.
+
+- **Mail records:** Configure the following MX records:
+  - `pinnacle.innovation` → MX priority 10, mail server `inbox.pinnacle.innovation`, with an A record pointing to the existing IP address of [pc39].
+  - `northstar.learning` → MX priority 10, mail server `inbox.northstar.learning`, with an A record pointing to the existing IP address of [pc22].
+  - `units.pinnacle.innovation` → MX priority 10, mail server `inbox.units.pinnacle.innovation`, with an A record pointing to the existing IP address of [pc5].
+  - `serviceshub.federal.services` → MX priority 10, mail server `inbox.serviceshub.federal.services`, with an A record pointing to the existing IP address of [pc13].
+  - Each MX record must refer to the full name of its mail server, and that name must resolve through its corresponding A record. Use only IP addresses already present in the laboratory; do not introduce dedicated mail machines.
+
+- **Machine assignments:** Preserve the correspondence between each DNS zone and the machine listed in square brackets. All 49 machines assigned to authoritative zones above must act as the authoritative servers for their respective zones. Select the local name server and clients from the other existing machines. Do not add devices or alter network links, IP addresses, or existing routing.

@@ -1,0 +1,94 @@
+Generate the DNS configuration for the existing Kathara laboratory without changing the topology, IP addresses, or previously configured routes.
+
+- **Hierarchy:** Configure a DNS hierarchy consisting of the root domain `.`, eight TLDs (tech, cloud, academy, city, community, systems, agency, and media), sixteen main domains, and their respective delegated subzones. The hierarchy must contain a total of **49 authoritative zones and 48 DNS delegations**, assigned to the existing machines as follows:
+  - Root domain `.` → [pc13]
+  - TLD tech → [pc49]
+  - TLD cloud → [pc7]
+  - TLD academy → [pc29]
+  - TLD city → [pc48]
+  - Zone nimbus.tech → [pc20]
+  - Zone orbit.tech → [pc40]
+  - Zone forge.tech → [pc39]
+  - Zone quantum.cloud → [pc2]
+  - Zone matrix.cloud → [pc3]
+  - Zone summit.academy → [pc4]
+  - Zone cedar.academy → [pc1]
+  - Zone polaris.city → [pc16]
+  - Zone riverton.city → [pc19]
+  - Zone highland.city → [pc34]
+  - Zone store.nimbus.tech → [pc8]
+  - Zone insights.nimbus.tech → [pc38]
+  - Zone division.orbit.tech → [pc24]
+  - Zone internal.orbit.tech → [pc18]
+  - Zone gateway.forge.tech → [pc22]
+  - Zone experiments.quantum.cloud → [pc43]
+  - Zone models.experiments.quantum.cloud → [pc6]
+  - Zone datasets.experiments.quantum.cloud → [pc9]
+  - Zone sandbox.quantum.cloud → [pc47]
+  - Zone build.matrix.cloud → [pc15]
+  - Zone secure.summit.academy → [pc23]
+  - Zone lessons.summit.academy → [pc41]
+  - Zone entry.cedar.academy → [pc33]
+  - Zone students.polaris.city → [pc10]
+  - Zone requests.riverton.city → [pc12]
+  - Zone statistics.highland.city → [pc5]
+  - TLD community → [pc37]
+  - TLD systems → [pc31]
+  - TLD agency → [pc44]
+  - TLD media → [pc42]
+  - Zone harbor.community → [pc11]
+  - Zone keystone.community → [pc14]
+  - Zone nova.systems → [pc27]
+  - Zone stratus.systems → [pc36]
+  - Zone civic.agency → [pc45]
+  - Zone pulse.media → [pc21]
+  - Zone vault.harbor.community → [pc30]
+  - Zone manuals.keystone.community → [pc28]
+  - Zone endpoint.nova.systems → [pc46]
+  - Zone health.stratus.systems → [pc32]
+  - Zone transparency.civic.agency → [pc17]
+  - Zone citizens.civic.agency → [pc26]
+  - Zone localdesk.pulse.media → [pc35]
+  - Zone streams.pulse.media → [pc25]
+
+- **Delegations:** Configure the following authoritative delegations:
+  - `.` delegates `tech`, `cloud`, `academy`, `city`, `community`, `systems`, `agency` and `media`.
+  - `tech` delegates `nimbus.tech`, `orbit.tech` and `forge.tech`.
+  - `cloud` delegates `quantum.cloud` and `matrix.cloud`.
+  - `academy` delegates `summit.academy` and `cedar.academy`.
+  - `city` delegates `polaris.city`, `riverton.city` and `highland.city`.
+  - `nimbus.tech` delegates `store.nimbus.tech` and `insights.nimbus.tech`.
+  - `orbit.tech` delegates `division.orbit.tech` and `internal.orbit.tech`.
+  - `forge.tech` delegates `gateway.forge.tech`.
+  - `quantum.cloud` delegates `experiments.quantum.cloud` and `sandbox.quantum.cloud`.
+  - `matrix.cloud` delegates `build.matrix.cloud`.
+  - `experiments.quantum.cloud` delegates `models.experiments.quantum.cloud` and `datasets.experiments.quantum.cloud`.
+  - `summit.academy` delegates `secure.summit.academy` and `lessons.summit.academy`.
+  - `cedar.academy` delegates `entry.cedar.academy`.
+  - `polaris.city` delegates `students.polaris.city`.
+  - `riverton.city` delegates `requests.riverton.city`.
+  - `highland.city` delegates `statistics.highland.city`.
+  - `community` delegates `harbor.community` and `keystone.community`.
+  - `systems` delegates `nova.systems` and `stratus.systems`.
+  - `agency` delegates `civic.agency`.
+  - `media` delegates `pulse.media`.
+  - `harbor.community` delegates `vault.harbor.community`.
+  - `keystone.community` delegates `manuals.keystone.community`.
+  - `nova.systems` delegates `endpoint.nova.systems`.
+  - `stratus.systems` delegates `health.stratus.systems`.
+  - `civic.agency` delegates `transparency.civic.agency` and `citizens.civic.agency`.
+  - `pulse.media` delegates `localdesk.pulse.media` and `streams.pulse.media`.
+  - Configure all required NS records and any necessary glue records to enable correct name resolution throughout the hierarchy.
+
+- **Local resolution:** Configure a local name server on an existing machine not assigned to any authoritative zone. Client resolvers must send DNS queries to this server, which must be able to query the name servers of the hierarchy when needed, starting from the root and following delegations to the requested zone. All existing clients must be able to use the resolution service.
+
+- **Services:** Configure DNS records so that all domain names and delegated subzones shown in the hierarchy resolve correctly to the IP addresses of their corresponding machines. In particular, `store.nimbus.tech`, `insights.nimbus.tech`, `division.orbit.tech`, `internal.orbit.tech`, `gateway.forge.tech`, `models.experiments.quantum.cloud`, `datasets.experiments.quantum.cloud`, `sandbox.quantum.cloud`, `build.matrix.cloud`, `secure.summit.academy`, `lessons.summit.academy`, `entry.cedar.academy`, `students.polaris.city`, `requests.riverton.city`, `statistics.highland.city`, `vault.harbor.community`, `manuals.keystone.community`, `endpoint.nova.systems`, `health.stratus.systems`, `transparency.civic.agency`, `citizens.civic.agency`, `localdesk.pulse.media` and `streams.pulse.media` must be reachable by name. Also provide DNS references for email at the specified main domains and deeper delegated subzones.
+
+- **Mail records:** Configure the following MX records:
+  - `orbit.tech` → MX priority 10, mail server `mx.orbit.tech`, with an A record pointing to the existing IP address of [pc40].
+  - `summit.academy` → MX priority 10, mail server `mx.summit.academy`, with an A record pointing to the existing IP address of [pc4].
+  - `division.orbit.tech` → MX priority 10, mail server `mx.division.orbit.tech`, with an A record pointing to the existing IP address of [pc24].
+  - `citizens.civic.agency` → MX priority 10, mail server `mx.citizens.civic.agency`, with an A record pointing to the existing IP address of [pc26].
+  - Each MX record must refer to the full name of its mail server, and that name must resolve through its corresponding A record. Use only IP addresses already present in the laboratory; do not introduce dedicated mail machines.
+
+- **Machine assignments:** Preserve the correspondence between each DNS zone and the machine listed in square brackets. All 49 machines assigned to authoritative zones above must act as the authoritative servers for their respective zones. Select the local name server and clients from the other existing machines. Do not add devices or alter network links, IP addresses, or existing routing.

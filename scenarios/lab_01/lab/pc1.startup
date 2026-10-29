@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+# pc1: LAN A1; gateway r1.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.11.1.11/24 ' || ip address add 10.11.1.11/24 dev eth0
+ip route replace default via 10.11.1.1 dev eth0
+
+# Neighbor IPv4 permanenti: riducono i timeout ICMP causati da ARP durante il checker.
+# Solo host direttamente collegati; nessuna modifica alle rotte o ai servizi DNS.
+ip -4 neigh replace 10.11.1.1 lladdr 02:00:00:0a:01:01 nud permanent dev eth0
+ip -4 neigh replace 10.11.1.12 lladdr 02:00:00:0a:01:03 nud permanent dev eth0
+ip -4 neigh replace 10.11.1.13 lladdr 02:00:00:0a:01:04 nud permanent dev eth0
+ip -4 neigh replace 10.11.1.14 lladdr 02:00:00:0a:01:05 nud permanent dev eth0
+ip -4 neigh replace 10.11.1.15 lladdr 02:00:00:0a:01:06 nud permanent dev eth0

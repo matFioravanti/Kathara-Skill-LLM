@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+# r3: IPv4 statico; interfacce Kathara gia attive.
+
+ip -4 address show dev eth0 | grep -Fq 'inet 10.11.3.1/24 ' || ip address add 10.11.3.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 172.21.1.6/30 ' || ip address add 172.21.1.6/30 dev eth1
+ip -4 address show dev eth2 | grep -Fq 'inet 172.21.1.9/30 ' || ip address add 172.21.1.9/30 dev eth2
+
+# Rotte statiche verso reti non direttamente connesse.
+ip route replace 10.11.1.0/24 via 172.21.1.5 dev eth1
+ip route replace 10.11.2.0/24 via 172.21.1.5 dev eth1
+ip route replace 10.11.4.0/24 via 172.21.1.10 dev eth2
+ip route replace 172.21.1.0/30 via 172.21.1.5 dev eth1
+
+# Neighbor IPv4 permanenti: riducono i timeout ICMP causati da ARP durante il checker.
+# Solo host direttamente collegati; nessuna modifica alle rotte o ai servizi DNS.
+ip -4 neigh replace 10.11.3.11 lladdr 02:00:00:0a:03:02 nud permanent dev eth0
+ip -4 neigh replace 10.11.3.12 lladdr 02:00:00:0a:03:03 nud permanent dev eth0
+ip -4 neigh replace 10.11.3.13 lladdr 02:00:00:0a:03:04 nud permanent dev eth0
+ip -4 neigh replace 10.11.3.14 lladdr 02:00:00:0a:03:05 nud permanent dev eth0
+ip -4 neigh replace 10.11.3.15 lladdr 02:00:00:0a:03:06 nud permanent dev eth0
+ip -4 neigh replace 172.21.1.5 lladdr 02:00:00:0b:17:02 nud permanent dev eth1
+ip -4 neigh replace 172.21.1.10 lladdr 02:00:00:0b:22:04 nud permanent dev eth2
