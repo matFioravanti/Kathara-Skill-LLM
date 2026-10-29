@@ -1,102 +1,185 @@
-# Benchmark DNS: esperimenti con assegnazioni esplicite
+# Kathara-Skill-LLM — benchmark DNS su laboratori Kathara
 
-> Stato: il checkout non contiene attualmente baseline, prompt o correction reali.
-> I file in `experiments/` sono volutamente incompleti e non eseguibili. Il
-> formato seguente è supportato dal motore ed è verificato con fixture temporanee.
-> Le sezioni storiche più sotto descrivono l'interfaccia legacy per scenario.
+Il progetto valuta il comportamento di agenti LLM nella configurazione di servizi DNS su **laboratori Kathara preesistenti**, utilizzando un correttore manuale (`correction.yaml`) e il Kathara Lab Checker. Ogni esecuzione conserva la baseline, il prompt inviato, la soluzione prodotta dall'agente e le metriche di valutazione. Sono supportati gli agenti Codex e Antigravity; le cinque modalità Skill Codex sono descritte più avanti.
 
-Un **laboratorio** è una baseline Kathara; un **albero DNS** identifica il
-compito funzionale; il **livello** ne indica la complessità. Una formulazione
-T1–T5 (T6 facoltativo) presenta lo stesso compito; la relativa correction è
-unica per laboratorio, albero e livello, indipendentemente da prompt, skill e
-replica. La coerenza funzionale dei testi e della correction deve essere
-verificata da chi prepara i dati; il software non può dedurla dai nomi.
+## Stato del benchmark e ambito attuale
 
-La dimensione è fissata esplicitamente dal catalogo: `lab_01` usa `small`,
-`lab_02` usa `medium` e `lab_03` usa `large`. Ciascuno può essere associato
-agli alberi `aster`, `aurora` e `meridian`: le nove triple previste non sono
-automaticamente abilitate e richiedono risorse e assegnazioni esplicite.
+**La fase operativa corrente usa esclusivamente l'albero DNS `base`.** Le directory `aster`, `aurora` e `meridian` sono predisposte per esperimenti futuri, ma non devono essere incluse nelle esecuzioni Base e non richiedono ancora correction.
+
+I laboratori contengono **solo la rete IPv4 con routing statico**: la configurazione DNS è il compito assegnato all'agente, non è già presente nella baseline.
+
+| Lab | Livello | Router | PC | LAN | Zone DNS autoritative | Deleghe |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `lab_01` | `small` | 4 | 20 | 6 | 13 | 12 |
+| `lab_02` | `medium` | 8 | 40 | 10 | 31 | 30 |
+| `lab_03` | `large` | 12 | 60 | 15 | 49 | 48 |
+
+Ogni laboratorio ha la propria `lab.conf`, i file `<device>.startup` per gli apparati e **una correction Base per livello**, indipendente da tipo di prompt, modalità Skill e replica.
+
+## Struttura delle risorse
 
 ```text
-prompt/<dns_tree_id>/<task_level>/T1.md ... T5.md
-scenarios/<lab_id>/lab/lab.conf
-scenarios/<lab_id>/tasks/<dns_tree_id>/<task_level>/correction.yaml
-scenarios/<lab_id>/tasks/<dns_tree_id>/<task_level>/bindings.yaml  # facoltativo
-experiments/<experiment>.yaml
-runs/<experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/
-results/{runs.csv,checks.csv,summary.csv,benchmark.xlsx}
+scenarios/
+  lab_01/
+    lab/                                # lab.conf + *.startup, baseline DNS-free
+    tasks/base/small/correction.yaml
+  lab_02/
+    lab/
+    tasks/base/medium/correction.yaml
+  lab_03/
+    lab/
+    tasks/base/large/correction.yaml
+
+prompt/
+  base/
+    small/                              # 6 formulazioni, 01/04/07/10/13/16
+    medium/                             # 6 formulazioni, 02/05/08/11/14/17
+    large/                              # 6 formulazioni, 03/06/09/12/15/18
+
+experiments/
+  quick_test.yaml                       # una run: lab_01/base/small/T1/dns_only
+  thesis_final.yaml                     # matrice completa Base
+
+runs/
+  <experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/
+results/
+  runs.csv
+  checks.csv
+  summary.csv
+  benchmark.xlsx
 ```
 
-Esempio **dimostrativo**, senza risorse reali nel checkout:
+Le cartelle `tasks/aster`, `tasks/aurora` e `tasks/meridian` possono rimanere vuote: sono riservate a correction specifiche da creare solo quando si deciderà di testare tali alberi. **Non copiare automaticamente la correction `base`**, perché gli altri alberi prevedono nomi di zone e assegnazioni di macchine differenti.
 
-```yaml
-experiment:
-  id: example
-assignments:
-  - lab_id: lab_01
-    dns_tree_id: aurora
-    task_levels: [small]
-  - lab_id: lab_01
-    dns_tree_id: aster
-    task_levels: [small]
-  - lab_id: lab_03
-    dns_tree_id: aurora
-    task_levels: [large]
-prompt_types: [T1, T2]
-skill_modes: [no_skill, dns_only]
-repetitions: 2
+### Identificazione dei sei tipi di prompt
+
+I prompt sono in `prompt/<dns_tree_id>/<task_level>/` e usano **nomi descrittivi**. Il runner risolve automaticamente i file per tipo (T1–T6) e livello; mantiene un fallback al vecchio formato `T1.md`–`T6.md` per fixture e dati legacy.
+
+| Tipo | Categoria | Small | Medium | Large |
+| --- | --- | --- | --- | --- |
+| T1 | `technical_structured` | `01_technical_structured_small.md` | `02_technical_structured_medium.md` | `03_technical_structured_large.md` |
+| T2 | `technical_discursive` | `04_technical_discursive_small.md` | `05_technical_discursive_medium.md` | `06_technical_discursive_large.md` |
+| T3 | `nontechnical_discursive` | `07_nontechnical_discursive_small.md` | `08_nontechnical_discursive_medium.md` | `09_nontechnical_discursive_large.md` |
+| T4 | `nontechnical_unstructured` | `10_nontechnical_unstructured_small.md` | `11_nontechnical_unstructured_medium.md` | `12_nontechnical_unstructured_large.md` |
+| T5 | `graphical_tree` | `13_graphical_tree_small.md` | `14_graphical_tree_medium.md` | `15_graphical_tree_large.md` |
+| T6 | `json_structured` | `16_json_structured_small.md` | `17_json_structured_medium.md` | `18_json_structured_large.md` |
+
+Ogni gruppo di sei prompt descrive un compito DNS da valutare con **la stessa correction** del laboratorio e dell'albero. Il sistema controlla l'esistenza e la leggibilità delle risorse; la corrispondenza semantica completa tra tutte le formulazioni resta una proprietà da verificare nell'analisi sperimentale.
+
+### Correction e valutazione
+
+Le correction Base si trovano nei tre percorsi indicati sopra. Contengono controlli sulla topologia, sugli IP, sulle rotte statiche e sulle proprietà DNS attese: server autoritativi, resolver, record e verifiche mediante comandi, inclusi test su SOA, deleghe/NS, record A/MX e risoluzione dai client.
+
+Il runner legge la correction **prima** di invocare l'agente, ne conserva una copia in `evaluation/correction.yaml` ed esegue il Kathara Lab Checker **dopo** la generazione della soluzione. La correction non viene esposta nel workspace modificabile dell'agente.
+
+## Requisiti e ambiente
+
+- Python e dipendenze presenti in `requirements.txt` (inclusi `kathara` e `kathara_lab_checker`).
+- Docker e Kathara funzionanti sull'host, necessari per le esecuzioni effettive.
+- CLI dell'agente configurato e autenticata localmente.
+- Per il backend Codex attualmente configurato in `benchmark.yaml`: Docker Sandboxes (`sbx`), con disponibilità di daemon e autenticazione Codex nel sandbox.
+
+Preparazione dell'ambiente virtuale:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-La matrice è il prodotto delle triple esplicitamente dichiarate per prompt,
-modalità e replica (nell'esempio: 3 × 2 × 2 × 2 = 24), non il prodotto di
-laboratori e alberi. Le triple duplicate vengono rifiutate. Per aggiungere dati:
-preparare la baseline immutabile e prompt coerenti, creare una correction nel
-formato del checker per ogni tripla, verificare compatibilità e aggiungere solo
-le triple autorizzate all'experiment. Il preflight valida prompt, correction,
-macchine della correction e binding; la correttezza semantica DNS e la
-compatibilità di tutti i requisiti con la topologia richiedono verifica umana.
+Il file `benchmark.yaml` contiene l'agente, il modello, il backend di esecuzione, le Skill, i timeout e le impostazioni del checker. Non occorre modificare i laboratori o le correction per selezionare un esperimento.
 
-I prompt possono usare `{{server.device}}` e `{{server.address}}` con un file
-`bindings.yaml` nella directory della correction:
+## Esperimenti configurati
 
-```yaml
-server:
-  device: pc1
-  address: 192.0.2.1
+### `experiments/quick_test.yaml`
+
+Esegue **una sola run** con:
+
+- `lab_01`, `base`, `small`
+- prompt `T1`
+- modalità Skill `dns_only`
+- `repetitions: 1`
+
+### `experiments/thesis_final.yaml`
+
+Contiene le tre assegnazioni `lab_01/base/small`, `lab_02/base/medium` e `lab_03/base/large`, con `T1`–`T6` e cinque modalità Codex (`no_skill`, `creation_only`, `dns_only`, `both_forced`, `auto`).
+
+Con la ripetizione attualmente configurata, l'esperimento completo prevede **3 laboratori × 6 prompt × 5 modalità × 1 replica = 90 run**. Le modalità descrivono condizioni sperimentali già implementate nel repository; il lavoro sulle risorse Kathara del progetto segue le Skill specializzate.
+
+## Come eseguire i test
+
+Eseguire i comandi dalla **radice del repository**, con l'ambiente virtuale attivo.
+
+**1. Test automatici del repository:**
+
+```bash
+python -m pytest -q
 ```
 
-Il dispositivo deve comparire in `lab.conf` e l'indirizzo nel suo `.startup`;
-il testo concreto è salvato in `input/prompt.md`. Non sono supportati binding
-calcolati o generati da un modello. La correction è letta prima dell'agente e
-salvata per la valutazione, fuori dal workspace temporaneo dell'agente.
+**2. Verifica statica del quick test (senza avviare agenti o Kathara):**
 
-Con un experiment e risorse effettivamente disponibili:
-
-```sh
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml --dry-run
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml --lab lab_01 --dns-tree aurora --task-level small --prompt-type T1 --skill-mode no_skill --repetitions 1 --dry-run
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml --resume
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml --rerun-correction --dry-run
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml --rerun-correction
-.venv/bin/python scripts/run_benchmark.py --experiment experiments/example.yaml --dry-run
-.venv/bin/python scripts/aggregate_results.py
-.venv/bin/python scripts/analyze_results.py
+```bash
+python scripts/run_experiment.py experiments/quick_test.yaml --dry-run
 ```
 
-I filtri valgono anche per resume e rivalutazione. Il dry-run controlla le
-risorse senza avviare Kathara o un modello. `rNNN` è il numero fisico allocato
-atomicamente; `replicate` è la ripetizione logica. Una run `COMPLETED` con
-risultato funzionale negativo resta un'osservazione valida per resume. La
-rivalutazione usa l'identità originale, non riesegue l'agente e conserva la
-revisione precedente in `evaluation/history/`. Le run storiche sono aggregate
-con albero e livello sconosciuti; la rivalutazione legacy usa solo la vecchia
-correction dello scenario, senza dedurre un'identità DNS nuova.
+**3. Prima esecuzione completa di prova:**
 
+```bash
+python scripts/run_experiment.py experiments/quick_test.yaml
+```
+
+**4. Visualizzazione della matrice Base (90 run, senza eseguirle):**
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --dry-run
+```
+
+**5. Avvio del benchmark completo:**
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml
+```
+
+È possibile limitare la matrice a un singolo caso, per esempio Lab 02/T3 con Skill DNS:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml \
+  --lab lab_02 --dns-tree base --task-level medium \
+  --prompt-type T3 --skill-mode dns_only --dry-run
+```
+
+Rimuovere `--dry-run` solo quando si intende eseguire la run. I comandi di ripresa o rivalutazione sono:
+
+```bash
+python scripts/run_experiment.py experiments/thesis_final.yaml --resume
+python scripts/run_experiment.py experiments/thesis_final.yaml --rerun-correction --dry-run
+python scripts/run_experiment.py experiments/thesis_final.yaml --rerun-correction
+```
+
+`--resume` evita di ripetere osservazioni già completate; `--rerun-correction` rivaluta run già presenti senza rilanciare l'agente. Si possono usare i filtri `--lab`, `--dns-tree`, `--task-level`, `--prompt-type` e `--skill-mode`.
+
+Il runner `scripts/run_benchmark.py` può delegare all'interfaccia attuale usando `--experiment`, ma **per i nuovi esperimenti Base è consigliato `scripts/run_experiment.py`**. Le opzioni legacy basate su `--scenario` e `--all` senza un experiment non descrivono questa struttura di correction.
+
+## Risultati e riproducibilità
+
+Ogni run ha la propria directory sotto `runs/<experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/` e conserva, tra gli altri, `manifest.json`, `input/lab/`, `input/prompt.md`, `lab/`, i log dell'agente e `evaluation/correction.yaml`.
+
+L'aggregazione produce `results/runs.csv`, `results/checks.csv`, `results/summary.csv` e `results/benchmark.xlsx`. Lo stato dell'esecuzione (`pipeline_state`) va distinto dall'esito funzionale (`task_success`): una run `COMPLETED` può correttamente avere `task_success: false`.
+
+## Estensioni future
+
+Il catalogo ammette anche `aster`, `aurora` e `meridian`, ma la fase Base non li usa. Per abilitarli serviranno correction coerenti con i relativi prompt e assegnazioni esplicite negli YAML degli esperimenti; non è necessario modificare la rete di partenza per questo scopo.
+
+I binding facoltativi in `tasks/<dns_tree_id>/<task_level>/bindings.yaml` permettono di sostituire nei prompt `{{server.device}}` e `{{server.address}}`; la risoluzione valida il dispositivo e l'indirizzo rispetto a `lab.conf` e al relativo `.startup`.
 
 ---
 
-# Kathara Skill LLM Benchmark
+## Documentazione storica: runner legacy e componenti avanzati
+
+> **Attenzione:** la sezione seguente è conservata come riferimento per l'interfaccia legacy e per dettagli su backend, telemetria, Skill e report. Alcuni esempi e percorsi qui sotto usano il vecchio formato `scenarios/<scenario>/correction.yaml`, `prompt/<scenario>/T1.md` o esperimenti basati su `scenarios:`. **Per i laboratori Base correnti seguire esclusivamente le sezioni aggiornate qui sopra.**
+
+### Kathara Skill LLM Benchmark (archivio)
+
 
 Reproducible benchmark for evaluating CLI LLM agents that configure DNS and web services in Kathara network emulation laboratories. The supported agents are **Codex CLI** and **Antigravity CLI (agy)**, each using strictly local authentication. Codex additionally supports fully isolated execution inside ephemeral **Docker Sandboxes (`sbx`)**.
 
