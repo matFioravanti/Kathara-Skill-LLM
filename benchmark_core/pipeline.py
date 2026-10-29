@@ -273,13 +273,13 @@ def reevaluate_run(config, run: Path) -> Path:
     ):
         raise ValueError(f"AUT non completato; run non rivalutata: {run}")
 
-    from .task_catalog import TaskAssignment
+    from .task_catalog import historical_correction_path
     lab_id, tree, level = (manifest.get(key) for key in ("lab_id", "dns_tree_id", "task_level"))
     if all(key not in manifest for key in ("lab_id", "dns_tree_id", "task_level")) and manifest.get("scenario_id"):
         # Legacy runs retain the original legacy oracle; never infer a DNS tree.
         source = correction_path(config.root, manifest["scenario_id"])
     else:
-        assignment = TaskAssignment(lab_id, tree, level)
+        source = historical_correction_path(config.root, lab_id, tree, level)
         experiment_id = manifest.get("experiment_id")
         prompt_type = manifest.get("prompt_type")
         skill_mode = manifest.get("skill_mode")
@@ -292,7 +292,6 @@ def reevaluate_run(config, run: Path) -> Path:
         expected_parent = (config.root / "runs" / experiment_id / lab_id / tree / level / prompt_type / skill_mode)
         if run.parent.resolve() != expected_parent.resolve() or not re.fullmatch(r"r\d{3,}", run.name):
             raise ValueError("Il percorso della run non corrisponde alla sua identità")
-        source = correction_path(config.root, assignment)
     # read_correction valida prima che qualunque snapshot/report esistente venga toccato.
     content, digest = read_correction(source)
     if tree is not None:

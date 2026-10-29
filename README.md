@@ -12,6 +12,11 @@ unica per laboratorio, albero e livello, indipendentemente da prompt, skill e
 replica. La coerenza funzionale dei testi e della correction deve essere
 verificata da chi prepara i dati; il software non può dedurla dai nomi.
 
+La dimensione è fissata esplicitamente dal catalogo: `lab_01` usa `small`,
+`lab_02` usa `medium` e `lab_03` usa `large`. Ciascuno può essere associato
+agli alberi `aster`, `aurora` e `meridian`: le nove triple previste non sono
+automaticamente abilitate e richiedono risorse e assegnazioni esplicite.
+
 ```text
 prompt/<dns_tree_id>/<task_level>/T1.md ... T5.md
 scenarios/<lab_id>/lab/lab.conf
@@ -28,12 +33,15 @@ Esempio **dimostrativo**, senza risorse reali nel checkout:
 experiment:
   id: example
 assignments:
-  - lab_id: lab_example
-    dns_tree_id: tree_example
-    task_levels: [small, large]
-  - lab_id: lab_example
-    dns_tree_id: another_tree
+  - lab_id: lab_01
+    dns_tree_id: aurora
     task_levels: [small]
+  - lab_id: lab_01
+    dns_tree_id: aster
+    task_levels: [small]
+  - lab_id: lab_03
+    dns_tree_id: aurora
+    task_levels: [large]
 prompt_types: [T1, T2]
 skill_modes: [no_skill, dns_only]
 repetitions: 2
@@ -66,7 +74,7 @@ Con un experiment e risorse effettivamente disponibili:
 
 ```sh
 .venv/bin/python scripts/run_experiment.py experiments/example.yaml --dry-run
-.venv/bin/python scripts/run_experiment.py experiments/example.yaml --lab lab_example --dns-tree tree_example --task-level small --prompt-type T1 --skill-mode no_skill --repetitions 1 --dry-run
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml --lab lab_01 --dns-tree aurora --task-level small --prompt-type T1 --skill-mode no_skill --repetitions 1 --dry-run
 .venv/bin/python scripts/run_experiment.py experiments/example.yaml
 .venv/bin/python scripts/run_experiment.py experiments/example.yaml --resume
 .venv/bin/python scripts/run_experiment.py experiments/example.yaml --rerun-correction --dry-run
