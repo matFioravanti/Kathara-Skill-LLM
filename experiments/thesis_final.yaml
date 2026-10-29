@@ -1,7 +1,15 @@
-# Configurazione incompleta: aggiungere soltanto assegnazioni reali validate.
 experiment:
   id: thesis_final
-assignments: []
-prompt_types: [T1, T2, T3, T4, T5]
+assignments:
+  - lab_id: lab_01
+    dns_tree_id: base
+    task_levels: [small]
+  - lab_id: lab_02
+    dns_tree_id: base
+    task_levels: [medium]
+  - lab_id: lab_03
+    dns_tree_id: base
+    task_levels: [large]
+prompt_types: [T1, T2, T3, T4, T5, T6]
 skill_modes: [no_skill, creation_only, dns_only, both_forced, auto]
 repetitions: 1

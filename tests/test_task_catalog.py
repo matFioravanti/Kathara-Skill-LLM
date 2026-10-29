@@ -55,7 +55,7 @@ def test_paths_distinguish_levels_and_reject_unsafe_ids(tmp_path):
         prompt_path(tmp_path, 'aurora', 'medium', 'T7')
 
 
-def test_matrix_contains_only_declared_nine_assignments(tmp_path):
+def test_matrix_contains_only_declared_assignments(tmp_path):
     entries = [{'lab_id': lab, 'dns_tree_id': tree, 'task_levels': [level]}
                for lab, level in LAB_LEVELS.items() for tree in DNS_TREES]
     data = {'experiment': {'id': 'test'}, 'assignments': entries,
@@ -66,7 +66,7 @@ def test_matrix_contains_only_declared_nine_assignments(tmp_path):
     path.write_text(yaml.safe_dump(data))
     spec = load_experiment(path)
     cells = build_run_matrix(spec)
-    assert len(cells) == 225
+    assert len(cells) == len(entries) * 25
     assert {cell.assignment for cell in cells} == set(parse_assignments(entries))
     data['assignments'][0]['task_levels'] = ['medium']
     path.write_text(yaml.safe_dump(data))

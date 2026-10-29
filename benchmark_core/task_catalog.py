@@ -11,9 +11,14 @@ import re
 from .prompts import PROMPT_TYPES
 
 TASK_LEVELS = ("small", "medium", "large")
-DNS_TREES = ("aster", "aurora", "meridian")
+DNS_TREES = ("aster", "aurora", "meridian", "base")
 LAB_LEVELS = MappingProxyType({"lab_01": "small", "lab_02": "medium", "lab_03": "large"})
 _ID = re.compile(r"[A-Za-z0-9_-]+\Z")
+_PROMPT_CATEGORIES = {
+    "T1": "technical_structured", "T2": "technical_discursive",
+    "T3": "nontechnical_discursive", "T4": "nontechnical_unstructured",
+    "T5": "graphical_tree", "T6": "json_structured",
+}
 
 
 def _identifier(value: str, label: str) -> str:
@@ -68,7 +73,14 @@ def prompt_path(root: Path, dns_tree_id: str, task_level: str, prompt_type: str)
         raise ValueError(f"task_level non valido: {task_level!r}")
     if prompt_type not in PROMPT_TYPES:
         raise ValueError(f"prompt_type non valido: {prompt_type!r}")
-    return root / "prompt" / dns_tree_id / task_level / f"{prompt_type}.md"
+    directory = root / "prompt" / dns_tree_id / task_level
+    number = 3 * (PROMPT_TYPES.index(prompt_type)) + TASK_LEVELS.index(task_level) + 1
+    descriptive = directory / f"{number:02d}_{_PROMPT_CATEGORIES[prompt_type]}_{task_level}.md"
+    # Prefer the descriptive filename when present, including dangling symlinks
+    # so that resolve_prompt can reject them instead of silently falling back.
+    if descriptive.exists() or descriptive.is_symlink():
+        return descriptive
+    return directory / f"{prompt_type}.md"
 
 
 def task_correction_path(root: Path, assignment: TaskAssignment) -> Path:
