@@ -1,4 +1,0 @@
-zone "." {
-        type hint;
-        file "/etc/bind/root.hints";
-};

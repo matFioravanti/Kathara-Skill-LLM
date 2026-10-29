@@ -1,1 +1,0 @@
-ip -6 address add 2001:8::1/64 dev eth0
