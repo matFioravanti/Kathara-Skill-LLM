@@ -1,0 +1,1 @@
+2026-10-29T08:57:48.854139Z ERROR codex_core::session::session: failed to load skill /private/tmp/tesi-gate-pilot-vk3h8rn6/lab-positive/.codex/skills/kathara-dns/SKILL.md: missing field `description`

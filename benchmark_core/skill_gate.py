@@ -21,7 +21,8 @@ FIELDS = ('skill_gate_enabled', 'skill_gate_status', 'skill_gate_required_skills
           'write_phase_input_tokens', 'write_phase_output_tokens',
           'skill_gate_isolation_verified', 'skill_gate_isolation_violations',
           'skill_gate_context_strategy', 'skill_gate_backend',
-          'skill_gate_protocol_version', 'skill_gate_state_history')
+          'skill_gate_protocol_version', 'skill_gate_state_history',
+          'skill_gate_certification', 'skill_gate_context_continuity_verified')
 
 
 class SkillGateError(RuntimeError):
@@ -48,6 +49,8 @@ def gate_record(required, backend):
             'skill_gate_isolation_verified': None, 'skill_gate_isolation_violations': None,
             'skill_gate_context_strategy': None, 'skill_gate_backend': backend,
             'skill_gate_protocol_version': PROTOCOL,
+            'skill_gate_certification': 'NOT_RUN',
+            'skill_gate_context_continuity_verified': None,
             'skill_gate_state_history': [{'status': 'unsupported_backend' if required else 'not_required', 'timestamp': utc_now()}]}
 
 
@@ -67,7 +70,7 @@ def enforce_or_block(config, run: Path, agent: str, mode: str):
         raise SkillGateError(f'unsupported_backend: {backend} has no verified protected read phase')
 
 
-def evaluate_read_evidence(run: Path, metadata: dict, events: list[dict], *, returncode: int | None, timed_out: bool):
+def evaluate_read_evidence(run: Path, metadata: dict, events: list[dict], *, returncode: int | None, timed_out: bool, phase='A'):
     """Evaluate saved phase-A evidence; this function alone never opens the gate.
 
     A future backend must provide independently verified isolation, non-truncated
@@ -76,6 +79,22 @@ def evaluate_read_evidence(run: Path, metadata: dict, events: list[dict], *, ret
     required = list(mode_details(metadata['skill_mode']).forced_skills)
     if not required:
         return {'status': 'not_required', 'verified_skills': [], 'blocked': False}
+    if phase != 'A':
+        return {'status': 'invalid_evidence_phase', 'verified_skills': [], 'blocked': True}
+    # Once phase-separated artifacts exist, never fall back to the historical
+    # aggregate stream, which can contain reads performed after gate opening.
+    phase_root = run / 'logs/aut/phase_a'
+    trace_path = phase_root / 'events.jsonl'
+    if (metadata.get('skill_protocol') == PROTOCOL or phase_root.exists()
+            or (run / 'logs/aut/phase_b').exists()):
+        try:
+            saved = [json.loads(line) for line in trace_path.read_text(encoding='utf-8').splitlines() if line.strip()]
+        except (OSError, ValueError):
+            return {'status': 'invalid_phase_a_artifact', 'verified_skills': [], 'blocked': True}
+        if saved != events:
+            return {'status': 'phase_a_evidence_mismatch', 'verified_skills': [], 'blocked': True}
+    else:
+        trace_path = run / 'logs/aut/events.jsonl'
     if timed_out:
         return {'status': 'read_phase_timeout', 'verified_skills': [], 'blocked': True}
     if (returncode != 0 or not any(e.get('type') == 'turn.completed' for e in events)
@@ -92,11 +111,30 @@ def evaluate_read_evidence(run: Path, metadata: dict, events: list[dict], *, ret
         if item.get('type') == 'file_change' and event.get('type') == 'item.completed' and item.get('status') == 'completed':
             return {'status': 'isolation_violation', 'verified_skills': [], 'blocked': True}
         safe_events.append(event)
-    _, compliance = observe(run, metadata, safe_events)
+    _, compliance = observe(run, metadata, safe_events, trace_path=trace_path)
     details = compliance['skill_details']
     verified = [s for s in required if details[s]['complete_read_verified'] is True and details[s]['dedicated_read'] is True]
     return {'status': 'evidence_verified' if len(verified) == len(required) else 'verification_failed',
             'verified_skills': verified, 'blocked': len(verified) != len(required)}
+
+
+def certification_outcome(checks):
+    """Classify observed checks only: None means NOT_RUN, False means failure.
+
+    Reading verifies returned bytes, never understanding or correct application.
+    No backend is enabled by this reporting function.
+    """
+    required = ('isolation', 'read', 'continuity', 'phase_b')
+    values = [checks.get(key) for key in required]
+    if any(value is not None and type(value) is not bool for value in values):
+        raise ValueError('Certification checks must be bool or None')
+    if any(value is False for value in values):
+        return 'FAILED'
+    if all(value is True for value in values):
+        return 'CERTIFIED'
+    if any(value is True for value in values):
+        return 'PARTIALLY_VERIFIED'
+    return 'NOT_RUN'
 
 
 def read_gate_metrics(run: Path):

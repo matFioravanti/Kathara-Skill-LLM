@@ -231,6 +231,9 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             raise
     finally:
         manifest["completed_at"] = utc_now()
+        if (run / "logs/aut/skill_gate.json").is_file():
+            from .skill_gate import read_gate_metrics
+            manifest.update(read_gate_metrics(run))
         write_json(run / "manifest.json", manifest)
         evaluation = run / "evaluation"
         evaluation.mkdir(parents=True, exist_ok=True)

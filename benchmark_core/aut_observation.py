@@ -390,8 +390,8 @@ def _skill_verification(items, metadata, required, trace):
             'strict_status': 'not_required' if relevant == [] else 'verified' if protocol_ok is True else 'read_after_modification' if all_before is False else 'not_dedicated' if protocol_ok is False else 'unverified' if trace else 'unknown'}
 
 
-def observe(run, metadata, events):
-    trace = (run / 'logs/aut/events.jsonl').is_file() and bool(events)
+def observe(run, metadata, events, *, trace_path=None):
+    trace = (trace_path if trace_path is not None else run / 'logs/aut/events.jsonl').is_file() and bool(events)
     attempts = calls = candidates = local = uncertain = 0
     result_domains, visited_domains, observed = set(), set(), set()
     other_external = False

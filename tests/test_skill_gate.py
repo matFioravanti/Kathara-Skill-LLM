@@ -94,6 +94,8 @@ def test_gate_reports_json_csv_excel(tmp_path):
     data = make_metrics(run, manifest, total_seconds=2, checker_seconds=None, checker_outcome=None)
     assert data['skill_gate_status'] == 'unsupported_backend' and data['skill_gate_input_tokens'] is None
     assert data['skill_gate_protocol_version'] == 'enforced_read_v1'
+    assert data['skill_gate_certification'] == 'NOT_RUN'
+    assert data['skill_gate_context_continuity_verified'] is None
     assert data['skill_gate_isolation_verified'] is None and data['skill_gate_write_seconds'] is None
     assert data['skill_gate_state_history'][0]['status'] == 'unsupported_backend'
     (run / 'evaluation').mkdir()
@@ -132,6 +134,9 @@ def test_pipeline_fails_closed_before_checker(tmp_path, monkeypatch):
     manifest = json.loads((run / 'manifest.json').read_text())
     metrics = json.loads((run / 'evaluation/metrics.json').read_text())
     assert manifest['pipeline_state'] == 'AUT_FAILED' and manifest['skill_protocol'] == 'enforced_read_v1'
+    assert manifest['skill_gate_status'] == 'unsupported_backend'
+    assert manifest['skill_gate_certification'] == 'NOT_RUN'
+    assert manifest['skill_gate_context_continuity_verified'] is None
     assert metrics['skill_gate_status'] == 'unsupported_backend' and metrics['skill_gate_blocked'] is True
     assert (run / 'lab/lab.conf').read_text() == 'original'
     assert not (run / 'evaluation/correction.yaml').exists()
@@ -157,3 +162,53 @@ def test_gate_rejects_changed_lab_and_wrong_hash(tmp_path):
     assert evidence(tmp_path, 'dns_only', [read('kathara-dns', content), change], meta)['status'] == 'isolation_violation'
     assert evidence(tmp_path, 'dns_only', [read('kathara-dns', content)], {'dns_skill_sha256': '0' * 64})['blocked'] is True
     assert evidence(tmp_path, 'dns_only', [read('kathara-dns', content[:-1])], meta)['blocked'] is True
+
+
+def test_phase_b_reads_cannot_verify_phase_a(tmp_path):
+    content, meta = fixture('kathara-dns')
+    metadata = {'agent': 'codex', 'skill_mode': 'dns_only', **meta}
+    a = [{'type': 'turn.completed'}]
+    b = [read('kathara-dns', content), {'type': 'turn.completed'}]
+    for phase, events in [('phase_a', a), ('phase_b', b)]:
+        path = tmp_path / 'logs/aut' / phase / 'events.jsonl'
+        path.parent.mkdir(parents=True)
+        path.write_text('\n'.join(json.dumps(e) for e in events))
+    assert evaluate_read_evidence(tmp_path, metadata, a, returncode=0, timed_out=False)['blocked']
+    assert evaluate_read_evidence(tmp_path, metadata, b, returncode=0, timed_out=False)['status'] == 'phase_a_evidence_mismatch'
+    assert evaluate_read_evidence(tmp_path, metadata, b, returncode=0, timed_out=False, phase='B')['status'] == 'invalid_evidence_phase'
+
+
+def test_separate_phase_a_needs_no_legacy_stream(tmp_path):
+    content, meta = fixture('kathara-dns')
+    events = [read('kathara-dns', content), {'type': 'turn.completed'}]
+    path = tmp_path / 'logs/aut/phase_a/events.jsonl'
+    path.parent.mkdir(parents=True)
+    path.write_text('\n'.join(json.dumps(e) for e in events))
+    metadata = {'agent': 'codex', 'skill_mode': 'dns_only', **meta}
+    assert not evaluate_read_evidence(tmp_path, metadata, events, returncode=0, timed_out=False)['blocked']
+    path.write_text('{truncated')
+    assert evaluate_read_evidence(tmp_path, metadata, events, returncode=0, timed_out=False)['status'] == 'invalid_phase_a_artifact'
+    path.unlink()
+    assert evaluate_read_evidence(tmp_path, metadata, events, returncode=0, timed_out=False)['blocked']
+
+
+def test_enforced_protocol_never_uses_legacy_stream(tmp_path):
+    content, meta = fixture('kathara-dns')
+    events = [read('kathara-dns', content), {'type': 'turn.completed'}]
+    path = tmp_path / 'logs/aut/events.jsonl'
+    path.parent.mkdir(parents=True)
+    path.write_text('\n'.join(json.dumps(e) for e in events))
+    metadata = {'agent': 'codex', 'skill_mode': 'dns_only', 'skill_protocol': 'enforced_read_v1', **meta}
+    assert evaluate_read_evidence(tmp_path, metadata, events, returncode=0, timed_out=False)['status'] == 'invalid_phase_a_artifact'
+
+
+@pytest.mark.parametrize('checks,expected', [
+    ({}, 'NOT_RUN'),
+    ({'read': True}, 'PARTIALLY_VERIFIED'),
+    ({'isolation': True, 'read': True, 'continuity': None, 'phase_b': True}, 'PARTIALLY_VERIFIED'),
+    ({'isolation': False, 'read': True}, 'FAILED'),
+    (dict.fromkeys(('isolation', 'read', 'continuity', 'phase_b'), True), 'CERTIFIED'),
+])
+def test_certification_requires_all_components(checks, expected):
+    from benchmark_core.skill_gate import certification_outcome
+    assert certification_outcome(checks) == expected

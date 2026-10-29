@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "isolation": true,
+    "read": true,
+    "continuity": true,
+    "phase_b": true
+  },
+  "phase_b_started": true,
+  "model_attempts": 2,
+  "cleanup": [
+    true,
+    true
+  ],
+  "gate": {
+    "status": "evidence_verified",
+    "verified_skills": [
+      "kathara-dns"
+    ],
+    "blocked": false
+  },
+  "session_a": "01a186e1-3619-71d0-9f0b-293778db9b24",
+  "session_b": "01a186e1-3619-71d0-9f0b-293778db9b24",
+  "certification": "PARTIALLY_VERIFIED",
+  "probe_outcome": "CERTIFIED",
+  "certification_checks": {
+    "isolation": null,
+    "read": true,
+    "continuity": true,
+    "phase_b": true
+  },
+  "security_scope": "Observed probes only; exhaustive alternate service/tool paths not verified"
+}

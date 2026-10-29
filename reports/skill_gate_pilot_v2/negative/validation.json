@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "isolation": true,
+    "read": null,
+    "continuity": null,
+    "phase_b": null
+  },
+  "phase_b_started": false,
+  "model_attempts": 1,
+  "cleanup": [
+    true
+  ],
+  "gate": {
+    "status": "verification_failed",
+    "verified_skills": [],
+    "blocked": true
+  },
+  "negative_control_passed": true,
+  "certification": "NOT_RUN",
+  "probe_outcome": "PARTIALLY_VERIFIED",
+  "certification_checks": {
+    "isolation": null,
+    "read": null,
+    "continuity": null,
+    "phase_b": null
+  },
+  "security_scope": "Observed probes only; exhaustive alternate service/tool paths not verified"
+}
