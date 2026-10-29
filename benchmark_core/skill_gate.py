@@ -78,9 +78,21 @@ def evaluate_read_evidence(run: Path, metadata: dict, events: list[dict], *, ret
         return {'status': 'not_required', 'verified_skills': [], 'blocked': False}
     if timed_out:
         return {'status': 'read_phase_timeout', 'verified_skills': [], 'blocked': True}
-    if returncode != 0 or not any(e.get('type') == 'turn.completed' for e in events):
+    if (returncode != 0 or not any(e.get('type') == 'turn.completed' for e in events)
+            or any(e.get('type') in ('turn.failed', 'error') for e in events)):
         return {'status': 'read_phase_failed', 'verified_skills': [], 'blocked': True}
-    _, compliance = observe(run, metadata, events)
+    # A shell read with no exit code is not proof of a successful read.
+    # Preserve its started event for traceability but exclude its incomplete result.
+    safe_events = []
+    for event in events:
+        item = event.get('item') if isinstance(event.get('item'), dict) else {}
+        if (item.get('type') == 'command_execution' and event.get('type') == 'item.completed'
+                and (type(item.get('exit_code')) is not int or item['exit_code'] != 0)):
+            continue
+        if item.get('type') == 'file_change' and event.get('type') == 'item.completed' and item.get('status') == 'completed':
+            return {'status': 'isolation_violation', 'verified_skills': [], 'blocked': True}
+        safe_events.append(event)
+    _, compliance = observe(run, metadata, safe_events)
     details = compliance['skill_details']
     verified = [s for s in required if details[s]['complete_read_verified'] is True and details[s]['dedicated_read'] is True]
     return {'status': 'evidence_verified' if len(verified) == len(required) else 'verification_failed',

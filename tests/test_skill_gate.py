@@ -135,3 +135,25 @@ def test_pipeline_fails_closed_before_checker(tmp_path, monkeypatch):
     assert metrics['skill_gate_status'] == 'unsupported_backend' and metrics['skill_gate_blocked'] is True
     assert (run / 'lab/lab.conf').read_text() == 'original'
     assert not (run / 'evaluation/correction.yaml').exists()
+
+
+def test_gate_rejects_unproven_exit_and_turn_failure(tmp_path):
+    content, meta = fixture('kathara-dns')
+    without_exit = read('kathara-dns', content)
+    del without_exit['item']['exit_code']
+    assert evidence(tmp_path, 'dns_only', [without_exit], meta)['status'] == 'verification_failed'
+    failed = read('kathara-dns', content)
+    failed['item']['exit_code'] = 1
+    assert evidence(tmp_path, 'dns_only', [failed], meta)['blocked'] is True
+    path = tmp_path / 'logs/aut/events.jsonl'
+    events = [read('kathara-dns', content), {'type': 'turn.completed'}, {'type': 'turn.failed'}]
+    path.write_text('\n'.join(json.dumps(x) for x in events))
+    assert evaluate_read_evidence(tmp_path, {'agent':'codex', 'skill_mode':'dns_only', **meta}, events, returncode=0, timed_out=False)['status'] == 'read_phase_failed'
+
+
+def test_gate_rejects_changed_lab_and_wrong_hash(tmp_path):
+    content, meta = fixture('kathara-dns')
+    change = {'type': 'item.completed', 'item': {'id': 'write', 'type': 'file_change', 'status': 'completed'}}
+    assert evidence(tmp_path, 'dns_only', [read('kathara-dns', content), change], meta)['status'] == 'isolation_violation'
+    assert evidence(tmp_path, 'dns_only', [read('kathara-dns', content)], {'dns_skill_sha256': '0' * 64})['blocked'] is True
+    assert evidence(tmp_path, 'dns_only', [read('kathara-dns', content[:-1])], meta)['blocked'] is True
