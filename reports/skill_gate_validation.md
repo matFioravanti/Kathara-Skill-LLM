@@ -8,6 +8,73 @@ La run DNS reale su copia di `lab00_five_router`, prompt T1 e correction origina
 
 La certificazione è riferita all'ambiente locale descritto e ai confini verificati: mount, identità, capability, configurazione degli strumenti, continuità e transizione. Non si estende al backend host, ad altre versioni/configurazioni o al vecchio protocollo strettamente bloccante senza `recovery_v1`, che conserva `unsupported_backend`.
 
+## Validazione finale delle statistiche e delle modalità Skill
+
+Verifica del 29 ottobre 2026 sul commit `026dfb0911f11b41d35184c39ad37d7bdee9a33a` più le modifiche locali qui descritte; nessun commit successivo all'inizio e working tree inizialmente pulito.
+
+### Correzione delle statistiche
+
+Per `enforced_read_v1 + recovery_v1`, `strict_verified_runs` conta solo `skill_autonomous_read_before_write=true`: una lettura iniziale o dopo retry è positiva; il fallback, anche misto ad altre letture, non è una lettura autonoma completa. Il denominatore stretto include solo i valori booleani osservati: il fallback verificato è incluso come `false`, mentre `null` è escluso. Il rapporto è `null` quando il denominatore è zero. La consegna è misurata indipendentemente da `skill_delivery_verified_runs` e dalle metriche di fallback.
+
+Per i protocolli storici, compreso `explicit_read_v2`, si conserva il conteggio precedente basato su `protocol_compliance_observed` e sul numero di run con Skill richieste, inclusi i valori non osservati nel denominatore. I tre campi storici `strict_verified_runs`, `strict_compliance_denominator` e `strict_observed_compliance_rate` coincidono per tutti i 76 gruppi nel ricalcolo temporaneo.
+
+`skill_technical_error_runs` e `skill_gate_error_runs` contano errori del gate prima dell'apertura di B. `agent_post_gate_error_runs` conta errori dell'AUT nella fase B dopo lo sblocco; `checker_error_runs` e `correction_error_runs` contano separatamente gli errori rispettivi, anche nelle modalità senza gate. `skill_unclassified_error_runs` conserva gli errori AUT per cui non è possibile stabilire la fase, inclusi errori dopo una B già completata che potrebbero riguardare cleanup o sincronizzazione. Le statistiche per Skill applicano la stessa distinzione. Un controllo funzionale fallito con checker terminato regolarmente non è un errore tecnico del checker o del gate.
+
+### Modalità e tipo di evidenza
+
+| Modalità | Verifica deterministica | Evidenza reale Codex e checker |
+|---|---|---|
+| `no_skill` | Nessuna lettura imposta; comportamento e prompt verificati dai test. | Nessun nuovo pilota; 15 run storiche `explicit_read_v1`, non prova del nuovo protocollo. |
+| `creation_only` | Gate, metodi, conteggi e transizione al checker simulato verificati. | Nuovo pilota `recovery_v1`: gate completato, Creation letta tramite tool, checker 132/132. |
+| `dns_only` | Gate e metriche verificati dai test. | Pilota `recovery_v1` precedente: gate completato, DNS letta tramite tool, checker 132/132; non rieseguito. |
+| `both_forced` | Entrambe le Skill, letture miste/fallback e denominatori verificati. | Nuovo pilota `recovery_v1`: entrambe lette tramite tool, gate completato, checker 131/132. |
+| `auto` | Discovery autonoma senza lettura imposta, verificata dai test. | Nessun nuovo pilota; 15 run storiche `explicit_read_v1`, non prova del nuovo protocollo. |
+
+I test che usano sessioni e checker simulati non sono presentati come prove del processo Codex o del checker reali. Il pilota precedente `dns_only` e le run storiche sono rimasti invariati.
+
+### Nuovi piloti reali
+
+Eseguiti esattamente i due casi richiesti, in sequenza, con `lab00_five_router`, prompt T1, Skill e correction originali copiate in workspace isolati. Nessun retry o fallback è stato necessario: ogni caso ha usato un turno A e un turno B, per **4 turni Codex complessivi**. L'autenticazione e il modello sono quelli già configurati; nessuna run ufficiale è stata aggiunta o riscritta.
+
+| Pilota | Gate e metodi | Checker | Tempo totale | Token totali | Anomalie |
+|---|---|---|---:|---:|---|
+| `creation_only` | `completed`, `CERTIFIED`; `kathara-creation: read_verified` | Terminato, 132 superati / 0 falliti | 173,44 s | 191.735 | Nessuna rilevata |
+| `both_forced` | `completed`, `CERTIFIED`; Creation e DNS entrambe `read_verified` | Terminato, 131 superati / 1 fallito | 178,82 s | 205.554 | HTTP su pc1: atteso 200, ottenuto 0 |
+
+I token totali sono input + output; i cached input sono già inclusi nell'input. Il fallimento HTTP del secondo caso è un risultato funzionale del laboratorio prodotto, non invalida il gate e non indica un errore di esecuzione del checker. Nei due report sono tutti superati i 20 controlli classificati esplicitamente DNS: 16 authority, 2 resolution e 2 record. Gli altri check possono includere verifiche correlate tra le categorie custom.
+
+| Pilota | A: secondi; token input/output | Retry | Fallback | B: secondi; token input/output | Verifica gate | Checker |
+|---|---|---|---|---|---:|---:|
+| `creation_only` | 7,89 s; 22.020 / 150 | Non attivato | Non attivato | 113,50 s; 165.491 / 4.074 | 0,0055 s | 22,56 s |
+| `both_forced` | 12,99 s; 37.582 / 271 | Non attivato | Non attivato | 117,40 s; 163.483 / 4.218 | 0,0061 s | 20,94 s |
+
+I valori non osservabili delle fasi non attivate restano `null`. I tempi totali del gate, inclusi gli overhead di sandbox e verifica, sono rispettivamente 150,76 s e 157,75 s. Gli overhead sandbox misurati sono 28,72 s e 26,71 s; non vanno sommati una seconda volta ai totali del gate.
+
+La sessione A/B è rimasta identica in ciascun caso: `01a1873e-7b31-7212-83fd-7e6a61c18204` e `01a18741-3f67-7b30-b717-2bd17fc62fc6`. Audit automatico di mount A/B, identità/capability del processo, hash delle Skill canoniche, prompt, correction, baseline e avvio/cleanup checker: tutte le verifiche richieste sono passate. Dettagli in `skill_gate_modes_pilot/audit.json`; eventi grezzi, metriche e risultati checker sono nei rispettivi sottodirectory `creation_real/` e `both_real/`.
+
+### Test, integrità e disponibilità per la campagna
+
+Prima dei due piloti, la suite completa ha riportato **275 superati, 0 falliti, 3 saltati**, più 12 sottotest superati. Dopo gli ultimi controlli deterministici aggiuntivi, la regressione finale ha riportato **277 superati, 0 falliti, 3 saltati**, più 12 sottotest superati. I tre skip sono i test Docker opt-in; il test preesistente del ciclo di vita sandbox shell è stato eseguito. I test coprono lettura diretta, retry, fallback e metodi misti, errori dei quattro stadi, fase non classificabile, valori sconosciuti e semantica storica.
+
+Il ricalcolo temporaneo in `/private/tmp/tesi-skill-modes-historical-final` ha letto **76 run, 32.257 check e 76 gruppi**. Confrontati i campi strict storici e le intestazioni CSV/Excel; coincidono. Confrontati con gli oggetti Git **5.476 file tracciati** in `runs`, `scenarios`, `skills`, `results` e `prompt`: **0 modificati, 0 mancanti**, con 76 manifest storici. Non sono stati modificati il checker, `benchmark.yaml`, l'architettura sandbox o il recupero. Dopo le prove `sbx ls --json` ha restituito `[]`; il cleanup Kathara di entrambi i casi ha restituito exit 0.
+
+L'export separato `skill_gate_modes_pilot_results/` contiene **2 run, 264 check, 2 gruppi** e workbook/CSV con intestazioni coerenti. In entrambi i gruppi `strict_verified_runs=1` e denominatore 1; il controllo HTTP fallito non incrementa `checker_error_runs` perché il checker ha terminato correttamente.
+
+**Il sistema è pronto per avviare la campagna nell'ambiente e con il backend verificati; non rimangono problemi bloccanti del gate o del checker emersi da queste prove.** Il singolo fallimento HTTP osservato resta un risultato della configurazione prodotta dal modello da includere nell'analisi; la verifica non garantisce il successo funzionale delle altre run né sostituisce la campagna completa. Se una fase B fallisce prima che la continuità sia sufficientemente osservabile, le metriche di consegna possono rimanere `null` invece di attribuire un successo non dimostrato.
+
+Comandi principali eseguiti:
+
+```bash
+.venv/bin/python -m pytest -q
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case creation_real --output reports/skill_gate_modes_pilot
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --case both_real --output reports/skill_gate_modes_pilot
+.venv/bin/python scripts/skill_gate_pilot.py --recovery --export-only --output reports/skill_gate_modes_pilot --results reports/skill_gate_modes_pilot_results
+.venv/bin/python scripts/aggregate_results.py --runs runs --output /private/tmp/tesi-skill-modes-historical-final
+git diff --check
+```
+
+I comandi dei piloti sono riportati come documentazione di prove già eseguite, non devono essere ripetuti automaticamente; lo script rifiuta di sovrascrivere i casi esistenti.
+
 ## Conformità della lettura, consegna delle Skill e successo funzionale
 
 Aggiornamento delle sole metriche, riferito al commit `7c0247ea6cc6c91b1b8280761784baf2ed6bd677` più le modifiche locali di questa verifica. I risultati dei piloti descritti nel resto del documento sono quelli precedenti: **non sono stati rieseguiti Codex, il checker o sandbox reali**.
@@ -52,7 +119,7 @@ Il caso retry esistente produce ugualmente `true/true`, con metodo `retry_verifi
 
 ### Aggregazione, test e limiti
 
-`runs.csv` e il foglio Runs esportano le due metriche e i dettagli per Skill. Summary esporta separatamente conteggi e percentuali per lettura autonoma verificata, consegna verificata, fallback verificato, conformità sconosciuta ed errore tecnico, più una struttura JSON con conteggi, denominatori e percentuali per singola Skill. Le percentuali di lettura/consegna/fallback usano come denominatore le run con il relativo valore noto; sconosciuti ed errori tecnici usano tutte le run abilitate a `recovery_v1`. Gli errori tecnici comprendono `technical_error` del gate e gli stati di errore AUT, checker o correction della pipeline. Una run tecnica non viene contata anche tra gli sconosciuti; le altre dimensioni possono sovrapporsi, per esempio consegna e fallback. Se il denominatore è zero, la percentuale è `null`.
+`runs.csv` e il foglio Runs esportano le due metriche e i dettagli per Skill. Summary esporta separatamente conteggi e percentuali per lettura autonoma verificata, consegna verificata, fallback verificato, conformità sconosciuta ed errore tecnico, più una struttura JSON con conteggi, denominatori e percentuali per singola Skill. Le percentuali di lettura/consegna/fallback usano come denominatore le run con il relativo valore noto; sconosciuti ed errori tecnici usano tutte le run abilitate a `recovery_v1`. `skill_technical_error_runs` e `skill_gate_error_runs` contano gli errori del gate prima dello sblocco. Gli errori dell’agente dopo lo sblocco, del checker e della correction hanno colonne distinte; quelli senza fase accertabile sono non classificati. Una run con errore non viene contata anche tra gli sconosciuti; le dimensioni della consegna possono sovrapporsi, per esempio consegna e fallback. Se il denominatore è zero, la percentuale è `null`.
 
 Verifiche deterministiche finali:
 

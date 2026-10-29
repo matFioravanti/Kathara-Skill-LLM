@@ -1,0 +1,173 @@
+{
+  "creation_real": {
+    "isolation_A": true,
+    "isolation_B": true,
+    "baseline_original_and_snapshot_match": true,
+    "prompt_matches": true,
+    "correction_matches": true,
+    "session_ids": {
+      "phase_a": "01a1873e-7b31-7212-83fd-7e6a61c18204",
+      "phase_b": "01a1873e-7b31-7212-83fd-7e6a61c18204"
+    },
+    "same_session": true,
+    "checker_execution": {
+      "returncode": 0,
+      "timed_out": false
+    },
+    "checker_cleanup_returncode": 0,
+    "autonomous": true,
+    "delivery": true,
+    "checker": {
+      "passed": 132,
+      "failed": 0,
+      "total": 132,
+      "pass_rate": 1.0
+    },
+    "checker_categories": {
+      "topology": {
+        "passed": 47,
+        "failed": 0
+      },
+      "addressing": {
+        "passed": 27,
+        "failed": 0
+      },
+      "reachability": {
+        "passed": 8,
+        "failed": 0
+      },
+      "dns_authority": {
+        "passed": 16,
+        "failed": 0
+      },
+      "routing": {
+        "passed": 11,
+        "failed": 0
+      },
+      "dns_resolution": {
+        "passed": 2,
+        "failed": 0
+      },
+      "dns_record": {
+        "passed": 2,
+        "failed": 0
+      },
+      "http": {
+        "passed": 1,
+        "failed": 0
+      },
+      "custom": {
+        "passed": 18,
+        "failed": 0
+      }
+    },
+    "required_skills": [
+      "kathara-creation"
+    ],
+    "methods": {
+      "kathara-creation": "read_verified"
+    },
+    "canonical_skill_hashes_match": {
+      "kathara-creation": true
+    },
+    "process_attestations": {
+      "phase_a": {
+        "uid": 501,
+        "no_new_privileges": true,
+        "zero_capabilities": true
+      },
+      "phase_b": {
+        "uid": 501,
+        "no_new_privileges": true,
+        "zero_capabilities": true
+      }
+    }
+  },
+  "both_real": {
+    "isolation_A": true,
+    "isolation_B": true,
+    "baseline_original_and_snapshot_match": true,
+    "prompt_matches": true,
+    "correction_matches": true,
+    "session_ids": {
+      "phase_a": "01a18741-3f67-7b30-b717-2bd17fc62fc6",
+      "phase_b": "01a18741-3f67-7b30-b717-2bd17fc62fc6"
+    },
+    "same_session": true,
+    "checker_execution": {
+      "returncode": 0,
+      "timed_out": false
+    },
+    "checker_cleanup_returncode": 0,
+    "autonomous": true,
+    "delivery": true,
+    "checker": {
+      "passed": 131,
+      "failed": 1,
+      "total": 132,
+      "pass_rate": 0.9924242424242424
+    },
+    "checker_categories": {
+      "topology": {
+        "passed": 47,
+        "failed": 0
+      },
+      "addressing": {
+        "passed": 27,
+        "failed": 0
+      },
+      "reachability": {
+        "passed": 8,
+        "failed": 0
+      },
+      "dns_authority": {
+        "passed": 16,
+        "failed": 0
+      },
+      "routing": {
+        "passed": 11,
+        "failed": 0
+      },
+      "dns_resolution": {
+        "passed": 2,
+        "failed": 0
+      },
+      "dns_record": {
+        "passed": 2,
+        "failed": 0
+      },
+      "http": {
+        "passed": 0,
+        "failed": 1
+      },
+      "custom": {
+        "passed": 18,
+        "failed": 0
+      }
+    },
+    "required_skills": [
+      "kathara-creation",
+      "kathara-dns"
+    ],
+    "methods": {
+      "kathara-creation": "read_verified",
+      "kathara-dns": "read_verified"
+    },
+    "canonical_skill_hashes_match": {
+      "kathara-creation": true,
+      "kathara-dns": true
+    },
+    "process_attestations": {
+      "phase_a": {
+        "uid": 501,
+        "no_new_privileges": true,
+        "zero_capabilities": true
+      },
+      "phase_b": {
+        "uid": 501,
+        "no_new_privileges": true,
+        "zero_capabilities": true
+      }
+    }
+  }
+}

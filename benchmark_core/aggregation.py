@@ -69,7 +69,9 @@ SUMMARY_COLUMNS = [
     "skill_delivery_verified_runs", "skill_delivery_denominator", "skill_delivery_rate",
     "skill_fallback_verified_runs", "skill_fallback_denominator", "skill_fallback_rate",
     "skill_conformity_unknown_runs", "skill_conformity_unknown_rate",
-    "skill_technical_error_runs", "skill_technical_error_rate", "skill_delivery_by_skill",
+    "skill_technical_error_runs", "skill_technical_error_rate",
+    "skill_gate_error_runs", "agent_post_gate_error_runs", "checker_error_runs",
+    "correction_error_runs", "skill_unclassified_error_runs", "skill_delivery_by_skill",
     *(f'mean_{field}' for field in RECOVERY_MEAN_FIELDS),
     "internet_confirmed_runs", "internet_confirmed_denominator", "internet_confirmed_rate",
     "internet_observed_rate",
@@ -422,7 +424,17 @@ def _summary_records(records: list[dict]) -> list[dict]:
         skill_required = [row for row in group if row.get("required_skills")]
         skill_verified = sum(row.get("required_reads_observed") is True for row in skill_required)
         internet_confirmed = sum(row.get("internet_used") is True for row in group)
-        strict_verified = sum(row.get("protocol_compliance_observed") is True for row in skill_required)
+        def strict_value(row):
+            if row.get('skill_protocol') == 'enforced_read_v1' and row.get('skill_gate_recovery_policy_version') == 'recovery_v1':
+                return row.get('skill_autonomous_read_before_write')
+            return row.get('protocol_compliance_observed')
+        strict_verified = sum(strict_value(row) is True for row in skill_required)
+        # Historical protocols retain their original denominator. Recovery has
+        # a genuine unknown state that must not be treated as non-compliance.
+        strict_denominator = sum(
+            1 for row in skill_required
+            if not (row.get('skill_protocol') == 'enforced_read_v1' and row.get('skill_gate_recovery_policy_version') == 'recovery_v1')
+            or type(strict_value(row)) is bool)
         gate_enabled = sum(row.get("skill_gate_enabled") is True for row in group)
         gate_passed = sum(row.get("skill_gate_status") in ("passed", "write_phase_running", "completed") for row in group)
         delivery = [row for row in group if row.get('skill_gate_enabled') is True
@@ -441,11 +453,30 @@ def _summary_records(records: list[dict]) -> list[dict]:
         delivery_count = sum(row['skill_delivery_before_write'] is True for row in delivery_known)
         fallback_count = sum(any(d.get('method') == 'preloaded_fallback' and d.get('delivery_before_write') is True
                                  for d in delivery_details(row).values() if isinstance(d, dict)) for row in delivery_known)
-        def technical_error(row):
-            return (row.get('skill_gate_status') == 'technical_error'
-                    or row.get('status') in ('AUT_FAILED', 'CHECKER_FAILED', 'CORRECTION_MISSING', 'CORRECTION_INVALID'))
-        technical = [row for row in delivery if technical_error(row)]
-        unknown = [row for row in delivery if not technical_error(row)
+        def error_categories(row):
+            history = row.get('skill_gate_state_history')
+            if isinstance(history, str):
+                try: history = json.loads(history)
+                except ValueError: history = None
+            states = [entry.get('status') for entry in history if isinstance(entry, dict)] if isinstance(history, list) else []
+            opened = 'write_phase_running' in states
+            failed_aut = row.get('status') == 'AUT_FAILED'
+            gate_failed = row.get('skill_gate_status') == 'technical_error'
+            gate_error = (gate_failed or failed_aut) and bool(states) and not opened
+            # A failure after a completed B may be cleanup or synchronization;
+            # its stage is not established by AUT_FAILED alone.
+            agent_error = (gate_failed or failed_aut) and opened and 'completed' not in states
+            checker_error = row.get('status') == 'CHECKER_FAILED'
+            correction_error = row.get('status') in ('CORRECTION_MISSING', 'CORRECTION_INVALID')
+            unclassified = (gate_failed or failed_aut) and not gate_error and not agent_error
+            return gate_error, agent_error, checker_error, correction_error, unclassified
+        category_counts = [sum(error_categories(row)[i] for row in delivery) for i in range(5)]
+        # Checker/correction failures exist even for no_skill, auto and older
+        # protocols. Count them for the whole group, independently of a gate.
+        category_counts[2] = sum(error_categories(row)[2] for row in group)
+        category_counts[3] = sum(error_categories(row)[3] for row in group)
+        gate_errors = [row for row in delivery if error_categories(row)[0]]
+        unknown = [row for row in delivery if not any(error_categories(row))
                    and (not known_boolean(row, 'skill_autonomous_read_before_write')
                         or not known_boolean(row, 'skill_delivery_before_write'))]
         by_skill = {}
@@ -456,7 +487,9 @@ def _summary_records(records: list[dict]) -> list[dict]:
                     continue
                 stats_for_skill = by_skill.setdefault(skill, {'required_runs': 0, 'autonomous_read_verified_runs': 0,
                     'autonomous_read_denominator': 0, 'delivery_verified_runs': 0, 'delivery_denominator': 0,
-                    'fallback_verified_runs': 0, 'unknown_runs': 0, 'technical_error_runs': 0})
+                    'fallback_verified_runs': 0, 'unknown_runs': 0, 'technical_error_runs': 0,
+                    'agent_post_gate_error_runs': 0, 'checker_error_runs': 0,
+                    'correction_error_runs': 0, 'unclassified_error_runs': 0})
                 detail = entries.get(skill) if isinstance(entries.get(skill), dict) else {}
                 a, d = detail.get('autonomous_read_before_write'), detail.get('delivery_before_write')
                 stats_for_skill['required_runs'] += 1
@@ -465,8 +498,11 @@ def _summary_records(records: list[dict]) -> list[dict]:
                 stats_for_skill['delivery_denominator'] += type(d) is bool
                 stats_for_skill['delivery_verified_runs'] += d is True
                 stats_for_skill['fallback_verified_runs'] += detail.get('method') == 'preloaded_fallback' and d is True
-                if technical_error(row):
-                    stats_for_skill['technical_error_runs'] += 1
+                errors = error_categories(row)
+                if any(errors):
+                    for label, flag in zip(('technical_error_runs', 'agent_post_gate_error_runs',
+                                            'checker_error_runs', 'correction_error_runs', 'unclassified_error_runs'), errors):
+                        stats_for_skill[label] += flag
                 elif type(a) is not bool or type(d) is not bool:
                     stats_for_skill['unknown_runs'] += 1
         for value in by_skill.values():
@@ -503,8 +539,10 @@ def _summary_records(records: list[dict]) -> list[dict]:
             'skill_fallback_rate': fallback_count / len(delivery_known) if delivery_known else None,
             'skill_conformity_unknown_runs': len(unknown),
             'skill_conformity_unknown_rate': len(unknown) / len(delivery) if delivery else None,
-            'skill_technical_error_runs': len(technical),
-            'skill_technical_error_rate': len(technical) / len(delivery) if delivery else None,
+            'skill_technical_error_runs': len(gate_errors),
+            'skill_technical_error_rate': len(gate_errors) / len(delivery) if delivery else None,
+            **dict(zip(('skill_gate_error_runs', 'agent_post_gate_error_runs', 'checker_error_runs',
+                        'correction_error_runs', 'skill_unclassified_error_runs'), category_counts)),
             'skill_delivery_by_skill': json.dumps(by_skill, ensure_ascii=False, sort_keys=True) if by_skill else None,
             **{f'mean_{field}': _mean(row.get(field) for row in group) for field in RECOVERY_MEAN_FIELDS},
             'skill_gate_delivery_denominator': len(delivery),
@@ -543,8 +581,8 @@ def _summary_records(records: list[dict]) -> list[dict]:
             "mean_skill_gate_input_tokens": _mean(row.get("skill_gate_input_tokens") for row in group),
             "mean_skill_gate_output_tokens": _mean(row.get("skill_gate_output_tokens") for row in group),
             "strict_verified_runs": strict_verified,
-            "strict_compliance_denominator": len(skill_required),
-            "strict_observed_compliance_rate": strict_verified / len(skill_required) if skill_required else None,
+            "strict_compliance_denominator": strict_denominator,
+            "strict_observed_compliance_rate": strict_verified / strict_denominator if strict_denominator else None,
             "total_runs": len(group),
             "pipeline_completed_runs": sum(state is True for state in manifest_states),
             "checker_executed_runs": sum(row.get("checker_executed") is True for row in group),

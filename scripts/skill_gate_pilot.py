@@ -223,7 +223,7 @@ def run_recovery_pilot():
     import argparse
     parser=argparse.ArgumentParser()
     parser.add_argument('--recovery',action='store_true')
-    parser.add_argument('--case',choices=['immediate','retry','fallback','dns_real','all'],default='all')
+    parser.add_argument('--case',choices=['immediate','retry','fallback','dns_real','creation_real','both_real','all'],default='all')
     parser.add_argument('--output',type=Path,default=OUT.parent/'skill_gate_recovery_pilot')
     parser.add_argument('--export-only',action='store_true')
     parser.add_argument('--include',action='append',type=Path,default=[])
@@ -239,7 +239,7 @@ def run_recovery_pilot():
         def turn(self,*,prompt,directory,timeout):
             nonlocal calls
             calls+=1
-            if calls>16: raise RuntimeError('Pilot model-call budget exhausted')
+            if calls>(5 if case in ('creation_real','both_real') else 16): raise RuntimeError('Pilot model-call budget exhausted')
             omit=(case=='retry' and directory.name=='phase_a') or (case=='fallback' and (directory.name=='phase_a' or directory.parent.name=='retries'))
             if omit:
                 # Explicit experimental intervention; preserve requested input.
@@ -259,17 +259,18 @@ def run_recovery_pilot():
             root=Path(temporary); root.chmod(0o755)
             data=copy.deepcopy(yaml.safe_load((repo/'benchmark.yaml').read_text()))
             data['aut'].update(skill_protocol='enforced_read_v1',skill_gate_recovery_policy='recovery_v1',skill_gate_max_retries=2)
-            scenario_id='lab00_five_router' if case=='dns_real' else 'pilot'
+            scenario_id='lab00_five_router' if case in ('dns_real','creation_real','both_real') else 'pilot'
             scenario_root=root/'scenarios'/scenario_id
             try:
-                if case=='dns_real':
+                if case in ('dns_real','creation_real','both_real'):
                     shutil.copytree(repo/'scenarios'/scenario_id,scenario_root)
                     shutil.copytree(repo/'prompt'/scenario_id,root/'prompt'/scenario_id)
                     shutil.copytree(repo/'skills',root/'skills')
                     # Keep every source/expected instruction byte unchanged.
                     cfg=Config(root,data)
+                    mode={'dns_real':'dns_only','creation_real':'creation_only','both_real':'both_forced'}[case]
                     with patch('benchmark_core.docker_sandbox_runner.ProtectedCodexSession',PilotSession):
-                        run=run_one(cfg,Scenario(scenario_id,scenario_root),'codex','T1','dns_only',experiment_id='recovery_v1_pilot')
+                        run=run_one(cfg,Scenario(scenario_id,scenario_root),'codex','T1',mode,experiment_id='recovery_v1_modes_pilot')
                     manifest=json.loads((run/'manifest.json').read_text())
                     summary.update(status=manifest['pipeline_state'],checker_executed=manifest['checker_execution_success'],task_success=manifest['task_success'],error=manifest.get('pipeline_error'))
                 else:
@@ -289,7 +290,7 @@ def run_recovery_pilot():
                     finalize_recovery_aut_artifacts(run,case=case,model=cfg.model(),reasoning_effort=cfg.reasoning_effort(),experiment_id=output.name)
                 shutil.copytree(run,target/'run')
                 summary['gate']=json.loads((run/'logs/aut/skill_gate.json').read_text())
-                if case=='dns_real': summary['metrics']=json.loads((run/'evaluation/metrics.json').read_text())
+                if case in ('dns_real','creation_real','both_real'): summary['metrics']=json.loads((run/'evaluation/metrics.json').read_text())
             except Exception as error:
                 summary.update(status='FAILED',error=f'{type(error).__name__}: {error}')
                 found=list((root/'runs').glob('*/*/*/r*'))

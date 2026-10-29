@@ -443,7 +443,9 @@ def test_aggregate_delivery_denominators_and_csv_excel(setup,tmp_path):
                 ('fallback',False,True,'preloaded_fallback','completed'),
                 ('unknown',None,None,None,'pending'),
                 ('error',None,None,None,'technical_error'),
-                ('checker_error',True,True,'read_verified','completed')]
+                ('checker_error',True,True,'read_verified','completed'),
+                ('agent_error',True,True,'read_verified','technical_error'),
+                ('correction_error',True,True,'read_verified','completed')]
     for index,(name,autonomous,delivery,method,status) in enumerate(situations,1):
         target=root/'case/T1/both_forced'/f'r{index:03d}'; target.mkdir(parents=True)
         data=copy.deepcopy(template)
@@ -456,24 +458,32 @@ def test_aggregate_delivery_denominators_and_csv_excel(setup,tmp_path):
                     experiment_id='synthetic',skill_autonomous_read_before_write=autonomous,
                     skill_delivery_before_write=delivery,skill_delivery_details=details,
                     skill_gate_status=status,skill_gate_load_methods={k:v['method'] for k,v in details.items()},
-                    status='CHECKER_FAILED' if name=='checker_error' else 'COMPLETED' if status=='completed' else 'AUT_FAILED' if name=='error' else 'PENDING')
+                    status='CHECKER_FAILED' if name=='checker_error' else 'CORRECTION_INVALID' if name=='correction_error' else 'AUT_FAILED' if name in ('error','agent_error') else 'COMPLETED' if status=='completed' else 'PENDING')
+        if name=='error':
+            data['skill_gate_state_history']=[{'status':'preparing'},{'status':'initial_read'},{'status':'technical_error'}]
+        elif name=='agent_error':
+            data['skill_gate_state_history']=[{'status':'preparing'},{'status':'passed'},{'status':'write_phase_running'},{'status':'technical_error'}]
         write_json(target/'manifest.json',{'agent':'codex','skill_protocol':'enforced_read_v1','skill_mode':'both_forced'})
         write_json(target/'evaluation/metrics.json',data)
     rows,_,summary=aggregate(root,reports)
-    assert len(rows)==6 and len(summary)==1
+    assert len(rows)==8 and len(summary)==1
     s=summary.iloc[0]
-    assert (s['skill_conformity_eligible_runs'],s['skill_autonomous_read_verified_runs'],s['skill_autonomous_read_denominator'])==(6,3,4)
-    assert s['skill_autonomous_read_rate']==pytest.approx(3/4)
-    assert (s['skill_delivery_verified_runs'],s['skill_delivery_denominator'],s['skill_delivery_rate'])==(4,4,1)
-    assert (s['skill_fallback_verified_runs'],s['skill_fallback_denominator'])==(1,4)
-    assert s['skill_fallback_rate']==pytest.approx(1/4)
-    assert (s['skill_conformity_unknown_runs'],s['skill_technical_error_runs'])==(1,2)
-    assert s['skill_conformity_unknown_rate']==pytest.approx(1/6)
-    assert s['skill_technical_error_rate']==pytest.approx(2/6)
+    assert (s['skill_conformity_eligible_runs'],s['skill_autonomous_read_verified_runs'],s['skill_autonomous_read_denominator'])==(8,5,6)
+    assert s['skill_autonomous_read_rate']==pytest.approx(5/6)
+    assert (s['strict_verified_runs'],s['strict_compliance_denominator'])==(5,6)
+    assert s['strict_observed_compliance_rate']==pytest.approx(5/6)
+    assert (s['skill_delivery_verified_runs'],s['skill_delivery_denominator'],s['skill_delivery_rate'])==(6,6,1)
+    assert (s['skill_fallback_verified_runs'],s['skill_fallback_denominator'])==(1,6)
+    assert s['skill_fallback_rate']==pytest.approx(1/6)
+    assert (s['skill_conformity_unknown_runs'],s['skill_technical_error_runs'])==(1,1)
+    assert s['skill_conformity_unknown_rate']==pytest.approx(1/8)
+    assert s['skill_technical_error_rate']==pytest.approx(1/8)
+    assert (s['skill_gate_error_runs'],s['agent_post_gate_error_runs'],s['checker_error_runs'],s['correction_error_runs'])==(1,1,1,1)
     skills=json.loads(s['skill_delivery_by_skill'])
-    assert skills['kathara-creation']['autonomous_read_verified_runs']==4
+    assert skills['kathara-creation']['autonomous_read_verified_runs']==6
     assert skills['kathara-dns']['fallback_verified_runs']==1
-    assert skills['kathara-dns']['unknown_runs']==1 and skills['kathara-dns']['technical_error_runs']==2
+    assert skills['kathara-dns']['unknown_runs']==1 and skills['kathara-dns']['technical_error_runs']==1
+    assert (skills['kathara-dns']['agent_post_gate_error_runs'],skills['kathara-dns']['checker_error_runs'],skills['kathara-dns']['correction_error_runs'])==(1,1,1)
     with (reports/'runs.csv').open(newline='') as f:
         csv_rows={r['ID']:r for r in csv.DictReader(f)}
     assert csv_rows['fallback']['skill_autonomous_read_before_write']=='False'
@@ -508,3 +518,45 @@ def test_partial_evidence_preserves_verified_individual_skill(setup):
     assert m['skill_delivery_details']['kathara-dns']['autonomous_read_before_write'] is None
     assert m['skill_compliance']['skill_details']['kathara-creation']['complete_read_verified'] is True
     assert m['skill_compliance']['skill_details']['kathara-dns']['complete_read_verified'] is None
+
+
+def test_historical_strict_denominator_is_unchanged(tmp_path):
+    from benchmark_core.aggregation import aggregate
+    root=tmp_path/'runs'
+    for i,value in enumerate((True,False,None),1):
+        run=root/'legacy/T1/dns_only'/f'r{i:03d}'
+        write_json(run/'manifest.json',{'agent':'codex','scenario_id':'legacy','prompt_type':'T1','skill_mode':'dns_only','skill_protocol':'explicit_read_v2'})
+        write_json(run/'evaluation/metrics.json',{'agent':'codex','scenario':'legacy','prompt_type':'T1','skill_mode':'dns_only',
+            'skill_protocol':'explicit_read_v2','skill_compliance':{'required_skills':['kathara-dns'],'protocol_compliance_observed':value}})
+    _,_,summary=aggregate(root,tmp_path/'results')
+    assert len(summary)==1
+    row=summary.iloc[0]
+    assert row['strict_verified_runs']==1 and row['strict_compliance_denominator']==3
+    assert row['strict_observed_compliance_rate']==pytest.approx(1/3)
+
+
+@pytest.mark.parametrize('history',[None,[{'status':'passed'},{'status':'write_phase_running'},{'status':'completed'},{'status':'technical_error'}]])
+def test_missing_gate_history_does_not_invent_error_stage(setup,tmp_path,history):
+    from benchmark_core.aggregation import aggregate
+    _,run,_,execute=setup
+    ScriptedSession.schedule=[['kathara-dns']]; execute('dns_only')
+    data=recovery_metrics(run,'dns_only')
+    data.update(skill_gate_status='technical_error',status='AUT_FAILED',skill_gate_state_history=history)
+    write_json(run/'evaluation/metrics.json',data)
+    _,_,summary=aggregate(run.parents[3],tmp_path/'out')
+    row=summary.iloc[0]
+    assert row['skill_gate_error_runs']==0 and row['agent_post_gate_error_runs']==0
+    assert row['skill_unclassified_error_runs']==1
+
+
+def test_checker_and_correction_errors_are_counted_without_gate(tmp_path):
+    from benchmark_core.aggregation import aggregate
+    root=tmp_path/'runs'
+    for index,status in enumerate(('CHECKER_FAILED','CORRECTION_INVALID'),1):
+        run=root/'case/T1/no_skill'/f'r{index:03d}'
+        write_json(run/'manifest.json',{'agent':'codex','scenario_id':'case','prompt_type':'T1','skill_mode':'no_skill','skill_protocol':'explicit_read_v2'})
+        write_json(run/'evaluation/metrics.json',{'agent':'codex','scenario':'case','prompt_type':'T1','skill_mode':'no_skill','skill_protocol':'explicit_read_v2','status':status})
+    _,_,summary=aggregate(root,tmp_path/'results')
+    row=summary.iloc[0]
+    assert row['checker_error_runs']==1 and row['correction_error_runs']==1
+    assert row['skill_gate_error_runs']==0 and row['skill_technical_error_runs']==0

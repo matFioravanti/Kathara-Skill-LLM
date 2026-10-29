@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 121.38756725000076,
+  "sandbox_overhead_seconds": 28.719242041001053,
+  "usage": {
+    "input_tokens": 187511,
+    "output_tokens": 4224,
+    "cached_input_tokens": 167168,
+    "reasoning_output_tokens": 1206,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Configurazione DNS interna completata senza modificare `lab.conf`, topologia, indirizzi o routing.\n\n- `pc2`: root autoritativa con delega `test.` e glue verso `100.0.8.2`.\n- `pc5`: autoritativa solo per `test.`, con `www.test. A 200.0.1.2`.\n- `pc3`: resolver ricorsivo con root hints interni, senza forwarder e con DNSSEC disabilitato.\n- `pc4` e `pc6`: configurati per usare rispettivamente `100.0.0.2` e `2001:8::2`.\n- `pc1`: avvia Apache HTTP.\n\nFile principali: [configurazioni DNS e resolver](/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-k40_mb4_/lab/pc3/etc/bind/named.conf), [zona root](/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-k40_mb4_/lab/pc2/etc/bind/db.root), [zona test](/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-k40_mb4_/lab/pc5/etc/bind/db.test).\n\nNon ho potuto avviare la verifica runtime (`dig`, `curl`, HTTP 200) perché `kathara` non è installato nell’ambiente corrente (`kathara: command not found`).",
+  "error": null
+}

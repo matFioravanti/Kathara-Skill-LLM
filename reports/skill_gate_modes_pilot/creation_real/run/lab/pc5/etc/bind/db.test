@@ -1,0 +1,11 @@
+$TTL 86400
+@       IN SOA  ns.test. hostmaster.test. (
+                2026102901  ; serial
+                3600        ; refresh
+                600         ; retry
+                604800      ; expire
+                86400 )     ; negative cache TTL
+        IN NS   ns.test.
+
+ns      IN A    100.0.8.2
+www     IN A    200.0.1.2

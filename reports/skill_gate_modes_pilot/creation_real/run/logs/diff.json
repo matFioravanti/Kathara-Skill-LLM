@@ -1,0 +1,26 @@
+{
+  "files_created": 8,
+  "files_modified": 4,
+  "files_deleted": 0,
+  "files_changed": 12,
+  "lines_added": 72,
+  "lines_deleted": 3,
+  "created": [
+    "pc2/etc/bind/db.root",
+    "pc2/etc/bind/named.conf",
+    "pc3/etc/bind/db.root.hints",
+    "pc3/etc/bind/named.conf",
+    "pc4/etc/resolv.conf",
+    "pc5/etc/bind/db.test",
+    "pc5/etc/bind/named.conf",
+    "pc6/etc/resolv.conf"
+  ],
+  "modified": [
+    "pc1.startup",
+    "pc2.startup",
+    "pc3.startup",
+    "pc5.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}
