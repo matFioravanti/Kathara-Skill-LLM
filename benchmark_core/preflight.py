@@ -24,7 +24,11 @@ def parse_cli_version(output: str) -> str:
 
 
 def preflight(config, agent: str, skill_mode: str | None = None,
-              scenario_ids: list[str] | tuple[str, ...] | None = None) -> None:
+              scenario_ids: list[str] | tuple[str, ...] | None = None, assignments=None) -> None:
+    if assignments is not None:
+        for assignment in assignments:
+            validate_correction(correction_path(config.root, assignment))
+        scenario_ids = ()
     if scenario_ids is None and hasattr(config, "root"):
         scenarios_root = config.root / "scenarios"
         scenario_ids = (sorted(path.name for path in scenarios_root.iterdir() if path.is_dir())

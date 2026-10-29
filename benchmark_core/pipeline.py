@@ -8,7 +8,7 @@ import traceback
 
 from .checker_runner import run_checker
 from .config import skill_paths
-from .correction_input import correction_path, read_correction, validate_correction
+from .correction_input import correction_path, read_correction, validate_correction, validate_correction_lab
 from .diff_metrics import compute_diff
 from .inspect_runner import run_aut
 from .skill_modes import mode_details
@@ -18,7 +18,7 @@ from .workspace import component_versions, create_workspace, logical_run_id, tre
 
 def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
             ui_context: dict | None = None, event_callback=None,
-            experiment_id: str | None = None, replicate: int | None = None) -> Path:
+            experiment_id: str | None = None, replicate: int | None = None, assignment=None) -> Path:
     # The five Codex skill modes are EXCLUSIVE to agent=="codex".
     # For any other agent (e.g. Antigravity) skill_mode is forced to "no_skill"
     # so that available_skills/forced_skills are both empty and no $skill directive
@@ -28,16 +28,23 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
     else:
         skill_mode = skill_mode or "dns_only"
     skill_selection = mode_details(skill_mode)
-    correction_source = scenario.correction
-    correction_source_relative = correction_path(config.root, scenario.scenario_id).relative_to(config.root).as_posix()
+    if assignment is not None and (assignment.lab_id != scenario.scenario_id or not experiment_id):
+        raise ValueError("L'assegnazione non corrisponde al laboratorio o manca experiment_id")
+    correction_source = correction_path(config.root, assignment) if assignment else scenario.correction
+    correction_source_relative = correction_source.relative_to(config.root).as_posix()
     correction_content, correction_sha256 = read_correction(correction_source)
-    from .prompts import resolve_prompt
-    resolved_prompt = resolve_prompt(config.root, scenario.scenario_id, prompt_type)
-    prompt_text = resolved_prompt.read_text(encoding="utf-8")
+    if assignment:
+        validate_correction_lab(correction_source, scenario.lab)
+    from .prompts import resolve_prompt, render_task_prompt
+    if assignment:
+        resolved_prompt, prompt_text = render_task_prompt(config.root, assignment, prompt_type)
+    else:
+        resolved_prompt = resolve_prompt(config.root, scenario.scenario_id, prompt_type)
+        prompt_text = resolved_prompt.read_text(encoding="utf-8")
     total_started = time.monotonic()
-    run = create_workspace(config.root / "runs", scenario, prompt_type, skill_mode, prompt_text)
+    run = create_workspace(config.root / "runs", scenario, prompt_type, skill_mode, prompt_text, experiment_id=experiment_id, assignment=assignment)
     run_number = int(run.name[1:])
-    run_id = logical_run_id(scenario.scenario_id, prompt_type, skill_mode, run_number)
+    run_id = logical_run_id(scenario.scenario_id, prompt_type, skill_mode, run_number, experiment_id=experiment_id, assignment=assignment)
     # Only load paths for skills actually used by this mode (avoids requiring creation_skill
     # when running Antigravity or a mode that doesn't use kathara-creation).
     mode_skills = skill_selection.available_skills
@@ -54,6 +61,9 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         "experiment_id": experiment_id,
         "replicate": replicate if replicate is not None else run_number,
         "scenario_id": scenario.scenario_id, "prompt_type": prompt_type, "repetition": run_number,
+        "lab_id": assignment.lab_id if assignment else scenario.scenario_id,
+        "dns_tree_id": assignment.dns_tree_id if assignment else None,
+        "task_level": assignment.task_level if assignment else None,
         "run_directory": str(run.relative_to(config.root / "runs")),
         "agent": agent, "agent_version": config.data["aut"]["version"],
         "codex_host_version": config.data["aut"]["version"] if agent == "codex" else None,
@@ -263,15 +273,44 @@ def reevaluate_run(config, run: Path) -> Path:
     ):
         raise ValueError(f"AUT non completato; run non rivalutata: {run}")
 
-    scenario_id = manifest.get("scenario_id")
-    source = correction_path(config.root, scenario_id)
+    from .task_catalog import TaskAssignment
+    lab_id, tree, level = (manifest.get(key) for key in ("lab_id", "dns_tree_id", "task_level"))
+    if all(key not in manifest for key in ("lab_id", "dns_tree_id", "task_level")) and manifest.get("scenario_id"):
+        # Legacy runs retain the original legacy oracle; never infer a DNS tree.
+        source = correction_path(config.root, manifest["scenario_id"])
+    else:
+        assignment = TaskAssignment(lab_id, tree, level)
+        experiment_id = manifest.get("experiment_id")
+        prompt_type = manifest.get("prompt_type")
+        skill_mode = manifest.get("skill_mode")
+        from .prompts import PROMPT_TYPES
+        from .skill_modes import SKILL_MODE_CHOICES
+        import re
+        if (not isinstance(experiment_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", experiment_id)
+                or prompt_type not in PROMPT_TYPES or skill_mode not in SKILL_MODE_CHOICES):
+            raise ValueError("Identità della run incompleta o non valida")
+        expected_parent = (config.root / "runs" / experiment_id / lab_id / tree / level / prompt_type / skill_mode)
+        if run.parent.resolve() != expected_parent.resolve() or not re.fullmatch(r"r\d{3,}", run.name):
+            raise ValueError("Il percorso della run non corrisponde alla sua identità")
+        source = correction_path(config.root, assignment)
     # read_correction valida prima che qualunque snapshot/report esistente venga toccato.
     content, digest = read_correction(source)
+    if tree is not None:
+        validate_correction_lab(source, run / "input/lab")
     previous_total_seconds = _metric_total_seconds(run)
     source_lab_hash = tree_hash(run / "lab")
     input_lab_hash = tree_hash(run / "input/lab")
     evaluation = run / "evaluation"
     evaluation.mkdir(parents=True, exist_ok=True)
+    revision = manifest.get("evaluation_revision", 0)
+    history = evaluation / "history" / f"revision_{revision:03d}"
+    if not history.exists():
+        history.mkdir(parents=True)
+        for old in (evaluation / "correction.yaml", evaluation / "metrics.json", manifest_path):
+            if old.is_file():
+                shutil.copy2(old, history / old.name)
+        if (run / "results").is_dir():
+            shutil.copytree(run / "results", history / "results")
     snapshot = evaluation / "correction.yaml"
     snapshot.write_bytes(content)
     if validate_correction(snapshot) != digest:

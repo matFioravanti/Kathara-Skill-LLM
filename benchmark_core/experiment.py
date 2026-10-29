@@ -10,6 +10,7 @@ from typing import Iterator
 import yaml
 
 from .prompts import PROMPT_TYPES
+from .task_catalog import TaskAssignment, parse_assignments
 from .skill_modes import SKILL_MODE_CHOICES
 
 
@@ -27,6 +28,7 @@ class ExperimentSpec:
     skill_modes: tuple[str, ...]
     repetitions: int
     source_path: Path
+    assignments: tuple[TaskAssignment, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -38,6 +40,19 @@ class RunCell:
     prompt_type: str
     skill_mode: str
     replicate: int
+    assignment: TaskAssignment | None = None
+
+    @property
+    def lab_id(self):
+        return self.assignment.lab_id if self.assignment else self.scenario_id
+
+    @property
+    def dns_tree_id(self):
+        return self.assignment.dns_tree_id if self.assignment else None
+
+    @property
+    def task_level(self):
+        return self.assignment.task_level if self.assignment else None
 
 
 # ---------------------------------------------------------------------------
@@ -68,12 +83,17 @@ def load_experiment(path: Path) -> ExperimentSpec:
             "Usare solo lettere, cifre, trattini e underscore."
         )
 
-    scenarios = data.get("scenarios")
-    if not isinstance(scenarios, list) or not scenarios:
-        raise ValueError("'scenarios' deve essere una lista non vuota.")
-    for s in scenarios:
-        if not isinstance(s, str) or not s.strip():
-            raise ValueError(f"ID scenario non valido: {s!r}")
+    assignments = parse_assignments(data["assignments"]) if "assignments" in data else ()
+    scenarios = data.get("scenarios", [])
+    if assignments and scenarios:
+        raise ValueError("Usare assignments o scenarios, non entrambi")
+    if not assignments:
+        if not isinstance(scenarios, list) or not scenarios:
+            raise ValueError("'assignments' deve essere una lista non vuota")
+        if any(not isinstance(s, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", s) for s in scenarios):
+            raise ValueError("ID scenario non valido")
+    else:
+        scenarios = list(dict.fromkeys(a.lab_id for a in assignments))
 
     prompt_types = data.get("prompt_types")
     if not isinstance(prompt_types, list) or not prompt_types:
@@ -84,6 +104,9 @@ def load_experiment(path: Path) -> ExperimentSpec:
                 f"prompt_type non valido: {pt!r}; valori ammessi: {', '.join(PROMPT_TYPES)}"
             )
 
+    if len(set(prompt_types)) != len(prompt_types):
+        raise ValueError("prompt_types duplicati")
+
     skill_modes = data.get("skill_modes")
     if not isinstance(skill_modes, list) or not skill_modes:
         raise ValueError("'skill_modes' deve essere una lista non vuota.")
@@ -92,6 +115,9 @@ def load_experiment(path: Path) -> ExperimentSpec:
             raise ValueError(
                 f"skill_mode non valido: {sm!r}; valori ammessi: {', '.join(SKILL_MODE_CHOICES)}"
             )
+
+    if len(set(skill_modes)) != len(skill_modes):
+        raise ValueError("skill_modes duplicati")
 
     repetitions = data.get("repetitions")
     if not isinstance(repetitions, int) or isinstance(repetitions, bool) or repetitions < 1:
@@ -104,6 +130,7 @@ def load_experiment(path: Path) -> ExperimentSpec:
         skill_modes=tuple(skill_modes),
         repetitions=repetitions,
         source_path=path,
+        assignments=assignments,
     )
 
 
@@ -114,7 +141,8 @@ def load_experiment(path: Path) -> ExperimentSpec:
 def build_run_matrix(spec: ExperimentSpec) -> list[RunCell]:
     """Genera tutte le combinazioni nell'ordine deterministico."""
     cells = []
-    for scenario_id in spec.scenarios:
+    for assignment in (spec.assignments or tuple(None for _ in spec.scenarios)):
+        scenario_id = assignment.lab_id if assignment else spec.scenarios[len(cells) // (len(spec.prompt_types) * len(spec.skill_modes) * spec.repetitions)]
         for prompt_type in spec.prompt_types:
             for skill_mode in spec.skill_modes:
                 for replicate in range(1, spec.repetitions + 1):
@@ -124,6 +152,7 @@ def build_run_matrix(spec: ExperimentSpec) -> list[RunCell]:
                         prompt_type=prompt_type,
                         skill_mode=skill_mode,
                         replicate=replicate,
+                        assignment=assignment,
                     ))
     return cells
 
@@ -206,33 +235,28 @@ def analyse_existing_runs(
     Legge i manifest esistenti in runs/ e classifica ogni run per la cella corrispondente.
     Restituisce un dict keyed per (scenario_id, prompt_type, skill_mode).
     """
-    analyses: dict[tuple[str, str, str], CellAnalysis] = {}
-    for scenario_id in spec.scenarios:
-        for prompt_type in spec.prompt_types:
-            for skill_mode in spec.skill_modes:
-                key = (scenario_id, prompt_type, skill_mode)
-                analysis = CellAnalysis(cell_base=key, experiment_id=spec.experiment_id)
-                mode_root = runs_root / scenario_id / prompt_type / skill_mode
-                if mode_root.is_dir():
-                    for run_dir in sorted(mode_root.iterdir(), key=lambda p: p.name):
-                        if not _is_valid_run_dir(run_dir):
-                            continue
-                        run_number = int(run_dir.name[1:])
-                        manifest = _read_manifest(run_dir)
-                        if manifest is None:
-                            continue
-                        # Considera la run solo se appartiene a questo experiment (o non ha experiment_id)
-                        run_exp_id = manifest.get("experiment_id")
-                        if run_exp_id is not None and run_exp_id != spec.experiment_id:
-                            continue
-                        analysis.all_runs.append(RunStatus(
-                            run=run_dir,
-                            run_number=run_number,
-                            replicate=_run_replicate(manifest),
-                            pipeline_state=manifest.get("pipeline_state"),
-                            experiment_id=run_exp_id,
-                        ))
-                analyses[key] = analysis
+    analyses = {}
+    for cell in build_run_matrix(spec):
+        key = (cell.lab_id, cell.dns_tree_id, cell.task_level, cell.prompt_type, cell.skill_mode) if cell.assignment else (cell.scenario_id, cell.prompt_type, cell.skill_mode)
+        if key in analyses:
+            continue
+        analysis = CellAnalysis(cell_base=key, experiment_id=spec.experiment_id)
+        mode_root = (runs_root / spec.experiment_id / cell.lab_id / cell.dns_tree_id / cell.task_level / cell.prompt_type / cell.skill_mode) if cell.assignment else (runs_root / cell.scenario_id / cell.prompt_type / cell.skill_mode)
+        if mode_root.is_dir():
+            for run_dir in sorted(mode_root.iterdir(), key=lambda p: p.name):
+                if not _is_valid_run_dir(run_dir):
+                    continue
+                manifest = _read_manifest(run_dir)
+                if manifest is None:
+                    continue
+                run_exp_id = manifest.get("experiment_id")
+                if cell.assignment:
+                    if (run_exp_id, manifest.get("lab_id"), manifest.get("dns_tree_id"), manifest.get("task_level"), manifest.get("prompt_type"), manifest.get("skill_mode")) != (spec.experiment_id, cell.lab_id, cell.dns_tree_id, cell.task_level, cell.prompt_type, cell.skill_mode):
+                        continue
+                elif run_exp_id is not None and run_exp_id != spec.experiment_id:
+                    continue
+                analysis.all_runs.append(RunStatus(run_dir, int(run_dir.name[1:]), _run_replicate(manifest), manifest.get("pipeline_state"), run_exp_id))
+        analyses[key] = analysis
     return analyses
 
 
@@ -264,7 +288,7 @@ def compute_resume_plan(
     decisions = []
     cells = build_run_matrix(spec)
     for cell in cells:
-        key = (cell.scenario_id, cell.prompt_type, cell.skill_mode)
+        key = (cell.lab_id, cell.dns_tree_id, cell.task_level, cell.prompt_type, cell.skill_mode) if cell.assignment else (cell.scenario_id, cell.prompt_type, cell.skill_mode)
         analysis = analyses.get(key)
         if analysis is None:
             decisions.append(ResumeDecision(cell=cell, should_run=True, reason="missing"))
@@ -330,8 +354,8 @@ def validate_experiment_prerequisites(
     PRIMA di fare qualsiasi chiamata al modello.
     Lancia ValueError se c'è un problema.
     """
-    from .correction_input import correction_path, validate_correction
-    from .prompts import resolve_prompt
+    from .correction_input import correction_path, validate_correction, validate_correction_lab
+    from .prompts import resolve_prompt, render_task_prompt
 
     missing_scenarios = [s for s in spec.scenarios if s not in scenarios_dict]
     if missing_scenarios:
@@ -340,17 +364,13 @@ def validate_experiment_prerequisites(
             f"Disponibili: {', '.join(sorted(scenarios_dict))}"
         )
 
-    for scenario_id in spec.scenarios:
+    for assignment in spec.assignments:
         for prompt_type in spec.prompt_types:
-            try:
+            render_task_prompt(config.root, assignment, prompt_type)
+        validate_correction(correction_path(config.root, assignment))
+        validate_correction_lab(correction_path(config.root, assignment), scenarios_dict[assignment.lab_id].lab)
+    if not spec.assignments:
+        for scenario_id in spec.scenarios:
+            for prompt_type in spec.prompt_types:
                 resolve_prompt(config.root, scenario_id, prompt_type)
-            except ValueError as exc:
-                raise ValueError(
-                    f"Prompt mancante per {scenario_id}/{prompt_type}: {exc}"
-                ) from exc
-        try:
             validate_correction(correction_path(config.root, scenario_id))
-        except Exception as exc:
-            raise ValueError(
-                f"Correction non valida per {scenario_id}: {exc}"
-            ) from exc

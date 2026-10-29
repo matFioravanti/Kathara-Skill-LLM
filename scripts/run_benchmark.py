@@ -20,7 +20,17 @@ from benchmark_core import terminal_ui
 
 
 def main() -> int:
+    # New experiments use the same selection, resume and dry-run implementation.
+    if "--experiment" in sys.argv:
+        from scripts.run_experiment import main as experiment_main
+        argv = sys.argv[1:]
+        index = argv.index("--experiment")
+        if index + 1 >= len(argv):
+            raise ValueError("--experiment richiede un percorso")
+        experiment = argv[index + 1]
+        return experiment_main([experiment, *argv[:index], *argv[index + 2:]])
     parser = argparse.ArgumentParser(description="Benchmark Codex CLI locale / Kathara DNS-web")
+    parser.add_argument("--experiment", type=Path, help="Usa la matrice con assegnazioni esplicite (vedi run_experiment.py --help)")
     parser.add_argument("--config", type=Path, default=ROOT / "benchmark.yaml")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--scenario")

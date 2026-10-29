@@ -1,3 +1,93 @@
+# Benchmark DNS: esperimenti con assegnazioni esplicite
+
+> Stato: il checkout non contiene attualmente baseline, prompt o correction reali.
+> I file in `experiments/` sono volutamente incompleti e non eseguibili. Il
+> formato seguente è supportato dal motore ed è verificato con fixture temporanee.
+> Le sezioni storiche più sotto descrivono l'interfaccia legacy per scenario.
+
+Un **laboratorio** è una baseline Kathara; un **albero DNS** identifica il
+compito funzionale; il **livello** ne indica la complessità. Una formulazione
+T1–T5 (T6 facoltativo) presenta lo stesso compito; la relativa correction è
+unica per laboratorio, albero e livello, indipendentemente da prompt, skill e
+replica. La coerenza funzionale dei testi e della correction deve essere
+verificata da chi prepara i dati; il software non può dedurla dai nomi.
+
+```text
+prompt/<dns_tree_id>/<task_level>/T1.md ... T5.md
+scenarios/<lab_id>/lab/lab.conf
+scenarios/<lab_id>/tasks/<dns_tree_id>/<task_level>/correction.yaml
+scenarios/<lab_id>/tasks/<dns_tree_id>/<task_level>/bindings.yaml  # facoltativo
+experiments/<experiment>.yaml
+runs/<experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/
+results/{runs.csv,checks.csv,summary.csv,benchmark.xlsx}
+```
+
+Esempio **dimostrativo**, senza risorse reali nel checkout:
+
+```yaml
+experiment:
+  id: example
+assignments:
+  - lab_id: lab_example
+    dns_tree_id: tree_example
+    task_levels: [small, large]
+  - lab_id: lab_example
+    dns_tree_id: another_tree
+    task_levels: [small]
+prompt_types: [T1, T2]
+skill_modes: [no_skill, dns_only]
+repetitions: 2
+```
+
+La matrice è il prodotto delle triple esplicitamente dichiarate per prompt,
+modalità e replica (nell'esempio: 3 × 2 × 2 × 2 = 24), non il prodotto di
+laboratori e alberi. Le triple duplicate vengono rifiutate. Per aggiungere dati:
+preparare la baseline immutabile e prompt coerenti, creare una correction nel
+formato del checker per ogni tripla, verificare compatibilità e aggiungere solo
+le triple autorizzate all'experiment. Il preflight valida prompt, correction,
+macchine della correction e binding; la correttezza semantica DNS e la
+compatibilità di tutti i requisiti con la topologia richiedono verifica umana.
+
+I prompt possono usare `{{server.device}}` e `{{server.address}}` con un file
+`bindings.yaml` nella directory della correction:
+
+```yaml
+server:
+  device: pc1
+  address: 192.0.2.1
+```
+
+Il dispositivo deve comparire in `lab.conf` e l'indirizzo nel suo `.startup`;
+il testo concreto è salvato in `input/prompt.md`. Non sono supportati binding
+calcolati o generati da un modello. La correction è letta prima dell'agente e
+salvata per la valutazione, fuori dal workspace temporaneo dell'agente.
+
+Con un experiment e risorse effettivamente disponibili:
+
+```sh
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml --dry-run
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml --lab lab_example --dns-tree tree_example --task-level small --prompt-type T1 --skill-mode no_skill --repetitions 1 --dry-run
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml --resume
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml --rerun-correction --dry-run
+.venv/bin/python scripts/run_experiment.py experiments/example.yaml --rerun-correction
+.venv/bin/python scripts/run_benchmark.py --experiment experiments/example.yaml --dry-run
+.venv/bin/python scripts/aggregate_results.py
+.venv/bin/python scripts/analyze_results.py
+```
+
+I filtri valgono anche per resume e rivalutazione. Il dry-run controlla le
+risorse senza avviare Kathara o un modello. `rNNN` è il numero fisico allocato
+atomicamente; `replicate` è la ripetizione logica. Una run `COMPLETED` con
+risultato funzionale negativo resta un'osservazione valida per resume. La
+rivalutazione usa l'identità originale, non riesegue l'agente e conserva la
+revisione precedente in `evaluation/history/`. Le run storiche sono aggregate
+con albero e livello sconosciuti; la rivalutazione legacy usa solo la vecchia
+correction dello scenario, senza dedurre un'identità DNS nuova.
+
+
+---
+
 # Kathara Skill LLM Benchmark
 
 Reproducible benchmark for evaluating CLI LLM agents that configure DNS and web services in Kathara network emulation laboratories. The supported agents are **Codex CLI** and **Antigravity CLI (agy)**, each using strictly local authentication. Codex additionally supports fully isolated execution inside ephemeral **Docker Sandboxes (`sbx`)**.

@@ -68,15 +68,14 @@ class ManualCorrectionsTest(unittest.TestCase):
             self.assertEqual(canonical.relative_to(root).as_posix(),
                              "scenarios/example_dns_001/correction.yaml")
 
-    def test_discovery_requires_root_correction_and_does_not_include_it_in_lab(self):
+    def test_discovery_does_not_require_correction_or_include_it_in_lab(self):
         from benchmark_core.scenario_loader import discover_scenarios
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary) / "scenarios"
             scenario_dir = root / "example_dns_001"
             (scenario_dir / "lab").mkdir(parents=True)
             (scenario_dir / "lab/lab.conf").write_text("client[0]=h1\n")
-            with self.assertRaisesRegex(ValueError, "correction.yaml"):
-                discover_scenarios(root)
+            self.assertIn("example_dns_001", discover_scenarios(root))
             correction = scenario_dir / "correction.yaml"
             correction.write_bytes(b"manual correction\n")
             scenario = discover_scenarios(root)["example_dns_001"]

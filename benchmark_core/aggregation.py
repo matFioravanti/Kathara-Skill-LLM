@@ -23,7 +23,7 @@ RECOVERY_MEAN_FIELDS = (
 
 RUN_COLUMNS = [
     # 1. IDENTIFICAZIONE
-    "ID", "Lab", "T",
+    "ID", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type",
     "experiment_id", "replicate", "run_number", "skill_mode", "skill_protocol",
     "agent", "model", "reasoning_effort",
     "llm_temperature", "llm_top_p",
@@ -55,12 +55,12 @@ RUN_COLUMNS = [
     "reasoning_tokens", "total_tokens",
 ]
 CHECK_COLUMNS = [
-    "ID", "Lab", "T", "experiment_id", "skill_mode", "repetition", "replicate",
+    "ID", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type", "experiment_id", "skill_mode", "repetition", "replicate",
     "agent", "model",
     "category", "test_description", "passed", "reason",
 ]
 SUMMARY_COLUMNS = [
-    "experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
+    "experiment_id", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort",
     "skill_gate_recovery_policy_version", "skill_gate_delivery_denominator",
     "skill_gate_direct_runs", "skill_gate_direct_rate",
     "skill_gate_retry_runs", "skill_gate_retry_rate", "skill_gate_fallback_runs", "skill_gate_fallback_rate",
@@ -272,6 +272,10 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
     return {
         **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills", "skill_gate_fallback_skills") else json.dumps(metrics[field], ensure_ascii=False) if isinstance(metrics.get(field), (dict, list)) else metrics.get(field)) for field in SKILL_GATE_FIELDS},
         "experiment_id": experiment_id,
+        "lab_id": metrics.get("lab_id") or manifest.get("lab_id") or manifest.get("scenario_id") or metrics.get("scenario"),
+        "dns_tree_id": metrics.get("dns_tree_id") or manifest.get("dns_tree_id"),
+        "task_level": metrics.get("task_level") or manifest.get("task_level"),
+        "prompt_type": metrics.get("prompt_type") or manifest.get("prompt_type"),
         "Lab": metrics.get("scenario") or manifest.get("scenario_id"),
         "T": metrics.get("prompt_type") or manifest.get("prompt_type"),
         "skill_mode": metrics.get("skill_mode") or manifest.get("skill_mode"),
@@ -367,6 +371,7 @@ def _check_records(run: Path, record: dict) -> list[dict]:
         description = check.get("test_description") or ""
         rows.append({
             "experiment_id": record.get("experiment_id"),
+            **{field: record.get(field) for field in ("lab_id", "dns_tree_id", "task_level", "prompt_type")},
             "Lab": record.get("Lab"), "T": record.get("T"),
             "skill_mode": record.get("skill_mode"), "repetition": record.get("repetition"),
             "replicate": record.get("replicate"),
@@ -379,7 +384,7 @@ def _check_records(run: Path, record: dict) -> list[dict]:
 
 def _summary_records(records: list[dict]) -> list[dict]:
     groups = {}
-    group_fields = ("experiment_id", "Lab", "T", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort", "skill_gate_recovery_policy_version")
+    group_fields = ("experiment_id", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type", "skill_mode", "skill_protocol", "agent", "model", "reasoning_effort", "skill_gate_recovery_policy_version")
     for record in records:
         key = tuple(record.get(field) for field in group_fields)
         groups.setdefault(key, []).append(record)
@@ -738,12 +743,14 @@ def aggregate(runs: Path, results: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd
     """Rigenera CSV e workbook dai manifest, metrics e report già salvati."""
     records, check_records = [], []
     for metrics_path in runs.rglob("metrics.json"):
+        if metrics_path.parent.name != "evaluation":
+            continue
         try:
             parts = metrics_path.relative_to(runs).parts
         except ValueError:
             continue
-        if (len(parts) != 6 or parts[4:] != ("evaluation", "metrics.json")
-                or not re.fullmatch(r"r\d{3,}", parts[3])):
+        if (len(parts) not in (6, 9) or parts[-2:] != ("evaluation", "metrics.json")
+                or not re.fullmatch(r"r\d{3,}", parts[-3])):
             continue
         run = metrics_path.parent.parent
         metrics = _read_json(metrics_path)

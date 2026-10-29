@@ -25,7 +25,7 @@ def discover_scenarios(directory: Path) -> dict[str, Scenario]:
             continue
         if not re.fullmatch(r"[A-Za-z0-9_-]+", path.name):
             raise ValueError(f"Scenario ID non valido: {path.name}")
-        required_files = [path / "correction.yaml", path / "lab/lab.conf"]
+        required_files = [path / "lab/lab.conf"]
         for required in required_files:
             if not required.is_file():
                 raise ValueError(f"Scenario incompleto: manca {required}")

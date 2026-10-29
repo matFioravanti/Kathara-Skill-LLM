@@ -71,9 +71,14 @@ def component_versions() -> dict:
             ("inspect-ai", "inspect-swe", "kathara-lab-checker", "kathara", "pandas", "PyYAML", "openai")}
 
 
-def allocate_run_directory(runs: Path, scenario_id: str, prompt_type: str, skill_mode: str) -> tuple[Path, int]:
+def allocate_run_directory(runs: Path, scenario_id: str, prompt_type: str, skill_mode: str, *, experiment_id=None, assignment=None) -> tuple[Path, int]:
     """Alloca atomicamente il prossimo rNNN per scenario e modalità."""
-    mode_root = runs / scenario_id / prompt_type / skill_mode
+    if assignment is not None:
+        if not experiment_id or not re.fullmatch(r"[A-Za-z0-9_-]+", experiment_id) or assignment.lab_id != scenario_id:
+            raise ValueError("Identità esperimento/laboratorio non valida")
+        mode_root = runs / experiment_id / assignment.lab_id / assignment.dns_tree_id / assignment.task_level / prompt_type / skill_mode
+    else:
+        mode_root = runs / scenario_id / prompt_type / skill_mode
     mode_root.mkdir(parents=True, exist_ok=True)
     existing = [
         int(match.group(1))
@@ -90,12 +95,15 @@ def allocate_run_directory(runs: Path, scenario_id: str, prompt_type: str, skill
             run_number += 1
 
 
-def logical_run_id(scenario_id: str, prompt_type: str, skill_mode: str, run_number: int) -> str:
+def logical_run_id(scenario_id: str, prompt_type: str, skill_mode: str, run_number: int, *, experiment_id=None, assignment=None) -> str:
+    if assignment is not None:
+        parts = (experiment_id, assignment.lab_id, assignment.dns_tree_id, assignment.task_level, prompt_type, skill_mode)
+        return "__".join(f"{len(part)}_{part}" for part in parts) + f"__r{run_number:03d}"
     return f"{scenario_id}__{prompt_type}__{skill_mode}__r{run_number:03d}"
 
 
-def create_workspace(runs: Path, scenario, prompt_type: str, skill_mode: str, prompt: str) -> Path:
-    run, _ = allocate_run_directory(runs, scenario.scenario_id, prompt_type, skill_mode)
+def create_workspace(runs: Path, scenario, prompt_type: str, skill_mode: str, prompt: str, *, experiment_id=None, assignment=None) -> Path:
+    run, _ = allocate_run_directory(runs, scenario.scenario_id, prompt_type, skill_mode, experiment_id=experiment_id, assignment=assignment)
     for folder in ("input", "lab", "logs/aut", "logs/generator", "results"):
         (run / folder).mkdir(parents=True, exist_ok=False)
     # input/lab: copia immutabile del baseline originale

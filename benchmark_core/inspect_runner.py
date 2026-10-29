@@ -94,7 +94,7 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                         run_number = int(run.name[1:])
                     except (ValueError, IndexError):
                         run_number = 1
-                    scenario_id = run.parents[2].name  # runs/<scenario>/<prompt>/<mode>/rNNN
+                    scenario_id = scenario.scenario_id
                     sandbox_name = _unique_sandbox_name(scenario_id, run_number)
                     codex_sbx_kwargs = {
                         "prompt": prompt,

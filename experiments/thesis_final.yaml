@@ -1,26 +1,7 @@
-# Experiment di tesi: matrice completa
-# 3 lab × 5 prompt × 5 skill mode × 3 replicate = 225 osservazioni previste
-
+# Configurazione incompleta: aggiungere soltanto assegnazioni reali validate.
 experiment:
   id: thesis_final
-
-scenarios:
-  - lab00_five_router
-  - Lab_2_No_DNS
-  - Lab_3_No_DNS
-
-prompt_types:
-  - T1
-  - T2
-  - T3
-  - T4
-  - T5
-
-skill_modes:
-  - no_skill
-  - creation_only
-  - dns_only
-  - both_forced
-  - auto
-
+assignments: []
+prompt_types: [T1, T2, T3, T4, T5]
+skill_modes: [no_skill, creation_only, dns_only, both_forced, auto]
 repetitions: 1

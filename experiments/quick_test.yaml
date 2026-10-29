@@ -1,16 +1,7 @@
-# Experiment minimale: 1 scenario × 1 prompt × 1 skill mode × 1 repetition
-# Produce UNA sola chiamata LLM.
-
+# Configurazione incompleta: aggiungere una tripla reale prima dell'uso.
 experiment:
   id: quick_test
-
-scenarios:
-  - lab00_five_router
-
-prompt_types:
-  - T3
-
-skill_modes:
-  - no_skill
-
+assignments: []
+prompt_types: [T1]
+skill_modes: [no_skill]
 repetitions: 1

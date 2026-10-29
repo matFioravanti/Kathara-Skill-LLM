@@ -162,7 +162,7 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertEqual(len(run_frame), 3)
             self.assertEqual(len(checks_frame), 2)
             self.assertEqual(list(checks_frame.columns), [
-                "ID", "Lab", "T", "experiment_id", "skill_mode",
+                "ID", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type", "experiment_id", "skill_mode",
                 "repetition", "replicate",
                 "agent", "model",
                 "category", "test_description", "passed", "reason",
