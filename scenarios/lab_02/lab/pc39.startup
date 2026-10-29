@@ -1,12 +1,21 @@
 #!/bin/sh
 set -eu
 # IPv4 e instradamento statico; le interfacce Kathara sono già attive.
-ip -4 address show dev eth0 | grep -Fq 'inet 10.12.10.13/24 ' || ip address add 10.12.10.13/24 dev eth0
+ip -4 address show dev eth0 | grep -Fq 'inet 10.15.10.13/24 ' || ip address add 10.15.10.13/24 dev eth0
 
-ip route replace default via 10.12.10.1 dev eth0
+ip route replace default via 10.15.10.1 dev eth0
 
 # Cache ARP statica per soli vicini dello stesso dominio L2 (riduce ICMP iniziali).
-ip -4 neigh replace 10.12.10.1 lladdr 02:00:00:0a:0a:01 nud permanent dev eth0
-ip -4 neigh replace 10.12.10.11 lladdr 02:00:00:0a:0a:02 nud permanent dev eth0
-ip -4 neigh replace 10.12.10.12 lladdr 02:00:00:0a:0a:03 nud permanent dev eth0
-ip -4 neigh replace 10.12.10.14 lladdr 02:00:00:0a:0a:05 nud permanent dev eth0
+ip -4 neigh replace 10.15.10.1 lladdr 02:00:00:0a:0a:01 nud permanent dev eth0
+ip -4 neigh replace 10.15.10.11 lladdr 02:00:00:0a:0a:02 nud permanent dev eth0
+ip -4 neigh replace 10.15.10.12 lladdr 02:00:00:0a:0a:03 nud permanent dev eth0
+ip -4 neigh replace 10.15.10.14 lladdr 02:00:00:0a:0a:05 nud permanent dev eth0
+
+# Gateway ICMP warmup; bounded, not fatal if router is late. 
+probe_attempt=0
+while [ "$probe_attempt" -lt 8 ]; do
+  if ping -n -I eth0 -c 1 -W 1 10.15.10.1 >/dev/null 2>&1; then break; fi
+  probe_attempt=$((probe_attempt + 1))
+  [ "$probe_attempt" -lt 8 ] || break
+  sleep 1
+done

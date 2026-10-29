@@ -1,39 +1,39 @@
 #!/bin/sh
 set -eu
-# Interfacce Kathara gia attive: indirizzamento IPv4 statico.
-ip -4 address show dev eth0 | grep -Fq 'inet 10.13.12.1/24 ' || ip address add 10.13.12.1/24 dev eth0
-ip -4 address show dev eth1 | grep -Fq 'inet 172.23.1.30/30 ' || ip address add 172.23.1.30/30 dev eth1
-ip -4 address show dev eth2 | grep -Fq 'inet 172.23.1.33/30 ' || ip address add 172.23.1.33/30 dev eth2
+# Le interfacce Kathara sono gia attive; configurazione IPv4 ripetibile.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.16.12.1/24 ' || ip address add 10.16.12.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 172.26.1.30/30 ' || ip address add 172.26.1.30/30 dev eth1
+ip -4 address show dev eth2 | grep -Fq 'inet 172.26.1.33/30 ' || ip address add 172.26.1.33/30 dev eth2
 
-# Solo rotte ip route statiche, nessun demone di routing.
-ip route replace 10.13.1.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.2.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.3.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.4.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.5.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.6.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.7.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.8.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.9.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.10.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.11.0/24 via 172.23.1.29 dev eth1
-ip route replace 10.13.13.0/24 via 172.23.1.34 dev eth2
-ip route replace 10.13.14.0/24 via 172.23.1.34 dev eth2
-ip route replace 10.13.15.0/24 via 172.23.1.34 dev eth2
-ip route replace 172.23.1.0/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.4/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.8/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.12/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.16/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.20/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.24/30 via 172.23.1.29 dev eth1
-ip route replace 172.23.1.36/30 via 172.23.1.34 dev eth2
-ip route replace 172.23.1.40/30 via 172.23.1.34 dev eth2
+# Rotte statiche verso tutte le reti non direttamente connesse.
+ip route replace 10.16.1.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.2.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.3.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.4.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.5.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.6.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.7.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.8.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.9.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.10.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.11.0/24 via 172.26.1.29 dev eth1
+ip route replace 10.16.13.0/24 via 172.26.1.34 dev eth2
+ip route replace 10.16.14.0/24 via 172.26.1.34 dev eth2
+ip route replace 10.16.15.0/24 via 172.26.1.34 dev eth2
+ip route replace 172.26.1.0/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.4/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.8/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.12/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.16/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.20/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.24/30 via 172.26.1.29 dev eth1
+ip route replace 172.26.1.36/30 via 172.26.1.34 dev eth2
+ip route replace 172.26.1.40/30 via 172.26.1.34 dev eth2
 
-# Cache ARP statica verso dispositivi sullo stesso segmento Ethernet.
-ip -4 neigh replace 10.13.12.11 lladdr 02:00:00:0a:0c:02 nud permanent dev eth0
-ip -4 neigh replace 10.13.12.12 lladdr 02:00:00:0a:0c:03 nud permanent dev eth0
-ip -4 neigh replace 10.13.12.13 lladdr 02:00:00:0a:0c:04 nud permanent dev eth0
-ip -4 neigh replace 10.13.12.14 lladdr 02:00:00:0a:0c:05 nud permanent dev eth0
-ip -4 neigh replace 172.23.1.29 lladdr 02:00:00:0b:89:08 nud permanent dev eth1
-ip -4 neigh replace 172.23.1.34 lladdr 02:00:00:0b:9a:0a nud permanent dev eth2
+# Associazioni ARP permanenti per i dispositivi direttamente collegati.
+ip -4 neigh replace 10.16.12.11 lladdr 02:00:00:aa:0c:02 nud permanent dev eth0
+ip -4 neigh replace 10.16.12.12 lladdr 02:00:00:aa:0c:03 nud permanent dev eth0
+ip -4 neigh replace 10.16.12.13 lladdr 02:00:00:aa:0c:04 nud permanent dev eth0
+ip -4 neigh replace 10.16.12.14 lladdr 02:00:00:aa:0c:05 nud permanent dev eth0
+ip -4 neigh replace 172.26.1.29 lladdr 02:00:00:bb:08:08 nud permanent dev eth1
+ip -4 neigh replace 172.26.1.34 lladdr 02:00:00:bb:09:0a nud permanent dev eth2
