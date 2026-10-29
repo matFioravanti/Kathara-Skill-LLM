@@ -1,5 +1,7 @@
 """Metriche normalizzate della run, derivate da trace e risultati conservati."""
 from pathlib import Path
+from datetime import datetime
+import hashlib
 import json
 
 from .checker_runner import checker_test_rows, parse_reports
@@ -166,6 +168,167 @@ def _sampling_meta(run: Path) -> dict | None:
     return None
 
 
+def _recovery_delivery_metrics(run: Path, metadata: dict, gate: dict, compliance: dict) -> dict:
+    """Reconcile recovery delivery with protected evidence, never phase-B reads.
+
+    Unknown or contradictory evidence remains unknown. The gate's certification
+    string alone cannot establish either reading or delivery.
+    """
+    from .skill_gate import evaluate_read_evidence
+    from .skill_modes import mode_details
+
+    unknown = {'skill_autonomous_read_before_write': None,
+               'skill_delivery_before_write': None, 'skill_delivery_details': None}
+    if (metadata.get('agent') != 'codex' or metadata.get('skill_protocol') != 'enforced_read_v1'
+            or gate.get('skill_gate_recovery_policy_version') != 'recovery_v1'):
+        return unknown
+    try:
+        required = list(mode_details(metadata['skill_mode']).forced_skills)
+    except (KeyError, ValueError):
+        return unknown
+    if not required or gate.get('skill_gate_enabled') is not True:
+        return unknown
+    methods = gate.get('skill_gate_load_methods')
+    methods = methods if isinstance(methods, dict) else {}
+    details = {skill: {'method': methods.get(skill), 'autonomous_read_before_write': None,
+                       'delivery_before_write': None} for skill in required}
+    result = {**unknown, 'skill_delivery_details': details}
+    history = gate.get('skill_gate_state_history')
+    if not isinstance(history, list) or not all(isinstance(entry, dict) for entry in history):
+        return result
+    states = [entry.get('status') for entry in history]
+    try:
+        passed_at, write_at = states.index('passed'), states.index('write_phase_running')
+        passed_time = datetime.fromisoformat(history[passed_at]['timestamp'])
+        write_time = datetime.fromisoformat(history[write_at]['timestamp'])
+        ordered = (passed_at < write_at and passed_time.utcoffset() is not None
+                   and write_time.utcoffset() is not None and passed_time <= write_time)
+    except (ValueError, TypeError, KeyError, IndexError):
+        ordered = False
+    session = gate.get('skill_gate_session_id')
+    if (not ordered or gate.get('skill_gate_status') not in ('write_phase_running', 'completed', 'technical_error')
+            or gate.get('skill_gate_protocol_version') != 'enforced_read_v1'
+            or gate.get('skill_gate_blocked') is not False
+            or gate.get('skill_gate_isolation_verified') is not True
+            or type(gate.get('skill_gate_isolation_violations')) is not int
+            or gate['skill_gate_isolation_violations'] != 0
+            or gate.get('skill_gate_context_continuity_verified') is not True
+            or type(gate.get('skill_gate_session_count')) is not int
+            or gate['skill_gate_session_count'] != 1 or not isinstance(session, str) or not session
+            or gate.get('skill_gate_required_skills') != required):
+        return result
+
+    logs = run / 'logs/aut'
+    def phase_data(path, initial=False):
+        try:
+            events = [json.loads(line) for line in (path / 'events.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
+            phase_result = json.loads((path / 'result.json').read_text(encoding='utf-8'))
+            invocation = json.loads((path / 'invocation.json').read_text(encoding='utf-8'))
+            ids = [event.get('thread_id') for event in events if event.get('type') == 'thread.started']
+            valid = (type(phase_result.get('returncode')) is int and phase_result['returncode'] == 0
+                     and phase_result.get('timed_out') is False
+                     and phase_result.get('stdin_delivery_verified') is True
+                     and phase_result.get('session_id') == session and ids == [session]
+                     and invocation.get('session_expected') == (None if initial else session)
+                     and any(e.get('type') == 'turn.completed' for e in events)
+                     and not any(e.get('type') in ('turn.failed', 'error') for e in events))
+            return events, phase_result, invocation, valid
+        except (OSError, ValueError, TypeError, AttributeError):
+            return [], {}, {}, False
+
+    # The transition and resumed B must be evidenced independently of the
+    # certification label; B events establish continuity, never a prior read.
+    _, _, _, phase_b_valid = phase_data(logs / 'phase_b')
+    if not phase_b_valid:
+        return result
+    initial_reads, retry_reads = set(), set()
+    retries = gate.get('skill_gate_retry_count')
+    attempts = gate.get('skill_gate_read_attempts')
+    if (type(retries) is not int or not 0 <= retries <= 10 or type(attempts) is not int
+            or attempts != retries + 1):
+        return result
+    retry_dirs = sorted(p for p in (logs / 'retries').glob('attempt_*') if p.is_dir())
+    if [path.name for path in retry_dirs] != [f'attempt_{index:02d}' for index in range(1, retries + 1)]:
+        return result
+    directories = [logs / 'phase_a'] + retry_dirs
+    for index, path in enumerate(directories):
+        events, phase_result, _, valid = phase_data(path, initial=index == 0)
+        if not valid:
+            return result
+        verdict = evaluate_read_evidence(run, metadata, events, returncode=phase_result['returncode'],
+                                         timed_out=phase_result['timed_out'], evidence_dir=path.relative_to(logs))
+        if verdict['status'] not in ('evidence_verified', 'verification_failed'):
+            return result
+        (initial_reads if index == 0 else retry_reads).update(verdict['verified_skills'])
+
+    # A failed check by itself is not proof of non-delivery. A negative
+    # conclusion requires a demonstrated transition, complete protected turn
+    # logs, a missing verified read, and an explicitly absent fallback.
+    if gate.get('skill_gate_context_delivery_verified') is False:
+        if (gate.get('skill_gate_fallback_used') is False
+                and not (logs / 'fallback').exists()
+                and any(skill not in initial_reads | retry_reads for skill in required)):
+            result['skill_delivery_before_write'] = False
+        return result
+    if (gate.get('skill_gate_certification') not in ('CERTIFIED', 'PARTIALLY_VERIFIED')
+            or gate.get('skill_gate_context_delivery_verified') is not True
+            or gate.get('skill_gate_verified_skills') != required
+            or set(methods) != set(required)):
+        return result
+
+    fallback_skills = [skill for skill in required if methods.get(skill) == 'preloaded_fallback']
+    fallback_valid = (not fallback_skills and gate.get('skill_gate_fallback_used') is False
+                      and gate.get('skill_gate_fallback_skills') == [] and not (logs / 'fallback').exists())
+    if fallback_skills and (gate.get('skill_gate_fallback_used') is True
+            and gate.get('skill_gate_fallback_sha256_verified') is True
+            and gate.get('skill_gate_fallback_skills') == fallback_skills):
+        _, _, invocation, valid = phase_data(logs / 'fallback')
+        try:
+            payload = (logs / 'fallback/prompt_sent.md').read_bytes()
+            valid = (valid and invocation.get('stdin_bytes') == len(payload)
+                     and invocation.get('stdin_sha256') == hashlib.sha256(payload).hexdigest())
+            for skill in fallback_skills:
+                start = b'\nBEGIN SKILL ' + skill.encode() + b'\n'
+                end = b'\nEND SKILL ' + skill.encode() + b'\n'
+                if payload.count(start) != 1 or payload.count(end) != 1:
+                    valid = False
+                    break
+                content = payload.split(start, 1)[1].split(end, 1)[0]
+                key = 'dns_skill_sha256' if skill == 'kathara-dns' else 'creation_skill_sha256'
+                valid = valid and bool(metadata.get(key)) and hashlib.sha256(content).hexdigest() == metadata[key]
+            fallback_valid = bool(valid)
+        except (OSError, ValueError, TypeError):
+            fallback_valid = False
+    if not fallback_valid:
+        return result
+
+    for skill in required:
+        method = methods.get(skill)
+        if method == 'read_verified' and skill in initial_reads:
+            autonomous = True
+        elif method == 'retry_verified' and skill in retry_reads and skill not in initial_reads:
+            autonomous = True
+        elif method == 'preloaded_fallback' and skill not in initial_reads | retry_reads:
+            autonomous = False
+        else:
+            continue
+        details[skill].update(autonomous_read_before_write=autonomous, delivery_before_write=True)
+    if all(value['delivery_before_write'] is True for value in details.values()):
+        result['skill_delivery_before_write'] = True
+        result['skill_autonomous_read_before_write'] = all(value['autonomous_read_before_write'] is True for value in details.values())
+        # These legacy fields are updated only for recovery_v1. Protocol
+        # compliance means verified delivery; strict_status distinguishes fallback.
+        compliance['required_reads_complete_before_modification'] = result['skill_autonomous_read_before_write']
+        compliance['protocol_compliance_observed'] = True
+        compliance['strict_status'] = 'verified' if result['skill_autonomous_read_before_write'] else 'fallback_delivered'
+        compliance['status'] = compliance['strict_status']
+        for skill, value in details.items():
+            observed = compliance['skill_details'][skill]
+            observed['read_before_modification'] = value['autonomous_read_before_write']
+            observed['verification_status'] = 'verified' if value['autonomous_read_before_write'] else 'fallback_delivered'
+    return result
+
+
 def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
                  checker_seconds: float | None, checker_outcome: dict | None) -> dict:
     logs = run / "logs/aut"
@@ -189,6 +352,8 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     protocol = metadata.get("skill_protocol")
     from .skill_gate import read_gate_metrics
     gate = read_gate_metrics(run)
+    delivery = {'skill_autonomous_read_before_write': None,
+                'skill_delivery_before_write': None, 'skill_delivery_details': None}
     if gate.get('skill_gate_recovery_policy_version') == 'recovery_v1':
         # The compatibility stream contains several turns; its last usage is
         # only phase B. The runner result holds their non-overlapping sum.
@@ -197,13 +362,49 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
         except (OSError, ValueError):
             result_usage = None
         tokens = codex_usage([{'type': 'turn.completed', 'usage': result_usage}])
-        protected = [e for e in events if e.get('_skill_gate_phase') == 'phase_a'
-                     or str(e.get('_skill_gate_phase', '')).startswith('retries/')]
+    if (gate.get('skill_gate_recovery_policy_version') == 'recovery_v1'
+            and protocol == 'enforced_read_v1' and agent == 'codex'
+            and metadata.get('skill_mode') in ('dns_only', 'creation_only', 'both_forced')):
+        protected = []
+        paths = [logs / 'phase_a/events.jsonl'] + sorted((logs / 'retries').glob('attempt_*/events.jsonl'))
+        for path in paths:
+            for event in load_jsonl(path):
+                item = event.get('item')
+                if (isinstance(item, dict) and item.get('type') == 'command_execution'
+                        and event.get('type') == 'item.completed'
+                        and (type(item.get('exit_code')) is not int or item['exit_code'] != 0)):
+                    continue
+                event = dict(event)
+                if isinstance(item, dict) and item.get('id'):
+                    event['item'] = {**item, 'id': str(path.parent.relative_to(logs)) + ':' + item['id']}
+                protected.append(event)
         # Network observations include all phases; autonomous reading metrics
         # exclude both fallback input and all reads after unlocking.
         _, skill_compliance = observe(run, metadata, protected, trace_path=logs / 'phase_a/events.jsonl')
+        delivery = _recovery_delivery_metrics(run, metadata, gate, skill_compliance)
+        if delivery['skill_delivery_before_write'] is not True and skill_compliance.get('required_skills'):
+            skill_compliance['status'] = skill_compliance['strict_status'] = (
+                'delivery_failed' if delivery['skill_delivery_before_write'] is False else 'unverified')
+            skill_compliance['protocol_compliance_observed'] = False if delivery['skill_delivery_before_write'] is False else None
+            skill_compliance['required_reads_complete_before_modification'] = None
+            skill_compliance['required_complete_read_count'] = None
+            skill_compliance['required_unverified_read_count'] = None
+            for skill in skill_compliance['required_skills']:
+                entry = skill_compliance['skill_details'][skill]
+                detail = (delivery.get('skill_delivery_details') or {}).get(skill) or {}
+                autonomous = detail.get('autonomous_read_before_write')
+                if detail.get('delivery_before_write') is True and type(autonomous) is bool:
+                    entry.update(complete_read_verified=True if autonomous else None,
+                                 dedicated_read=True if autonomous else None,
+                                 read_before_modification=autonomous,
+                                 verification_status='verified' if autonomous else 'fallback_delivered')
+                else:
+                    entry.update(complete_read_verified=None, dedicated_read=None,
+                                 read_before_modification=None, verification_status='unverified')
+        skill_compliance.update(delivery)
     return {
         **gate,
+        **delivery,
         "internet": internet,
         "skill_compliance": skill_compliance,
         "scenario": metadata.get("scenario_id", metadata.get("scenario")),

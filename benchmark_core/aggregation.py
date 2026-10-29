@@ -47,6 +47,7 @@ RUN_COLUMNS = [
     "required_skill_count", "required_read_attempt_count", "required_content_identified_count",
     "required_complete_read_count", "required_unverified_read_count",
     "required_reads_complete_before_modification", "protocol_compliance_observed", "skill_strict_status",
+    "skill_autonomous_read_before_write", "skill_delivery_before_write", "skill_delivery_details",
     *SKILL_GATE_FIELDS,
 
     # 4. TOKEN
@@ -63,6 +64,12 @@ SUMMARY_COLUMNS = [
     "skill_gate_recovery_policy_version", "skill_gate_delivery_denominator",
     "skill_gate_direct_runs", "skill_gate_direct_rate",
     "skill_gate_retry_runs", "skill_gate_retry_rate", "skill_gate_fallback_runs", "skill_gate_fallback_rate",
+    "skill_conformity_eligible_runs", "skill_autonomous_read_verified_runs",
+    "skill_autonomous_read_denominator", "skill_autonomous_read_rate",
+    "skill_delivery_verified_runs", "skill_delivery_denominator", "skill_delivery_rate",
+    "skill_fallback_verified_runs", "skill_fallback_denominator", "skill_fallback_rate",
+    "skill_conformity_unknown_runs", "skill_conformity_unknown_rate",
+    "skill_technical_error_runs", "skill_technical_error_rate", "skill_delivery_by_skill",
     *(f'mean_{field}' for field in RECOVERY_MEAN_FIELDS),
     "internet_confirmed_runs", "internet_confirmed_denominator", "internet_confirmed_rate",
     "internet_observed_rate",
@@ -329,6 +336,10 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
         "required_reads_complete_before_modification": compliance.get("required_reads_complete_before_modification"),
         "protocol_compliance_observed": compliance.get("protocol_compliance_observed"),
         "skill_strict_status": compliance.get("strict_status"),
+        "skill_autonomous_read_before_write": metrics.get("skill_autonomous_read_before_write"),
+        "skill_delivery_before_write": metrics.get("skill_delivery_before_write"),
+        "skill_delivery_details": json.dumps(metrics['skill_delivery_details'], ensure_ascii=False, sort_keys=True)
+                                  if isinstance(metrics.get('skill_delivery_details'), dict) else None,
         "available_skills": _skill_list_str(avail_raw),
         "forced_skills": _skill_list_str(forced_raw),
 
@@ -416,6 +427,53 @@ def _summary_records(records: list[dict]) -> list[dict]:
         gate_passed = sum(row.get("skill_gate_status") in ("passed", "write_phase_running", "completed") for row in group)
         delivery = [row for row in group if row.get('skill_gate_enabled') is True
                     and row.get('skill_gate_recovery_policy_version') == 'recovery_v1']
+        def delivery_details(row):
+            try:
+                data = json.loads(row['skill_delivery_details']) if isinstance(row.get('skill_delivery_details'), str) else row.get('skill_delivery_details')
+                return data if isinstance(data, dict) else {}
+            except ValueError:
+                return {}
+        def known_boolean(row, field):
+            return type(row.get(field)) is bool
+        autonomous_known = [row for row in delivery if known_boolean(row, 'skill_autonomous_read_before_write')]
+        delivery_known = [row for row in delivery if known_boolean(row, 'skill_delivery_before_write')]
+        autonomous_count = sum(row['skill_autonomous_read_before_write'] is True for row in autonomous_known)
+        delivery_count = sum(row['skill_delivery_before_write'] is True for row in delivery_known)
+        fallback_count = sum(any(d.get('method') == 'preloaded_fallback' and d.get('delivery_before_write') is True
+                                 for d in delivery_details(row).values() if isinstance(d, dict)) for row in delivery_known)
+        def technical_error(row):
+            return (row.get('skill_gate_status') == 'technical_error'
+                    or row.get('status') in ('AUT_FAILED', 'CHECKER_FAILED', 'CORRECTION_MISSING', 'CORRECTION_INVALID'))
+        technical = [row for row in delivery if technical_error(row)]
+        unknown = [row for row in delivery if not technical_error(row)
+                   and (not known_boolean(row, 'skill_autonomous_read_before_write')
+                        or not known_boolean(row, 'skill_delivery_before_write'))]
+        by_skill = {}
+        for row in delivery:
+            entries = delivery_details(row)
+            for skill in (row.get('skill_gate_required_skills') or '').split(';'):
+                if not skill:
+                    continue
+                stats_for_skill = by_skill.setdefault(skill, {'required_runs': 0, 'autonomous_read_verified_runs': 0,
+                    'autonomous_read_denominator': 0, 'delivery_verified_runs': 0, 'delivery_denominator': 0,
+                    'fallback_verified_runs': 0, 'unknown_runs': 0, 'technical_error_runs': 0})
+                detail = entries.get(skill) if isinstance(entries.get(skill), dict) else {}
+                a, d = detail.get('autonomous_read_before_write'), detail.get('delivery_before_write')
+                stats_for_skill['required_runs'] += 1
+                stats_for_skill['autonomous_read_denominator'] += type(a) is bool
+                stats_for_skill['autonomous_read_verified_runs'] += a is True
+                stats_for_skill['delivery_denominator'] += type(d) is bool
+                stats_for_skill['delivery_verified_runs'] += d is True
+                stats_for_skill['fallback_verified_runs'] += detail.get('method') == 'preloaded_fallback' and d is True
+                if technical_error(row):
+                    stats_for_skill['technical_error_runs'] += 1
+                elif type(a) is not bool or type(d) is not bool:
+                    stats_for_skill['unknown_runs'] += 1
+        for value in by_skill.values():
+            for label, count, denominator in [('autonomous_read_rate', 'autonomous_read_verified_runs', 'autonomous_read_denominator'),
+                                               ('delivery_rate', 'delivery_verified_runs', 'delivery_denominator'),
+                                               ('fallback_rate', 'fallback_verified_runs', 'delivery_denominator')]:
+                value[label] = value[count] / value[denominator] if value[denominator] else None
         def has_method(row, method):
             value = row.get('skill_gate_load_methods')
             if isinstance(value, str):
@@ -433,6 +491,21 @@ def _summary_records(records: list[dict]) -> list[dict]:
         output.append({
             **dict(zip(group_fields, key)),
             **methods,
+            'skill_conformity_eligible_runs': len(delivery),
+            'skill_autonomous_read_verified_runs': autonomous_count,
+            'skill_autonomous_read_denominator': len(autonomous_known),
+            'skill_autonomous_read_rate': autonomous_count / len(autonomous_known) if autonomous_known else None,
+            'skill_delivery_verified_runs': delivery_count,
+            'skill_delivery_denominator': len(delivery_known),
+            'skill_delivery_rate': delivery_count / len(delivery_known) if delivery_known else None,
+            'skill_fallback_verified_runs': fallback_count,
+            'skill_fallback_denominator': len(delivery_known),
+            'skill_fallback_rate': fallback_count / len(delivery_known) if delivery_known else None,
+            'skill_conformity_unknown_runs': len(unknown),
+            'skill_conformity_unknown_rate': len(unknown) / len(delivery) if delivery else None,
+            'skill_technical_error_runs': len(technical),
+            'skill_technical_error_rate': len(technical) / len(delivery) if delivery else None,
+            'skill_delivery_by_skill': json.dumps(by_skill, ensure_ascii=False, sort_keys=True) if by_skill else None,
             **{f'mean_{field}': _mean(row.get(field) for row in group) for field in RECOVERY_MEAN_FIELDS},
             'skill_gate_delivery_denominator': len(delivery),
             "internet_confirmed_runs": internet_confirmed,

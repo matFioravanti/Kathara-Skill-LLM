@@ -8,6 +8,72 @@ La run DNS reale su copia di `lab00_five_router`, prompt T1 e correction origina
 
 La certificazione è riferita all'ambiente locale descritto e ai confini verificati: mount, identità, capability, configurazione degli strumenti, continuità e transizione. Non si estende al backend host, ad altre versioni/configurazioni o al vecchio protocollo strettamente bloccante senza `recovery_v1`, che conserva `unsupported_backend`.
 
+## Conformità della lettura, consegna delle Skill e successo funzionale
+
+Aggiornamento delle sole metriche, riferito al commit `7c0247ea6cc6c91b1b8280761784baf2ed6bd677` più le modifiche locali di questa verifica. I risultati dei piloti descritti nel resto del documento sono quelli precedenti: **non sono stati rieseguiti Codex, il checker o sandbox reali**.
+
+Le tre dimensioni sono indipendenti:
+
+1. **Lettura autonoma**: Codex ha letto tramite tool ogni Skill obbligatoria, con lettura dedicata e integrale verificata prima dell'apertura di B. `skill_autonomous_read_before_write` è `true` solo con queste prove, `false` quando almeno una Skill è stata consegnata tramite fallback verificato e `null` quando la prova è insufficiente o non applicabile. Anche un sollecito seguito da una lettura tramite tool conta come lettura autonoma, ed è identificato da `retry_verified`.
+2. **Consegna**: `skill_delivery_before_write` indica se tutte le Skill obbligatorie sono state rese disponibili prima di B, tramite lettura verificata o fallback integrale verificato. Un valore `false` richiede una violazione dimostrata; un errore o un controllo incompleto da soli producono `null`. Il fallback prova la consegna dell'input al processo, non la comprensione del modello.
+3. **Successo funzionale**: i risultati del Kathara Lab Checker misurano il laboratorio prodotto. Una lettura o una consegna verificata non implica la comprensione delle istruzioni né il successo funzionale.
+
+`skill_delivery_details` espone per ogni Skill `method`, `autonomous_read_before_write` e `delivery_before_write`; supporta `read_verified`, `retry_verified` e `preloaded_fallback`, compresi metodi misti. Il fallback non aumenta il conteggio delle letture autonome.
+
+### Problema precedente e correzione
+
+L'osservatore precedente riceveva soltanto gli eventi protetti di A e dei retry. L'assenza delle modifiche di B in quello stream rendeva sconosciuto l'ordine lettura/modifica, con `required_reads_complete_before_modification=null` e `strict_status=unverified`, anche quando il gate aveva verificato il passaggio ad una B autorizzata.
+
+Per `enforced_read_v1` con `recovery_v1`, il ricalcolo usa gli eventi salvati delle fasi protette, i loro risultati e hash attesi, la sequenza temporale `passed` → `write_phase_running`, l'isolamento, l'ID esplicito di sessione e il risultato del turno B. La prova di lettura proviene esclusivamente da A o dai retry: gli eventi B servono a verificare la transizione, mai a dimostrare una lettura precedente. I tentativi dichiarati devono corrispondere ai log presenti; sessioni, timestamp o log mancanti/contraddittori lasciano i valori sconosciuti. La stringa `CERTIFIED` da sola non produce `true`.
+
+Per il fallback vengono verificati il messaggio salvato, la lunghezza e l'hash dell'input, gli hash dei singoli contenuti, l'esito della consegna e la stessa sessione. Un'incongruenza porta a `null`, non a una lettura inventata. Le prove di singole Skill possono restare note anche quando la conformità complessiva è sconosciuta.
+
+Nel solo protocollo di recupero, i campi storici sono coerenti con le nuove dimensioni: `required_reads_complete_before_modification` rappresenta la lettura autonoma di tutte le Skill; `protocol_compliance_observed` rappresenta la consegna verificata secondo `recovery_v1`; `strict_status` è `verified` per letture tramite tool, `fallback_delivered` per consegna con fallback, `delivery_failed` per una violazione dimostrata e `unverified` quando mancano prove. I protocolli storici, incluso `explicit_read_v2`, mantengono la semantica precedente; `no_skill` e `auto` non ricevono valori positivi artificiali.
+
+### Esempi dai log già esistenti
+
+Il ricalcolo su una **copia temporanea** del pilota DNS reale precedentemente eseguito produce:
+
+```json
+{
+  "skill_autonomous_read_before_write": true,
+  "skill_delivery_before_write": true,
+  "skill_delivery_details": {
+    "kathara-dns": {
+      "method": "read_verified",
+      "autonomous_read_before_write": true,
+      "delivery_before_write": true
+    }
+  }
+}
+```
+
+Il caso retry esistente produce ugualmente `true/true`, con metodo `retry_verified`. Il caso fallback esistente produce `false/true`, con metodo `preloaded_fallback` e `strict_status=fallback_delivered`. Il pilota DNS precedente conserva il risultato funzionale registrato di 132/132; questa verifica non lo ha rieseguito e non ha modificato i suoi file originali.
+
+### Aggregazione, test e limiti
+
+`runs.csv` e il foglio Runs esportano le due metriche e i dettagli per Skill. Summary esporta separatamente conteggi e percentuali per lettura autonoma verificata, consegna verificata, fallback verificato, conformità sconosciuta ed errore tecnico, più una struttura JSON con conteggi, denominatori e percentuali per singola Skill. Le percentuali di lettura/consegna/fallback usano come denominatore le run con il relativo valore noto; sconosciuti ed errori tecnici usano tutte le run abilitate a `recovery_v1`. Gli errori tecnici comprendono `technical_error` del gate e gli stati di errore AUT, checker o correction della pipeline. Una run tecnica non viene contata anche tra gli sconosciuti; le altre dimensioni possono sovrapporsi, per esempio consegna e fallback. Se il denominatore è zero, la percentuale è `null`.
+
+Verifiche deterministiche finali:
+
+- Test mirati richiesti: **103 superati, 0 falliti, 0 saltati**.
+- Suite completa con guardia temporanea: **272 superati, 0 falliti, 4 saltati**, più 12 sottotest superati. Tre skip sono i test Docker opt-in; il quarto è il test preesistente che crea un sandbox shell reale, saltato per rispettare la richiesta. La guardia impedisce anche l'avvio reale di Codex, Docker, Kathara e checker durante i test. Tre warning preesistenti `pkg_resources`.
+- I test coprono lettura iniziale/retry, fallback, entrambe le Skill e metodi misti, gate incompleto, errore tecnico, letture solo in B, hash errato, output troncato, sessione diversa, log retry mancanti, timestamp incoerenti e denominatori.
+- CSV ed Excel sono stati rigenerati solo in `/private/tmp/tesi-skill-conformita-l34_4f2y/results`: 3 run copiate, 132 righe di check già esistenti e intestazioni CSV/fogli Excel corrispondenti. I valori `true`, `false` e celle vuote sono verificati anche con fixture sintetiche. Il file temporaneo `validation.json` descrive il ricalcolo.
+- Confrontati con gli oggetti Git **5.476 file tracciati** in `runs`, `scenarios`, `skills`, `results` e `prompt`: **0 modificati, 0 mancanti**; presenti 76 manifest storici. `benchmark.yaml`, protocollo del sandbox e meccanismo di recupero non sono stati modificati.
+
+Comandi eseguiti:
+
+```bash
+.venv/bin/python -m pytest -v tests/test_skill_gate_recovery.py \
+  tests/test_skill_gate.py tests/test_aut_observation.py
+PYTHONPATH=/private/tmp PYTEST_ADDOPTS='-p tesi_skill_metrics_pytest_guard' \
+  .venv/bin/python -m pytest -q
+git diff --check
+```
+
+Limite: i nuovi valori vengono calcolati quando si producono o ricalcolano le metriche; i JSON/CSV/Excel ufficiali già salvati non sono stati riscritti. Per derivare un valore positivo servono gli artefatti di fase, risultato, invocazione, sessione e cronologia coerenti: se sono assenti, la metrica rimane `null`. Questo controllo non dimostra la comprensione del modello e non modifica l'architettura A → Gate → B.
+
 ## Stato iniziale e versione
 
 `HEAD` iniziale e commit di riferimento: `115a21feb7e889383c3d5b78594f895b88aff865`. Nessun commit successivo, working tree inizialmente pulito. Esaminati i file richiesti, la cronologia e gli esperimenti precedenti. Il codice testato è quel commit più le modifiche locali elencate in `skill_gate_recovery_code_versions.json`, con SHA-256 dei file. Nessun commit o push automatico.

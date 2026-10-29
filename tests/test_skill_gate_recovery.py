@@ -48,7 +48,10 @@ class ScriptedSession:
                     'command':f'cat .codex/skills/{name}/SKILL.md','status':'completed','exit_code':0,'aggregated_output':raw}})
         events.append({'type':'turn.completed','usage':{'input_tokens':11,'output_tokens':3,'cached_input_tokens':5}})
         (directory/'events.jsonl').write_text(''.join(json.dumps(e)+'\n' for e in events))
-        result={'returncode':0,'timed_out':False,'duration_seconds':2,'usage':{'input_tokens':11,'output_tokens':3,'cached_input_tokens':5},'stdin_delivery_verified':True}
+        result={'returncode':0,'timed_out':False,'duration_seconds':2,'usage':{'input_tokens':11,'output_tokens':3,'cached_input_tokens':5},'stdin_delivery_verified':True,'session_id':self.thread_id}
+        write_json(directory/'invocation.json',{'stdin_bytes':len(prompt),
+                   'stdin_sha256':hashlib.sha256(prompt).hexdigest(),
+                   'session_expected':None if directory.name=='phase_a' else self.thread_id})
         self.turns.append((directory,result)); write_json(directory/'result.json',result)
         if self.mutate_at: self.mutate_at(index)
         if self.fail_at==index: raise RuntimeError('Infrastructure failure')
@@ -261,3 +264,247 @@ def test_real_launcher_checks_thread_and_privilege_events(tmp_path,monkeypatch,k
         with pytest.raises(SandboxError): session.turn(prompt=payload,directory=directory,timeout=5)
         assert json.loads((directory/'result.json').read_text()).get('error')
     assert (directory/'prompt_sent.md').read_bytes()==payload
+
+
+def recovery_metrics(run, mode):
+    from benchmark_core.run_metrics import make_metrics
+    metadata = json.loads((run/'manifest.json').read_text())
+    metadata['skill_mode'] = mode
+    return make_metrics(run, metadata, total_seconds=None, checker_seconds=None, checker_outcome=None)
+
+
+@pytest.mark.parametrize('mode,schedule,expected_methods,autonomous', [
+    ('dns_only', [['kathara-dns']], {'kathara-dns':'read_verified'}, True),
+    ('dns_only', [[], ['kathara-dns']], {'kathara-dns':'retry_verified'}, True),
+    ('dns_only', [[], [], []], {'kathara-dns':'preloaded_fallback'}, False),
+    ('both_forced', [['kathara-creation','kathara-dns']],
+        {'kathara-creation':'read_verified','kathara-dns':'read_verified'}, True),
+    ('both_forced', [['kathara-creation'], [], []],
+        {'kathara-creation':'read_verified','kathara-dns':'preloaded_fallback'}, False),
+    ('both_forced', [[], [], []],
+        {'kathara-creation':'preloaded_fallback','kathara-dns':'preloaded_fallback'}, False),
+])
+def test_recovery_conformity_dimensions_per_skill(setup,mode,schedule,expected_methods,autonomous):
+    _,run,_,execute=setup
+    ScriptedSession.schedule=schedule
+    execute(mode)
+    metrics=recovery_metrics(run,mode)
+    assert metrics['skill_autonomous_read_before_write'] is autonomous
+    assert metrics['skill_delivery_before_write'] is True
+    assert set(metrics['skill_delivery_details']) == set(expected_methods)
+    for skill, method in expected_methods.items():
+        assert metrics['skill_delivery_details'][skill] == {
+            'method':method, 'autonomous_read_before_write':method != 'preloaded_fallback',
+            'delivery_before_write':True}
+    compliance=metrics['skill_compliance']
+    assert compliance['required_reads_complete_before_modification'] is autonomous
+    assert compliance['protocol_compliance_observed'] is True
+    assert compliance['strict_status']==('verified' if autonomous else 'fallback_delivered')
+    assert compliance['required_complete_read_count']==sum(m != 'preloaded_fallback' for m in expected_methods.values())
+    for skill, method in expected_methods.items():
+        assert compliance['skill_details'][skill]['read_before_modification'] is (method != 'preloaded_fallback')
+        if method == 'preloaded_fallback':
+            assert compliance['skill_details'][skill]['complete_read_verified'] is None
+
+
+def test_missing_or_inconsistent_gate_evidence_stays_unknown(setup):
+    _,run,_,execute=setup
+    ScriptedSession.schedule=[['kathara-dns']]
+    execute('dns_only')
+    gate=record(run)
+    # A certification string, even alongside an observed read, cannot establish
+    # a transition that has no matching lifecycle evidence.
+    gate['skill_gate_state_history']=[{'status':'initial_read'}]
+    write_json(run/'logs/aut/skill_gate.json',gate)
+    m=recovery_metrics(run,'dns_only')
+    assert m['skill_autonomous_read_before_write'] is None
+    assert m['skill_delivery_before_write'] is None
+    assert m['skill_delivery_details']['kathara-dns']['delivery_before_write'] is None
+    assert m['skill_compliance']['strict_status']=='unverified'
+    assert m['skill_compliance']['protocol_compliance_observed'] is None
+
+
+def test_preunlock_technical_failure_is_not_delivery(setup):
+    _,run,_,execute=setup
+    ScriptedSession.fail_at=0
+    with pytest.raises(RuntimeError): execute('dns_only')
+    m=recovery_metrics(run,'dns_only')
+    assert m['skill_gate_status']=='technical_error'
+    assert m['skill_autonomous_read_before_write'] is None
+    assert m['skill_delivery_before_write'] is None
+    assert m['skill_delivery_details']['kathara-dns']['delivery_before_write'] is None
+
+
+@pytest.mark.parametrize('kind',['partial','wrong_hash','missing_exit','wrong_session','truncated_fallback','bad_timestamp','missing_retry','missing_b','wrong_protocol','contradictory_fallback'])
+def test_corrupt_or_contradictory_evidence_never_proves_delivery(setup,kind):
+    _,run,_,execute=setup
+    ScriptedSession.schedule=([[],[],[]] if kind=='truncated_fallback' else [[],['kathara-dns']] if kind=='missing_retry' else [['kathara-dns']])
+    execute('dns_only')
+    metadata=json.loads((run/'manifest.json').read_text()); metadata['skill_mode']='dns_only'
+    if kind=='wrong_hash':
+        metadata['dns_skill_sha256']='0'*64
+    elif kind=='wrong_session':
+        path=run/'logs/aut/phase_b/result.json'; data=json.loads(path.read_text()); data['session_id']='other'; write_json(path,data)
+    elif kind=='truncated_fallback':
+        path=run/'logs/aut/fallback/prompt_sent.md'; path.write_bytes(path.read_bytes()[:-10])
+    elif kind=='bad_timestamp':
+        gate=record(run)
+        passed=next(x for x in gate['skill_gate_state_history'] if x['status']=='passed')
+        passed['timestamp']='9999-01-01T00:00:00+00:00'
+        write_json(run/'logs/aut/skill_gate.json',gate)
+    elif kind=='missing_retry':
+        (run/'logs/aut/retries/attempt_01').rename(run/'logs/aut/missing_retry')
+    elif kind=='missing_b':
+        (run/'logs/aut/phase_b/result.json').rename(run/'logs/aut/phase_b/missing_result.json')
+    elif kind in ('wrong_protocol','contradictory_fallback'):
+        gate=record(run)
+        if kind=='wrong_protocol': gate['skill_gate_protocol_version']='explicit_read_v2'
+        else: gate['skill_gate_fallback_skills']=['kathara-dns']
+        write_json(run/'logs/aut/skill_gate.json',gate)
+    else:
+        path=run/'logs/aut/phase_a/events.jsonl'; events=[json.loads(line) for line in path.read_text().splitlines()]
+        read=next(e['item'] for e in events if e.get('item',{}).get('type')=='command_execution')
+        if kind=='partial': read['aggregated_output']=read['aggregated_output'][:20]
+        else: del read['exit_code']
+        path.write_text(''.join(json.dumps(e)+'\n' for e in events))
+    from benchmark_core.run_metrics import make_metrics
+    m=make_metrics(run,metadata,total_seconds=None,checker_seconds=None,checker_outcome=None)
+    assert m['skill_autonomous_read_before_write'] is None
+    assert m['skill_delivery_before_write'] is None
+    assert m['skill_compliance']['strict_status']=='unverified'
+    assert m['skill_compliance']['skill_details']['kathara-dns']['complete_read_verified'] is None
+
+
+def test_phase_b_read_cannot_be_counted_as_prior_read(setup):
+    cfg,run,_,execute=setup
+    execute('dns_only')
+    path=run/'logs/aut/phase_b/events.jsonl'
+    events=[json.loads(line) for line in path.read_text().splitlines()]
+    events.insert(1,{'type':'item.completed','item':{'id':'extra','type':'command_execution',
+        'command':'cat .codex/skills/kathara-dns/SKILL.md','status':'completed','exit_code':0,
+        'aggregated_output':cfg.path(cfg.data['aut']['dns_skill']).read_bytes().decode('utf-8')}})
+    path.write_text(''.join(json.dumps(e)+'\n' for e in events))
+    m=recovery_metrics(run,'dns_only')
+    assert m['skill_autonomous_read_before_write'] is False
+    assert m['skill_delivery_before_write'] is True
+    assert m['skill_compliance']['required_complete_read_count']==0
+    assert m['skill_compliance']['observed_read_skills']==[]
+
+
+def test_non_recovery_modes_keep_unknown_delivery(setup):
+    _,run,_,execute=setup
+    ScriptedSession.schedule=[['kathara-dns']]; execute('dns_only')
+    metadata=json.loads((run/'manifest.json').read_text())
+    from benchmark_core.run_metrics import make_metrics
+    from benchmark_core.run_metrics import load_jsonl
+    from benchmark_core.aut_observation import observe
+    for mode,protocol in [('dns_only','explicit_read_v2'),('no_skill','enforced_read_v1'),('auto','enforced_read_v1')]:
+        current={**metadata,'skill_mode':mode,'skill_protocol':protocol}
+        m=make_metrics(run,current,total_seconds=None,checker_seconds=None,checker_outcome=None)
+        assert m['skill_autonomous_read_before_write'] is None
+        assert m['skill_delivery_before_write'] is None
+        assert m['skill_delivery_details'] is None
+        assert m['skill_compliance']==observe(run,current,load_jsonl(run/'logs/aut/events.jsonl'))[1]
+
+
+def test_delivery_is_false_only_for_a_demonstrated_violation(setup):
+    _,run,_,execute=setup
+    ScriptedSession.schedule=[['kathara-dns']]; execute('dns_only')
+    path=run/'logs/aut/phase_a/events.jsonl'
+    events=[json.loads(line) for line in path.read_text().splitlines()]
+    events=[e for e in events if e.get('item',{}).get('type')!='command_execution']
+    path.write_text(''.join(json.dumps(e)+'\n' for e in events))
+    gate=record(run)
+    gate.update(skill_gate_context_delivery_verified=False,skill_gate_certification='FAILED',
+                skill_gate_verified_skills=[],skill_gate_load_methods={},skill_gate_status='technical_error')
+    write_json(run/'logs/aut/skill_gate.json',gate)
+    m=recovery_metrics(run,'dns_only')
+    assert m['skill_delivery_before_write'] is False
+    assert m['skill_autonomous_read_before_write'] is None
+    assert m['skill_compliance']['protocol_compliance_observed'] is False
+    assert m['skill_compliance']['strict_status']=='delivery_failed'
+    # Missing/truncated evidence is not proof that delivery was absent.
+    (run/'logs/aut/phase_a/events.jsonl').write_text('{incomplete')
+    m=recovery_metrics(run,'dns_only')
+    assert m['skill_delivery_before_write'] is None
+
+
+def test_aggregate_delivery_denominators_and_csv_excel(setup,tmp_path):
+    import copy
+    import csv
+    import openpyxl
+    from benchmark_core.aggregation import aggregate
+    _,run,_,execute=setup
+    ScriptedSession.schedule=[['kathara-creation','kathara-dns']]; execute()
+    template=recovery_metrics(run,'both_forced')
+    root=tmp_path/'aggregate/runs'; reports=tmp_path/'aggregate/results'
+    situations=[('direct',True,True,'read_verified','completed'),
+                ('retry',True,True,'retry_verified','completed'),
+                ('fallback',False,True,'preloaded_fallback','completed'),
+                ('unknown',None,None,None,'pending'),
+                ('error',None,None,None,'technical_error'),
+                ('checker_error',True,True,'read_verified','completed')]
+    for index,(name,autonomous,delivery,method,status) in enumerate(situations,1):
+        target=root/'case/T1/both_forced'/f'r{index:03d}'; target.mkdir(parents=True)
+        data=copy.deepcopy(template)
+        details={}
+        for skill in ('kathara-creation','kathara-dns'):
+            item_method = 'read_verified' if name=='fallback' and skill=='kathara-creation' else method
+            skill_autonomous = True if item_method in ('read_verified','retry_verified') else False if item_method=='preloaded_fallback' else None
+            details[skill]={'method':item_method,'autonomous_read_before_write':skill_autonomous,'delivery_before_write':delivery}
+        data.update(run_id=name,scenario='case',prompt_type='T1',skill_mode='both_forced',
+                    experiment_id='synthetic',skill_autonomous_read_before_write=autonomous,
+                    skill_delivery_before_write=delivery,skill_delivery_details=details,
+                    skill_gate_status=status,skill_gate_load_methods={k:v['method'] for k,v in details.items()},
+                    status='CHECKER_FAILED' if name=='checker_error' else 'COMPLETED' if status=='completed' else 'AUT_FAILED' if name=='error' else 'PENDING')
+        write_json(target/'manifest.json',{'agent':'codex','skill_protocol':'enforced_read_v1','skill_mode':'both_forced'})
+        write_json(target/'evaluation/metrics.json',data)
+    rows,_,summary=aggregate(root,reports)
+    assert len(rows)==6 and len(summary)==1
+    s=summary.iloc[0]
+    assert (s['skill_conformity_eligible_runs'],s['skill_autonomous_read_verified_runs'],s['skill_autonomous_read_denominator'])==(6,3,4)
+    assert s['skill_autonomous_read_rate']==pytest.approx(3/4)
+    assert (s['skill_delivery_verified_runs'],s['skill_delivery_denominator'],s['skill_delivery_rate'])==(4,4,1)
+    assert (s['skill_fallback_verified_runs'],s['skill_fallback_denominator'])==(1,4)
+    assert s['skill_fallback_rate']==pytest.approx(1/4)
+    assert (s['skill_conformity_unknown_runs'],s['skill_technical_error_runs'])==(1,2)
+    assert s['skill_conformity_unknown_rate']==pytest.approx(1/6)
+    assert s['skill_technical_error_rate']==pytest.approx(2/6)
+    skills=json.loads(s['skill_delivery_by_skill'])
+    assert skills['kathara-creation']['autonomous_read_verified_runs']==4
+    assert skills['kathara-dns']['fallback_verified_runs']==1
+    assert skills['kathara-dns']['unknown_runs']==1 and skills['kathara-dns']['technical_error_runs']==2
+    with (reports/'runs.csv').open(newline='') as f:
+        csv_rows={r['ID']:r for r in csv.DictReader(f)}
+    assert csv_rows['fallback']['skill_autonomous_read_before_write']=='False'
+    assert csv_rows['fallback']['skill_delivery_before_write']=='True'
+    assert csv_rows['unknown']['skill_delivery_before_write']==''
+    assert json.loads(csv_rows['fallback']['skill_delivery_details'])['kathara-dns']['method']=='preloaded_fallback'
+    book=openpyxl.load_workbook(reports/'benchmark.xlsx',read_only=True)
+    for name in ('Runs','Summary'):
+        headers=[cell.value for cell in next(book[name].iter_rows())]
+        assert ('skill_delivery_details' if name=='Runs' else 'skill_delivery_by_skill') in headers
+    sheet=book['Runs']; headers=[cell.value for cell in next(sheet.iter_rows())]
+    excel_rows={r[headers.index('ID')]:r for r in sheet.iter_rows(min_row=2,values_only=True)}
+    assert excel_rows['fallback'][headers.index('skill_autonomous_read_before_write')] is False
+    assert excel_rows['unknown'][headers.index('skill_delivery_before_write')] is None
+    stored=json.loads((root/'case/T1/both_forced/r003/evaluation/metrics.json').read_text())
+    assert stored['skill_delivery_details']['kathara-dns']['method']=='preloaded_fallback'
+
+
+def test_partial_evidence_preserves_verified_individual_skill(setup):
+    _,run,_,execute=setup
+    ScriptedSession.schedule=[['kathara-creation','kathara-dns']]
+    execute()
+    path=run/'logs/aut/phase_a/events.jsonl'
+    events=[json.loads(line) for line in path.read_text().splitlines()]
+    dns=next(e['item'] for e in events if 'kathara-dns/SKILL.md' in e.get('item',{}).get('command',''))
+    dns['aggregated_output']=dns['aggregated_output'][:10]
+    path.write_text(''.join(json.dumps(e)+'\n' for e in events))
+    m=recovery_metrics(run,'both_forced')
+    assert m['skill_delivery_before_write'] is None
+    assert m['skill_autonomous_read_before_write'] is None
+    assert m['skill_delivery_details']['kathara-creation']['autonomous_read_before_write'] is True
+    assert m['skill_delivery_details']['kathara-dns']['autonomous_read_before_write'] is None
+    assert m['skill_compliance']['skill_details']['kathara-creation']['complete_read_verified'] is True
+    assert m['skill_compliance']['skill_details']['kathara-dns']['complete_read_verified'] is None
