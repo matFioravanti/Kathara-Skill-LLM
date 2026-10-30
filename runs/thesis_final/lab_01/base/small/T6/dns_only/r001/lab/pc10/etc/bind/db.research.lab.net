@@ -1,0 +1,9 @@
+$ORIGIN research.lab.net.
+$TTL 3600
+@ IN SOA ns.research.lab.net. hostmaster.research.lab.net. ( 1 3600 900 604800 300 )
+@ IN NS ns.research.lab.net.
+ns.research.lab.net. IN A 10.14.3.13
+ai.research.lab.net. IN NS ns.ai.research.lab.net.
+ns.ai.research.lab.net. IN A 10.14.4.12
+data.research.lab.net. IN NS ns.data.research.lab.net.
+ns.data.research.lab.net. IN A 10.14.4.13

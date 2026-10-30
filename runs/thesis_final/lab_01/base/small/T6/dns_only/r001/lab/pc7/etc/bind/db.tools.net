@@ -1,0 +1,9 @@
+$ORIGIN tools.net.
+$TTL 3600
+@ IN SOA ns.tools.net. hostmaster.tools.net. ( 1 3600 900 604800 300 )
+@ IN NS ns.tools.net.
+ns.tools.net. IN A 10.14.2.13
+mail IN A 10.14.2.13
+@ IN MX 10 mail.tools.net.
+ci.tools.net. IN NS ns.ci.tools.net.
+ns.ci.tools.net. IN A 10.14.4.11

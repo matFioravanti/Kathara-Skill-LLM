@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+
+# Resolver condiviso del laboratorio.
+printf "nameserver 10.14.1.11\n" > /etc/resolv.conf
+# Kathara: interfacce gia attive, solo IPv4 e routing statico.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.14.4.1/24 ' || ip address add 10.14.4.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 10.14.5.1/24 ' || ip address add 10.14.5.1/24 dev eth1
+ip -4 address show dev eth2 | grep -Fq 'inet 172.24.1.6/30 ' || ip address add 172.24.1.6/30 dev eth2
+ip -4 address show dev eth3 | grep -Fq 'inet 172.24.1.9/30 ' || ip address add 172.24.1.9/30 dev eth3
+
+# Rotte MANUALI: non avviare alcun protocollo di routing.
+ip route replace 10.14.1.0/24 via 172.24.1.5 dev eth2
+ip route replace 10.14.2.0/24 via 172.24.1.5 dev eth2
+ip route replace 10.14.3.0/24 via 172.24.1.5 dev eth2
+ip route replace 10.14.6.0/24 via 172.24.1.10 dev eth3
+ip route replace 172.24.1.0/30 via 172.24.1.5 dev eth2
+
+# ARP statico limitato ai vicini sul medesimo dominio L2.
+ip -4 neigh replace 10.14.4.11 lladdr 02:00:00:0a:04:02 nud permanent dev eth0
+ip -4 neigh replace 10.14.4.12 lladdr 02:00:00:0a:04:03 nud permanent dev eth0
+ip -4 neigh replace 10.14.4.13 lladdr 02:00:00:0a:04:04 nud permanent dev eth0
+ip -4 neigh replace 10.14.4.14 lladdr 02:00:00:0a:04:05 nud permanent dev eth0
+ip -4 neigh replace 10.14.5.11 lladdr 02:00:00:0a:05:02 nud permanent dev eth1
+ip -4 neigh replace 10.14.5.12 lladdr 02:00:00:0a:05:03 nud permanent dev eth1
+ip -4 neigh replace 10.14.5.13 lladdr 02:00:00:0a:05:04 nud permanent dev eth1
+ip -4 neigh replace 172.24.1.5 lladdr 02:00:00:0b:23:02 nud permanent dev eth2
+ip -4 neigh replace 172.24.1.10 lladdr 02:00:00:0b:34:04 nud permanent dev eth3

@@ -1,0 +1,42 @@
+{
+  "files_created": 6,
+  "files_modified": 22,
+  "files_deleted": 0,
+  "files_changed": 28,
+  "lines_added": 108,
+  "lines_deleted": 1,
+  "created": [
+    "r1/etc/bind/db.example.com",
+    "r1/etc/bind/db.lab.net",
+    "r1/etc/bind/db.service.com",
+    "r1/etc/bind/db.tools.net",
+    "r1/etc/bind/named.conf.local",
+    "r1/etc/bind/named.conf.options"
+  ],
+  "modified": [
+    "lab.conf",
+    "pc1.startup",
+    "pc10.startup",
+    "pc11.startup",
+    "pc12.startup",
+    "pc13.startup",
+    "pc14.startup",
+    "pc15.startup",
+    "pc16.startup",
+    "pc17.startup",
+    "pc18.startup",
+    "pc19.startup",
+    "pc2.startup",
+    "pc20.startup",
+    "pc3.startup",
+    "pc4.startup",
+    "pc5.startup",
+    "pc6.startup",
+    "pc7.startup",
+    "pc8.startup",
+    "pc9.startup",
+    "r1.startup"
+  ],
+  "deleted": [],
+  "non_text_files": []
+}

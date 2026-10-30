@@ -1,0 +1,20 @@
+{
+  "temperature": 1.0,
+  "top_p": 0.98,
+  "source": "server_response",
+  "status": "observed",
+  "transport": "http",
+  "collection_mode": "http_trace",
+  "temperature_status": "observed",
+  "top_p_status": "observed",
+  "response_count": 7,
+  "distinct_temperatures": [
+    1.0
+  ],
+  "distinct_top_p": [
+    0.98
+  ],
+  "client_requested_temperature": null,
+  "client_requested_top_p": null,
+  "details": null
+}

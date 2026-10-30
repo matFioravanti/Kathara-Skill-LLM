@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+# Resolver DNS del laboratorio.
+printf 'nameserver 10.14.1.11\n' > /etc/resolv.conf
+# Kathara: interfacce gia attive, solo IPv4 e routing statico.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.14.3.1/24 ' || ip address add 10.14.3.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 172.24.1.2/30 ' || ip address add 172.24.1.2/30 dev eth1
+ip -4 address show dev eth2 | grep -Fq 'inet 172.24.1.5/30 ' || ip address add 172.24.1.5/30 dev eth2
+
+# Rotte MANUALI: non avviare alcun protocollo di routing.
+ip route replace 10.14.1.0/24 via 172.24.1.1 dev eth1
+ip route replace 10.14.2.0/24 via 172.24.1.1 dev eth1
+ip route replace 10.14.4.0/24 via 172.24.1.6 dev eth2
+ip route replace 10.14.5.0/24 via 172.24.1.6 dev eth2
+ip route replace 10.14.6.0/24 via 172.24.1.6 dev eth2
+ip route replace 172.24.1.8/30 via 172.24.1.6 dev eth2
+
+# ARP statico limitato ai vicini sul medesimo dominio L2.
+ip -4 neigh replace 10.14.3.11 lladdr 02:00:00:0a:03:02 nud permanent dev eth0
+ip -4 neigh replace 10.14.3.12 lladdr 02:00:00:0a:03:03 nud permanent dev eth0
+ip -4 neigh replace 10.14.3.13 lladdr 02:00:00:0a:03:04 nud permanent dev eth0
+ip -4 neigh replace 172.24.1.1 lladdr 02:00:00:0b:12:01 nud permanent dev eth1
+ip -4 neigh replace 172.24.1.6 lladdr 02:00:00:0b:23:03 nud permanent dev eth2

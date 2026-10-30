@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/matthew/Desktop/Tesi-Skill/benchmark_core/pipeline.py", line 218, in run_one
+    raise RuntimeError("Lab AUT alterato durante il checker.")
+RuntimeError: Lab AUT alterato durante il checker.

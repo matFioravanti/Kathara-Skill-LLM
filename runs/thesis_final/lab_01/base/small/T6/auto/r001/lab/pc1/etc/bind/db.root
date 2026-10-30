@@ -1,0 +1,9 @@
+$TTL 3600
+$ORIGIN .
+@ IN SOA a.root-servers. hostmaster. ( 1 3600 900 604800 300 )
+@ IN NS a.root-servers.
+a.root-servers. IN A 10.14.1.11
+com. IN NS ns.com.
+ns.com. IN A 10.14.1.12
+net. IN NS ns.net.
+ns.net. IN A 10.14.1.13

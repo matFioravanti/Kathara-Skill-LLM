@@ -1,0 +1,898 @@
+Test Description,Passed,Reason
+Check existence of `r1`,True,OK
+Check existence of `r2`,True,OK
+Check existence of `r3`,True,OK
+Check existence of `r4`,True,OK
+Check existence of `pc1`,True,OK
+Check existence of `pc2`,True,OK
+Check existence of `pc3`,True,OK
+Check existence of `pc4`,True,OK
+Check existence of `pc5`,True,OK
+Check existence of `pc6`,True,OK
+Check existence of `pc7`,True,OK
+Check existence of `pc8`,True,OK
+Check existence of `pc9`,True,OK
+Check existence of `pc10`,True,OK
+Check existence of `pc11`,True,OK
+Check existence of `pc12`,True,OK
+Check existence of `pc13`,True,OK
+Check existence of `pc14`,True,OK
+Check existence of `pc15`,True,OK
+Check existence of `pc16`,True,OK
+Check existence of `pc17`,True,OK
+Check existence of `pc18`,True,OK
+Check existence of `pc19`,True,OK
+Check existence of `pc20`,True,OK
+Checking the collision domain attached to interface `eth0` of `r1`,True,OK
+Checking the collision domain attached to interface `eth1` of `r1`,True,OK
+Checking the collision domain attached to interface `eth2` of `r1`,True,OK
+Checking the collision domain attached to interface `eth0` of `r2`,True,OK
+Checking the collision domain attached to interface `eth1` of `r2`,True,OK
+Checking the collision domain attached to interface `eth2` of `r2`,True,OK
+Checking the collision domain attached to interface `eth0` of `r3`,True,OK
+Checking the collision domain attached to interface `eth1` of `r3`,True,OK
+Checking the collision domain attached to interface `eth2` of `r3`,True,OK
+Checking the collision domain attached to interface `eth3` of `r3`,True,OK
+Checking the collision domain attached to interface `eth0` of `r4`,True,OK
+Checking the collision domain attached to interface `eth1` of `r4`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc1`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc2`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc3`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc4`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc5`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc6`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc7`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc8`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc9`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc10`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc11`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc12`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc13`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc14`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc15`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc16`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc17`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc18`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc19`,True,OK
+Checking the collision domain attached to interface `eth0` of `pc20`,True,OK
+Check existence of `r1.startup` file,True,OK
+Check existence of `r2.startup` file,True,OK
+Check existence of `r3.startup` file,True,OK
+Check existence of `r4.startup` file,True,OK
+Check existence of `pc1.startup` file,True,OK
+Check existence of `pc2.startup` file,True,OK
+Check existence of `pc3.startup` file,True,OK
+Check existence of `pc4.startup` file,True,OK
+Check existence of `pc5.startup` file,True,OK
+Check existence of `pc6.startup` file,True,OK
+Check existence of `pc7.startup` file,True,OK
+Check existence of `pc8.startup` file,True,OK
+Check existence of `pc9.startup` file,True,OK
+Check existence of `pc10.startup` file,True,OK
+Check existence of `pc11.startup` file,True,OK
+Check existence of `pc12.startup` file,True,OK
+Check existence of `pc13.startup` file,True,OK
+Check existence of `pc14.startup` file,True,OK
+Check existence of `pc15.startup` file,True,OK
+Check existence of `pc16.startup` file,True,OK
+Check existence of `pc17.startup` file,True,OK
+Check existence of `pc18.startup` file,True,OK
+Check existence of `pc19.startup` file,True,OK
+Check existence of `pc20.startup` file,True,OK
+Verifying the IP address (10.14.1.1/24) assigned to eth0 of r1,True,OK
+Verifying the IP address (10.14.2.1/24) assigned to eth1 of r1,True,OK
+Verifying the IP address (172.24.1.1/30) assigned to eth2 of r1,True,OK
+Verifying the IP address (10.14.3.1/24) assigned to eth0 of r2,True,OK
+Verifying the IP address (172.24.1.2/30) assigned to eth1 of r2,True,OK
+Verifying the IP address (172.24.1.5/30) assigned to eth2 of r2,True,OK
+Verifying the IP address (10.14.4.1/24) assigned to eth0 of r3,True,OK
+Verifying the IP address (10.14.5.1/24) assigned to eth1 of r3,True,OK
+Verifying the IP address (172.24.1.6/30) assigned to eth2 of r3,True,OK
+Verifying the IP address (172.24.1.9/30) assigned to eth3 of r3,True,OK
+Verifying the IP address (10.14.6.1/24) assigned to eth0 of r4,True,OK
+Verifying the IP address (172.24.1.10/30) assigned to eth1 of r4,True,OK
+Verifying the IP address (10.14.1.11/24) assigned to eth0 of pc1,True,OK
+Verifying the IP address (10.14.1.12/24) assigned to eth0 of pc2,True,OK
+Verifying the IP address (10.14.1.13/24) assigned to eth0 of pc3,True,OK
+Verifying the IP address (10.14.1.14/24) assigned to eth0 of pc4,True,OK
+Verifying the IP address (10.14.2.11/24) assigned to eth0 of pc5,True,OK
+Verifying the IP address (10.14.2.12/24) assigned to eth0 of pc6,True,OK
+Verifying the IP address (10.14.2.13/24) assigned to eth0 of pc7,True,OK
+Verifying the IP address (10.14.3.11/24) assigned to eth0 of pc8,True,OK
+Verifying the IP address (10.14.3.12/24) assigned to eth0 of pc9,True,OK
+Verifying the IP address (10.14.3.13/24) assigned to eth0 of pc10,True,OK
+Verifying the IP address (10.14.4.11/24) assigned to eth0 of pc11,True,OK
+Verifying the IP address (10.14.4.12/24) assigned to eth0 of pc12,True,OK
+Verifying the IP address (10.14.4.13/24) assigned to eth0 of pc13,True,OK
+Verifying the IP address (10.14.4.14/24) assigned to eth0 of pc14,True,OK
+Verifying the IP address (10.14.5.11/24) assigned to eth0 of pc15,True,OK
+Verifying the IP address (10.14.5.12/24) assigned to eth0 of pc16,True,OK
+Verifying the IP address (10.14.5.13/24) assigned to eth0 of pc17,True,OK
+Verifying the IP address (10.14.6.11/24) assigned to eth0 of pc18,True,OK
+Verifying the IP address (10.14.6.12/24) assigned to eth0 of pc19,True,OK
+Verifying the IP address (10.14.6.13/24) assigned to eth0 of pc20,True,OK
+Verifying `10.14.1.12` reachable from device `pc1`,True,OK
+Verifying `10.14.1.13` reachable from device `pc1`,True,OK
+Verifying `10.14.1.14` reachable from device `pc1`,True,OK
+Verifying `10.14.2.11` reachable from device `pc1`,True,OK
+Verifying `10.14.2.12` reachable from device `pc1`,True,OK
+Verifying `10.14.2.13` reachable from device `pc1`,True,OK
+Verifying `10.14.3.11` reachable from device `pc1`,True,OK
+Verifying `10.14.3.12` reachable from device `pc1`,True,OK
+Verifying `10.14.3.13` reachable from device `pc1`,True,OK
+Verifying `10.14.4.11` reachable from device `pc1`,True,OK
+Verifying `10.14.4.12` reachable from device `pc1`,True,OK
+Verifying `10.14.4.13` reachable from device `pc1`,True,OK
+Verifying `10.14.4.14` reachable from device `pc1`,True,OK
+Verifying `10.14.5.11` reachable from device `pc1`,True,OK
+Verifying `10.14.5.12` reachable from device `pc1`,True,OK
+Verifying `10.14.5.13` reachable from device `pc1`,True,OK
+Verifying `10.14.6.11` reachable from device `pc1`,True,OK
+Verifying `10.14.6.12` reachable from device `pc1`,True,OK
+Verifying `10.14.6.13` reachable from device `pc1`,True,OK
+Verifying `10.14.1.1` reachable from device `pc1`,True,OK
+Verifying `10.14.1.11` reachable from device `pc2`,True,OK
+Verifying `10.14.1.13` reachable from device `pc2`,True,OK
+Verifying `10.14.1.14` reachable from device `pc2`,True,OK
+Verifying `10.14.2.11` reachable from device `pc2`,True,OK
+Verifying `10.14.2.12` reachable from device `pc2`,True,OK
+Verifying `10.14.2.13` reachable from device `pc2`,True,OK
+Verifying `10.14.3.11` reachable from device `pc2`,True,OK
+Verifying `10.14.3.12` reachable from device `pc2`,True,OK
+Verifying `10.14.3.13` reachable from device `pc2`,True,OK
+Verifying `10.14.4.11` reachable from device `pc2`,True,OK
+Verifying `10.14.4.12` reachable from device `pc2`,True,OK
+Verifying `10.14.4.13` reachable from device `pc2`,True,OK
+Verifying `10.14.4.14` reachable from device `pc2`,True,OK
+Verifying `10.14.5.11` reachable from device `pc2`,True,OK
+Verifying `10.14.5.12` reachable from device `pc2`,True,OK
+Verifying `10.14.5.13` reachable from device `pc2`,True,OK
+Verifying `10.14.6.11` reachable from device `pc2`,True,OK
+Verifying `10.14.6.12` reachable from device `pc2`,True,OK
+Verifying `10.14.6.13` reachable from device `pc2`,True,OK
+Verifying `10.14.1.1` reachable from device `pc2`,True,OK
+Verifying `10.14.1.11` reachable from device `pc3`,True,OK
+Verifying `10.14.1.12` reachable from device `pc3`,True,OK
+Verifying `10.14.1.14` reachable from device `pc3`,True,OK
+Verifying `10.14.2.11` reachable from device `pc3`,True,OK
+Verifying `10.14.2.12` reachable from device `pc3`,True,OK
+Verifying `10.14.2.13` reachable from device `pc3`,True,OK
+Verifying `10.14.3.11` reachable from device `pc3`,True,OK
+Verifying `10.14.3.12` reachable from device `pc3`,True,OK
+Verifying `10.14.3.13` reachable from device `pc3`,True,OK
+Verifying `10.14.4.11` reachable from device `pc3`,True,OK
+Verifying `10.14.4.12` reachable from device `pc3`,True,OK
+Verifying `10.14.4.13` reachable from device `pc3`,True,OK
+Verifying `10.14.4.14` reachable from device `pc3`,True,OK
+Verifying `10.14.5.11` reachable from device `pc3`,True,OK
+Verifying `10.14.5.12` reachable from device `pc3`,True,OK
+Verifying `10.14.5.13` reachable from device `pc3`,True,OK
+Verifying `10.14.6.11` reachable from device `pc3`,True,OK
+Verifying `10.14.6.12` reachable from device `pc3`,True,OK
+Verifying `10.14.6.13` reachable from device `pc3`,True,OK
+Verifying `10.14.1.1` reachable from device `pc3`,True,OK
+Verifying `10.14.1.11` reachable from device `pc4`,True,OK
+Verifying `10.14.1.12` reachable from device `pc4`,True,OK
+Verifying `10.14.1.13` reachable from device `pc4`,True,OK
+Verifying `10.14.2.11` reachable from device `pc4`,True,OK
+Verifying `10.14.2.12` reachable from device `pc4`,True,OK
+Verifying `10.14.2.13` reachable from device `pc4`,True,OK
+Verifying `10.14.3.11` reachable from device `pc4`,True,OK
+Verifying `10.14.3.12` reachable from device `pc4`,True,OK
+Verifying `10.14.3.13` reachable from device `pc4`,True,OK
+Verifying `10.14.4.11` reachable from device `pc4`,True,OK
+Verifying `10.14.4.12` reachable from device `pc4`,True,OK
+Verifying `10.14.4.13` reachable from device `pc4`,True,OK
+Verifying `10.14.4.14` reachable from device `pc4`,True,OK
+Verifying `10.14.5.11` reachable from device `pc4`,True,OK
+Verifying `10.14.5.12` reachable from device `pc4`,True,OK
+Verifying `10.14.5.13` reachable from device `pc4`,True,OK
+Verifying `10.14.6.11` reachable from device `pc4`,True,OK
+Verifying `10.14.6.12` reachable from device `pc4`,True,OK
+Verifying `10.14.6.13` reachable from device `pc4`,True,OK
+Verifying `10.14.1.1` reachable from device `pc4`,True,OK
+Verifying `10.14.1.11` reachable from device `pc5`,True,OK
+Verifying `10.14.1.12` reachable from device `pc5`,True,OK
+Verifying `10.14.1.13` reachable from device `pc5`,True,OK
+Verifying `10.14.1.14` reachable from device `pc5`,True,OK
+Verifying `10.14.2.12` reachable from device `pc5`,True,OK
+Verifying `10.14.2.13` reachable from device `pc5`,True,OK
+Verifying `10.14.3.11` reachable from device `pc5`,True,OK
+Verifying `10.14.3.12` reachable from device `pc5`,True,OK
+Verifying `10.14.3.13` reachable from device `pc5`,True,OK
+Verifying `10.14.4.11` reachable from device `pc5`,True,OK
+Verifying `10.14.4.12` reachable from device `pc5`,True,OK
+Verifying `10.14.4.13` reachable from device `pc5`,True,OK
+Verifying `10.14.4.14` reachable from device `pc5`,True,OK
+Verifying `10.14.5.11` reachable from device `pc5`,True,OK
+Verifying `10.14.5.12` reachable from device `pc5`,True,OK
+Verifying `10.14.5.13` reachable from device `pc5`,True,OK
+Verifying `10.14.6.11` reachable from device `pc5`,True,OK
+Verifying `10.14.6.12` reachable from device `pc5`,True,OK
+Verifying `10.14.6.13` reachable from device `pc5`,True,OK
+Verifying `10.14.2.1` reachable from device `pc5`,True,OK
+Verifying `10.14.1.11` reachable from device `pc6`,True,OK
+Verifying `10.14.1.12` reachable from device `pc6`,True,OK
+Verifying `10.14.1.13` reachable from device `pc6`,True,OK
+Verifying `10.14.1.14` reachable from device `pc6`,True,OK
+Verifying `10.14.2.11` reachable from device `pc6`,True,OK
+Verifying `10.14.2.13` reachable from device `pc6`,True,OK
+Verifying `10.14.3.11` reachable from device `pc6`,True,OK
+Verifying `10.14.3.12` reachable from device `pc6`,True,OK
+Verifying `10.14.3.13` reachable from device `pc6`,True,OK
+Verifying `10.14.4.11` reachable from device `pc6`,True,OK
+Verifying `10.14.4.12` reachable from device `pc6`,True,OK
+Verifying `10.14.4.13` reachable from device `pc6`,True,OK
+Verifying `10.14.4.14` reachable from device `pc6`,True,OK
+Verifying `10.14.5.11` reachable from device `pc6`,True,OK
+Verifying `10.14.5.12` reachable from device `pc6`,True,OK
+Verifying `10.14.5.13` reachable from device `pc6`,True,OK
+Verifying `10.14.6.11` reachable from device `pc6`,True,OK
+Verifying `10.14.6.12` reachable from device `pc6`,True,OK
+Verifying `10.14.6.13` reachable from device `pc6`,True,OK
+Verifying `10.14.2.1` reachable from device `pc6`,True,OK
+Verifying `10.14.1.11` reachable from device `pc7`,True,OK
+Verifying `10.14.1.12` reachable from device `pc7`,True,OK
+Verifying `10.14.1.13` reachable from device `pc7`,True,OK
+Verifying `10.14.1.14` reachable from device `pc7`,True,OK
+Verifying `10.14.2.11` reachable from device `pc7`,True,OK
+Verifying `10.14.2.12` reachable from device `pc7`,True,OK
+Verifying `10.14.3.11` reachable from device `pc7`,True,OK
+Verifying `10.14.3.12` reachable from device `pc7`,True,OK
+Verifying `10.14.3.13` reachable from device `pc7`,True,OK
+Verifying `10.14.4.11` reachable from device `pc7`,True,OK
+Verifying `10.14.4.12` reachable from device `pc7`,True,OK
+Verifying `10.14.4.13` reachable from device `pc7`,True,OK
+Verifying `10.14.4.14` reachable from device `pc7`,True,OK
+Verifying `10.14.5.11` reachable from device `pc7`,True,OK
+Verifying `10.14.5.12` reachable from device `pc7`,True,OK
+Verifying `10.14.5.13` reachable from device `pc7`,True,OK
+Verifying `10.14.6.11` reachable from device `pc7`,True,OK
+Verifying `10.14.6.12` reachable from device `pc7`,True,OK
+Verifying `10.14.6.13` reachable from device `pc7`,True,OK
+Verifying `10.14.2.1` reachable from device `pc7`,True,OK
+Verifying `10.14.1.11` reachable from device `pc8`,True,OK
+Verifying `10.14.1.12` reachable from device `pc8`,True,OK
+Verifying `10.14.1.13` reachable from device `pc8`,True,OK
+Verifying `10.14.1.14` reachable from device `pc8`,True,OK
+Verifying `10.14.2.11` reachable from device `pc8`,True,OK
+Verifying `10.14.2.12` reachable from device `pc8`,True,OK
+Verifying `10.14.2.13` reachable from device `pc8`,True,OK
+Verifying `10.14.3.12` reachable from device `pc8`,True,OK
+Verifying `10.14.3.13` reachable from device `pc8`,True,OK
+Verifying `10.14.4.11` reachable from device `pc8`,True,OK
+Verifying `10.14.4.12` reachable from device `pc8`,True,OK
+Verifying `10.14.4.13` reachable from device `pc8`,True,OK
+Verifying `10.14.4.14` reachable from device `pc8`,True,OK
+Verifying `10.14.5.11` reachable from device `pc8`,True,OK
+Verifying `10.14.5.12` reachable from device `pc8`,True,OK
+Verifying `10.14.5.13` reachable from device `pc8`,True,OK
+Verifying `10.14.6.11` reachable from device `pc8`,True,OK
+Verifying `10.14.6.12` reachable from device `pc8`,True,OK
+Verifying `10.14.6.13` reachable from device `pc8`,True,OK
+Verifying `10.14.3.1` reachable from device `pc8`,True,OK
+Verifying `10.14.1.11` reachable from device `pc9`,True,OK
+Verifying `10.14.1.12` reachable from device `pc9`,True,OK
+Verifying `10.14.1.13` reachable from device `pc9`,True,OK
+Verifying `10.14.1.14` reachable from device `pc9`,True,OK
+Verifying `10.14.2.11` reachable from device `pc9`,True,OK
+Verifying `10.14.2.12` reachable from device `pc9`,True,OK
+Verifying `10.14.2.13` reachable from device `pc9`,True,OK
+Verifying `10.14.3.11` reachable from device `pc9`,True,OK
+Verifying `10.14.3.13` reachable from device `pc9`,True,OK
+Verifying `10.14.4.11` reachable from device `pc9`,True,OK
+Verifying `10.14.4.12` reachable from device `pc9`,True,OK
+Verifying `10.14.4.13` reachable from device `pc9`,True,OK
+Verifying `10.14.4.14` reachable from device `pc9`,True,OK
+Verifying `10.14.5.11` reachable from device `pc9`,True,OK
+Verifying `10.14.5.12` reachable from device `pc9`,True,OK
+Verifying `10.14.5.13` reachable from device `pc9`,True,OK
+Verifying `10.14.6.11` reachable from device `pc9`,True,OK
+Verifying `10.14.6.12` reachable from device `pc9`,True,OK
+Verifying `10.14.6.13` reachable from device `pc9`,True,OK
+Verifying `10.14.3.1` reachable from device `pc9`,True,OK
+Verifying `10.14.1.11` reachable from device `pc10`,True,OK
+Verifying `10.14.1.12` reachable from device `pc10`,True,OK
+Verifying `10.14.1.13` reachable from device `pc10`,True,OK
+Verifying `10.14.1.14` reachable from device `pc10`,True,OK
+Verifying `10.14.2.11` reachable from device `pc10`,True,OK
+Verifying `10.14.2.12` reachable from device `pc10`,True,OK
+Verifying `10.14.2.13` reachable from device `pc10`,True,OK
+Verifying `10.14.3.11` reachable from device `pc10`,True,OK
+Verifying `10.14.3.12` reachable from device `pc10`,True,OK
+Verifying `10.14.4.11` reachable from device `pc10`,True,OK
+Verifying `10.14.4.12` reachable from device `pc10`,True,OK
+Verifying `10.14.4.13` reachable from device `pc10`,True,OK
+Verifying `10.14.4.14` reachable from device `pc10`,True,OK
+Verifying `10.14.5.11` reachable from device `pc10`,True,OK
+Verifying `10.14.5.12` reachable from device `pc10`,True,OK
+Verifying `10.14.5.13` reachable from device `pc10`,True,OK
+Verifying `10.14.6.11` reachable from device `pc10`,True,OK
+Verifying `10.14.6.12` reachable from device `pc10`,True,OK
+Verifying `10.14.6.13` reachable from device `pc10`,True,OK
+Verifying `10.14.3.1` reachable from device `pc10`,True,OK
+Verifying `10.14.1.11` reachable from device `pc11`,True,OK
+Verifying `10.14.1.12` reachable from device `pc11`,True,OK
+Verifying `10.14.1.13` reachable from device `pc11`,True,OK
+Verifying `10.14.1.14` reachable from device `pc11`,True,OK
+Verifying `10.14.2.11` reachable from device `pc11`,True,OK
+Verifying `10.14.2.12` reachable from device `pc11`,True,OK
+Verifying `10.14.2.13` reachable from device `pc11`,True,OK
+Verifying `10.14.3.11` reachable from device `pc11`,True,OK
+Verifying `10.14.3.12` reachable from device `pc11`,True,OK
+Verifying `10.14.3.13` reachable from device `pc11`,True,OK
+Verifying `10.14.4.12` reachable from device `pc11`,True,OK
+Verifying `10.14.4.13` reachable from device `pc11`,True,OK
+Verifying `10.14.4.14` reachable from device `pc11`,True,OK
+Verifying `10.14.5.11` reachable from device `pc11`,True,OK
+Verifying `10.14.5.12` reachable from device `pc11`,True,OK
+Verifying `10.14.5.13` reachable from device `pc11`,True,OK
+Verifying `10.14.6.11` reachable from device `pc11`,True,OK
+Verifying `10.14.6.12` reachable from device `pc11`,True,OK
+Verifying `10.14.6.13` reachable from device `pc11`,True,OK
+Verifying `10.14.4.1` reachable from device `pc11`,True,OK
+Verifying `10.14.1.11` reachable from device `pc12`,True,OK
+Verifying `10.14.1.12` reachable from device `pc12`,True,OK
+Verifying `10.14.1.13` reachable from device `pc12`,True,OK
+Verifying `10.14.1.14` reachable from device `pc12`,True,OK
+Verifying `10.14.2.11` reachable from device `pc12`,True,OK
+Verifying `10.14.2.12` reachable from device `pc12`,True,OK
+Verifying `10.14.2.13` reachable from device `pc12`,True,OK
+Verifying `10.14.3.11` reachable from device `pc12`,True,OK
+Verifying `10.14.3.12` reachable from device `pc12`,True,OK
+Verifying `10.14.3.13` reachable from device `pc12`,True,OK
+Verifying `10.14.4.11` reachable from device `pc12`,True,OK
+Verifying `10.14.4.13` reachable from device `pc12`,True,OK
+Verifying `10.14.4.14` reachable from device `pc12`,True,OK
+Verifying `10.14.5.11` reachable from device `pc12`,True,OK
+Verifying `10.14.5.12` reachable from device `pc12`,True,OK
+Verifying `10.14.5.13` reachable from device `pc12`,True,OK
+Verifying `10.14.6.11` reachable from device `pc12`,True,OK
+Verifying `10.14.6.12` reachable from device `pc12`,True,OK
+Verifying `10.14.6.13` reachable from device `pc12`,True,OK
+Verifying `10.14.4.1` reachable from device `pc12`,True,OK
+Verifying `10.14.1.11` reachable from device `pc13`,True,OK
+Verifying `10.14.1.12` reachable from device `pc13`,True,OK
+Verifying `10.14.1.13` reachable from device `pc13`,True,OK
+Verifying `10.14.1.14` reachable from device `pc13`,True,OK
+Verifying `10.14.2.11` reachable from device `pc13`,True,OK
+Verifying `10.14.2.12` reachable from device `pc13`,True,OK
+Verifying `10.14.2.13` reachable from device `pc13`,True,OK
+Verifying `10.14.3.11` reachable from device `pc13`,True,OK
+Verifying `10.14.3.12` reachable from device `pc13`,True,OK
+Verifying `10.14.3.13` reachable from device `pc13`,True,OK
+Verifying `10.14.4.11` reachable from device `pc13`,True,OK
+Verifying `10.14.4.12` reachable from device `pc13`,True,OK
+Verifying `10.14.4.14` reachable from device `pc13`,True,OK
+Verifying `10.14.5.11` reachable from device `pc13`,True,OK
+Verifying `10.14.5.12` reachable from device `pc13`,True,OK
+Verifying `10.14.5.13` reachable from device `pc13`,True,OK
+Verifying `10.14.6.11` reachable from device `pc13`,True,OK
+Verifying `10.14.6.12` reachable from device `pc13`,True,OK
+Verifying `10.14.6.13` reachable from device `pc13`,True,OK
+Verifying `10.14.4.1` reachable from device `pc13`,True,OK
+Verifying `10.14.1.11` reachable from device `pc14`,True,OK
+Verifying `10.14.1.12` reachable from device `pc14`,True,OK
+Verifying `10.14.1.13` reachable from device `pc14`,True,OK
+Verifying `10.14.1.14` reachable from device `pc14`,True,OK
+Verifying `10.14.2.11` reachable from device `pc14`,True,OK
+Verifying `10.14.2.12` reachable from device `pc14`,True,OK
+Verifying `10.14.2.13` reachable from device `pc14`,True,OK
+Verifying `10.14.3.11` reachable from device `pc14`,True,OK
+Verifying `10.14.3.12` reachable from device `pc14`,True,OK
+Verifying `10.14.3.13` reachable from device `pc14`,True,OK
+Verifying `10.14.4.11` reachable from device `pc14`,True,OK
+Verifying `10.14.4.12` reachable from device `pc14`,True,OK
+Verifying `10.14.4.13` reachable from device `pc14`,True,OK
+Verifying `10.14.5.11` reachable from device `pc14`,True,OK
+Verifying `10.14.5.12` reachable from device `pc14`,True,OK
+Verifying `10.14.5.13` reachable from device `pc14`,True,OK
+Verifying `10.14.6.11` reachable from device `pc14`,True,OK
+Verifying `10.14.6.12` reachable from device `pc14`,True,OK
+Verifying `10.14.6.13` reachable from device `pc14`,True,OK
+Verifying `10.14.4.1` reachable from device `pc14`,True,OK
+Verifying `10.14.1.11` reachable from device `pc15`,True,OK
+Verifying `10.14.1.12` reachable from device `pc15`,True,OK
+Verifying `10.14.1.13` reachable from device `pc15`,True,OK
+Verifying `10.14.1.14` reachable from device `pc15`,True,OK
+Verifying `10.14.2.11` reachable from device `pc15`,True,OK
+Verifying `10.14.2.12` reachable from device `pc15`,True,OK
+Verifying `10.14.2.13` reachable from device `pc15`,True,OK
+Verifying `10.14.3.11` reachable from device `pc15`,True,OK
+Verifying `10.14.3.12` reachable from device `pc15`,True,OK
+Verifying `10.14.3.13` reachable from device `pc15`,True,OK
+Verifying `10.14.4.11` reachable from device `pc15`,True,OK
+Verifying `10.14.4.12` reachable from device `pc15`,True,OK
+Verifying `10.14.4.13` reachable from device `pc15`,True,OK
+Verifying `10.14.4.14` reachable from device `pc15`,True,OK
+Verifying `10.14.5.12` reachable from device `pc15`,True,OK
+Verifying `10.14.5.13` reachable from device `pc15`,True,OK
+Verifying `10.14.6.11` reachable from device `pc15`,True,OK
+Verifying `10.14.6.12` reachable from device `pc15`,True,OK
+Verifying `10.14.6.13` reachable from device `pc15`,True,OK
+Verifying `10.14.5.1` reachable from device `pc15`,True,OK
+Verifying `10.14.1.11` reachable from device `pc16`,True,OK
+Verifying `10.14.1.12` reachable from device `pc16`,True,OK
+Verifying `10.14.1.13` reachable from device `pc16`,True,OK
+Verifying `10.14.1.14` reachable from device `pc16`,True,OK
+Verifying `10.14.2.11` reachable from device `pc16`,True,OK
+Verifying `10.14.2.12` reachable from device `pc16`,True,OK
+Verifying `10.14.2.13` reachable from device `pc16`,True,OK
+Verifying `10.14.3.11` reachable from device `pc16`,True,OK
+Verifying `10.14.3.12` reachable from device `pc16`,True,OK
+Verifying `10.14.3.13` reachable from device `pc16`,True,OK
+Verifying `10.14.4.11` reachable from device `pc16`,True,OK
+Verifying `10.14.4.12` reachable from device `pc16`,True,OK
+Verifying `10.14.4.13` reachable from device `pc16`,True,OK
+Verifying `10.14.4.14` reachable from device `pc16`,True,OK
+Verifying `10.14.5.11` reachable from device `pc16`,True,OK
+Verifying `10.14.5.13` reachable from device `pc16`,True,OK
+Verifying `10.14.6.11` reachable from device `pc16`,True,OK
+Verifying `10.14.6.12` reachable from device `pc16`,True,OK
+Verifying `10.14.6.13` reachable from device `pc16`,True,OK
+Verifying `10.14.5.1` reachable from device `pc16`,True,OK
+Verifying `10.14.1.11` reachable from device `pc17`,True,OK
+Verifying `10.14.1.12` reachable from device `pc17`,True,OK
+Verifying `10.14.1.13` reachable from device `pc17`,True,OK
+Verifying `10.14.1.14` reachable from device `pc17`,True,OK
+Verifying `10.14.2.11` reachable from device `pc17`,True,OK
+Verifying `10.14.2.12` reachable from device `pc17`,True,OK
+Verifying `10.14.2.13` reachable from device `pc17`,True,OK
+Verifying `10.14.3.11` reachable from device `pc17`,True,OK
+Verifying `10.14.3.12` reachable from device `pc17`,True,OK
+Verifying `10.14.3.13` reachable from device `pc17`,True,OK
+Verifying `10.14.4.11` reachable from device `pc17`,True,OK
+Verifying `10.14.4.12` reachable from device `pc17`,True,OK
+Verifying `10.14.4.13` reachable from device `pc17`,True,OK
+Verifying `10.14.4.14` reachable from device `pc17`,True,OK
+Verifying `10.14.5.11` reachable from device `pc17`,True,OK
+Verifying `10.14.5.12` reachable from device `pc17`,True,OK
+Verifying `10.14.6.11` reachable from device `pc17`,True,OK
+Verifying `10.14.6.12` reachable from device `pc17`,True,OK
+Verifying `10.14.6.13` reachable from device `pc17`,True,OK
+Verifying `10.14.5.1` reachable from device `pc17`,True,OK
+Verifying `10.14.1.11` reachable from device `pc18`,True,OK
+Verifying `10.14.1.12` reachable from device `pc18`,True,OK
+Verifying `10.14.1.13` reachable from device `pc18`,True,OK
+Verifying `10.14.1.14` reachable from device `pc18`,True,OK
+Verifying `10.14.2.11` reachable from device `pc18`,True,OK
+Verifying `10.14.2.12` reachable from device `pc18`,True,OK
+Verifying `10.14.2.13` reachable from device `pc18`,True,OK
+Verifying `10.14.3.11` reachable from device `pc18`,True,OK
+Verifying `10.14.3.12` reachable from device `pc18`,True,OK
+Verifying `10.14.3.13` reachable from device `pc18`,True,OK
+Verifying `10.14.4.11` reachable from device `pc18`,True,OK
+Verifying `10.14.4.12` reachable from device `pc18`,True,OK
+Verifying `10.14.4.13` reachable from device `pc18`,True,OK
+Verifying `10.14.4.14` reachable from device `pc18`,True,OK
+Verifying `10.14.5.11` reachable from device `pc18`,True,OK
+Verifying `10.14.5.12` reachable from device `pc18`,True,OK
+Verifying `10.14.5.13` reachable from device `pc18`,True,OK
+Verifying `10.14.6.12` reachable from device `pc18`,True,OK
+Verifying `10.14.6.13` reachable from device `pc18`,True,OK
+Verifying `10.14.6.1` reachable from device `pc18`,True,OK
+Verifying `10.14.1.11` reachable from device `pc19`,True,OK
+Verifying `10.14.1.12` reachable from device `pc19`,True,OK
+Verifying `10.14.1.13` reachable from device `pc19`,True,OK
+Verifying `10.14.1.14` reachable from device `pc19`,True,OK
+Verifying `10.14.2.11` reachable from device `pc19`,True,OK
+Verifying `10.14.2.12` reachable from device `pc19`,True,OK
+Verifying `10.14.2.13` reachable from device `pc19`,True,OK
+Verifying `10.14.3.11` reachable from device `pc19`,True,OK
+Verifying `10.14.3.12` reachable from device `pc19`,True,OK
+Verifying `10.14.3.13` reachable from device `pc19`,True,OK
+Verifying `10.14.4.11` reachable from device `pc19`,True,OK
+Verifying `10.14.4.12` reachable from device `pc19`,True,OK
+Verifying `10.14.4.13` reachable from device `pc19`,True,OK
+Verifying `10.14.4.14` reachable from device `pc19`,True,OK
+Verifying `10.14.5.11` reachable from device `pc19`,True,OK
+Verifying `10.14.5.12` reachable from device `pc19`,True,OK
+Verifying `10.14.5.13` reachable from device `pc19`,True,OK
+Verifying `10.14.6.11` reachable from device `pc19`,True,OK
+Verifying `10.14.6.13` reachable from device `pc19`,True,OK
+Verifying `10.14.6.1` reachable from device `pc19`,True,OK
+Verifying `10.14.1.11` reachable from device `pc20`,True,OK
+Verifying `10.14.1.12` reachable from device `pc20`,True,OK
+Verifying `10.14.1.13` reachable from device `pc20`,True,OK
+Verifying `10.14.1.14` reachable from device `pc20`,True,OK
+Verifying `10.14.2.11` reachable from device `pc20`,True,OK
+Verifying `10.14.2.12` reachable from device `pc20`,True,OK
+Verifying `10.14.2.13` reachable from device `pc20`,True,OK
+Verifying `10.14.3.11` reachable from device `pc20`,True,OK
+Verifying `10.14.3.12` reachable from device `pc20`,True,OK
+Verifying `10.14.3.13` reachable from device `pc20`,True,OK
+Verifying `10.14.4.11` reachable from device `pc20`,True,OK
+Verifying `10.14.4.12` reachable from device `pc20`,True,OK
+Verifying `10.14.4.13` reachable from device `pc20`,True,OK
+Verifying `10.14.4.14` reachable from device `pc20`,True,OK
+Verifying `10.14.5.11` reachable from device `pc20`,True,OK
+Verifying `10.14.5.12` reachable from device `pc20`,True,OK
+Verifying `10.14.5.13` reachable from device `pc20`,True,OK
+Verifying `10.14.6.11` reachable from device `pc20`,True,OK
+Verifying `10.14.6.12` reachable from device `pc20`,True,OK
+Verifying `10.14.6.1` reachable from device `pc20`,True,OK
+Verifying `172.24.1.2` reachable from device `r1`,True,OK
+Verifying `172.24.1.1` reachable from device `r2`,True,OK
+Verifying `172.24.1.6` reachable from device `r2`,True,OK
+Verifying `172.24.1.5` reachable from device `r3`,True,OK
+Verifying `172.24.1.10` reachable from device `r3`,True,OK
+Verifying `172.24.1.9` reachable from device `r4`,True,OK
+Checking that named is not running on device `r1`,True,OK
+Checking that ripd is not running on device `r1`,True,OK
+Checking that ospfd is not running on device `r1`,True,OK
+Checking that bgpd is not running on device `r1`,True,OK
+Checking that zebra is not running on device `r1`,True,OK
+Checking that named is not running on device `r2`,True,OK
+Checking that ripd is not running on device `r2`,True,OK
+Checking that ospfd is not running on device `r2`,True,OK
+Checking that bgpd is not running on device `r2`,True,OK
+Checking that zebra is not running on device `r2`,True,OK
+Checking that named is not running on device `r3`,True,OK
+Checking that ripd is not running on device `r3`,True,OK
+Checking that ospfd is not running on device `r3`,True,OK
+Checking that bgpd is not running on device `r3`,True,OK
+Checking that zebra is not running on device `r3`,True,OK
+Checking that named is not running on device `r4`,True,OK
+Checking that ripd is not running on device `r4`,True,OK
+Checking that ospfd is not running on device `r4`,True,OK
+Checking that bgpd is not running on device `r4`,True,OK
+Checking that zebra is not running on device `r4`,True,OK
+Checking that named is running on device `pc1`,True,OK
+Checking that named is running on device `pc2`,True,OK
+Checking that named is running on device `pc3`,True,OK
+Checking that named is running on device `pc4`,False,Daemon named is not running on device `pc4`
+Checking that named is running on device `pc5`,False,Daemon named is not running on device `pc5`
+Checking that named is running on device `pc6`,False,Daemon named is not running on device `pc6`
+Checking that named is running on device `pc7`,False,Daemon named is not running on device `pc7`
+Checking that named is running on device `pc8`,False,Daemon named is not running on device `pc8`
+Checking that named is running on device `pc9`,False,Daemon named is not running on device `pc9`
+Checking that named is running on device `pc10`,True,OK
+Checking that named is running on device `pc11`,False,Daemon named is not running on device `pc11`
+Checking that named is running on device `pc12`,False,Daemon named is not running on device `pc12`
+Checking that named is running on device `pc13`,False,Daemon named is not running on device `pc13`
+Checking that named is running on device `pc14`,True,OK
+Checking that named is not running on device `pc15`,False,Daemon named is running on device `pc15`
+Checking that named is not running on device `pc16`,False,Daemon named is running on device `pc16`
+Checking that named is not running on device `pc17`,False,Daemon named is running on device `pc17`
+Checking that named is not running on device `pc18`,True,OK
+Checking that named is not running on device `pc19`,True,OK
+Checking that named is not running on device `pc20`,True,OK
+Checking the routing table of r1,True,OK
+Checking the routing table of r2,True,OK
+Checking the routing table of r3,True,OK
+Checking the routing table of r4,True,OK
+Checking the routing table of pc1,True,OK
+Checking the routing table of pc2,True,OK
+Checking the routing table of pc3,True,OK
+Checking the routing table of pc4,True,OK
+Checking the routing table of pc5,True,OK
+Checking the routing table of pc6,True,OK
+Checking the routing table of pc7,True,OK
+Checking the routing table of pc8,True,OK
+Checking the routing table of pc9,True,OK
+Checking the routing table of pc10,True,OK
+Checking the routing table of pc11,True,OK
+Checking the routing table of pc12,True,OK
+Checking the routing table of pc13,True,OK
+Checking the routing table of pc14,True,OK
+Checking the routing table of pc15,True,OK
+Checking the routing table of pc16,True,OK
+Checking the routing table of pc17,True,OK
+Checking the routing table of pc18,True,OK
+Checking the routing table of pc19,True,OK
+Checking the routing table of pc20,True,OK
+Checking on `pc1` that `10.14.1.11` is the authority for domain `.`,True,OK
+Checking on `pc1` that `10.14.1.11` is the authority for domain `.`,True,OK
+Checking on `pc14` that `10.14.1.11` is the authority for domain `.`,False,named on pc14 is running but answered with REFUSED when quering for .
+Checking on `pc2` that `10.14.1.12` is the authority for domain `com`,True,OK
+Checking on `pc3` that `10.14.1.13` is the authority for domain `net`,True,OK
+Checking on `pc4` that `10.14.1.14` is the authority for domain `example.com`,False,named not started in `pc4`.startup`
+Checking on `pc5` that `10.14.2.11` is the authority for domain `service.com`,False,named not started in `pc5`.startup`
+Checking on `pc6` that `10.14.2.12` is the authority for domain `lab.net`,False,named not started in `pc6`.startup`
+Checking on `pc7` that `10.14.2.13` is the authority for domain `tools.net`,False,named not started in `pc7`.startup`
+Checking on `pc8` that `10.14.3.11` is the authority for domain `shop.example.com`,False,named not started in `pc8`.startup`
+Checking on `pc9` that `10.14.3.12` is the authority for domain `api.service.com`,False,named not started in `pc9`.startup`
+Checking on `pc10` that `10.14.3.13` is the authority for domain `research.lab.net`,False,named on pc10 is running but answered with REFUSED when quering for research.lab.net
+Checking on `pc11` that `10.14.4.11` is the authority for domain `ci.tools.net`,False,named not started in `pc11`.startup`
+Checking on `pc12` that `10.14.4.12` is the authority for domain `ai.research.lab.net`,False,named not started in `pc12`.startup`
+Checking on `pc13` that `10.14.4.13` is the authority for domain `data.research.lab.net`,False,named not started in `pc13`.startup`
+Checking that `10.14.4.14` is the local name server for device `pc16`,False,There is no local name server for device `pc16` with IP `10.14.4.14`. Actual nameservers: ['10.14.5.13']
+Checking that `10.14.4.14` is the local name server for device `pc17`,False,There is no local name server for device `pc17` with IP `10.14.4.14`. Actual nameservers: ['10.14.5.13']
+Checking that `10.14.4.14` is the local name server for device `pc18`,False,There is no local name server for device `pc18` with IP `10.14.4.14`. Actual nameservers: ['10.14.5.13']
+Checking that `10.14.4.14` is the local name server for device `pc19`,False,There is no local name server for device `pc19` with IP `10.14.4.14`. Actual nameservers: ['10.14.5.13']
+Checking that `10.14.4.14` is the local name server for device `pc20`,False,There is no local name server for device `pc20` with IP `10.14.4.14`. Actual nameservers: ['10.14.5.13']
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,False,pc16 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+Checking correctness of DNS records,False,pc17 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+Checking correctness of DNS records,False,pc18 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+Checking correctness of DNS records,False,pc19 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+Checking correctness of DNS records,False,pc20 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+Checking correctness of DNS records,False,pc16 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+Checking correctness of DNS records,False,pc17 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+Checking correctness of DNS records,False,pc18 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+Checking correctness of DNS records,False,pc19 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+Checking correctness of DNS records,False,pc20 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+Checking correctness of DNS records,False,pc16 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+Checking correctness of DNS records,False,pc17 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+Checking correctness of DNS records,False,pc18 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+Checking correctness of DNS records,False,pc19 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+Checking correctness of DNS records,False,pc20 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+Checking correctness of DNS records,False,pc16 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+Checking correctness of DNS records,False,pc17 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+Checking correctness of DNS records,False,pc18 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+Checking correctness of DNS records,False,pc19 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+Checking correctness of DNS records,False,pc20 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r1',True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '""'""'^10\.14\.3\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '""'""'^10\.14\.4\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.5.0/24 | grep -Eq '""'""'^10\.14\.5\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.6.0/24 | grep -Eq '""'""'^10\.14\.6\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 172.24.1.4/30 | grep -Eq '""'""'^172\.24\.1\.4/30 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 172.24.1.8/30 | grep -Eq '""'""'^172\.24\.1\.8/30 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
+Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r2',True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.1.0/24 | grep -Eq '""'""'^10\.14\.1\.0/24 via 172\.24\.1\.1 dev eth1([[:space:]]|$)'""'""''' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.2.0/24 | grep -Eq '""'""'^10\.14\.2\.0/24 via 172\.24\.1\.1 dev eth1([[:space:]]|$)'""'""''' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '""'""'^10\.14\.4\.0/24 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'""'""''' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.5.0/24 | grep -Eq '""'""'^10\.14\.5\.0/24 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'""'""''' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.6.0/24 | grep -Eq '""'""'^10\.14\.6\.0/24 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'""'""''' on 'r2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 172.24.1.8/30 | grep -Eq '""'""'^172\.24\.1\.8/30 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'""'""''' on 'r2'",True,OK
+Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r3',True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.1.0/24 | grep -Eq '""'""'^10\.14\.1\.0/24 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'""'""''' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.2.0/24 | grep -Eq '""'""'^10\.14\.2\.0/24 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'""'""''' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '""'""'^10\.14\.3\.0/24 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'""'""''' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.6.0/24 | grep -Eq '""'""'^10\.14\.6\.0/24 via 172\.24\.1\.10 dev eth3([[:space:]]|$)'""'""''' on 'r3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 172.24.1.0/30 | grep -Eq '""'""'^172\.24\.1\.0/30 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'""'""''' on 'r3'",True,OK
+Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r4',True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.1.0/24 | grep -Eq '""'""'^10\.14\.1\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.2.0/24 | grep -Eq '""'""'^10\.14\.2\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '""'""'^10\.14\.3\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '""'""'^10\.14\.4\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.5.0/24 | grep -Eq '""'""'^10\.14\.5\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 172.24.1.0/30 | grep -Eq '""'""'^172\.24\.1\.0/30 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show 172.24.1.4/30 | grep -Eq '""'""'^172\.24\.1\.4/30 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'""'""''' on 'r4'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc1'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc1'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc2'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc3'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc3'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc4'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.14 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc4'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.2\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc5'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.2.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc5'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.2\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc6'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.2.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc6'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.2\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc7'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.2.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc7'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.3\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc8'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.3.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc8'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.3\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc9'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.3.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc9'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.3\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.3.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc10'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc11'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc12'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc12'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc13'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc13'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc14'",True,OK
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.11 . SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",True,OK
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.12 com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",True,OK
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.13 net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",True,OK
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.14 example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""example.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.11 service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""service.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.12 lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.13 tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""tools.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.11 shop.example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.12 api.service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.13 research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""research.lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.11 ci.tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.12 ai.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.13 data.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.12 com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.12"" ] || exit 1; case ""$ns"" in ""com.""|*.""com."") b=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.11 net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.13 net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.13"" ] || exit 1; case ""$ns"" in ""net.""|*.""net."") b=$(dig @10.14.1.11 net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.14 example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.14"" ] || exit 1; case ""$ns"" in ""example.com.""|*.""example.com."") b=$(dig @10.14.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.2.11 service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.2.11"" ] || exit 1; case ""$ns"" in ""service.com.""|*.""service.com."") b=$(dig @10.14.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.2.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.2.12 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.2.12"" ] || exit 1; case ""$ns"" in ""lab.net.""|*.""lab.net."") b=$(dig @10.14.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.2.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.2.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.2.13"" ] || exit 1; case ""$ns"" in ""tools.net.""|*.""tools.net."") b=$(dig @10.14.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.2.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""shop.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.3.11 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""shop.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.3.11"" ] || exit 1; case ""$ns"" in ""shop.example.com.""|*.""shop.example.com."") b=$(dig @10.14.1.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.3.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.2.11 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""api.service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.3.12 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""api.service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.3.12"" ] || exit 1; case ""$ns"" in ""api.service.com.""|*.""api.service.com."") b=$(dig @10.14.2.11 api.service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.3.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.2.12 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.3.13 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.3.13"" ] || exit 1; case ""$ns"" in ""research.lab.net.""|*.""research.lab.net."") b=$(dig @10.14.2.12 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.3.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.2.13 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.4.11 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.4.11"" ] || exit 1; case ""$ns"" in ""ci.tools.net.""|*.""ci.tools.net."") b=$(dig @10.14.2.13 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.4.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.3.13 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.4.12 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.4.12"" ] || exit 1; case ""$ns"" in ""ai.research.lab.net.""|*.""ai.research.lab.net."") b=$(dig @10.14.3.13 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.4.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.4.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.4.13"" ] || exit 1; case ""$ns"" in ""data.research.lab.net.""|*.""data.research.lab.net."") b=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.4.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.11 shop.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.12 api.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.11 ci.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.12 ai.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.13 data.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.14 example.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""example.com."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.example.com."" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.14 mail.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.example.com."" && $4==""A"" && $5==""10.14.1.14"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.11 service.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""service.com."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.service.com."" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.11 mail.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.service.com."" && $4==""A"" && $5==""10.14.2.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.12 lab.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""lab.net."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.lab.net."" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.12 mail.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.lab.net."" && $4==""A"" && $5==""10.14.2.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.13 tools.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""tools.net."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.tools.net."" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.13 mail.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.tools.net."" && $4==""A"" && $5==""10.14.2.13"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'x=$(dig @10.14.1.14 www.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$x"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$x"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && a=$(printf ""%s\n"" ""$x"" | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ -n ""$a"" ] || exit 1; for ip in $a; do case "" 10.14.1.11 10.14.1.12 10.14.1.13 10.14.1.14 10.14.2.11 10.14.2.12 10.14.2.13 10.14.3.11 10.14.3.12 10.14.3.13 10.14.4.11 10.14.4.12 10.14.4.13 10.14.4.14 10.14.5.11 10.14.5.12 10.14.5.13 10.14.6.11 10.14.6.12 10.14.6.13 "" in *"" $ip ""*) ;; *) exit 1 ;; esac; done; y=$(dig @10.14.4.14 www.example.com. A +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ ""$y"" = ""$a"" ]'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 shop.example.com. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 api.service.com. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 ci.tools.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 ai.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 data.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.5\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc15'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.5\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc16'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc16'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc16'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc16'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc16'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc16'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.5\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc17'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc17'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc17'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc17'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc17'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc17'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.6\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc18'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc18'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc18'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc18'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc18'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc18'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.6\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc19'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc19'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc19'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc19'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc19'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc19'",True,OK
+"Checking the exit code of the command 'sh -c 'ip -4 route show default | grep -Eq '""'""'^default via 10\.14\.6\.1 dev eth0([[:space:]]|$)'""'""''' on 'pc20'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc20'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc20'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc20'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc20'",True,OK
+"Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc20'",True,OK

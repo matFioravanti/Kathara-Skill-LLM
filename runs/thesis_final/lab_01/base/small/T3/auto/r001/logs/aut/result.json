@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 28.366590334000648,
+  "sandbox_overhead_seconds": 4.74689679200128,
+  "final_message": "Configured the requested host and MX records, with all PCs using the lab’s recursive resolver. Existing addresses, routes, and connections were preserved.\n\nThe DNS roles are: root on pc1; `com` and `net` on pc2 and pc3; `example.com`, `service.com`, `lab.net`, and `tools.net` on pc10, pc14, pc15, and pc16; resolver on pc17. Those eight PCs now use the BIND image.\n\nStatic DNS and startup-script checks passed. BIND validation tools were unavailable locally, and the lab was not started, so live resolution remains to be verified. The MX records identify mail hosts; they do not configure mail delivery services.",
+  "usage": {
+    "input_tokens": 105132,
+    "cached_input_tokens": 74496,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1802,
+    "reasoning_output_tokens": 128
+  },
+  "error": null
+}

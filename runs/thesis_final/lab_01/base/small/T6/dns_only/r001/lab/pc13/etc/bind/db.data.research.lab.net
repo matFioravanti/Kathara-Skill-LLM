@@ -1,0 +1,6 @@
+$ORIGIN data.research.lab.net.
+$TTL 3600
+@ IN SOA ns.data.research.lab.net. hostmaster.data.research.lab.net. ( 1 3600 900 604800 300 )
+@ IN NS ns.data.research.lab.net.
+ns.data.research.lab.net. IN A 10.14.4.13
+@ IN A 10.14.4.13

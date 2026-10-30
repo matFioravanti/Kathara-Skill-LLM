@@ -1,0 +1,6 @@
+$TTL 300
+$ORIGIN ci.tools.net.
+@ IN SOA ns.ci.tools.net. hostmaster.ci.tools.net. ( 1 3600 600 86400 300 )
+@ IN NS ns.ci.tools.net.
+ns.ci.tools.net. IN A 10.14.4.11
+@ IN A 10.14.4.11

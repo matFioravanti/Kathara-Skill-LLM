@@ -1,0 +1,8 @@
+$TTL 300
+@ IN SOA ns.service.com. hostmaster.service.com. ( 1 3600 600 86400 300 )
+@ IN NS ns.service.com.
+ns.service.com. IN A 10.14.2.11
+mail IN A 10.14.2.11
+@ IN MX 10 mail.service.com.
+api.service.com. IN NS ns.api.service.com.
+ns.api.service.com. IN A 10.14.3.12

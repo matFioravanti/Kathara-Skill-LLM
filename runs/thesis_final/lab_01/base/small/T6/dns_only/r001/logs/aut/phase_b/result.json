@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 28.967304166999384,
+  "usage": {
+    "input_tokens": 168102,
+    "cached_input_tokens": 145280,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1934,
+    "reasoning_output_tokens": 21
+  },
+  "final_message": "Configurata la gerarchia DNS: pc1 è la root, pc2–pc13 servono le zone nell’ordine indicato nella richiesta e pc14 è il resolver per pc16–pc20.  \nCreati i file BIND e aggiunte le istruzioni di avvio DNS; in [lab.conf](/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-4qq14p9a/lab/lab.conf) le immagini di pc1–pc14 sono state impostate a `kathara/bind`.  \n**Rimane incompleto `www.example.com`**: il laboratorio non identifica un host web, quindi non è stato possibile assegnargli un indirizzo senza inventarlo.  \nVerificata la sintassi degli script di avvio; `named-checkzone` e `named-checkconf` non sono disponibili localmente. La validazione dinamica resta da eseguire esternamente.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a18d94-07a0-7682-b496-bd3f661c2272"
+}

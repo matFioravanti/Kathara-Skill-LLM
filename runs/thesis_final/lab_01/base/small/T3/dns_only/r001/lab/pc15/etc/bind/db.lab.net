@@ -1,0 +1,8 @@
+$TTL 3600
+@ IN SOA ns.lab.net. hostmaster.lab.net. ( 1 3600 900 604800 300 )
+@ IN NS ns.lab.net.
+ns IN A 10.14.5.11
+@ IN MX 10 mail.lab.net.
+mail IN A 10.14.2.12
+ai.research IN A 10.14.4.12
+data.research IN A 10.14.4.13

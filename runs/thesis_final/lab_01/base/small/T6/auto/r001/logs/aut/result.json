@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 22.061731334000797,
+  "sandbox_overhead_seconds": 4.739372832002118,
+  "final_message": "Configured the requested DNS hierarchy on pc1–pc13, with pc14 as the recursive resolver and pc16–pc20 as clients. DNS configuration files and startup commands were added, and pc1–pc14 now use the `kathara/bind` image.\n\n`www.example.com` remains unset because the lab identifies no web service host. Startup shell syntax passed; BIND validation tools were unavailable, and the lab was not started for dynamic testing.",
+  "usage": {
+    "input_tokens": 104684,
+    "cached_input_tokens": 66944,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1604,
+    "reasoning_output_tokens": 37
+  },
+  "error": null
+}

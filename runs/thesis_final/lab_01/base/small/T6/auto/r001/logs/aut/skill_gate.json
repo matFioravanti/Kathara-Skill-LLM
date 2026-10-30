@@ -1,0 +1,30 @@
+{
+  "skill_gate_enabled": false,
+  "skill_gate_status": "not_required",
+  "skill_gate_required_skills": [],
+  "skill_gate_verified_skills": [],
+  "skill_gate_read_seconds": null,
+  "skill_gate_verification_seconds": null,
+  "skill_gate_blocked": false,
+  "skill_gate_write_attempts_blocked": null,
+  "skill_gate_backend_enforcement": null,
+  "skill_gate_input_tokens": null,
+  "skill_gate_output_tokens": null,
+  "skill_gate_write_seconds": null,
+  "skill_gate_total_seconds": null,
+  "write_phase_input_tokens": null,
+  "write_phase_output_tokens": null,
+  "skill_gate_isolation_verified": null,
+  "skill_gate_isolation_violations": null,
+  "skill_gate_context_strategy": null,
+  "skill_gate_backend": "docker_sandbox",
+  "skill_gate_protocol_version": "enforced_read_v1",
+  "skill_gate_certification": "NOT_RUN",
+  "skill_gate_context_continuity_verified": null,
+  "skill_gate_state_history": [
+    {
+      "status": "not_required",
+      "timestamp": "2026-10-30T16:15:46.859092+00:00"
+    }
+  ]
+}

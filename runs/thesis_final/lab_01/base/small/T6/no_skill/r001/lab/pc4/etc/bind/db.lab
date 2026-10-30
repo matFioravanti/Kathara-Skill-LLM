@@ -1,0 +1,9 @@
+$TTL 300
+@ IN SOA ns.example.com. hostmaster.example.com. ( 1 3600 600 86400 300 )
+@ IN NS ns.example.com.
+ns.example.com. IN A 10.14.1.14
+www IN A 10.14.5.11
+mail IN A 10.14.1.14
+@ IN MX 10 mail.example.com.
+shop.example.com. IN NS ns.shop.example.com.
+ns.shop.example.com. IN A 10.14.3.11

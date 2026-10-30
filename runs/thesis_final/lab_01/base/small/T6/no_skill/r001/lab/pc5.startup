@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+# Kathara: interfacce gia attive, solo IPv4 e routing statico.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.14.2.11/24 ' || ip address add 10.14.2.11/24 dev eth0
+
+ip route replace default via 10.14.2.1 dev eth0
+
+# ARP statico limitato ai vicini sul medesimo dominio L2.
+ip -4 neigh replace 10.14.2.1 lladdr 02:00:00:0a:02:01 nud permanent dev eth0
+ip -4 neigh replace 10.14.2.12 lladdr 02:00:00:0a:02:03 nud permanent dev eth0
+ip -4 neigh replace 10.14.2.13 lladdr 02:00:00:0a:02:04 nud permanent dev eth0
+
+# Stabilizzazione del gateway (massimo 8 tentativi, mai fatale).
+probe_attempt=0
+while [ "$probe_attempt" -lt 8 ]; do
+    if ping -n -I eth0 -c 1 -W 1 10.14.2.1 >/dev/null 2>&1; then
+        break
+    fi
+    probe_attempt=$((probe_attempt + 1))
+    [ "$probe_attempt" -lt 8 ] || break
+    sleep 1
+done
+
+# Start the authoritative DNS server.
+mkdir -p /run/named /var/cache/bind
+named -4 -c /etc/bind/named.conf
