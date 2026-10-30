@@ -268,7 +268,7 @@ def merge_sampling_telemetries(telemetries: list[SamplingTelemetry],
 
 def run_http_trace_command(
     args: list[str] | tuple[str, ...], *, input_bytes: bytes, timeout: int,
-    env: dict[str, str], backend: str,
+    env: dict[str, str], backend: str, cwd: Path | None = None,
 ) -> tuple[bytes, bytes, int, bool, SamplingTelemetry]:
     """Run Codex while discarding raw SSE immediately; retain only numeric metadata.
 
@@ -282,7 +282,7 @@ def run_http_trace_command(
     collector = SamplingCollector(collection_mode="http_trace", backend=backend)
     stdout_chunks: list[bytes] = []
     process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE, env=env)
+                               stderr=subprocess.PIPE, env=env, cwd=cwd)
     assert process.stdin is not None and process.stdout is not None and process.stderr is not None
 
     def read_stdout() -> None:
