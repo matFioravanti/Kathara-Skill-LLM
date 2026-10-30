@@ -603,9 +603,16 @@ def run_codex_in_sandbox(
             codex_args += ["--model", model]
         if reasoning_effort:
             codex_args += ["-c", f'model_reasoning_effort="{reasoning_effort}"']
+        if sampling_mode == "http_trace":
+            from .sampling_telemetry import HTTP_PROVIDER_CONFIG_ARGS
+            codex_args.extend(HTTP_PROVIDER_CONFIG_ARGS)
         codex_args.append("-")
 
-        full_command = tuple([exe, "exec", "-w", str(workspace.resolve()), "-i", sandbox_name] + codex_args)
+        prefix = [exe, "exec", "-w", str(workspace.resolve()), "-i"]
+        if sampling_mode == "http_trace":
+            from .sampling_telemetry import HTTP_TRACE_RUST_LOG
+            prefix.extend(["-e", "RUST_LOG=" + HTTP_TRACE_RUST_LOG])
+        full_command = tuple(prefix + [sandbox_name] + codex_args)
 
         env = os.environ.copy()
         env.pop("OPENAI_API_KEY", None)
@@ -613,19 +620,28 @@ def run_codex_in_sandbox(
 
         codex_start = time.monotonic()
         try:
-            completed = subprocess.run(
-                list(full_command),
-                input=prompt,
-                text=True,
-                capture_output=True,
-                env=env,
-                timeout=timeout,
-                check=False,
-            )
-            codex_stdout = completed.stdout or ""
-            codex_stderr = completed.stderr or ""
-            codex_returncode = completed.returncode
-            timed_out = False
+            if sampling_mode == "http_trace":
+                from .sampling_telemetry import run_http_trace_command
+                out, err, codex_returncode, timed_out, observed_sampling = run_http_trace_command(
+                    list(full_command), input_bytes=prompt.encode("utf-8"), timeout=timeout,
+                    env=env, backend="docker_sandbox",
+                )
+                codex_stdout = out.decode("utf-8", errors="replace")
+                codex_stderr = err.decode("utf-8", errors="replace")
+            else:
+                completed = subprocess.run(
+                    list(full_command),
+                    input=prompt,
+                    text=True,
+                    capture_output=True,
+                    env=env,
+                    timeout=timeout,
+                    check=False,
+                )
+                codex_stdout = completed.stdout or ""
+                codex_stderr = completed.stderr or ""
+                codex_returncode = completed.returncode
+                timed_out = False
         except subprocess.TimeoutExpired as exc:
             codex_stdout = exc.stdout.decode("utf-8", errors="replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
             codex_stderr = exc.stderr.decode("utf-8", errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
@@ -670,7 +686,9 @@ def run_codex_in_sandbox(
 
         from .sampling_telemetry import extract_sampling_telemetry, save_sampling_telemetry
         try:
-            sampling_telemetry = extract_sampling_telemetry(logs, collection_mode=sampling_mode, backend="docker_sandbox")
+            sampling_telemetry = (observed_sampling if sampling_mode == "http_trace" and
+                                  "observed_sampling" in locals() else
+                                  extract_sampling_telemetry(logs, collection_mode=sampling_mode, backend="docker_sandbox"))
             save_sampling_telemetry(logs, sampling_telemetry)
         except Exception as exc:
             log_errors.append(f"sampling_telemetry.json: {exc}")
@@ -686,7 +704,7 @@ def run_codex_in_sandbox(
                 "model": model,
                 "reasoning_effort": reasoning_effort,
                 "sampling_collection_mode": sampling_mode,
-                "sampling_transport": None,
+                "sampling_transport": "http" if sampling_mode == "http_trace" else None,
                 "sandbox_name": sandbox_name,
                 "sandbox_id": sandbox_id,
                 "sbx_version": detected_sbx_version,
@@ -995,18 +1013,38 @@ print(json.dumps(r))
                  '-c','sandbox_workspace_write.writable_roots='+json.dumps([str(self.workspace),str(self.state)])]
         if self.config.model(): args += ['--model',self.config.model()]
         if self.config.reasoning_effort(): args += ['-c','model_reasoning_effort='+json.dumps(self.config.reasoning_effort())]
+        telemetry_cfg = self.config.sampling_telemetry_config()
+        sampling_mode = (str(telemetry_cfg.get("mode", "passive"))
+                         if telemetry_cfg.get("enabled") else "disabled")
+        if sampling_mode == "http_trace":
+            from .sampling_telemetry import HTTP_PROVIDER_CONFIG_ARGS
+            args.extend(HTTP_PROVIDER_CONFIG_ARGS)
         args += ['-']
         # This trusted wrapper reports the actual pre-exec identity. exec cannot
         # regain privilege because every capability and no-new-privs are set.
         wrapper = "import os,pathlib,json,sys; print(json.dumps({'type':'skill_gate.process_attestation','uid':os.geteuid(),'status':pathlib.Path('/proc/self/status').read_text()}),flush=True); os.execvp(sys.argv[1],sys.argv[1:])"
-        command = self.prefix()+['python3','-c',wrapper]+args
+        command = self.prefix()
+        if sampling_mode == "http_trace":
+            from .sampling_telemetry import HTTP_TRACE_RUST_LOG
+            command = command[:command.index(self.name)] + [
+                "-e", "RUST_LOG=" + HTTP_TRACE_RUST_LOG,
+            ] + command[command.index(self.name):]
+        command += ['python3','-c',wrapper]+args
         self.commands.append(command)
         write_json(directory/'invocation.json',{'command':command,'stdin_bytes':len(prompt),
                   'stdin_sha256':__import__('hashlib').sha256(prompt).hexdigest(),'session_expected':self.thread_id})
         started=time.monotonic(); timed_out=False
         try:
-            process=subprocess.run(command,input=prompt,capture_output=True,timeout=timeout,env=self.environment())
-            out,err,code=process.stdout,process.stderr,process.returncode
+            if sampling_mode == "http_trace":
+                from .sampling_telemetry import run_http_trace_command, save_sampling_telemetry
+                out,err,code,timed_out,observed = run_http_trace_command(
+                    command, input_bytes=prompt, timeout=timeout,
+                    env=self.environment(), backend="docker_sandbox",
+                )
+                save_sampling_telemetry(directory, observed)
+            else:
+                process=subprocess.run(command,input=prompt,capture_output=True,timeout=timeout,env=self.environment())
+                out,err,code=process.stdout,process.stderr,process.returncode
         except subprocess.TimeoutExpired as e:
             out,err,code,timed_out=e.stdout or b'',e.stderr or b'',124,True
         duration=time.monotonic()-started

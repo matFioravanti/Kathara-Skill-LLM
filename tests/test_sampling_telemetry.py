@@ -179,10 +179,10 @@ class TestSamplingTelemetry(unittest.TestCase):
             collection_mode="http_trace",
             backend="docker_sandbox",
         )
-        self.assertEqual(telemetry.status, "unsupported_backend")
-        self.assertEqual(telemetry.source, "unsupported")
-        self.assertIsNone(telemetry.temperature)
-        self.assertIn("docker_sandbox", str(telemetry.details))
+        self.assertEqual(telemetry.status, "partial")
+        self.assertEqual(telemetry.source, "server_response")
+        self.assertEqual(telemetry.temperature, 1.0)
+        self.assertEqual(telemetry.response_count, 1)
 
     # 10. Persistenza dei metadati anche in caso di errore dell'AUT
     def test_10_metadata_persistence_on_aut_error(self):
@@ -199,17 +199,21 @@ class TestSamplingTelemetry(unittest.TestCase):
                 '{"type":"response.done","response":{"id":"resp_err","temperature":1.0}}\n'
                 "Process crashed with error code 7\n"
             )
-            fake_proc = subprocess.CompletedProcess([], 7, stdout="", stderr=stderr)
+            telemetry = parse_sampling_telemetry(
+                stderr_text=stderr, collection_mode="http_trace", backend="codex_cli"
+            )
+            # HTTP mode now uses a streaming subprocess rather than subprocess.run.
+            # Mock the streaming boundary so the test never invokes a real CLI.
             with patch("benchmark_core.codex_cli_runner.codex_executable", return_value="codex"), \
-                 patch("benchmark_core.codex_cli_runner.subprocess.run", return_value=fake_proc):
-                try:
+                 patch("benchmark_core.sampling_telemetry.run_http_trace_command",
+                       return_value=(b"", b"Redacted failure", 7, False, telemetry)):
+                with self.assertRaises(Exception):
                     run_codex(
                         prompt="test prompt", workspace=workspace, logs=logs, timeout=10,
                         model="gpt-5.6-terra", reasoning_effort="low", variant="aut",
                         sampling_mode="http_trace",
                     )
-                except Exception:
-                    pass
+            self.assertNotIn("SSE event:", (logs / "stderr.log").read_text())
 
             telemetry_path = logs / "sampling_telemetry.json"
             self.assertTrue(telemetry_path.is_file(), "sampling_telemetry.json deve essere salvato anche in caso di crash")
@@ -521,3 +525,42 @@ class TestSamplingSafety(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestRealHTTPTraceSupport(unittest.TestCase):
+    def test_real_codex_sse_trace_and_deduplication(self):
+        from benchmark_core.sampling_telemetry import parse_sampling_telemetry
+        lines = []
+        for event_type in ("response.created", "response.completed", "response.done"):
+            lines.append(
+                "2026-10-30T10:11:12.000Z TRACE codex_api::sse::responses: SSE event: "
+                + json.dumps({"type": event_type, "response": {
+                    "id": "resp_test", "temperature": 1.0, "top_p": 0.98}})
+            )
+        sample = parse_sampling_telemetry("\n".join(lines), collection_mode="http_trace",
+                                          backend="docker_sandbox")
+        self.assertEqual(sample.response_count, 1)
+        self.assertEqual((sample.temperature, sample.top_p), (1.0, 0.98))
+        self.assertEqual(sample.status, "observed")
+        self.assertEqual(sample.transport, "http")
+
+    def test_merge_phase_discordance(self):
+        from benchmark_core.sampling_telemetry import merge_sampling_telemetries
+        left = parse_sampling_telemetry(
+            'TRACE codex_api::sse::responses: SSE event: '
+            '{"type":"response.done","response":{"id":"a","temperature":1.0}}',
+            collection_mode="http_trace")
+        right = parse_sampling_telemetry(
+            'TRACE codex_api::sse::responses: SSE event: '
+            '{"type":"response.done","response":{"id":"b","temperature":0.7}}',
+            collection_mode="http_trace")
+        merged = merge_sampling_telemetries([left, right])
+        self.assertEqual(merged.temperature_status, "inconsistent")
+        self.assertEqual(merged.response_count, 2)
+        self.assertEqual(merged.distinct_temperatures, (0.7, 1.0))
+
+    def test_trace_does_not_accept_agent_output(self):
+        trace = '{"type":"response.done","response":{"temperature":0.2}}'
+        sample = parse_sampling_telemetry(trace + "\n" + "SSE event: " + trace,
+                                         collection_mode="http_trace")
+        self.assertIsNone(sample.temperature)
+        self.assertEqual(sample.response_count, 0)

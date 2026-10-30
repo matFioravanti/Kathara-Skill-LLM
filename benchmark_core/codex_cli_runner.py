@@ -97,9 +97,17 @@ def run_codex(*, prompt: str, workspace: Path, logs: Path, timeout: int,
                           sampling_mode=sampling_mode)
     started = time.monotonic()
     try:
-        completed = subprocess.run(command, input=prompt, text=True, capture_output=True, cwd=workspace,
-                                   env=codex_environment(sampling_mode=sampling_mode), timeout=timeout, check=False)
-        stdout, stderr, returncode, timed_out = completed.stdout or "", completed.stderr or "", completed.returncode, False
+        if sampling_mode == "http_trace":
+            from .sampling_telemetry import run_http_trace_command
+            out, err, returncode, timed_out, observed_sampling = run_http_trace_command(
+                list(command), input_bytes=prompt.encode("utf-8"), timeout=timeout,
+                env=codex_environment(sampling_mode=sampling_mode), backend="codex_cli", cwd=workspace,
+            )
+            stdout, stderr = out.decode("utf-8", errors="replace"), err.decode("utf-8", errors="replace")
+        else:
+            completed = subprocess.run(command, input=prompt, text=True, capture_output=True, cwd=workspace,
+                                       env=codex_environment(sampling_mode=sampling_mode), timeout=timeout, check=False)
+            stdout, stderr, returncode, timed_out = completed.stdout or "", completed.stderr or "", completed.returncode, False
     except subprocess.TimeoutExpired as error:
         stdout = error.stdout.decode("utf-8", errors="replace") if isinstance(error.stdout, bytes) else (error.stdout or "")
         stderr = error.stderr.decode("utf-8", errors="replace") if isinstance(error.stderr, bytes) else (error.stderr or "")
@@ -113,7 +121,9 @@ def run_codex(*, prompt: str, workspace: Path, logs: Path, timeout: int,
 
     from .sampling_telemetry import extract_sampling_telemetry, save_sampling_telemetry
     try:
-        sampling_telemetry = extract_sampling_telemetry(logs, collection_mode=sampling_mode, backend="codex_cli")
+        sampling_telemetry = (observed_sampling if sampling_mode == "http_trace" and
+                              "observed_sampling" in locals() else
+                              extract_sampling_telemetry(logs, collection_mode=sampling_mode, backend="codex_cli"))
         save_sampling_telemetry(logs, sampling_telemetry)
     except Exception as exc:
         print(f"Avviso salvataggio telemetria sampling in {logs}: {exc}", file=sys.stderr if "sys" in globals() else None)

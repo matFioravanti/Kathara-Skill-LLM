@@ -95,72 +95,158 @@ def _is_response_payload(obj: Any) -> tuple[bool, dict[str, Any], str | None]:
     return True, response, response_id if isinstance(response_id, str) and response_id else None
 
 
-def parse_sampling_telemetry(stderr_text: str = "", events_text: str = "",
-                             collection_mode: str = "passive", backend: str = "codex_cli") -> SamplingTelemetry:
-    """Parse response SSE from Codex's response trace, never generic CLI output.
+# Accept only the known Codex SSE trace target, not agent output, JSONL or bare data:.
+_TRACE_LINE = re.compile(
+    r"^(?:\S+\s+)?TRACE\s+codex_api::sse::responses:\s*"
+    r"(?:SSE event:|data:)\s*(.*)$"
+)
 
-    The log channel is the provenance boundary: arbitrary JSON, agent output and
-    unlabelled `data:` lines cannot establish that a server sent a response.
-    """
-    if collection_mode == "disabled":
-        return SamplingTelemetry(None, None, "none", "disabled", None, collection_mode,
-                                 temperature_status="disabled", top_p_status="disabled")
-    if backend not in ("codex_cli", "docker_sandbox") or (backend == "docker_sandbox" and collection_mode == "http_trace"):
-        return SamplingTelemetry(None, None, "unsupported", "unsupported_backend", None, collection_mode,
-                                 temperature_status="unsupported_backend", top_p_status="unsupported_backend",
-                                 details=f"Sampling collection unavailable for {backend} in {collection_mode} mode.")
-    responses: dict[str, dict[str, list[Any]]] = {}
-    anonymous = 0
-    for line in stderr_text.splitlines():
-        # Only the known Codex response trace supplies provenance. JSONL events,
-        # shell output and bare SSE text may contain arbitrary user-controlled text.
-        match = re.match(r"^(?:\S+\s+)?TRACE\s+codex_api::sse::responses:\s*data:\s*(.*)$", line.strip())
+
+class SamplingCollector:
+    """Streaming, metadata-only extraction. Never retains raw SSE bodies or messages."""
+
+    def __init__(self, collection_mode: str = "http_trace", backend: str = "docker_sandbox"):
+        self.collection_mode = collection_mode
+        self.backend = backend
+        self.responses: dict[str, dict[str, dict[str, Any]]] = {}
+        self.anonymous = 0
+        self.overflow = False
+        self.events_seen = 0
+
+    def consume(self, line: str) -> bool:
+        """Consume a *trusted Codex stderr* line. Return True for trace lines."""
+        match = _TRACE_LINE.match(line.strip())
         if not match:
-            continue
-        data = match.group(1)
+            return False
+        # Cap individual lines to protect memory against enormous model messages.
+        if len(line) > 2_000_000:
+            self.overflow = True
+            return True
         try:
-            payload = json.loads(data.strip())
+            payload = json.loads(match.group(1))
         except (ValueError, TypeError):
-            continue
+            return True
+        self.events_seen += 1
         accepted, response, response_id = _is_response_payload(payload)
         if not accepted:
-            continue
-        if response_id is None:
-            anonymous += 1
-            response_id = f"__anonymous_{anonymous}"
-        entry = responses.setdefault(response_id, {"temperature": [], "top_p": []})
-        for name in entry:
-            if name in response:
-                entry[name].append(response[name])
-
-    def summarize(name: str) -> tuple[float | None, str, tuple[float, ...]]:
-        values: set[float] = set()
-        invalid = null = False
-        for entry in responses.values():
-            for raw in entry[name]:
-                if raw is None:
-                    null = True
-                    continue
+            return True
+        if not response_id:
+            self.anonymous += 1
+            response_id = f"__anonymous_{self.anonymous}"
+        if response_id not in self.responses:
+            if len(self.responses) >= 100_000:
+                self.overflow = True
+                return True
+            self.responses[response_id] = {
+                name: {"values": set(), "null": False, "invalid": False}
+                for name in ("temperature", "top_p")
+            }
+        entry = self.responses[response_id]
+        for name in ("temperature", "top_p"):
+            if name not in response:
+                continue
+            raw = response[name]
+            if raw is None:
+                entry[name]["null"] = True
+            else:
                 number = _validate_numeric(raw)
-                # General constraints only: provider-specific temperature ceilings
-                # differ, and no provider-specific limit is inferred here.
                 if number is None or number < 0 or (name == "top_p" and number > 1):
-                    invalid = True
+                    entry[name]["invalid"] = True
                 else:
-                    values.add(number)
+                    entry[name]["values"].add(number)
+        return True
+
+    def finish(self) -> SamplingTelemetry:
+        if self.collection_mode == "disabled":
+            return SamplingTelemetry(None, None, "none", "disabled", None, "disabled",
+                                     temperature_status="disabled", top_p_status="disabled")
+        if self.backend not in ("codex_cli", "docker_sandbox"):
+            return SamplingTelemetry(None, None, "unsupported", "unsupported_backend",
+                                     None, self.collection_mode, temperature_status="unsupported_backend",
+                                     top_p_status="unsupported_backend")
+        def summarize(name: str) -> tuple[float | None, str, tuple[float, ...]]:
+            vals: set[float] = set()
+            invalid = self.overflow
+            null = False
+            for response in self.responses.values():
+                part = response[name]
+                vals.update(part["values"])
+                null |= part["null"]
+                invalid |= part["invalid"]
+            distinct = tuple(sorted(vals))
+            if len(distinct) > 1:
+                return None, "inconsistent", distinct
+            if invalid:
+                return None, "invalid", distinct
+            if distinct:
+                return distinct[0], "observed", distinct
+            if null:
+                return None, "explicit_null", distinct
+            return None, "not_reported" if self.responses else "unavailable", distinct
+
+        temperature, ts, temps = summarize("temperature")
+        top_p, ps, top_ps = summarize("top_p")
+        if "inconsistent" in (ts, ps):
+            status = "inconsistent"
+        elif "invalid" in (ts, ps):
+            status = "invalid"
+        elif ts == ps:
+            status = ts
+        else:
+            status = "partial"
+        found = bool(self.responses)
+        return SamplingTelemetry(
+            temperature, top_p, "server_response" if found else "none", status,
+            "http" if found else None, self.collection_mode,
+            temperature_status=ts, top_p_status=ps, response_count=len(self.responses),
+            distinct_temperatures=temps, distinct_top_p=top_ps,
+            details=("Valori discordanti tra risposte." if status == "inconsistent" else
+                     "Limite di telemetria raggiunto." if self.overflow else None),
+        )
+
+
+def parse_sampling_telemetry(stderr_text: str = "", events_text: str = "",
+                             collection_mode: str = "passive", backend: str = "codex_cli") -> SamplingTelemetry:
+    """Parse trusted stderr only; JSONL, prompts, and arbitrary output are not evidence."""
+    collector = SamplingCollector(collection_mode=collection_mode, backend=backend)
+    if collection_mode == "disabled":
+        return collector.finish()
+    for line in stderr_text.splitlines():
+        collector.consume(line)
+    return collector.finish()
+
+
+def merge_sampling_telemetries(telemetries: list[SamplingTelemetry],
+                               *, collection_mode: str = "http_trace") -> SamplingTelemetry:
+    """Combine isolated phase observations, preserving discordance and missing fields."""
+    if collection_mode == "disabled":
+        return SamplingCollector("disabled").finish()
+    if not telemetries:
+        return SamplingCollector(collection_mode).finish()
+
+    def combine(name: str) -> tuple[float | None, str, tuple[float, ...]]:
+        values: set[float] = set()
+        statuses = []
+        for t in telemetries:
+            statuses.append(getattr(t, name + "_status") or t.status)
+            values.update(getattr(t, "distinct_" + ("temperatures" if name == "temperature" else "top_p")))
+            value = getattr(t, name)
+            if value is not None:
+                values.add(value)
         distinct = tuple(sorted(values))
-        if len(distinct) > 1:
+        if len(distinct) > 1 or "inconsistent" in statuses:
             return None, "inconsistent", distinct
-        if invalid:
+        if "invalid" in statuses:
             return None, "invalid", distinct
         if distinct:
             return distinct[0], "observed", distinct
-        if null:
-            return None, "explicit_null", distinct
-        return None, "not_reported" if responses else "unavailable", distinct
+        for status in ("explicit_null", "not_reported", "unavailable", "unsupported_backend", "disabled"):
+            if status in statuses:
+                return None, status, distinct
+        return None, "unavailable", distinct
 
-    temperature, ts, temps = summarize("temperature")
-    top_p, ps, top_ps = summarize("top_p")
+    t, ts, temps = combine("temperature")
+    p, ps, top_ps = combine("top_p")
     if "inconsistent" in (ts, ps):
         status = "inconsistent"
     elif "invalid" in (ts, ps):
@@ -169,11 +255,90 @@ def parse_sampling_telemetry(stderr_text: str = "", events_text: str = "",
         status = ts
     else:
         status = "partial"
-    return SamplingTelemetry(temperature, top_p, "server_response" if responses else "none", status,
-                             "http" if responses else None, collection_mode,
-                             temperature_status=ts, top_p_status=ps, response_count=len(responses),
-                             distinct_temperatures=temps, distinct_top_p=top_ps,
-                             details="Valori discordanti tra risposte." if status == "inconsistent" else None)
+    observed = any(x.source == "server_response" for x in telemetries)
+    return SamplingTelemetry(
+        t, p, "server_response" if observed else "none", status,
+        "http" if observed else None, collection_mode,
+        temperature_status=ts, top_p_status=ps,
+        response_count=sum(x.response_count for x in telemetries),
+        distinct_temperatures=temps, distinct_top_p=top_ps,
+        details="Valori discordanti tra fasi." if status == "inconsistent" else None,
+    )
+
+
+def run_http_trace_command(
+    args: list[str] | tuple[str, ...], *, input_bytes: bytes, timeout: int,
+    env: dict[str, str], backend: str, cwd: Path | None = None,
+) -> tuple[bytes, bytes, int, bool, SamplingTelemetry]:
+    """Run Codex while discarding raw SSE immediately; retain only numeric metadata.
+
+    Two concurrent readers drain both pipes to avoid deadlock. No raw HTTP trace
+    is written to disk or accumulated across the run. A fixed, non-sensitive
+    diagnostic replaces stderr in this mode.
+    """
+    import subprocess
+    import threading
+
+    collector = SamplingCollector(collection_mode="http_trace", backend=backend)
+    stdout_chunks: list[bytes] = []
+    with subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE, env=env, cwd=cwd) as process:
+        assert process.stdin is not None and process.stdout is not None and process.stderr is not None
+
+        def read_stdout() -> None:
+            while True:
+                chunk = process.stdout.read(65536)
+                if not chunk:
+                    break
+                stdout_chunks.append(chunk)
+
+        def read_stderr() -> None:
+            # SSE traces may contain full model responses. Never store raw lines.
+            # Limit line buffering to 2 MiB, discarding oversized trace lines.
+            while True:
+                raw_line = process.stderr.readline(2_000_001)
+                if not raw_line:
+                    break
+                if len(raw_line) >= 2_000_001 and not raw_line.endswith(b"\n"):
+                    collector.overflow = True
+                    # Drain the remainder in bounded chunks without accumulating it.
+                    while raw_line and not raw_line.endswith(b"\n"):
+                        raw_line = process.stderr.readline(65_536)
+                    continue
+                collector.consume(raw_line.decode("utf-8", errors="replace"))
+
+        def send_stdin() -> None:
+            try:
+                process.stdin.write(input_bytes)
+                process.stdin.flush()
+            except (BrokenPipeError, OSError):
+                pass
+            finally:
+                process.stdin.close()
+
+        threads = [
+            threading.Thread(target=read_stdout, daemon=True),
+            threading.Thread(target=read_stderr, daemon=True),
+            threading.Thread(target=send_stdin, daemon=True),
+        ]
+        for worker in threads:
+            worker.start()
+        timed_out = False
+        try:
+            code = process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            process.kill()
+            code = 124
+            process.wait()
+        for worker in threads:
+            worker.join(timeout=15)
+        # Do not infer unreported sampling parameters from model defaults.
+        telemetry = collector.finish()
+        diagnostic = (b"Codex HTTP/SSE execution timed out.\n" if timed_out else
+                      b"Codex HTTP/SSE execution failed; raw trace intentionally redacted.\n"
+                      if code else b"")
+        return b"".join(stdout_chunks), diagnostic, code, timed_out, telemetry
 
 
 def extract_sampling_telemetry(
@@ -181,15 +346,16 @@ def extract_sampling_telemetry(
     collection_mode: str = "passive",
     backend: str = "codex_cli",
 ) -> SamplingTelemetry:
-    """Estrae la telemetria di campionamento leggendo i log in logs_dir."""
+    """Read traditional passive stderr; traced runs persist sanitized metadata directly."""
     if collection_mode == "disabled":
         return parse_sampling_telemetry(collection_mode=collection_mode, backend=backend)
+    existing = load_sampling_telemetry(logs_dir) if collection_mode == "http_trace" else None
+    if existing is not None:
+        return existing
     stderr_file = logs_dir / "stderr.log"
     stderr_text = stderr_file.read_text(encoding="utf-8", errors="replace") if stderr_file.is_file() else ""
     return parse_sampling_telemetry(
-        stderr_text=stderr_text,
-        collection_mode=collection_mode,
-        backend=backend,
+        stderr_text=stderr_text, collection_mode=collection_mode, backend=backend,
     )
 
 

@@ -16,7 +16,7 @@ aut:
   creation_skill: skills/kathara-creation/SKILL.md
   sampling_telemetry:
     enabled: true
-    mode: passive
+    mode: http_trace
 
 sandbox:
   image: python:3.14.6-bookworm
