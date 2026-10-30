@@ -101,7 +101,7 @@ def run_codex(*, prompt: str, workspace: Path, logs: Path, timeout: int,
             from .sampling_telemetry import run_http_trace_command
             out, err, returncode, timed_out, observed_sampling = run_http_trace_command(
                 list(command), input_bytes=prompt.encode("utf-8"), timeout=timeout,
-                env=codex_environment(sampling_mode=sampling_mode), backend="codex_cli",
+                env=codex_environment(sampling_mode=sampling_mode), backend="codex_cli", cwd=workspace,
             )
             stdout, stderr = out.decode("utf-8", errors="replace"), err.decode("utf-8", errors="replace")
         else:
