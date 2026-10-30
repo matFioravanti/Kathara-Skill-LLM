@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 27.873820708000494,
+  "usage": {
+    "input_tokens": 170580,
+    "cached_input_tokens": 136704,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1955,
+    "reasoning_output_tokens": 45
+  },
+  "final_message": "Configured the 13 authoritative zones on pc1–pc13, with 12 delegations and glue records. pc14 is the recursive resolver for pc16–pc20, using pc1 as its root server.\n\nAdded the requested host and MX records and enabled Apache on pc4 for `www.example.com`. The MX records provide DNS mail routing; they do not configure mail server software.\n\nThe existing images, topology, IP addresses and routes were preserved. Startup scripts passed shell syntax checks. BIND validation tools were unavailable locally, so zone syntax and live resolution still need external verification.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a18cd7-13c6-73c0-9525-9ef213277826"
+}

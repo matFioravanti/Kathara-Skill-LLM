@@ -1,0 +1,75 @@
+{
+  "skill_gate_enabled": true,
+  "skill_gate_status": "completed",
+  "skill_gate_required_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "skill_gate_verified_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "skill_gate_read_seconds": 9.006728165999448,
+  "skill_gate_verification_seconds": 0.007460791000994504,
+  "skill_gate_blocked": false,
+  "skill_gate_write_attempts_blocked": null,
+  "skill_gate_backend_enforcement": "docker_sandbox:ro_nonroot_zero_caps_no_mcp",
+  "skill_gate_input_tokens": 42174,
+  "skill_gate_output_tokens": 159,
+  "skill_gate_write_seconds": 27.873820708000494,
+  "skill_gate_total_seconds": 52.67508145799911,
+  "write_phase_input_tokens": 170580,
+  "write_phase_output_tokens": 1955,
+  "skill_gate_isolation_verified": true,
+  "skill_gate_isolation_violations": 0,
+  "skill_gate_context_strategy": "explicit_resume_shared_state",
+  "skill_gate_backend": "docker_sandbox",
+  "skill_gate_protocol_version": "enforced_read_v1",
+  "skill_gate_certification": "CERTIFIED",
+  "skill_gate_context_continuity_verified": true,
+  "skill_gate_state_history": [
+    {
+      "status": "preparing",
+      "timestamp": "2026-10-30T12:44:19.744615+00:00"
+    },
+    {
+      "status": "initial_read",
+      "timestamp": "2026-10-30T12:44:27.386751+00:00"
+    },
+    {
+      "status": "passed",
+      "timestamp": "2026-10-30T12:44:36.405320+00:00"
+    },
+    {
+      "status": "write_phase_running",
+      "timestamp": "2026-10-30T12:44:43.002131+00:00"
+    },
+    {
+      "status": "completed",
+      "timestamp": "2026-10-30T12:45:10.877496+00:00"
+    }
+  ],
+  "skill_gate_load_methods": {
+    "kathara-creation": "read_verified",
+    "kathara-dns": "read_verified"
+  },
+  "skill_gate_read_attempts": 1,
+  "skill_gate_retry_count": 0,
+  "skill_gate_fallback_used": false,
+  "skill_gate_fallback_skills": [],
+  "skill_gate_fallback_sha256_verified": null,
+  "skill_gate_context_delivery_verified": true,
+  "skill_gate_initial_read_seconds": 9.006728165999448,
+  "skill_gate_retry_seconds": null,
+  "skill_gate_fallback_seconds": null,
+  "skill_gate_initial_input_tokens": 42174,
+  "skill_gate_initial_output_tokens": 159,
+  "skill_gate_retry_input_tokens": null,
+  "skill_gate_retry_output_tokens": null,
+  "skill_gate_fallback_input_tokens": null,
+  "skill_gate_fallback_output_tokens": null,
+  "skill_gate_recovery_policy_version": "recovery_v1",
+  "skill_gate_session_id": "01a18cd7-13c6-73c0-9525-9ef213277826",
+  "skill_gate_session_count": 1,
+  "baseline_sha256": "a3e81668cb211e1064c4c81d41dd9bca0e238ed2ffa91119ff6a1ceeaf0a36fd"
+}
