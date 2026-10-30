@@ -281,54 +281,64 @@ def run_http_trace_command(
 
     collector = SamplingCollector(collection_mode="http_trace", backend=backend)
     stdout_chunks: list[bytes] = []
-    process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE, env=env, cwd=cwd)
-    assert process.stdin is not None and process.stdout is not None and process.stderr is not None
+    with subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE, env=env, cwd=cwd) as process:
+        assert process.stdin is not None and process.stdout is not None and process.stderr is not None
 
-    def read_stdout() -> None:
-        while True:
-            chunk = process.stdout.read(65536)
-            if not chunk:
-                break
-            stdout_chunks.append(chunk)
+        def read_stdout() -> None:
+            while True:
+                chunk = process.stdout.read(65536)
+                if not chunk:
+                    break
+                stdout_chunks.append(chunk)
 
-    def read_stderr() -> None:
-        # The trace can contain user messages. Never save or append raw stderr.
-        for raw_line in process.stderr:
-            collector.consume(raw_line.decode("utf-8", errors="replace"))
+        def read_stderr() -> None:
+            # SSE traces may contain full model responses. Never store raw lines.
+            # Limit line buffering to 2 MiB, discarding oversized trace lines.
+            while True:
+                raw_line = process.stderr.readline(2_000_001)
+                if not raw_line:
+                    break
+                if len(raw_line) >= 2_000_001 and not raw_line.endswith(b"\n"):
+                    collector.overflow = True
+                    # Drain the remainder in bounded chunks without accumulating it.
+                    while raw_line and not raw_line.endswith(b"\n"):
+                        raw_line = process.stderr.readline(65_536)
+                    continue
+                collector.consume(raw_line.decode("utf-8", errors="replace"))
 
-    def send_stdin() -> None:
+        def send_stdin() -> None:
+            try:
+                process.stdin.write(input_bytes)
+                process.stdin.flush()
+            except (BrokenPipeError, OSError):
+                pass
+            finally:
+                process.stdin.close()
+
+        threads = [
+            threading.Thread(target=read_stdout, daemon=True),
+            threading.Thread(target=read_stderr, daemon=True),
+            threading.Thread(target=send_stdin, daemon=True),
+        ]
+        for worker in threads:
+            worker.start()
+        timed_out = False
         try:
-            process.stdin.write(input_bytes)
-            process.stdin.flush()
-        except (BrokenPipeError, OSError):
-            pass
-        finally:
-            process.stdin.close()
-
-    threads = [
-        threading.Thread(target=read_stdout, daemon=True),
-        threading.Thread(target=read_stderr, daemon=True),
-        threading.Thread(target=send_stdin, daemon=True),
-    ]
-    for worker in threads:
-        worker.start()
-    timed_out = False
-    try:
-        code = process.wait(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        timed_out = True
-        process.kill()
-        code = 124
-        process.wait()
-    for worker in threads:
-        worker.join(timeout=15)
-    # Do not fabricate server-reported values if no complete trace was observed.
-    telemetry = collector.finish()
-    diagnostic = (b"Codex HTTP/SSE execution timed out.\n" if timed_out else
-                  b"Codex HTTP/SSE execution failed; raw trace intentionally redacted.\n"
-                  if code else b"")
-    return b"".join(stdout_chunks), diagnostic, code, timed_out, telemetry
+            code = process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            process.kill()
+            code = 124
+            process.wait()
+        for worker in threads:
+            worker.join(timeout=15)
+        # Do not infer unreported sampling parameters from model defaults.
+        telemetry = collector.finish()
+        diagnostic = (b"Codex HTTP/SSE execution timed out.\n" if timed_out else
+                      b"Codex HTTP/SSE execution failed; raw trace intentionally redacted.\n"
+                      if code else b"")
+        return b"".join(stdout_chunks), diagnostic, code, timed_out, telemetry
 
 
 def extract_sampling_telemetry(
