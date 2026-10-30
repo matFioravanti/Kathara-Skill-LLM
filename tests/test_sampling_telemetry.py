@@ -199,17 +199,21 @@ class TestSamplingTelemetry(unittest.TestCase):
                 '{"type":"response.done","response":{"id":"resp_err","temperature":1.0}}\n'
                 "Process crashed with error code 7\n"
             )
-            fake_proc = subprocess.CompletedProcess([], 7, stdout="", stderr=stderr)
+            telemetry = parse_sampling_telemetry(
+                stderr_text=stderr, collection_mode="http_trace", backend="codex_cli"
+            )
+            # HTTP mode now uses a streaming subprocess rather than subprocess.run.
+            # Mock the streaming boundary so the test never invokes a real CLI.
             with patch("benchmark_core.codex_cli_runner.codex_executable", return_value="codex"), \
-                 patch("benchmark_core.codex_cli_runner.subprocess.run", return_value=fake_proc):
-                try:
+                 patch("benchmark_core.sampling_telemetry.run_http_trace_command",
+                       return_value=(b"", b"Redacted failure", 7, False, telemetry)):
+                with self.assertRaises(Exception):
                     run_codex(
                         prompt="test prompt", workspace=workspace, logs=logs, timeout=10,
                         model="gpt-5.6-terra", reasoning_effort="low", variant="aut",
                         sampling_mode="http_trace",
                     )
-                except Exception:
-                    pass
+            self.assertNotIn("SSE event:", (logs / "stderr.log").read_text())
 
             telemetry_path = logs / "sampling_telemetry.json"
             self.assertTrue(telemetry_path.is_file(), "sampling_telemetry.json deve essere salvato anche in caso di crash")
