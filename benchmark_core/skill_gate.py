@@ -361,6 +361,12 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
                 except (ValueError,TypeError): pass
         (logs/'events.jsonl').write_text(''.join(json.dumps(e,ensure_ascii=False)+'\n' for e in aggregate_events),encoding='utf-8')
         (logs/'stderr.log').write_bytes(b'\n'.join((p/'stderr.log').read_bytes() for p,_ in turns))
+        from .sampling_telemetry import load_sampling_telemetry, merge_sampling_telemetries, save_sampling_telemetry
+        telemetry_cfg = config.sampling_telemetry_config()
+        if telemetry_cfg.get('enabled') and telemetry_cfg.get('mode') == 'http_trace':
+            phase_samples = [sample for path,_ in turns
+                             if (sample := load_sampling_telemetry(path)) is not None]
+            save_sampling_telemetry(logs, merge_sampling_telemetries(phase_samples))
         (logs/'prompt_sent.md').write_bytes(original_prompt.encode('utf-8'))
         usage={k:sum_usage(turns,k) for k in ('input_tokens','output_tokens','cached_input_tokens','reasoning_output_tokens','cache_write_input_tokens')}
         write_json(logs/'result.json',{'returncode':0 if record['skill_gate_status']=='completed' else 1,
