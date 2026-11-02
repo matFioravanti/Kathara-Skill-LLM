@@ -1,0 +1,16 @@
+{
+  "sandbox_name": "kathara-lab-02-r001-c86c09e3",
+  "sandbox_id": "5ac4110a-a7b1-43fd-aade-ee4539ff42c4",
+  "sbx_version": "0.48.0",
+  "codex_host_version": "0.157.1",
+  "codex_sandbox_version": "0.165.0",
+  "execution_backend": "docker_sandbox",
+  "cleanup_ok": true,
+  "cleanup_error": null,
+  "overhead_seconds": 7.169761707998987,
+  "codex_duration_seconds": 29.24832858300215,
+  "error": null,
+  "network_policy": "restricted",
+  "artifacts_ok": true,
+  "artifact_errors": null
+}

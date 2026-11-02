@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 38.41854162499658,
+  "sandbox_overhead_seconds": 5.355354833001911,
+  "final_message": "Configured the 31 authoritative zones and 30 delegations, with glue records and the requested service and MX records. pc32 (`10.15.8.14`) is the recursive resolver, and all 40 PCs are configured to use it. The existing topology, addresses, and routes were preserved.\n\nThe configuration was checked for zone assignments, delegation glue, service addresses, MX targets, and shell syntax. Live DNS queries could not be tested because BIND tools and a usable Docker daemon were unavailable in this environment. [DNS-README.md](DNS-README.md) contains example queries and startup assumptions.",
+  "usage": {
+    "input_tokens": 211161,
+    "cached_input_tokens": 188672,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2689,
+    "reasoning_output_tokens": 164
+  },
+  "error": null
+}
