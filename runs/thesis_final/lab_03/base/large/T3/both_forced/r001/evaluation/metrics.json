@@ -185,7 +185,7 @@
     "kathara-dns"
   ],
   "agent_success": true,
-  "status": "CHECKER_FAILED",
+  "status": "COMPLETED",
   "execution_backend": "docker_sandbox",
   "authentication": "sbx_oauth_proxy",
   "codex_host_version": "0.157.1",
@@ -200,11 +200,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "Error: field larger than field limit (131072)",
+  "pipeline_error": null,
   "timing": {
     "agent_seconds": 114.61507979199814,
     "sandbox_overhead_seconds": 26.182140249009535,
-    "checker_seconds": 257.2971574999974,
+    "checker_seconds": 332.0875815410036,
     "total_seconds": 399.34397887499654
   },
   "tokens": {
@@ -244,6 +244,6 @@
     "pass_rate": 0.9099244875943905
   },
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-03T21:49:51.276371+00:00"
 }

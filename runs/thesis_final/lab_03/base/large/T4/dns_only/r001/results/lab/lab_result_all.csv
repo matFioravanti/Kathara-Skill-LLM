@@ -3170,7 +3170,7 @@ Verifying `10.16.13.11` reachable from device `pc47`,True,OK
 Verifying `10.16.13.12` reachable from device `pc47`,True,OK
 Verifying `10.16.13.13` reachable from device `pc47`,True,OK
 Verifying `10.16.13.14` reachable from device `pc47`,True,OK
-Verifying `10.16.14.11` reachable from device `pc47`,True,OK
+Verifying `10.16.14.11` reachable from device `pc47`,False,
 Verifying `10.16.14.12` reachable from device `pc47`,True,OK
 Verifying `10.16.14.13` reachable from device `pc47`,True,OK
 Verifying `10.16.14.14` reachable from device `pc47`,True,OK
@@ -3524,7 +3524,7 @@ Verifying `10.16.11.12` reachable from device `pc53`,True,OK
 Verifying `10.16.11.13` reachable from device `pc53`,True,OK
 Verifying `10.16.11.14` reachable from device `pc53`,True,OK
 Verifying `10.16.12.11` reachable from device `pc53`,True,OK
-Verifying `10.16.12.12` reachable from device `pc53`,False,
+Verifying `10.16.12.12` reachable from device `pc53`,True,OK
 Verifying `10.16.12.13` reachable from device `pc53`,True,OK
 Verifying `10.16.12.14` reachable from device `pc53`,True,OK
 Verifying `10.16.13.11` reachable from device `pc53`,True,OK
@@ -3828,7 +3828,7 @@ Verifying `10.16.12.12` reachable from device `pc58`,True,OK
 Verifying `10.16.12.13` reachable from device `pc58`,True,OK
 Verifying `10.16.12.14` reachable from device `pc58`,True,OK
 Verifying `10.16.13.11` reachable from device `pc58`,True,OK
-Verifying `10.16.13.12` reachable from device `pc58`,False,
+Verifying `10.16.13.12` reachable from device `pc58`,True,OK
 Verifying `10.16.13.13` reachable from device `pc58`,True,OK
 Verifying `10.16.13.14` reachable from device `pc58`,True,OK
 Verifying `10.16.14.11` reachable from device `pc58`,True,OK

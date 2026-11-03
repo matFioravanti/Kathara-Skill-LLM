@@ -27,7 +27,7 @@
     "kathara-creation"
   ],
   "started_at": "2026-11-03T13:06:59.778737+00:00",
-  "completed_at": "2026-11-03T14:15:41.261226+00:00",
+  "completed_at": "2026-11-03T22:25:44.230744+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -37,7 +37,7 @@
     "PyYAML": "6.0.3",
     "openai": "3.16.2"
   },
-  "pipeline_state": "CHECKER_FAILED",
+  "pipeline_state": "COMPLETED",
   "state_history": [
     {
       "state": "PENDING",
@@ -54,11 +54,15 @@
     {
       "state": "CHECKER_FAILED",
       "timestamp": "2026-11-03T14:15:41.260532+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-03T22:25:44.173108+00:00"
     }
   ],
   "aut_execution_success": true,
-  "checker_execution_success": false,
-  "task_success": null,
+  "checker_execution_success": true,
+  "task_success": false,
   "source_lab_sha256": "c3a2ac33768ba6c192052d3d892071c9cece8bba6a2d4953a823a8bc985474ac",
   "input_lab_sha256": "c3a2ac33768ba6c192052d3d892071c9cece8bba6a2d4953a823a8bc985474ac",
   "prompt_sha256": "3ea96c748c04e914f3df8b02cb61b8932d20f9acaae1c19985353e9a73f0273c",
@@ -72,7 +76,7 @@
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 0,
+  "evaluation_revision": 1,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -87,7 +91,6 @@
   "sandbox_cleanup_ok": true,
   "final_lab_sha256": "c3e264e4316263216a3e24fbd1690b207c8e2871ab49ebb1c501cd2b51aa3dcd",
   "correction_snapshot": "evaluation/correction.yaml",
-  "pipeline_error": "Error: field larger than field limit (131072)",
   "skill_gate_enabled": true,
   "skill_gate_status": "completed",
   "skill_gate_required_skills": [
@@ -156,5 +159,6 @@
   "skill_gate_fallback_output_tokens": null,
   "skill_gate_recovery_policy_version": "recovery_v1",
   "skill_gate_session_id": "01a1a185-4df9-7f80-8a24-0be30945f5b3",
-  "skill_gate_session_count": 1
+  "skill_gate_session_count": 1,
+  "last_reevaluated_at": "2026-11-03T22:19:43.119179+00:00"
 }

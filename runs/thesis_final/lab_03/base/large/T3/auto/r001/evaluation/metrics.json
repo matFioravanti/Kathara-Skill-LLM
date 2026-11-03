@@ -128,7 +128,7 @@
   ],
   "forced_skills": [],
   "agent_success": true,
-  "status": "CHECKER_FAILED",
+  "status": "COMPLETED",
   "execution_backend": "docker_sandbox",
   "authentication": "sbx_oauth_proxy",
   "codex_host_version": "0.157.1",
@@ -143,11 +143,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "Error: field larger than field limit (131072)",
+  "pipeline_error": null,
   "timing": {
     "agent_seconds": 47.43908329199621,
     "sandbox_overhead_seconds": 6.6918508329981705,
-    "checker_seconds": 281.3712409169966,
+    "checker_seconds": 346.53413462499884,
     "total_seconds": 344.0615587909997
   },
   "tokens": {
@@ -187,6 +187,6 @@
     "pass_rate": 0.9099244875943905
   },
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-03T21:55:24.532841+00:00"
 }

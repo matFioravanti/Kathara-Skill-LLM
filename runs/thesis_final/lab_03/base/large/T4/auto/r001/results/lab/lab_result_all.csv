@@ -3871,7 +3871,7 @@ Verifying `10.16.8.11` reachable from device `pc59`,True,OK
 Verifying `10.16.8.12` reachable from device `pc59`,True,OK
 Verifying `10.16.8.13` reachable from device `pc59`,True,OK
 Verifying `10.16.8.14` reachable from device `pc59`,True,OK
-Verifying `10.16.9.11` reachable from device `pc59`,True,OK
+Verifying `10.16.9.11` reachable from device `pc59`,False,
 Verifying `10.16.9.12` reachable from device `pc59`,True,OK
 Verifying `10.16.9.13` reachable from device `pc59`,True,OK
 Verifying `10.16.9.14` reachable from device `pc59`,True,OK

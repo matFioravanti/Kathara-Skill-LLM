@@ -23,7 +23,7 @@
   "available_skills": [],
   "forced_skills": [],
   "started_at": "2026-11-03T12:30:31.753260+00:00",
-  "completed_at": "2026-11-03T12:36:00.490632+00:00",
+  "completed_at": "2026-11-03T21:38:50.271207+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -50,6 +50,10 @@
     {
       "state": "CHECKER_FAILED",
       "timestamp": "2026-11-03T12:36:00.490156+00:00"
+    },
+    {
+      "state": "CHECKER_FAILED",
+      "timestamp": "2026-11-03T21:38:50.242966+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -68,7 +72,7 @@
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 0,
+  "evaluation_revision": 1,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -83,7 +87,6 @@
   "sandbox_cleanup_ok": true,
   "final_lab_sha256": "eddd974e4fa88231359e02649f96b5883a59350caf384c4fd528c93de9cfc317",
   "correction_snapshot": "evaluation/correction.yaml",
-  "pipeline_error": "Error: field larger than field limit (131072)",
   "skill_gate_enabled": false,
   "skill_gate_status": "not_required",
   "skill_gate_required_skills": [],
@@ -130,5 +133,7 @@
   "skill_gate_fallback_output_tokens": null,
   "skill_gate_recovery_policy_version": null,
   "skill_gate_session_id": null,
-  "skill_gate_session_count": null
+  "skill_gate_session_count": null,
+  "last_reevaluated_at": "2026-11-03T21:34:44.445803+00:00",
+  "pipeline_error": "RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log."
 }

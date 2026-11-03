@@ -1,6 +1,5 @@
 Test Description,Passed,Reason
-Verifying `10.16.12.12` reachable from device `pc53`,False,
-Verifying `10.16.13.12` reachable from device `pc58`,False,
+Verifying `10.16.14.11` reachable from device `pc47`,False,
 Checking that named is running on device `pc7`,False,Daemon named is not running on device `pc7`
 Checking that named is running on device `pc11`,False,Daemon named is not running on device `pc11`
 Checking that named is running on device `pc13`,False,Daemon named is not running on device `pc13`

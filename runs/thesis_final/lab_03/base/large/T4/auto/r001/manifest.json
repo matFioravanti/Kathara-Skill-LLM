@@ -26,7 +26,7 @@
   ],
   "forced_skills": [],
   "started_at": "2026-11-03T16:04:28.516152+00:00",
-  "completed_at": "2026-11-03T16:12:50.908842+00:00",
+  "completed_at": "2026-11-03T22:43:00.352642+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -36,7 +36,7 @@
     "PyYAML": "6.0.3",
     "openai": "3.16.2"
   },
-  "pipeline_state": "CHECKER_FAILED",
+  "pipeline_state": "COMPLETED",
   "state_history": [
     {
       "state": "PENDING",
@@ -53,11 +53,15 @@
     {
       "state": "CHECKER_FAILED",
       "timestamp": "2026-11-03T16:12:50.908245+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-03T22:43:00.317769+00:00"
     }
   ],
   "aut_execution_success": true,
-  "checker_execution_success": false,
-  "task_success": null,
+  "checker_execution_success": true,
+  "task_success": false,
   "source_lab_sha256": "c3a2ac33768ba6c192052d3d892071c9cece8bba6a2d4953a823a8bc985474ac",
   "input_lab_sha256": "c3a2ac33768ba6c192052d3d892071c9cece8bba6a2d4953a823a8bc985474ac",
   "prompt_sha256": "3ea96c748c04e914f3df8b02cb61b8932d20f9acaae1c19985353e9a73f0273c",
@@ -71,7 +75,7 @@
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 0,
+  "evaluation_revision": 1,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -86,7 +90,6 @@
   "sandbox_cleanup_ok": true,
   "final_lab_sha256": "0112b7ba77feb3ae0ab867db4838e6e37bcc41301519dcddee90c8d575fd6e4c",
   "correction_snapshot": "evaluation/correction.yaml",
-  "pipeline_error": "Error: field larger than field limit (131072)",
   "skill_gate_enabled": false,
   "skill_gate_status": "not_required",
   "skill_gate_required_skills": [],
@@ -133,5 +136,6 @@
   "skill_gate_fallback_output_tokens": null,
   "skill_gate_recovery_policy_version": null,
   "skill_gate_session_id": null,
-  "skill_gate_session_count": null
+  "skill_gate_session_count": null,
+  "last_reevaluated_at": "2026-11-03T22:37:44.873555+00:00"
 }

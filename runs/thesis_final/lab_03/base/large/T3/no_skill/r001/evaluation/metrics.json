@@ -138,11 +138,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "Error: field larger than field limit (131072)",
+  "pipeline_error": "RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log.",
   "timing": {
     "agent_seconds": 48.41888283300068,
     "sandbox_overhead_seconds": 7.1004066240057,
-    "checker_seconds": 266.16309866600204,
+    "checker_seconds": 245.79586870800267,
     "total_seconds": 328.8057653750002
   },
   "tokens": {
@@ -176,12 +176,12 @@
     "details": null
   },
   "checker": {
-    "passed": 5040,
-    "failed": 522,
-    "total": 5562,
-    "pass_rate": 0.9061488673139159
+    "passed": null,
+    "failed": null,
+    "total": null,
+    "pass_rate": null
   },
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-03T21:34:44.445803+00:00"
 }

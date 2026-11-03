@@ -3739,7 +3739,7 @@ Verifying `10.16.5.11` reachable from device `pc57`,True,OK
 Verifying `10.16.5.12` reachable from device `pc57`,True,OK
 Verifying `10.16.5.13` reachable from device `pc57`,True,OK
 Verifying `10.16.5.14` reachable from device `pc57`,True,OK
-Verifying `10.16.6.11` reachable from device `pc57`,True,OK
+Verifying `10.16.6.11` reachable from device `pc57`,False,
 Verifying `10.16.6.12` reachable from device `pc57`,True,OK
 Verifying `10.16.6.13` reachable from device `pc57`,True,OK
 Verifying `10.16.6.14` reachable from device `pc57`,True,OK
