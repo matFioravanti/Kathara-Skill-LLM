@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 47.043217625000125,
+  "sandbox_overhead_seconds": 29.41590083300025,
+  "usage": {
+    "input_tokens": 259769,
+    "output_tokens": 1982,
+    "cached_input_tokens": 221440,
+    "reasoning_output_tokens": 38,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Configured the 31 authoritative zones on pc1–pc31 with the requested 30 delegations, SOA, NS, glue, apex A and MX records.  \nConfigured pc32 (`10.15.8.14`) as the recursive resolver and pc33–pc40 as clients; `www.example.com` uses pc6’s existing address.  \nCreated BIND configuration and zone files and appended DNS commands to the relevant startup files; no images, links, IP addresses, or routes were changed.  \nStatic inspection covered the root, example.com and research.lab.net delegations. `named-checkzone` and `named-checkconf` were unavailable, and runtime resolution remains untested.",
+  "error": null
+}

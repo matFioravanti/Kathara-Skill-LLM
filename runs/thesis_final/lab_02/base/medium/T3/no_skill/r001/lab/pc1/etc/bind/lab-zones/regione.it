@@ -1,0 +1,5 @@
+$TTL 300
+@ IN SOA ns.regione.it. hostmaster.regione.it. ( 1 3600 600 604800 300 )
+@ IN NS ns.regione.it.
+ns IN A 10.15.1.11
+dati IN A 10.15.8.13

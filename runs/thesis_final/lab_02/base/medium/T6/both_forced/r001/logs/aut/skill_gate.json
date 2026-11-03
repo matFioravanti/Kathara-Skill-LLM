@@ -1,0 +1,76 @@
+{
+  "skill_gate_enabled": true,
+  "skill_gate_status": "technical_error",
+  "skill_gate_required_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "skill_gate_verified_skills": [
+    "kathara-creation",
+    "kathara-dns"
+  ],
+  "skill_gate_read_seconds": 7.95608566699957,
+  "skill_gate_verification_seconds": 0.014724791002663551,
+  "skill_gate_blocked": false,
+  "skill_gate_write_attempts_blocked": null,
+  "skill_gate_backend_enforcement": "docker_sandbox:ro_nonroot_zero_caps_no_mcp",
+  "skill_gate_input_tokens": 42152,
+  "skill_gate_output_tokens": 142,
+  "skill_gate_write_seconds": 10.906061666999449,
+  "skill_gate_total_seconds": 41.5369357089985,
+  "write_phase_input_tokens": null,
+  "write_phase_output_tokens": null,
+  "skill_gate_isolation_verified": true,
+  "skill_gate_isolation_violations": 0,
+  "skill_gate_context_strategy": "explicit_resume_shared_state",
+  "skill_gate_backend": "docker_sandbox",
+  "skill_gate_protocol_version": "enforced_read_v1",
+  "skill_gate_certification": "FAILED",
+  "skill_gate_context_continuity_verified": true,
+  "skill_gate_state_history": [
+    {
+      "status": "preparing",
+      "timestamp": "2026-11-03T04:30:36.593996+00:00"
+    },
+    {
+      "status": "initial_read",
+      "timestamp": "2026-11-03T04:30:46.054511+00:00"
+    },
+    {
+      "status": "passed",
+      "timestamp": "2026-11-03T04:30:54.027536+00:00"
+    },
+    {
+      "status": "write_phase_running",
+      "timestamp": "2026-11-03T05:02:55.818267+00:00"
+    },
+    {
+      "status": "technical_error",
+      "timestamp": "2026-11-03T05:31:41.487983+00:00"
+    }
+  ],
+  "skill_gate_load_methods": {
+    "kathara-creation": "read_verified",
+    "kathara-dns": "read_verified"
+  },
+  "skill_gate_read_attempts": 1,
+  "skill_gate_retry_count": 0,
+  "skill_gate_fallback_used": false,
+  "skill_gate_fallback_skills": [],
+  "skill_gate_fallback_sha256_verified": null,
+  "skill_gate_context_delivery_verified": true,
+  "skill_gate_initial_read_seconds": 7.95608566699957,
+  "skill_gate_retry_seconds": null,
+  "skill_gate_fallback_seconds": null,
+  "skill_gate_initial_input_tokens": 42152,
+  "skill_gate_initial_output_tokens": 142,
+  "skill_gate_retry_input_tokens": null,
+  "skill_gate_retry_output_tokens": null,
+  "skill_gate_fallback_input_tokens": null,
+  "skill_gate_fallback_output_tokens": null,
+  "skill_gate_recovery_policy_version": "recovery_v1",
+  "skill_gate_session_id": "01a19fac-875b-7170-88d6-3d826cd35353",
+  "skill_gate_session_count": 1,
+  "baseline_sha256": "7c7b13f0c28f226a7bbb892e633f41da32ecc8ab6fe93d9ea37d3141d423c9df",
+  "error": "SandboxProbeError: Missing real process attestation"
+}

@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 28.308451875000173,
+  "usage": {
+    "input_tokens": 164561,
+    "cached_input_tokens": 122624,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2028,
+    "reasoning_output_tokens": 43
+  },
+  "final_message": "Configurata la gerarchia DNS: pc1–pc31 servono le zone nell’ordine richiesto; pc32 è il resolver ricorsivo e pc33–pc40 sono configurati come client.\n\nCreati i file BIND nelle directory dei server e aggiornati gli startup; nessuna immagine è stata cambiata. La verifica statica ha controllato zone, deleghe, glue e copertura delle rotte LAN. `named-checkzone` e `named-checkconf` non sono disponibili; la verifica dinamica resta da eseguire.\n\nPer `www.example.com` ho usato l’indirizzo esistente di pc33: il laboratorio non identifica un host web né configura un servizio web.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1a117-6653-75a0-87b9-72a4e550e116"
+}

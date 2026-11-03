@@ -1,0 +1,278 @@
+Parsing test configuration...
+Parsing inline network scenarios template
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-by2_8xiy/labs
+  0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-by2_8xiy/labs/lab
+Network scenario name: lab
+Undeploying network scenario in case it was running...
+Deploying network scenario...
+Waiting convergence...
+Starting tests
+Verifying lab structure using inline lab.conf template
+Checking devices existence...
+Check existence of `r1`: [92m OK[00m
+Check existence of `r2`: [92m OK[00m
+Check existence of `r3`: [92m OK[00m
+Check existence of `r4`: [92m OK[00m
+Check existence of `r5`: [92m OK[00m
+Check existence of `r6`: [92m OK[00m
+Check existence of `r7`: [92m OK[00m
+Check existence of `r8`: [92m OK[00m
+Check existence of `pc1`: [92m OK[00m
+Check existence of `pc2`: [92m OK[00m
+Check existence of `pc3`: [92m OK[00m
+Check existence of `pc4`: [92m OK[00m
+Check existence of `pc5`: [92m OK[00m
+Check existence of `pc6`: [92m OK[00m
+Check existence of `pc7`: [92m OK[00m
+Check existence of `pc8`: [92m OK[00m
+Check existence of `pc9`: [92m OK[00m
+Check existence of `pc10`: [92m OK[00m
+Check existence of `pc11`: [92m OK[00m
+Check existence of `pc12`: [92m OK[00m
+Check existence of `pc13`: [92m OK[00m
+Check existence of `pc14`: [92m OK[00m
+Check existence of `pc15`: [92m OK[00m
+Check existence of `pc16`: [92m OK[00m
+Check existence of `pc17`: [92m OK[00m
+Check existence of `pc18`: [92m OK[00m
+Check existence of `pc19`: [92m OK[00m
+Check existence of `pc20`: [92m OK[00m
+Check existence of `pc21`: [92m OK[00m
+Check existence of `pc22`: [92m OK[00m
+Check existence of `pc23`: [92m OK[00m
+Check existence of `pc24`: [92m OK[00m
+Check existence of `pc25`: [92m OK[00m
+Check existence of `pc26`: [92m OK[00m
+Check existence of `pc27`: [92m OK[00m
+Check existence of `pc28`: [92m OK[00m
+Check existence of `pc29`: [92m OK[00m
+Check existence of `pc30`: [92m OK[00m
+Check existence of `pc31`: [92m OK[00m
+Check existence of `pc32`: [92m OK[00m
+Check existence of `pc33`: [92m OK[00m
+Check existence of `pc34`: [92m OK[00m
+Check existence of `pc35`: [92m OK[00m
+Check existence of `pc36`: [92m OK[00m
+Check existence of `pc37`: [92m OK[00m
+Check existence of `pc38`: [92m OK[00m
+Check existence of `pc39`: [92m OK[00m
+Check existence of `pc40`: [92m OK[00m
+Checking collision domains...
+Checking the collision domain attached to interface `eth0` of `r1`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r1`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r1`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r2`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r3`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r3`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r3`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth3` of `r4`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r5`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r6`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r6`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r6`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r7`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r7`: [92m OK[00m
+Checking the collision domain attached to interface `eth2` of `r7`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `r8`: [92m OK[00m
+Checking the collision domain attached to interface `eth1` of `r8`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc1`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc2`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc3`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc4`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc5`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc6`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc7`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc8`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc9`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc10`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc11`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc12`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc13`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc14`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc15`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc16`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc17`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc18`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc19`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc20`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc21`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc22`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc23`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc24`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc25`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc26`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc27`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc28`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc29`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc30`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc31`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc32`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc33`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc34`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc35`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc36`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc37`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc38`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc39`: [92m OK[00m
+Checking the collision domain attached to interface `eth0` of `pc40`: [92m OK[00m
+Checking that all required startup files exist...
+Check existence of `r1.startup` file: [92m OK[00m
+Check existence of `r2.startup` file: [92m OK[00m
+Check existence of `r3.startup` file: [92m OK[00m
+Check existence of `r4.startup` file: [92m OK[00m
+Check existence of `r5.startup` file: [92m OK[00m
+Check existence of `r6.startup` file: [92m OK[00m
+Check existence of `r7.startup` file: [92m OK[00m
+Check existence of `r8.startup` file: [92m OK[00m
+Check existence of `pc1.startup` file: [92m OK[00m
+Check existence of `pc2.startup` file: [92m OK[00m
+Check existence of `pc3.startup` file: [92m OK[00m
+Check existence of `pc4.startup` file: [92m OK[00m
+Check existence of `pc5.startup` file: [92m OK[00m
+Check existence of `pc6.startup` file: [92m OK[00m
+Check existence of `pc7.startup` file: [92m OK[00m
+Check existence of `pc8.startup` file: [92m OK[00m
+Check existence of `pc9.startup` file: [92m OK[00m
+Check existence of `pc10.startup` file: [92m OK[00m
+Check existence of `pc11.startup` file: [92m OK[00m
+Check existence of `pc12.startup` file: [92m OK[00m
+Check existence of `pc13.startup` file: [92m OK[00m
+Check existence of `pc14.startup` file: [92m OK[00m
+Check existence of `pc15.startup` file: [92m OK[00m
+Check existence of `pc16.startup` file: [92m OK[00m
+Check existence of `pc17.startup` file: [92m OK[00m
+Check existence of `pc18.startup` file: [92m OK[00m
+Check existence of `pc19.startup` file: [92m OK[00m
+Check existence of `pc20.startup` file: [92m OK[00m
+Check existence of `pc21.startup` file: [92m OK[00m
+Check existence of `pc22.startup` file: [92m OK[00m
+Check existence of `pc23.startup` file: [92m OK[00m
+Check existence of `pc24.startup` file: [92m OK[00m
+Check existence of `pc25.startup` file: [92m OK[00m
+Check existence of `pc26.startup` file: [92m OK[00m
+Check existence of `pc27.startup` file: [92m OK[00m
+Check existence of `pc28.startup` file: [92m OK[00m
+Check existence of `pc29.startup` file: [92m OK[00m
+Check existence of `pc30.startup` file: [92m OK[00m
+Check existence of `pc31.startup` file: [92m OK[00m
+Check existence of `pc32.startup` file: [92m OK[00m
+Check existence of `pc33.startup` file: [92m OK[00m
+Check existence of `pc34.startup` file: [92m OK[00m
+Check existence of `pc35.startup` file: [92m OK[00m
+Check existence of `pc36.startup` file: [92m OK[00m
+Check existence of `pc37.startup` file: [92m OK[00m
+Check existence of `pc38.startup` file: [92m OK[00m
+Check existence of `pc39.startup` file: [92m OK[00m
+Check existence of `pc40.startup` file: [92m OK[00m
+Verifying the IP addresses assigned to devices...
+Checking IPs for `r1`...
+Verifying the IP address (10.15.1.1/24) assigned to eth0 of r1: [92m OK[00m
+Verifying the IP address (10.15.2.1/24) assigned to eth1 of r1: [92m OK[00m
+Verifying the IP address (172.25.1.1/30) assigned to eth2 of r1: [92m OK[00m
+Checking IPs for `r2`...
+Verifying the IP address (10.15.3.1/24) assigned to eth0 of r2: [92m OK[00m
+Verifying the IP address (172.25.1.2/30) assigned to eth1 of r2: [92m OK[00m
+Verifying the IP address (172.25.1.5/30) assigned to eth2 of r2: [92m OK[00m
+Checking IPs for `r3`...
+Verifying the IP address (10.15.4.1/24) assigned to eth0 of r3: [92m OK[00m
+Verifying the IP address (172.25.1.6/30) assigned to eth1 of r3: [92m OK[00m
+Verifying the IP address (172.25.1.9/30) assigned to eth2 of r3: [92m OK[00m
+Checking IPs for `r4`...
+Verifying the IP address (10.15.5.1/24) assigned to eth0 of r4: [92m OK[00m
+Verifying the IP address (10.15.6.1/24) assigned to eth1 of r4: [92m OK[00m
+Verifying the IP address (172.25.1.10/30) assigned to eth2 of r4: [92m OK[00m
+Verifying the IP address (172.25.1.13/30) assigned to eth3 of r4: [92m OK[00m
+Checking IPs for `r5`...
+Verifying the IP address (10.15.7.1/24) assigned to eth0 of r5: [92m OK[00m
+Verifying the IP address (172.25.1.14/30) assigned to eth1 of r5: [92m OK[00m
+Verifying the IP address (172.25.1.17/30) assigned to eth2 of r5: [92m OK[00m
+Checking IPs for `r6`...
+Verifying the IP address (10.15.8.1/24) assigned to eth0 of r6: [92m OK[00m
+Verifying the IP address (172.25.1.18/30) assigned to eth1 of r6: [92m OK[00m
+Verifying the IP address (172.25.1.21/30) assigned to eth2 of r6: [92m OK[00m
+Checking IPs for `r7`...
+Verifying the IP address (10.15.9.1/24) assigned to eth0 of r7: [92m OK[00m
+Verifying the IP address (172.25.1.22/30) assigned to eth1 of r7: [92m OK[00m
+Verifying the IP address (172.25.1.25/30) assigned to eth2 of r7: [92m OK[00m
+Checking IPs for `r8`...
+Verifying the IP address (10.15.10.1/24) assigned to eth0 of r8: [92m OK[00m
+Verifying the IP address (172.25.1.26/30) assigned to eth1 of r8: [92m OK[00m
+Checking IPs for `pc1`...
+Verifying the IP address (10.15.1.11/24) assigned to eth0 of pc1: [92m OK[00m
+Checking IPs for `pc2`...
+Verifying the IP address (10.15.1.12/24) assigned to eth0 of pc2: [92m OK[00m
+Checking IPs for `pc3`...
+Verifying the IP address (10.15.1.13/24) assigned to eth0 of pc3: [92m OK[00m
+Checking IPs for `pc4`...
+Verifying the IP address (10.15.1.14/24) assigned to eth0 of pc4: [92m OK[00m
+Checking IPs for `pc5`...
+Verifying the IP address (10.15.2.11/24) assigned to eth0 of pc5: [92m OK[00m
+Checking IPs for `pc6`...
+Verifying the IP address (10.15.2.12/24) assigned to eth0 of pc6: [92m OK[00m
+Checking IPs for `pc7`...
+Verifying the IP address (10.15.2.13/24) assigned to eth0 of pc7: [92m OK[00m
+Checking IPs for `pc8`...
+Verifying the IP address (10.15.2.14/24) assigned to eth0 of pc8: [92m OK[00m
+Checking IPs for `pc9`...
+Verifying the IP address (10.15.3.11/24) assigned to eth0 of pc9: [92m OK[00m
+Checking IPs for `pc10`...
+Verifying the IP address (10.15.3.12/24) assigned to eth0 of pc10: [92m OK[00m
+Checking IPs for `pc11`...
+Verifying the IP address (10.15.3.13/24) assigned to eth0 of pc11: [92m OK[00m
+Checking IPs for `pc12`...
+Verifying the IP address (10.15.3.14/24) assigned to eth0 of pc12: [92m OK[00m
+Checking IPs for `pc13`...
+Verifying the IP address (10.15.4.11/24) assigned to eth0 of pc13: [92m OK[00m
+Checking IPs for `pc14`...
+Verifying the IP address (10.15.4.12/24) assigned to eth0 of pc14: [92m OK[00m
+Checking IPs for `pc15`...
+Verifying the IP address (10.15.4.13/24) assigned to eth0 of pc15: [92m OK[00m
+Checking IPs for `pc16`...
+Verifying the IP address (10.15.4.14/24) assigned to eth0 of pc16: [92m OK[00m
+Checking IPs for `pc17`...
+Verifying the IP address (10.15.5.11/24) assigned to eth0 of pc17: [92m OK[00m
+Checking IPs for `pc18`...
+Verifying the IP address (10.15.5.12/24) assigned to eth0 of pc18: [92m OK[00m
+Checking IPs for `pc19`...
+Verifying the IP address (10.15.5.13/24) assigned to eth0 of pc19: [92m OK[00m
+Checking IPs for `pc20`...
+  0%|          | 0/1 [00:32<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/__main__.py", line 311, in <module>
+    main()
+    ~~~~^^
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/__main__.py", line 305, in main
+    run_on_multiple_network_scenarios(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        args.labs, conf, args.no_cache, args.live, args.keep_open, args.report_type
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/__main__.py", line 161, in run_on_multiple_network_scenarios
+    test_results = run_on_single_network_scenario(
+        os.path.join(labs_path, lab_name), configuration, no_cache, live, keep_open, report_type
+    )
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/__main__.py", line 112, in run_on_single_network_scenario
+    check_results = check.run_from_configuration(configuration)
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/checks/InterfaceIPCheck.py", line 74, in run_from_configuration
+    results.extend(self.run(configuration["test"]["ip_mapping"]))
+                   ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/checks/InterfaceIPCheck.py", line 54, in run
+    dumped_iface = self.get_interfaces_addresses(device_name)
+  File "/Users/matthew/Desktop/Tesi-Skill/.venv/lib/python3.14/site-packages/kathara_lab_checker/checks/InterfaceIPCheck.py", line 68, in get_interfaces_addresses
+    return json.loads(stdout)
+           ~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 345, in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                    f'not {s.__class__.__name__}')
+TypeError: the JSON object must be str, bytes or bytearray, not NoneType

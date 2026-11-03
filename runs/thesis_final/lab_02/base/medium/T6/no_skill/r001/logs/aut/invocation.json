@@ -1,0 +1,17 @@
+{
+  "command": [],
+  "cwd": "/private/var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-aut-916nxf7f/lab",
+  "variant": "aut",
+  "execution_backend": "docker_sandbox",
+  "authentication": "sbx_oauth_proxy",
+  "api_key_used": false,
+  "model": "gpt-6.1-terra",
+  "reasoning_effort": "low",
+  "sampling_collection_mode": "http_trace",
+  "sampling_transport": "http",
+  "sandbox_name": "kathara-lab-02-r001-1b55cbb6",
+  "sandbox_id": null,
+  "sbx_version": "0.48.0",
+  "codex_host_version": "0.157.1",
+  "codex_sandbox_version": null
+}

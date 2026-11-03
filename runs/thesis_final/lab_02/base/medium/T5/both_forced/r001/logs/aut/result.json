@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 39.433357874997455,
+  "sandbox_overhead_seconds": 26.844671916998777,
+  "usage": {
+    "input_tokens": 247006,
+    "output_tokens": 2185,
+    "cached_input_tokens": 194432,
+    "reasoning_output_tokens": 60,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Configurata la gerarchia DNS: pc1–pc31 sono autorevoli per le zone indicate, pc32 è il resolver ricorsivo e pc33–pc40 sono client.\n\nCreati i file BIND e aggiornati gli startup; le immagini esistenti sono rimaste invariate. Ho verificato staticamente deleghe, glue e sintassi degli startup; la verifica dinamica resta da eseguire e gli strumenti `named-checkzone` e `named-checkconf` non sono disponibili localmente.\n\n**Da completare:** manca il record A di `www.example.com`, perché non è specificato l’indirizzo del servizio web.",
+  "error": null
+}

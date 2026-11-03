@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 133.33643295900015,
+  "sandbox_overhead_seconds": 6.098275459000206,
+  "final_message": "Configured the 31-zone hierarchy on pc1–pc31 with all 30 delegations, glue, zone-apex addresses, and the requested MX records. pc32 is the recursive resolver at `10.15.8.14`; pc33–pc40 use it as clients.\n\nThe existing `kathara/base` images were retained, along with the links, addresses, and routes. The web record points to pc6 (`10.15.2.12`), since no separate web host was specified.\n\nStatic checks passed for the zones, delegations, glue, web, and mail records. BIND validation tools were unavailable locally, so runtime resolution remains to be verified in Kathara.",
+  "usage": {
+    "input_tokens": 123198,
+    "cached_input_tokens": 100224,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1816,
+    "reasoning_output_tokens": 52
+  },
+  "error": null
+}

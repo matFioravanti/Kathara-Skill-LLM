@@ -1,0 +1,9 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 10.906061666999449,
+  "usage": null,
+  "final_message": null,
+  "stdin_delivery_verified": false,
+  "error": "Missing real process attestation"
+}
