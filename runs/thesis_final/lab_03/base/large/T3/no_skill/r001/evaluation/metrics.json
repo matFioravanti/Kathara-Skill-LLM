@@ -123,7 +123,7 @@
   "available_skills": [],
   "forced_skills": [],
   "agent_success": true,
-  "status": "CHECKER_FAILED",
+  "status": "COMPLETED",
   "execution_backend": "docker_sandbox",
   "authentication": "sbx_oauth_proxy",
   "codex_host_version": "0.157.1",
@@ -138,11 +138,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log.",
+  "pipeline_error": null,
   "timing": {
     "agent_seconds": 48.41888283300068,
     "sandbox_overhead_seconds": 7.1004066240057,
-    "checker_seconds": 245.79586870800267,
+    "checker_seconds": 307.251122458998,
     "total_seconds": 328.8057653750002
   },
   "tokens": {
@@ -176,12 +176,12 @@
     "details": null
   },
   "checker": {
-    "passed": null,
-    "failed": null,
-    "total": null,
-    "pass_rate": null
+    "passed": 5038,
+    "failed": 524,
+    "total": 5562,
+    "pass_rate": 0.9057892844300611
   },
   "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
-  "evaluation_revision": 1,
-  "last_reevaluated_at": "2026-11-03T21:34:44.445803+00:00"
+  "evaluation_revision": 2,
+  "last_reevaluated_at": "2026-11-03T23:01:25.238489+00:00"
 }
