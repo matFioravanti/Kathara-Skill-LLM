@@ -13,7 +13,8 @@ from .diff_metrics import compute_diff
 from .inspect_runner import run_aut
 from .skill_modes import mode_details
 from .run_metrics import make_metrics, print_run_summary
-from .workspace import component_versions, create_workspace, logical_run_id, tree_hash, utc_now, write_json
+from .workspace import (check_lab_integrity, component_versions, create_workspace, logical_run_id,
+                        manifest as lab_manifest, manifest_hash, tree_hash, utc_now, write_json)
 
 
 def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
@@ -191,7 +192,8 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             raise RuntimeError("Il laboratorio sorgente è cambiato durante la run.")
         if tree_hash(run / "input/lab") != manifest["input_lab_sha256"]:
             raise RuntimeError("Il baseline input/lab è cambiato durante la run.")
-        manifest["final_lab_sha256"] = tree_hash(run / "lab")
+        lab_before_checker = lab_manifest(run / "lab")
+        manifest["final_lab_sha256"] = manifest_hash(lab_before_checker)
         state("AUT_COMPLETED")
         stage = "EVALUATION"
         evaluation = run / "evaluation"
@@ -206,16 +208,18 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         if event_callback:
             event_callback("correction_ready")
             event_callback("checker_running")
+        input_before_checker = lab_manifest(run / "input/lab")
+        if manifest_hash(input_before_checker) != manifest["input_lab_sha256"]:
+            raise RuntimeError("Il baseline input/lab è cambiato durante la run.")
         checker_started = time.monotonic()
         try:
             outcome = run_checker(config, run, correction_snapshot)
             checker_outcome = outcome
         finally:
             checker_seconds = time.monotonic() - checker_started
+            check_lab_integrity(run, {"lab": lab_before_checker, "input/lab": input_before_checker})
         manifest["checker_execution_success"] = True
         manifest["task_success"] = outcome["task_success"]
-        if tree_hash(run / "lab") != manifest["final_lab_sha256"]:
-            raise RuntimeError("Lab AUT alterato durante il checker.")
         if tree_hash(run / "input/lab") != manifest["input_lab_sha256"]:
             raise RuntimeError("Il baseline input/lab è cambiato durante la run.")
         state("COMPLETED")
@@ -297,8 +301,7 @@ def reevaluate_run(config, run: Path) -> Path:
     if tree is not None:
         validate_correction_lab(source, run / "input/lab")
     previous_total_seconds = _metric_total_seconds(run)
-    source_lab_hash = tree_hash(run / "lab")
-    input_lab_hash = tree_hash(run / "input/lab")
+    checker_snapshots = {path: lab_manifest(run / path) for path in ("lab", "input/lab")}
     evaluation = run / "evaluation"
     evaluation.mkdir(parents=True, exist_ok=True)
     revision = manifest.get("evaluation_revision", 0)
@@ -357,8 +360,7 @@ def reevaluate_run(config, run: Path) -> Path:
         (run / "logs").mkdir(parents=True, exist_ok=True)
         (run / "logs/pipeline_error.log").write_text(traceback.format_exc())
     checker_seconds = time.monotonic() - started
-    if tree_hash(run / "lab") != source_lab_hash or tree_hash(run / "input/lab") != input_lab_hash:
-        raise RuntimeError("Il checker ha alterato lab/ o input/lab/.")
+    check_lab_integrity(run, checker_snapshots)
     manifest["completed_at"] = utc_now()
     write_json(manifest_path, manifest)
     metrics = make_metrics(run, manifest,

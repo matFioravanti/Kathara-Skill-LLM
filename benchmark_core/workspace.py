@@ -49,8 +49,40 @@ def manifest(root: Path) -> dict:
     return result
 
 
+def manifest_hash(entries: dict) -> str:
+    return hashlib.sha256(json.dumps(entries, sort_keys=True).encode()).hexdigest()
+
+
 def tree_hash(root: Path) -> str:
-    return hashlib.sha256(json.dumps(manifest(root), sort_keys=True).encode()).hexdigest()
+    return manifest_hash(manifest(root))
+
+
+def manifest_changes(before: dict, after: dict) -> dict:
+    """Describe exactly the entries included in tree_hash, including mode changes."""
+    old, new = set(before), set(after)
+    common = old & new
+    return {
+        "added": sorted(new - old),
+        "deleted": sorted(old - new),
+        "modified": sorted(p for p in common if
+                           {k: v for k, v in before[p].items() if k != "mode"} !=
+                           {k: v for k, v in after[p].items() if k != "mode"}),
+        "permissions": {p: {"before": oct(before[p]["mode"]), "after": oct(after[p]["mode"])}
+                        for p in sorted(common) if before[p]["mode"] != after[p]["mode"]},
+    }
+
+
+def check_lab_integrity(run: Path, snapshots: dict) -> None:
+    changes = {}
+    for relative, before in snapshots.items():
+        after = manifest(run / relative)
+        if manifest_hash(before) != manifest_hash(after):
+            changes[relative] = {"before_sha256": manifest_hash(before),
+                                 "after_sha256": manifest_hash(after),
+                                 **manifest_changes(before, after)}
+    if changes:
+        write_json(run / "logs/checker_integrity_diff.json", changes)
+        raise RuntimeError("Lab AUT alterato durante il checker: vedere logs/checker_integrity_diff.json.")
 
 
 def copy_lab(source: Path, target: Path) -> None:

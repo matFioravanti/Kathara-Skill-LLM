@@ -14,6 +14,17 @@ from .workspace import copy_lab, write_json
 CATEGORIES = ("dns_authority", "local_ns", "dns_record", "http", "reachability", "custom")
 REPORT_COLUMNS = ["Test Description", "Passed", "Reason"]
 
+# CSV parser limit is process-wide; raise it once and never lower a larger setting.
+# The Problems field can contain thousands of failure descriptions.
+_csv_limit = sys.maxsize
+while True:
+    try:
+        if csv.field_size_limit() < _csv_limit:
+            csv.field_size_limit(_csv_limit)
+        break
+    except OverflowError:
+        _csv_limit //= 10
+
 
 def category(description: str) -> str | None:
     # Descrizioni verificate nei sorgenti dei check 0.1.14; nessun ID inventato.
