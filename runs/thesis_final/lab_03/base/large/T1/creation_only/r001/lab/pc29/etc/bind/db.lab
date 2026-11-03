@@ -1,0 +1,7 @@
+$TTL 3600
+$ORIGIN studenti.unibo.it.
+@ IN SOA ns.studenti.unibo.it. hostmaster.studenti.unibo.it. (
+    2026110301 3600 900 604800 300 )
+@ IN NS ns.studenti.unibo.it.
+@ IN A 10.16.8.11
+ns.studenti.unibo.it. IN A 10.16.8.11

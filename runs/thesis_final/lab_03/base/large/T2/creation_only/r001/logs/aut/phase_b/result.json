@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 41.85119433399814,
+  "usage": {
+    "input_tokens": 180603,
+    "cached_input_tokens": 158976,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2281,
+    "reasoning_output_tokens": 205
+  },
+  "final_message": "Configured the 49 authoritative zones and 48 delegations on the requested PCs. Each delegation has an in-zone name server and glue record. The four requested MX records and their mail host A records use the existing PC addresses.\n\nThe recursive resolver is **pc50, 10.16.13.12**. Its root hints point to pc1, and the PC startup scripts configure clients to use pc50. The topology, IP addresses and routes were left unchanged.\n\nStatic checks passed for all 60 startup scripts, the zone and delegation counts, glue records and MX records. Runtime DNS resolution has not been verified: Kathara and BIND validation tools are unavailable in this environment.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1a14f-6c0a-7370-bd1e-e67612fac061"
+}

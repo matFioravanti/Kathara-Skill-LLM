@@ -1,0 +1,8 @@
+$TTL 300
+@ IN SOA ns.ministero.gov. hostmaster.ministero.gov. ( 2026110301 3600 600 604800 300 )
+@ IN NS ns.ministero.gov.
+ns IN A 10.16.1.11
+open IN A 10.16.12.12
+servizi IN A 10.16.12.13
+mail.servizi IN A 10.16.12.13
+servizi IN MX 10 mail.servizi.ministero.gov.

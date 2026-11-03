@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 44.89660633300082,
+  "usage": {
+    "input_tokens": 237040,
+    "cached_input_tokens": 199936,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1825,
+    "reasoning_output_tokens": 186
+  },
+  "final_message": "Configured DNS on `r5` for all requested machine names and the four mail exchanger records. All 60 PCs are set to use it, with their existing resolver entries retained as fallbacks. The existing connections and routes were left unchanged.\n\nThe startup scripts pass shell syntax checks, and I verified that the configuration contains all 27 host records and four MX records. I could not test resolution or connectivity in a running lab because Kathara is not available in this environment.\n\nThe MX records identify the requested mail hosts; they do not configure or verify mail delivery services.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1a185-4df9-7f80-8a24-0be30945f5b3"
+}

@@ -1,0 +1,7 @@
+$TTL 3600
+$ORIGIN open.ministero.gov.
+@ IN SOA ns.open.ministero.gov. hostmaster.open.ministero.gov. (
+    2026110301 3600 900 604800 3600 )
+@ IN NS ns.open.ministero.gov.
+@ IN A 10.16.12.12
+ns.open.ministero.gov. IN A 10.16.12.12

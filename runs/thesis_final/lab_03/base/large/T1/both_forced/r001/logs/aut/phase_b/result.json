@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 38.67294754100294,
+  "usage": {
+    "input_tokens": 207048,
+    "cached_input_tokens": 162176,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2380,
+    "reasoning_output_tokens": 34
+  },
+  "final_message": "La configurazione DNS è stata generata: pc1–pc49 ospitano le 49 zone assegnate, con 48 deleghe e relativi record NS e glue. Sono presenti i record A delle zone e i quattro record MX richiesti.\n\nIl resolver ricorsivo è **pc50** (`10.16.13.12`); pc51–pc60 sono configurati come client. Le immagini `kathara/base` esistenti sono state mantenute.\n\nLa verifica statica ha rilevato 49 zone, 48 deleghe e nessuna mancanza nei percorsi tra PC. La validazione dinamica non è stata eseguita; `named-checkzone` e `named-checkconf` non sono disponibili localmente.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1a140-775f-7360-a6bb-9f90f3280e70"
+}

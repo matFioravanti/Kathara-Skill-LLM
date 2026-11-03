@@ -1,0 +1,8 @@
+$TTL 300
+$ORIGIN service.com.
+@ IN SOA ns.service.com. hostmaster.service.com. ( 2026110301 3600 600 604800 300 )
+@ IN NS ns.service.com.
+ns.service.com. IN A 10.16.2.14
+@ IN A 10.16.2.14
+api.service.com. IN NS ns.api.service.com.
+ns.api.service.com. IN A 10.16.5.14

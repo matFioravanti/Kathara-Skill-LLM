@@ -1,0 +1,8 @@
+$TTL 300
+@ IN SOA ns.university.edu. hostmaster.university.edu. ( 2026110301 3600 600 604800 300 )
+@ IN NS ns.university.edu.
+ns IN A 10.16.1.11
+vpn IN A 10.16.7.12
+courses IN A 10.16.7.13
+mail IN A 10.16.3.13
+@ IN MX 10 mail.university.edu.

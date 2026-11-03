@@ -1,0 +1,20 @@
+$TTL 3600
+@ IN SOA a.root-servers. hostmaster.root-servers. ( 1 3600 900 604800 300 )
+@ IN NS a.root-servers.
+a.root-servers. IN A 10.16.1.11
+com. IN NS ns.com.
+ns.com. IN A 10.16.1.13
+net. IN NS ns.net.
+ns.net. IN A 10.16.1.14
+org. IN NS ns.org.
+ns.org. IN A 10.16.2.11
+io. IN NS ns.io.
+ns.io. IN A 10.16.2.12
+it. IN NS ns.it.
+ns.it. IN A 10.16.2.14
+gov. IN NS ns.gov.
+ns.gov. IN A 10.16.3.11
+edu. IN NS ns.edu.
+ns.edu. IN A 10.16.3.12
+info. IN NS ns.info.
+ns.info. IN A 10.16.3.14

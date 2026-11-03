@@ -1,0 +1,38 @@
+#!/bin/sh
+set -eu
+# Le interfacce Kathara sono gia attive; configurazione IPv4 ripetibile.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.16.15.1/24 ' || ip address add 10.16.15.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 172.26.1.42/30 ' || ip address add 172.26.1.42/30 dev eth1
+
+# Rotte statiche verso tutte le reti non direttamente connesse.
+ip route replace 10.16.1.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.2.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.3.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.4.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.5.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.6.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.7.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.8.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.9.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.10.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.11.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.12.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.13.0/24 via 172.26.1.41 dev eth1
+ip route replace 10.16.14.0/24 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.0/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.4/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.8/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.12/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.16/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.20/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.24/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.28/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.32/30 via 172.26.1.41 dev eth1
+ip route replace 172.26.1.36/30 via 172.26.1.41 dev eth1
+
+# Associazioni ARP permanenti per i dispositivi direttamente collegati.
+ip -4 neigh replace 10.16.15.11 lladdr 02:00:00:aa:0f:02 nud permanent dev eth0
+ip -4 neigh replace 10.16.15.12 lladdr 02:00:00:aa:0f:03 nud permanent dev eth0
+ip -4 neigh replace 10.16.15.13 lladdr 02:00:00:aa:0f:04 nud permanent dev eth0
+ip -4 neigh replace 10.16.15.14 lladdr 02:00:00:aa:0f:05 nud permanent dev eth0
+ip -4 neigh replace 172.26.1.41 lladdr 02:00:00:bb:0b:0b nud permanent dev eth1

@@ -1,0 +1,6 @@
+$TTL 3600
+$ORIGIN ai.research.lab.net.
+@ IN SOA ns.ai.research.lab.net. hostmaster.ai.research.lab.net. ( 2026110301 3600 900 604800 3600 )
+@ IN NS ns.ai.research.lab.net.
+@ IN A 10.16.6.12
+ns.ai.research.lab.net. IN A 10.16.6.12

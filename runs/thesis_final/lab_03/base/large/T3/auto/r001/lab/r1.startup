@@ -1,0 +1,45 @@
+#!/bin/sh
+set -eu
+# Le interfacce Kathara sono gia attive; configurazione IPv4 ripetibile.
+ip -4 address show dev eth0 | grep -Fq 'inet 10.16.1.1/24 ' || ip address add 10.16.1.1/24 dev eth0
+ip -4 address show dev eth1 | grep -Fq 'inet 10.16.2.1/24 ' || ip address add 10.16.2.1/24 dev eth1
+ip -4 address show dev eth2 | grep -Fq 'inet 172.26.1.1/30 ' || ip address add 172.26.1.1/30 dev eth2
+
+# Rotte statiche verso tutte le reti non direttamente connesse.
+ip route replace 10.16.3.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.4.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.5.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.6.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.7.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.8.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.9.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.10.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.11.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.12.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.13.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.14.0/24 via 172.26.1.2 dev eth2
+ip route replace 10.16.15.0/24 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.4/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.8/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.12/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.16/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.20/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.24/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.28/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.32/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.36/30 via 172.26.1.2 dev eth2
+ip route replace 172.26.1.40/30 via 172.26.1.2 dev eth2
+
+# Associazioni ARP permanenti per i dispositivi direttamente collegati.
+ip -4 neigh replace 10.16.1.11 lladdr 02:00:00:aa:01:02 nud permanent dev eth0
+ip -4 neigh replace 10.16.1.12 lladdr 02:00:00:aa:01:03 nud permanent dev eth0
+ip -4 neigh replace 10.16.1.13 lladdr 02:00:00:aa:01:04 nud permanent dev eth0
+ip -4 neigh replace 10.16.1.14 lladdr 02:00:00:aa:01:05 nud permanent dev eth0
+ip -4 neigh replace 10.16.2.11 lladdr 02:00:00:aa:02:02 nud permanent dev eth1
+ip -4 neigh replace 10.16.2.12 lladdr 02:00:00:aa:02:03 nud permanent dev eth1
+ip -4 neigh replace 10.16.2.13 lladdr 02:00:00:aa:02:04 nud permanent dev eth1
+ip -4 neigh replace 10.16.2.14 lladdr 02:00:00:aa:02:05 nud permanent dev eth1
+ip -4 neigh replace 172.26.1.2 lladdr 02:00:00:bb:01:02 nud permanent dev eth2
+
+# DNS lab resolver
+echo "nameserver 10.16.1.12" > /etc/resolv.conf

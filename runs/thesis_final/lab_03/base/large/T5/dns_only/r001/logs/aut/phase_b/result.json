@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 36.27389137499995,
+  "usage": {
+    "input_tokens": 169103,
+    "cached_input_tokens": 137728,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2140,
+    "reasoning_output_tokens": 28
+  },
+  "final_message": "Configurata la gerarchia DNS richiesta: pc1–pc49 sono autoritativi per le rispettive zone; pc50 è il resolver ricorsivo e pc51–pc60 sono i client.\nCreati i file BIND e aggiornati gli startup; le immagini di pc1–pc50 sono passate a `kathara/bind`.\nAssunzioni: IPv4, un solo resolver e tutti gli host non autoritativi rimanenti come client.\nIl controllo statico ha verificato 48 deleghe e la corrispondenza degli NS padre-figlio. `named-checkzone` e `named-checkconf` non sono disponibili localmente; la verifica dinamica resta da eseguire esternamente.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1a23a-4642-7842-8590-f8647499739b"
+}

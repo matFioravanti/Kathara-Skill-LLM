@@ -1,0 +1,7 @@
+$TTL 3600
+$ORIGIN foundation.org.
+@ IN SOA ns.foundation.org. hostmaster.foundation.org. ( 1 3600 900 604800 3600 )
+@ IN NS ns.foundation.org.
+ns.foundation.org. IN A 10.16.9.14
+archive.foundation.org. IN NS ns.archive.foundation.org.
+ns.archive.foundation.org. IN A 10.16.11.12

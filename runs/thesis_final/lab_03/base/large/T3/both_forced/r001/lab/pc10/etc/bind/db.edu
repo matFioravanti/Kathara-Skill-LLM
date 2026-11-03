@@ -1,0 +1,9 @@
+$TTL 3600
+@ IN SOA ns.edu. hostmaster.edu. ( 1 3600 900 604800 300 )
+@ IN NS ns.edu.
+ns IN A 10.16.3.12
+vpn.university.edu. IN A 10.16.7.12
+courses.university.edu. IN A 10.16.7.13
+portal.campus.edu. IN A 10.16.7.14
+mail.university.edu. IN A 10.16.3.13
+university.edu. IN MX 10 mail.university.edu.

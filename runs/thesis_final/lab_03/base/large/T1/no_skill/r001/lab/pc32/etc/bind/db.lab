@@ -1,0 +1,11 @@
+$TTL 3600
+$ORIGIN org.
+@ IN SOA ns.org. hostmaster.org. (
+    2026110301 3600 900 604800 3600 )
+@ IN NS ns.org.
+@ IN A 10.16.8.14
+ns.org. IN A 10.16.8.14
+foundation.org. IN NS ns.foundation.org.
+ns.foundation.org. IN A 10.16.9.14
+project.org. IN NS ns.project.org.
+ns.project.org. IN A 10.16.10.11

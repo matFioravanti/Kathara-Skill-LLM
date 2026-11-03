@@ -1,0 +1,7 @@
+$TTL 3600
+$ORIGIN dev.lab.net.
+@ IN SOA ns.dev.lab.net. hostmaster.dev.lab.net. (
+    2026110301 3600 900 604800 300 )
+@ IN NS ns.dev.lab.net.
+@ IN A 10.16.6.14
+ns.dev.lab.net. IN A 10.16.6.14

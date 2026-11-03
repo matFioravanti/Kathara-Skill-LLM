@@ -1,0 +1,9 @@
+$TTL 3600
+$ORIGIN info.
+@ IN SOA ns.info. hostmaster.info. (
+    2026110301 3600 900 604800 3600 )
+@ IN NS ns.info.
+@ IN A 10.16.9.13
+ns.info. IN A 10.16.9.13
+news.info. IN NS ns.news.info.
+ns.news.info. IN A 10.16.11.11

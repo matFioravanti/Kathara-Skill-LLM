@@ -1,0 +1,5 @@
+$TTL 300
+@ IN SOA ns.vpn.university.edu. hostmaster.vpn.university.edu. ( 1 3600 600 604800 300 )
+@ IN NS ns.vpn.university.edu.
+ns.vpn.university.edu. IN A 10.16.7.12
+@ IN A 10.16.7.12

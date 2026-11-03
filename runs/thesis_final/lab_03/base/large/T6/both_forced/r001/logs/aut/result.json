@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 47.76023599999462,
+  "sandbox_overhead_seconds": 26.798600791989884,
+  "usage": {
+    "input_tokens": 237681,
+    "output_tokens": 2621,
+    "cached_input_tokens": 181376,
+    "reasoning_output_tokens": 39,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Gerarchia DNS configurata: pc1–pc49 ospitano le 49 zone richieste, pc50 è il resolver ricorsivo e pc51–pc60 sono i client. Sono stati aggiunti deleghe, glue e record A e MX richiesti.\n\nLa verifica statica ha risolto tutti i percorsi tra i PC e controllato le 50 configurazioni e gli startup DNS. Le immagini esistenti sono rimaste invariate.\n\nLa validazione dinamica non è stata eseguita; `named-checkzone` e `named-checkconf` non sono disponibili localmente.",
+  "error": null
+}

@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 44.07828429199435,
+  "sandbox_overhead_seconds": 23.395767124995473,
+  "usage": {
+    "input_tokens": 179855,
+    "output_tokens": 2374,
+    "cached_input_tokens": 146688,
+    "reasoning_output_tokens": 207,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Ho configurato la gerarchia DNS richiesta: 49 zone autoritative su pc1–pc49, con deleghe, glue e record A e MX previsti. Il resolver ricorsivo è pc50 (`10.16.13.12`), configurato per partire dalla radice su pc1; tutti i 60 PC lo usano come nameserver.\n\nLa topologia, gli indirizzi e le rotte esistenti sono rimasti invariati. Ho verificato la sintassi degli script di avvio e la presenza di SOA, NS e glue nelle zone. La risoluzione effettiva non è stata verificata: `kathara` e `named-checkzone` non sono disponibili nell’ambiente.",
+  "error": null
+}

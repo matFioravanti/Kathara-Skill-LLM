@@ -1,0 +1,5 @@
+$TTL 300
+@ IN SOA ns.status.platform.io. hostmaster.status.platform.io. ( 1 3600 600 604800 300 )
+@ IN NS ns.status.platform.io.
+ns.status.platform.io. IN A 10.16.12.11
+@ IN A 10.16.12.11

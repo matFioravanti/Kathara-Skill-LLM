@@ -1,0 +1,10 @@
+options {
+    directory "/tmp";
+    listen-on port 53 { any; };
+    listen-on-v6 { none; };
+    recursion no;
+    allow-query { any; };
+    dnssec-validation no;
+    pid-file "/run/named-lab.pid";
+};
+zone "dati.regione.it" { type primary; file "/etc/bind/db.lab"; };

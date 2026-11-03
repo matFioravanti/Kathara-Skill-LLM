@@ -1,0 +1,232 @@
+{
+  "skill_gate_enabled": true,
+  "skill_gate_status": "completed",
+  "skill_gate_required_skills": [
+    "kathara-creation"
+  ],
+  "skill_gate_verified_skills": [
+    "kathara-creation"
+  ],
+  "skill_gate_read_seconds": 7.099404707994836,
+  "skill_gate_verification_seconds": 0.014336000000184868,
+  "skill_gate_blocked": false,
+  "skill_gate_write_attempts_blocked": null,
+  "skill_gate_backend_enforcement": "docker_sandbox:ro_nonroot_zero_caps_no_mcp",
+  "skill_gate_input_tokens": 25248,
+  "skill_gate_output_tokens": 155,
+  "skill_gate_write_seconds": 41.85119433399814,
+  "skill_gate_total_seconds": 73.34174799999892,
+  "write_phase_input_tokens": 180603,
+  "write_phase_output_tokens": 2281,
+  "skill_gate_isolation_verified": true,
+  "skill_gate_isolation_violations": 0,
+  "skill_gate_context_strategy": "explicit_resume_shared_state",
+  "skill_gate_backend": "docker_sandbox",
+  "skill_gate_protocol_version": "enforced_read_v1",
+  "skill_gate_state_history": [
+    {
+      "status": "preparing",
+      "timestamp": "2026-11-03T12:08:07.865034+00:00"
+    },
+    {
+      "status": "initial_read",
+      "timestamp": "2026-11-03T12:08:18.189488+00:00"
+    },
+    {
+      "status": "passed",
+      "timestamp": "2026-11-03T12:08:25.310287+00:00"
+    },
+    {
+      "status": "write_phase_running",
+      "timestamp": "2026-11-03T12:08:38.012205+00:00"
+    },
+    {
+      "status": "completed",
+      "timestamp": "2026-11-03T12:09:19.865656+00:00"
+    }
+  ],
+  "skill_gate_certification": "CERTIFIED",
+  "skill_gate_context_continuity_verified": true,
+  "skill_gate_load_methods": {
+    "kathara-creation": "read_verified"
+  },
+  "skill_gate_read_attempts": 1,
+  "skill_gate_retry_count": 0,
+  "skill_gate_fallback_used": false,
+  "skill_gate_fallback_skills": [],
+  "skill_gate_fallback_sha256_verified": null,
+  "skill_gate_context_delivery_verified": true,
+  "skill_gate_initial_read_seconds": 7.099404707994836,
+  "skill_gate_retry_seconds": null,
+  "skill_gate_fallback_seconds": null,
+  "skill_gate_initial_input_tokens": 25248,
+  "skill_gate_initial_output_tokens": 155,
+  "skill_gate_retry_input_tokens": null,
+  "skill_gate_retry_output_tokens": null,
+  "skill_gate_fallback_input_tokens": null,
+  "skill_gate_fallback_output_tokens": null,
+  "skill_gate_recovery_policy_version": "recovery_v1",
+  "skill_gate_session_id": "01a1a14f-6c0a-7370-bd1e-e67612fac061",
+  "skill_gate_session_count": 1,
+  "skill_autonomous_read_before_write": true,
+  "skill_delivery_before_write": true,
+  "skill_delivery_details": {
+    "kathara-creation": {
+      "method": "read_verified",
+      "autonomous_read_before_write": true,
+      "delivery_before_write": true
+    }
+  },
+  "internet": {
+    "internet_used": null,
+    "status": "unknown",
+    "web_search_calls": 0,
+    "web_search_attempts": 0,
+    "external_domains": [],
+    "search_result_domains": [],
+    "visited_domains": [],
+    "shell_network_candidates": 0,
+    "shell_network_local": 0,
+    "shell_network_uncertain": 0,
+    "network_policy": null,
+    "trace_available": true,
+    "detection_source": "aut_events"
+  },
+  "skill_compliance": {
+    "skill_mode": "creation_only",
+    "required_skills": [
+      "kathara-creation"
+    ],
+    "observed_read_skills": [
+      "kathara-creation"
+    ],
+    "skill_states": {
+      "kathara-creation": "observed",
+      "kathara-dns": "not_required"
+    },
+    "required_reads_observed": true,
+    "skill_details": {
+      "kathara-creation": {
+        "required": true,
+        "read_attempt_observed": true,
+        "content_identified": true,
+        "complete_read_verified": true,
+        "dedicated_read": true,
+        "read_before_modification": true,
+        "verification_status": "verified"
+      },
+      "kathara-dns": {
+        "required": false,
+        "read_attempt_observed": null,
+        "content_identified": null,
+        "complete_read_verified": null,
+        "dedicated_read": null,
+        "read_before_modification": null,
+        "verification_status": "not_required"
+      }
+    },
+    "required_skill_count": 1,
+    "required_read_attempt_count": 1,
+    "required_content_identified_count": 1,
+    "required_complete_read_count": 1,
+    "required_unverified_read_count": 0,
+    "required_reads_complete_before_modification": true,
+    "protocol_compliance_observed": true,
+    "strict_status": "verified",
+    "status": "verified",
+    "skill_autonomous_read_before_write": true,
+    "skill_delivery_before_write": true,
+    "skill_delivery_details": {
+      "kathara-creation": {
+        "method": "read_verified",
+        "autonomous_read_before_write": true,
+        "delivery_before_write": true
+      }
+    }
+  },
+  "scenario": "lab_03",
+  "scenario_id": "lab_03",
+  "lab_id": "lab_03",
+  "dns_tree_id": "base",
+  "task_level": "large",
+  "prompt_type": "T2",
+  "prompt_sha256": "53303db368af512e1df1c9662a476e87978291633673775c159c36eaa91ac3cc",
+  "prompt_sent_sha256": "53303db368af512e1df1c9662a476e87978291633673775c159c36eaa91ac3cc",
+  "skill_mode": "creation_only",
+  "skill_protocol": "enforced_read_v1",
+  "run_number": 1,
+  "replicate": 1,
+  "experiment_id": "thesis_final",
+  "run_id": "12_thesis_final__6_lab_03__4_base__5_large__2_T2__13_creation_only__r001",
+  "agent": "codex",
+  "model": "gpt-6.1-terra",
+  "reasoning_effort": "low",
+  "available_skills": [
+    "kathara-creation"
+  ],
+  "forced_skills": [
+    "kathara-creation"
+  ],
+  "agent_success": true,
+  "status": "COMPLETED",
+  "execution_backend": "docker_sandbox",
+  "authentication": "sbx_oauth_proxy",
+  "codex_host_version": "0.157.1",
+  "codex_sandbox_version": "codex-cli 0.165.0",
+  "sandbox": {
+    "name": null,
+    "id": null,
+    "sbx_version": null,
+    "codex_host_version": "0.157.1",
+    "codex_sandbox_version": "codex-cli 0.165.0",
+    "cleanup_ok": true,
+    "cleanup_error": null,
+    "error": null
+  },
+  "pipeline_error": null,
+  "timing": {
+    "agent_seconds": 48.95059904199297,
+    "sandbox_overhead_seconds": 23.782326999004,
+    "checker_seconds": 261.6857763340013,
+    "total_seconds": 335.7154913339982
+  },
+  "tokens": {
+    "input": 205851,
+    "cached_input": 179072,
+    "output": 2436,
+    "reasoning": 205,
+    "total": 208287,
+    "total_reported": null,
+    "total_calculated": 208287,
+    "cache_write_input": 0
+  },
+  "llm_sampling": {
+    "temperature": 1.0,
+    "top_p": 0.98,
+    "source": "server_response",
+    "status": "observed",
+    "transport": "http",
+    "collection_mode": "http_trace",
+    "temperature_status": "observed",
+    "top_p_status": "observed",
+    "response_count": 8,
+    "distinct_temperatures": [
+      1.0
+    ],
+    "distinct_top_p": [
+      0.98
+    ],
+    "client_requested_temperature": null,
+    "client_requested_top_p": null,
+    "details": null
+  },
+  "checker": {
+    "passed": 5522,
+    "failed": 40,
+    "total": 5562,
+    "pass_rate": 0.9928083423229054
+  },
+  "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
+  "evaluation_revision": 0,
+  "last_reevaluated_at": null
+}

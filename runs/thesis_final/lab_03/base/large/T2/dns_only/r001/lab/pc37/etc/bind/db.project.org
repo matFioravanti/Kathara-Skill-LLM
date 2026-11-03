@@ -1,0 +1,7 @@
+$TTL 3600
+@ IN SOA ns.project.org. hostmaster.project.org. ( 1 3600 900 604800 300 )
+@ IN NS ns.project.org.
+ns.project.org. IN A 10.16.10.11
+@ IN A 10.16.10.11
+docs IN NS ns.docs.project.org.
+ns.docs.project.org. IN A 10.16.11.13

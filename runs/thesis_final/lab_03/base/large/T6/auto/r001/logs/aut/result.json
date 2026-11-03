@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 30.061325459006184,
+  "sandbox_overhead_seconds": 6.830723876002594,
+  "final_message": "Configured the 49 authoritative zones on pc1–pc49, with delegations, glue, and the requested A and MX records. pc50 is the recursive resolver at `10.16.13.12`; pc51–pc60 use it as clients.\n\nThe existing `kathara/base` images were retained. Static checks verified all 49 zones, 48 delegation and glue pairs, and the startup assignments. BIND’s checking tools were unavailable, and the lab was not started, so live resolution remains unverified.",
+  "usage": {
+    "input_tokens": 164076,
+    "cached_input_tokens": 134144,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1901,
+    "reasoning_output_tokens": 27
+  },
+  "error": null
+}
