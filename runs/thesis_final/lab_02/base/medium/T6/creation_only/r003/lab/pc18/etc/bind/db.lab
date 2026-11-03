@@ -1,0 +1,6 @@
+$ORIGIN dept.company.com.
+$TTL 300
+@ IN SOA ns.dept.company.com. hostmaster.dept.company.com. ( 1 3600 600 604800 300 )
+@ IN NS ns.dept.company.com.
+ns.dept.company.com. IN A 10.15.5.12
+@ IN A 10.15.5.12

@@ -1,0 +1,7 @@
+$TTL 3600
+@ IN SOA ns.it. hostmaster.it. ( 1 3600 900 604800 300 )
+@ IN NS ns.it.
+ns IN A 10.15.2.12
+studenti.unibo.it. IN A 10.15.8.11
+servizi.comune.it. IN A 10.15.8.12
+dati.regione.it. IN A 10.15.8.13

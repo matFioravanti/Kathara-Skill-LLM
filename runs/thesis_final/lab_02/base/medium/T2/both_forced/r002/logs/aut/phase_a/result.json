@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 9.335751708997122,
+  "usage": {
+    "input_tokens": 42186,
+    "cached_input_tokens": 34432,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 155,
+    "reasoning_output_tokens": 0
+  },
+  "final_message": "Ho letto integralmente entrambe le Skill con comandi separati. Non ho modificato file né configurato il laboratorio.",
+  "stdin_delivery_verified": true,
+  "session_id": "01a1a2c4-aae1-7dc2-89a4-6811d91dba84"
+}

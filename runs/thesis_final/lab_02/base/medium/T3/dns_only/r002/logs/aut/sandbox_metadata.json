@@ -1,0 +1,18 @@
+{
+  "execution_backend": "docker_sandbox",
+  "codex_sandbox_version": "codex-cli 0.165.0",
+  "cleanup_ok": true,
+  "environments": [
+    {
+      "name": "kathara-gate-1a312650a271",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "kathara-gate-e0205ae91bf0",
+      "ok": true,
+      "error": null
+    }
+  ],
+  "error": null
+}

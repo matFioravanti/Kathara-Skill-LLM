@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 33.9492687499951,
+  "sandbox_overhead_seconds": 6.901700209004048,
+  "final_message": "Configured the 31 authoritative zones on pc1–pc31 with the requested 30 delegations, glue, apex addresses, and MX records. The recursive resolver runs on pc32 (`10.15.8.14`); pc33–pc40 use it for DNS.\n\nAssumed `www.example.com` should point to pc6 (`10.15.2.12`), since no separate web host was specified. Existing links, addresses, routing, and images were preserved.\n\nStatic checks passed for the zones, delegation and glue pairs, and router LAN route coverage. BIND validation tools were unavailable, and the lab was not started, so live DNS resolution remains unverified.",
+  "usage": {
+    "input_tokens": 122839,
+    "cached_input_tokens": 90880,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1920,
+    "reasoning_output_tokens": 37
+  },
+  "error": null
+}

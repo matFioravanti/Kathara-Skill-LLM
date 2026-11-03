@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 31.580520000003162,
+  "sandbox_overhead_seconds": 25.145261584002583,
+  "usage": {
+    "input_tokens": 183589,
+    "output_tokens": 1827,
+    "cached_input_tokens": 108288,
+    "reasoning_output_tokens": 33,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Configurazione DNS generata: pc1–pc31 servono le 31 zone assegnate, con 30 deleghe; pc32 è il resolver ricorsivo e pc33–pc40 sono configurati come client.\n\nHo creato i file BIND e aggiornato gli startup e le immagini dei server DNS. Per `www.example.com` ho assunto l’indirizzo di pc6; i record MX richiesti usano gli indirizzi esistenti di pc7 e pc11.\n\nLa verifica dinamica non è stata eseguita; `named-checkzone` e `named-checkconf` non sono disponibili nell’ambiente.",
+  "error": null
+}

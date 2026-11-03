@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 42.09328516799724,
+  "sandbox_overhead_seconds": 30.446617082998273,
+  "usage": {
+    "input_tokens": 268110,
+    "output_tokens": 2347,
+    "cached_input_tokens": 232704,
+    "reasoning_output_tokens": 20,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Configured the 31 authoritative zones on pc1–pc31, with the requested mapping, 30 delegations and glue records. pc32 (`10.15.8.14`) is the recursive resolver; pc33–pc40 use it as clients.\n\nAdded the requested MX and mail A records. I assumed the web service for `www.example.com` is on pc6.\n\nStatic checks confirmed the zone and delegation counts. BIND validation tools were unavailable locally, and runtime resolution has not been tested. Existing links, addresses and routing were not changed.",
+  "error": null
+}
