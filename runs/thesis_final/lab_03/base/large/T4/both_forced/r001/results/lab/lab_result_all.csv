@@ -3739,7 +3739,7 @@ Verifying `10.16.5.11` reachable from device `pc57`,True,OK
 Verifying `10.16.5.12` reachable from device `pc57`,True,OK
 Verifying `10.16.5.13` reachable from device `pc57`,True,OK
 Verifying `10.16.5.14` reachable from device `pc57`,True,OK
-Verifying `10.16.6.11` reachable from device `pc57`,False,
+Verifying `10.16.6.11` reachable from device `pc57`,True,OK
 Verifying `10.16.6.12` reachable from device `pc57`,True,OK
 Verifying `10.16.6.13` reachable from device `pc57`,True,OK
 Verifying `10.16.6.14` reachable from device `pc57`,True,OK
@@ -4892,46 +4892,46 @@ Checking correctness of DNS records,True,OK
 Checking correctness of DNS records,True,OK
 Checking correctness of DNS records,True,OK
 Checking correctness of DNS records,True,OK
-Checking correctness of DNS records,False,pc51 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc52 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc53 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc54 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc55 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc56 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc57 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc58 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc59 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc60 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc51 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc52 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc53 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc54 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc55 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc56 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc57 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc58 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc59 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc60 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc51 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc52 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc53 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc54 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc55 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc56 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc57 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc58 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc59 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc60 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
-Checking correctness of DNS records,False,pc51 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc52 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc53 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc54 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc55 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc56 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc57 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc58 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc59 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
-Checking correctness of DNS records,False,pc60 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
 Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r1',True,OK
 "Checking the exit code of the command 'sh -c 'ip -4 route show 10.16.3.0/24 | grep -Eq '""'""'^10\.16\.3\.0/24 via 172\.26\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
 "Checking the exit code of the command 'sh -c 'ip -4 route show 10.16.4.0/24 | grep -Eq '""'""'^10\.16\.4\.0/24 via 172\.26\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK

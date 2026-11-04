@@ -1,0 +1,736 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,616,181,797,"1: Checking that named is running on device `pc1`: Daemon named is not running on device `pc1`
+2: Checking that named is running on device `pc2`: Daemon named is not running on device `pc2`
+3: Checking that named is running on device `pc3`: Daemon named is not running on device `pc3`
+4: Checking that named is running on device `pc4`: Daemon named is not running on device `pc4`
+5: Checking that named is running on device `pc5`: Daemon named is not running on device `pc5`
+6: Checking that named is running on device `pc6`: Daemon named is not running on device `pc6`
+7: Checking that named is running on device `pc7`: Daemon named is not running on device `pc7`
+8: Checking that named is running on device `pc8`: Daemon named is not running on device `pc8`
+9: Checking that named is running on device `pc9`: Daemon named is not running on device `pc9`
+10: Checking that named is running on device `pc10`: Daemon named is not running on device `pc10`
+11: Checking that named is running on device `pc11`: Daemon named is not running on device `pc11`
+12: Checking that named is running on device `pc12`: Daemon named is not running on device `pc12`
+13: Checking that named is running on device `pc13`: Daemon named is not running on device `pc13`
+14: Checking that named is running on device `pc14`: Daemon named is not running on device `pc14`
+15: Checking on `pc1` that `10.14.1.11` is the authority for domain `.`: named not started in `pc1`.startup`
+16: Checking on `pc1` that `10.14.1.11` is the authority for domain `.`: named not started in `pc1`.startup`
+17: Checking on `pc14` that `10.14.1.11` is the authority for domain `.`: named not started in `pc14`.startup`
+18: Checking on `pc2` that `10.14.1.12` is the authority for domain `com`: named not started in `pc2`.startup`
+19: Checking on `pc3` that `10.14.1.13` is the authority for domain `net`: named not started in `pc3`.startup`
+20: Checking on `pc4` that `10.14.1.14` is the authority for domain `example.com`: named not started in `pc4`.startup`
+21: Checking on `pc5` that `10.14.2.11` is the authority for domain `service.com`: named not started in `pc5`.startup`
+22: Checking on `pc6` that `10.14.2.12` is the authority for domain `lab.net`: named not started in `pc6`.startup`
+23: Checking on `pc7` that `10.14.2.13` is the authority for domain `tools.net`: named not started in `pc7`.startup`
+24: Checking on `pc8` that `10.14.3.11` is the authority for domain `shop.example.com`: named not started in `pc8`.startup`
+25: Checking on `pc9` that `10.14.3.12` is the authority for domain `api.service.com`: named not started in `pc9`.startup`
+26: Checking on `pc10` that `10.14.3.13` is the authority for domain `research.lab.net`: named not started in `pc10`.startup`
+27: Checking on `pc11` that `10.14.4.11` is the authority for domain `ci.tools.net`: named not started in `pc11`.startup`
+28: Checking on `pc12` that `10.14.4.12` is the authority for domain `ai.research.lab.net`: named not started in `pc12`.startup`
+29: Checking on `pc13` that `10.14.4.13` is the authority for domain `data.research.lab.net`: named not started in `pc13`.startup`
+30: Checking that `10.14.4.14` is the local name server for device `pc16`: `resolv.conf` file not found for device `pc16`
+31: Checking that `10.14.4.14` is the local name server for device `pc17`: `resolv.conf` file not found for device `pc17`
+32: Checking that `10.14.4.14` is the local name server for device `pc18`: `resolv.conf` file not found for device `pc18`
+33: Checking that `10.14.4.14` is the local name server for device `pc19`: `resolv.conf` file not found for device `pc19`
+34: Checking that `10.14.4.14` is the local name server for device `pc20`: `resolv.conf` file not found for device `pc20`
+35: Checking correctness of DNS records: pc16 resolve A shop.example.com with IP ;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.11']
+36: Checking correctness of DNS records: pc17 resolve A shop.example.com with IP ;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.11']
+37: Checking correctness of DNS records: pc18 resolve A shop.example.com with IP ;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.11']
+38: Checking correctness of DNS records: pc19 resolve A shop.example.com with IP ;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.11']
+39: Checking correctness of DNS records: pc20 resolve A shop.example.com with IP ;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for shop.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.11']
+40: Checking correctness of DNS records: pc16 resolve A api.service.com with IP ;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.12']
+41: Checking correctness of DNS records: pc17 resolve A api.service.com with IP ;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.12']
+42: Checking correctness of DNS records: pc18 resolve A api.service.com with IP ;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.12']
+43: Checking correctness of DNS records: pc19 resolve A api.service.com with IP ;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.12']
+44: Checking correctness of DNS records: pc20 resolve A api.service.com with IP ;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for api.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.3.12']
+45: Checking correctness of DNS records: pc16 resolve A ci.tools.net with IP ;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.11']
+46: Checking correctness of DNS records: pc17 resolve A ci.tools.net with IP ;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.11']
+47: Checking correctness of DNS records: pc18 resolve A ci.tools.net with IP ;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.11']
+48: Checking correctness of DNS records: pc19 resolve A ci.tools.net with IP ;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.11']
+49: Checking correctness of DNS records: pc20 resolve A ci.tools.net with IP ;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ci.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.11']
+50: Checking correctness of DNS records: pc16 resolve A ai.research.lab.net with IP ;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.12']
+51: Checking correctness of DNS records: pc17 resolve A ai.research.lab.net with IP ;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.12']
+52: Checking correctness of DNS records: pc18 resolve A ai.research.lab.net with IP ;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.12']
+53: Checking correctness of DNS records: pc19 resolve A ai.research.lab.net with IP ;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.12']
+54: Checking correctness of DNS records: pc20 resolve A ai.research.lab.net with IP ;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for ai.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.12']
+55: Checking correctness of DNS records: pc16 resolve A data.research.lab.net with IP ;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.13']
+56: Checking correctness of DNS records: pc17 resolve A data.research.lab.net with IP ;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.13']
+57: Checking correctness of DNS records: pc18 resolve A data.research.lab.net with IP ;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.13']
+58: Checking correctness of DNS records: pc19 resolve A data.research.lab.net with IP ;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.13']
+59: Checking correctness of DNS records: pc20 resolve A data.research.lab.net with IP ;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for data.research.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.4.13']
+60: Checking correctness of DNS records: pc16 resolve A mail.example.com with IP ;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.1.14']
+61: Checking correctness of DNS records: pc17 resolve A mail.example.com with IP ;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.1.14']
+62: Checking correctness of DNS records: pc18 resolve A mail.example.com with IP ;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.1.14']
+63: Checking correctness of DNS records: pc19 resolve A mail.example.com with IP ;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.1.14']
+64: Checking correctness of DNS records: pc20 resolve A mail.example.com with IP ;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.1.14']
+65: Checking correctness of DNS records: pc16 resolve A mail.service.com with IP ;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.11']
+66: Checking correctness of DNS records: pc17 resolve A mail.service.com with IP ;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.11']
+67: Checking correctness of DNS records: pc18 resolve A mail.service.com with IP ;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.11']
+68: Checking correctness of DNS records: pc19 resolve A mail.service.com with IP ;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.11']
+69: Checking correctness of DNS records: pc20 resolve A mail.service.com with IP ;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.11']
+70: Checking correctness of DNS records: pc16 resolve A mail.lab.net with IP ;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.12']
+71: Checking correctness of DNS records: pc17 resolve A mail.lab.net with IP ;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.12']
+72: Checking correctness of DNS records: pc18 resolve A mail.lab.net with IP ;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.12']
+73: Checking correctness of DNS records: pc19 resolve A mail.lab.net with IP ;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.12']
+74: Checking correctness of DNS records: pc20 resolve A mail.lab.net with IP ;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.12']
+75: Checking correctness of DNS records: pc16 resolve A mail.tools.net with IP ;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.13']
+76: Checking correctness of DNS records: pc17 resolve A mail.tools.net with IP ;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.13']
+77: Checking correctness of DNS records: pc18 resolve A mail.tools.net with IP ;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.13']
+78: Checking correctness of DNS records: pc19 resolve A mail.tools.net with IP ;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.13']
+79: Checking correctness of DNS records: pc20 resolve A mail.tools.net with IP ;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for mail.tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10.14.2.13']
+80: Checking correctness of DNS records: pc16 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.example.com']
+81: Checking correctness of DNS records: pc17 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.example.com']
+82: Checking correctness of DNS records: pc18 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.example.com']
+83: Checking correctness of DNS records: pc19 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.example.com']
+84: Checking correctness of DNS records: pc20 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for example.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.example.com']
+85: Checking correctness of DNS records: pc16 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.service.com']
+86: Checking correctness of DNS records: pc17 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.service.com']
+87: Checking correctness of DNS records: pc18 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.service.com']
+88: Checking correctness of DNS records: pc19 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.service.com']
+89: Checking correctness of DNS records: pc20 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for service.com failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.service.com']
+90: Checking correctness of DNS records: pc16 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.lab.net']
+91: Checking correctness of DNS records: pc17 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.lab.net']
+92: Checking correctness of DNS records: pc18 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.lab.net']
+93: Checking correctness of DNS records: pc19 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.lab.net']
+94: Checking correctness of DNS records: pc20 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.lab.net']
+95: Checking correctness of DNS records: pc16 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.tools.net']
+96: Checking correctness of DNS records: pc17 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.tools.net']
+97: Checking correctness of DNS records: pc18 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.tools.net']
+98: Checking correctness of DNS records: pc19 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.tools.net']
+99: Checking correctness of DNS records: pc20 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; no servers could be reached
+;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
+;; communications error to 127.0.0.1#53: connection refused
+;; no servers could be reached instead of ['10 mail.tools.net']
+100: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc1': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+101: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc2': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+102: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc3': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+103: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.1.14 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc4': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+104: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.2.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc5': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+105: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.2.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc6': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+106: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.2.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc7': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+107: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.3.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc8': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+108: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.3.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc9': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+109: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.3.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc10': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+110: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc11': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+111: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc12': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+112: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc13': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+113: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.11 . SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+114: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.12 com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+115: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.13 net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+116: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.14 example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""example.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+117: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.11 service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""service.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+118: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.12 lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+119: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.13 tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""tools.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+120: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.11 shop.example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+121: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.12 api.service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+122: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.13 research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""research.lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+123: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.11 ci.tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+124: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.12 ai.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+125: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.13 data.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""SOA"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+126: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.12 com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.12"" ] || exit 1; case ""$ns"" in ""com.""|*.""com."") b=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+127: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.11 net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.13 net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.13"" ] || exit 1; case ""$ns"" in ""net.""|*.""net."") b=$(dig @10.14.1.11 net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+128: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.14 example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.14"" ] || exit 1; case ""$ns"" in ""example.com.""|*.""example.com."") b=$(dig @10.14.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+129: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.2.11 service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.2.11"" ] || exit 1; case ""$ns"" in ""service.com.""|*.""service.com."") b=$(dig @10.14.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.2.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+130: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.2.12 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.2.12"" ] || exit 1; case ""$ns"" in ""lab.net.""|*.""lab.net."") b=$(dig @10.14.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.2.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+131: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.2.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.2.13"" ] || exit 1; case ""$ns"" in ""tools.net.""|*.""tools.net."") b=$(dig @10.14.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.2.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+132: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""shop.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.3.11 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""shop.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.3.11"" ] || exit 1; case ""$ns"" in ""shop.example.com.""|*.""shop.example.com."") b=$(dig @10.14.1.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.3.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+133: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.2.11 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""api.service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.3.12 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""api.service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.3.12"" ] || exit 1; case ""$ns"" in ""api.service.com.""|*.""api.service.com."") b=$(dig @10.14.2.11 api.service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.3.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+134: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.2.12 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.3.13 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.3.13"" ] || exit 1; case ""$ns"" in ""research.lab.net.""|*.""research.lab.net."") b=$(dig @10.14.2.12 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.3.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+135: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.2.13 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.4.11 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.4.11"" ] || exit 1; case ""$ns"" in ""ci.tools.net.""|*.""ci.tools.net."") b=$(dig @10.14.2.13 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.4.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+136: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.3.13 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.4.12 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.4.12"" ] || exit 1; case ""$ns"" in ""ai.research.lab.net.""|*.""ai.research.lab.net."") b=$(dig @10.14.3.13 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.4.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+137: Checking the exit code of the command 'sh -c 'p=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.4.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.4.13"" ] || exit 1; case ""$ns"" in ""data.research.lab.net.""|*.""data.research.lab.net."") b=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.4.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+138: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.11 shop.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+139: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.3.12 api.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+140: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.11 ci.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+141: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.12 ai.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+142: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.4.13 data.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+143: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.14 example.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""example.com."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.example.com."" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+144: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.1.14 mail.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.example.com."" && $4==""A"" && $5==""10.14.1.14"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+145: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.11 service.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""service.com."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.service.com."" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+146: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.11 mail.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.service.com."" && $4==""A"" && $5==""10.14.2.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+147: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.12 lab.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""lab.net."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.lab.net."" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+148: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.12 mail.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.lab.net."" && $4==""A"" && $5==""10.14.2.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+149: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.13 tools.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""tools.net."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.tools.net."" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+150: Checking the exit code of the command 'sh -c 'ans=$(dig @10.14.2.13 mail.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$ans"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$ans"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$ans"" | awk '""'""'tolower($1)==""mail.tools.net."" && $4==""A"" && $5==""10.14.2.13"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+151: Checking the exit code of the command 'sh -c 'x=$(dig @10.14.1.14 www.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$x"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$x"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && a=$(printf ""%s\n"" ""$x"" | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ -n ""$a"" ] || exit 1; for ip in $a; do case "" 10.14.1.11 10.14.1.12 10.14.1.13 10.14.1.14 10.14.2.11 10.14.2.12 10.14.2.13 10.14.3.11 10.14.3.12 10.14.3.13 10.14.4.11 10.14.4.12 10.14.4.13 10.14.4.14 10.14.5.11 10.14.5.12 10.14.5.13 10.14.6.11 10.14.6.12 10.14.6.13 "" in *"" $ip ""*) ;; *) exit 1 ;; esac; done; y=$(dig @10.14.4.14 www.example.com. A +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ ""$y"" = ""$a"" ]'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+152: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 shop.example.com. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+153: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 api.service.com. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+154: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 ci.tools.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+155: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 ai.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+156: Checking the exit code of the command 'sh -c 'out=$(dig @10.14.4.14 data.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+157: Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc16': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+158: Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc16': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+159: Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc16': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+160: Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc16': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+161: Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc16': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+162: Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc17': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+163: Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc17': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+164: Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc17': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+165: Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc17': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+166: Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc17': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+167: Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc18': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+168: Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc18': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+169: Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc18': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+170: Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc18': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+171: Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc18': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+172: Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc19': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+173: Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc19': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+174: Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc19': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+175: Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc19': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+176: Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc19': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+177: Checking the exit code of the command 'sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.14.3.11"" {ok=1} END {exit !ok}'""'""''' on 'pc20': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+178: Checking the exit code of the command 'sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.14.3.12"" {ok=1} END {exit !ok}'""'""''' on 'pc20': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+179: Checking the exit code of the command 'sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.14.4.11"" {ok=1} END {exit !ok}'""'""''' on 'pc20': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+180: Checking the exit code of the command 'sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.14.4.12"" {ok=1} END {exit !ok}'""'""''' on 'pc20': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0
+181: Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.14.4.13"" {ok=1} END {exit !ok}'""'""''' on 'pc20': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

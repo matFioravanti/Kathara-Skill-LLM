@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yf4fi6ii/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yriq6pxf/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yf4fi6ii/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yriq6pxf/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -1287,7 +1287,7 @@ Verifying `10.16.15.13` reachable from device `pc14`: [92m OK[00m
 Verifying `10.16.15.14` reachable from device `pc14`: [92m OK[00m
 Verifying `10.16.4.1` reachable from device `pc14`: [92m OK[00m
 Verifying `10.16.1.11` reachable from device `pc15`: [92m OK[00m
-Verifying `10.16.1.12` reachable from device `pc15`: [91m [00m
+Verifying `10.16.1.12` reachable from device `pc15`: [92m OK[00m
 Verifying `10.16.1.13` reachable from device `pc15`: [92m OK[00m
 Verifying `10.16.1.14` reachable from device `pc15`: [92m OK[00m
 Verifying `10.16.2.11` reachable from device `pc15`: [92m OK[00m
@@ -3227,7 +3227,7 @@ Verifying `10.16.5.12` reachable from device `pc47`: [92m OK[00m
 Verifying `10.16.5.13` reachable from device `pc47`: [92m OK[00m
 Verifying `10.16.5.14` reachable from device `pc47`: [92m OK[00m
 Verifying `10.16.6.11` reachable from device `pc47`: [92m OK[00m
-Verifying `10.16.6.12` reachable from device `pc47`: [91m [00m
+Verifying `10.16.6.12` reachable from device `pc47`: [92m OK[00m
 Verifying `10.16.6.13` reachable from device `pc47`: [92m OK[00m
 Verifying `10.16.6.14` reachable from device `pc47`: [92m OK[00m
 Verifying `10.16.7.11` reachable from device `pc47`: [92m OK[00m
@@ -5178,46 +5178,46 @@ Checking correctness of DNS records: [92m OK[00m
 Checking correctness of DNS records: [92m OK[00m
 Checking correctness of DNS records: [92m OK[00m
 Checking correctness of DNS records: [92m OK[00m
-Checking correctness of DNS records: [91m pc51 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc52 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc53 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc54 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc55 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc56 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc57 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc58 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc59 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc60 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc51 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc52 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc53 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc54 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc55 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc56 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc57 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc58 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc59 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc60 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc51 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc52 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc53 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc54 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc55 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc56 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc57 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc58 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc59 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc60 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com'][00m
-Checking correctness of DNS records: [91m pc51 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc52 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc53 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc54 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc55 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc56 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc57 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc58 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc59 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
-Checking correctness of DNS records: [91m pc60 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov'][00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
 Checking custom commands output...
 Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r1': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -4 route show 10.16.3.0/24 | grep -Eq '"'"'^10\.16\.3\.0/24 via 172\.26\.1\.2 dev eth2([[:space:]]|$)'"'"''' on 'r1': [92m OK[00m
@@ -6254,7 +6254,7 @@ Checking the exit code of the command 'sh -c 'out=$(dig servizi.ministero.gov. A
 Checking the exit code of the command 'sh -c 'out=$(dig media.news.info. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="media.news.info." && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''' on 'pc60': [92m OK[00m
 Undeploying Network Scenario
 Total Tests: 5562
-Passed Tests: 5038/5562
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yf4fi6ii/labs/lab as CSV report...
-100%|██████████| 1/1 [05:06<00:00, 306.13s/it]100%|██████████| 1/1 [05:06<00:00, 306.13s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yf4fi6ii/labs as CSV report...
+Passed Tests: 5080/5562
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yriq6pxf/labs/lab as CSV report...
+100%|██████████| 1/1 [04:22<00:00, 262.62s/it]100%|██████████| 1/1 [04:22<00:00, 262.62s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-yriq6pxf/labs as CSV report...

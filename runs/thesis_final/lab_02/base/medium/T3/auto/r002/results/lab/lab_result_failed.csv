@@ -65,22 +65,6 @@ Checking correctness of DNS records,False,pc37 resolve A research.lab.net with I
 Checking correctness of DNS records,False,pc38 resolve A research.lab.net with IP  instead of ['10.15.6.11']
 Checking correctness of DNS records,False,pc39 resolve A research.lab.net with IP  instead of ['10.15.6.11']
 Checking correctness of DNS records,False,pc40 resolve A research.lab.net with IP  instead of ['10.15.6.11']
-Checking correctness of DNS records,False,pc33 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc34 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc35 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc36 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc37 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc38 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc39 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc40 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc33 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc34 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc35 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc36 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc37 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc38 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc39 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc40 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
 "Checking the exit code of the command 'sh -c 'out=$(dig @10.15.1.12 www.unconfigured-outside.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc2'",False,"The exit code of the command differs from the expected one.
  Actual: 1
  Expected: 0"

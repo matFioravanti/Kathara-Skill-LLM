@@ -29,7 +29,7 @@
     "kathara-dns"
   ],
   "started_at": "2026-11-03T15:46:29.676394+00:00",
-  "completed_at": "2026-11-03T22:37:43.747329+00:00",
+  "completed_at": "2026-11-04T04:08:33.125505+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -60,6 +60,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-11-03T22:37:43.718747+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-04T04:08:33.092339+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -75,10 +79,10 @@
   "creation_skill_sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
   "creation_skill_bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e",
   "correction_source": "scenarios/lab_03/tasks/base/large/correction.yaml",
-  "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
+  "correction_sha256": "59bb0f54ad8dda6384292d3f9a4e5795dd425cbd60c527817b65eab1a0a2194b",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 1,
+  "evaluation_revision": 2,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -165,5 +169,5 @@
   "skill_gate_recovery_policy_version": "recovery_v1",
   "skill_gate_session_id": "01a1a217-5f17-7713-9ae4-df62cb9f2573",
   "skill_gate_session_count": 1,
-  "last_reevaluated_at": "2026-11-03T22:31:54.704682+00:00"
+  "last_reevaluated_at": "2026-11-04T04:04:24.032315+00:00"
 }

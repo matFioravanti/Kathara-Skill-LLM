@@ -168,7 +168,7 @@
     "kathara-creation"
   ],
   "agent_success": true,
-  "status": "CHECKER_FAILED",
+  "status": "COMPLETED",
   "execution_backend": "docker_sandbox",
   "authentication": "sbx_oauth_proxy",
   "codex_host_version": "0.157.1",
@@ -183,11 +183,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "Error: field larger than field limit (131072)",
+  "pipeline_error": null,
   "timing": {
     "agent_seconds": 29.829698207999172,
     "sandbox_overhead_seconds": 25.117560751001292,
-    "checker_seconds": 143.406656500003,
+    "checker_seconds": 144.49803366701235,
     "total_seconds": 198.79353049999918
   },
   "tokens": {
@@ -221,12 +221,12 @@
     "details": null
   },
   "checker": {
-    "passed": 2091,
-    "failed": 518,
+    "passed": 2093,
+    "failed": 516,
     "total": 2609,
-    "pass_rate": 0.8014564967420468
+    "pass_rate": 0.8022230739747029
   },
-  "correction_sha256": "5acd5e66998ba1015e6c3b413f68336baa385197f46c16f60d487390eafba517",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "correction_sha256": "100b1770780c231ae2bf3a0e1f5b19fa3763b1434a0a3dcc6293abcd1256652f",
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-04T01:27:46.420248+00:00"
 }

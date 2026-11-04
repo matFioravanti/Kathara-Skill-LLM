@@ -7143,10 +7143,10 @@ test:
           - 10.16.12.13
         MX:
           company.com:
-          - 10 mail.company.com
+          - 10 mail.company.com.
           university.edu:
-          - 10 mail.university.edu
+          - 10 mail.university.edu.
           dept.company.com:
-          - 10 mail.dept.company.com
+          - 10 mail.dept.company.com.
           servizi.ministero.gov:
-          - 10 mail.servizi.ministero.gov
+          - 10 mail.servizi.ministero.gov.

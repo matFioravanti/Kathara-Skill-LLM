@@ -168,7 +168,7 @@
     "kathara-creation"
   ],
   "agent_success": true,
-  "status": "CHECKER_FAILED",
+  "status": "COMPLETED",
   "execution_backend": "docker_sandbox",
   "authentication": "sbx_oauth_proxy",
   "codex_host_version": "0.157.1",
@@ -183,11 +183,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "RuntimeError: Lab AUT alterato durante il checker.",
+  "pipeline_error": null,
   "timing": {
     "agent_seconds": 25.13036587500028,
     "sandbox_overhead_seconds": 15.311353290997431,
-    "checker_seconds": 96.56801191699924,
+    "checker_seconds": 98.97651629100437,
     "total_seconds": 141.14129637500082
   },
   "tokens": {
@@ -226,7 +226,7 @@
     "total": 797,
     "pass_rate": 0.7728983688833124
   },
-  "correction_sha256": "7d341718e0cd3a54953a80569a1b69d1cdb4d47c79fba1f69768866dfae0b0c2",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "correction_sha256": "6eacc54404a21b98b9f8a5bd7ea2ae91696efdc3c7d8ef557589fc3611ab9575",
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-04T00:01:55.619028+00:00"
 }

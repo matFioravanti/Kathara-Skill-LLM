@@ -1,18 +1,2 @@
 Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
-lab,2592,17,2609,"1: Verifying `10.15.3.11` reachable from device `pc11`: 
-2: Checking correctness of DNS records: pc33 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-3: Checking correctness of DNS records: pc34 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-4: Checking correctness of DNS records: pc35 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-5: Checking correctness of DNS records: pc36 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-6: Checking correctness of DNS records: pc37 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-7: Checking correctness of DNS records: pc38 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-8: Checking correctness of DNS records: pc39 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-9: Checking correctness of DNS records: pc40 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-10: Checking correctness of DNS records: pc33 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-11: Checking correctness of DNS records: pc34 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-12: Checking correctness of DNS records: pc35 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-13: Checking correctness of DNS records: pc36 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-14: Checking correctness of DNS records: pc37 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-15: Checking correctness of DNS records: pc38 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-16: Checking correctness of DNS records: pc39 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-17: Checking correctness of DNS records: pc40 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']"
+lab,2609,0,2609,None

@@ -773,13 +773,13 @@ test:
           - 10.14.2.13
         MX:
           example.com:
-          - 10 mail.example.com
+          - 10 mail.example.com.
           service.com:
-          - 10 mail.service.com
+          - 10 mail.service.com.
           lab.net:
-          - 10 mail.lab.net
+          - 10 mail.lab.net.
           tools.net:
-          - 10 mail.tools.net
+          - 10 mail.tools.net.
   custom_commands:
     r1:
     - command: sysctl -n net.ipv4.ip_forward

@@ -1,0 +1,24 @@
+Student Name,Tests Passed,Tests Failed,Tests Total Number,Problems
+lab,776,21,797,"1: Checking correctness of DNS records: pc16 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+2: Checking correctness of DNS records: pc17 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+3: Checking correctness of DNS records: pc18 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+4: Checking correctness of DNS records: pc19 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+5: Checking correctness of DNS records: pc20 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
+6: Checking correctness of DNS records: pc16 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+7: Checking correctness of DNS records: pc17 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+8: Checking correctness of DNS records: pc18 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+9: Checking correctness of DNS records: pc19 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+10: Checking correctness of DNS records: pc20 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
+11: Checking correctness of DNS records: pc16 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+12: Checking correctness of DNS records: pc17 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+13: Checking correctness of DNS records: pc18 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+14: Checking correctness of DNS records: pc19 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+15: Checking correctness of DNS records: pc20 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
+16: Checking correctness of DNS records: pc16 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+17: Checking correctness of DNS records: pc17 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+18: Checking correctness of DNS records: pc18 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+19: Checking correctness of DNS records: pc19 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+20: Checking correctness of DNS records: pc20 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+21: Checking the exit code of the command 'sh -c 'x=$(dig @10.14.1.14 www.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$x"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$x"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && a=$(printf ""%s\n"" ""$x"" | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ -n ""$a"" ] || exit 1; for ip in $a; do case "" 10.14.1.11 10.14.1.12 10.14.1.13 10.14.1.14 10.14.2.11 10.14.2.12 10.14.2.13 10.14.3.11 10.14.3.12 10.14.3.13 10.14.4.11 10.14.4.12 10.14.4.13 10.14.4.14 10.14.5.11 10.14.5.12 10.14.5.13 10.14.6.11 10.14.6.12 10.14.6.13 "" in *"" $ip ""*) ;; *) exit 1 ;; esac; done; y=$(dig @10.14.4.14 www.example.com. A +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ ""$y"" = ""$a"" ]'' on 'pc14': The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

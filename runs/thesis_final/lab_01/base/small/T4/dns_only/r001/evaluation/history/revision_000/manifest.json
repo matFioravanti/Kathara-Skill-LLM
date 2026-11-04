@@ -1,0 +1,160 @@
+{
+  "run_id": "12_thesis_final__6_lab_01__4_base__5_small__2_T4__8_dns_only__r001",
+  "run_number": 1,
+  "experiment_id": "thesis_final",
+  "replicate": 1,
+  "scenario_id": "lab_01",
+  "prompt_type": "T4",
+  "repetition": 1,
+  "lab_id": "lab_01",
+  "dns_tree_id": "base",
+  "task_level": "small",
+  "run_directory": "thesis_final/lab_01/base/small/T4/dns_only/r001",
+  "agent": "codex",
+  "agent_version": "0.157.1",
+  "codex_host_version": "0.157.1",
+  "model": "gpt-6.1-terra",
+  "reasoning_effort": "low",
+  "execution_backend": "docker_sandbox",
+  "authentication": "sbx_oauth_proxy",
+  "api_key_used": false,
+  "skill_protocol": "enforced_read_v1",
+  "skill_mode": "dns_only",
+  "available_skills": [
+    "kathara-dns"
+  ],
+  "forced_skills": [
+    "kathara-dns"
+  ],
+  "started_at": "2026-10-30T15:39:05.700951+00:00",
+  "completed_at": "2026-10-30T15:41:47.450250+00:00",
+  "component_versions": {
+    "inspect-ai": "0.3.266",
+    "inspect-swe": "0.2.71",
+    "kathara-lab-checker": "0.1.14",
+    "kathara": "3.8.3",
+    "pandas": "3.0.6",
+    "PyYAML": "6.0.3",
+    "openai": "3.16.2"
+  },
+  "pipeline_state": "CHECKER_FAILED",
+  "state_history": [
+    {
+      "state": "PENDING",
+      "timestamp": "2026-10-30T15:39:05.711700+00:00"
+    },
+    {
+      "state": "AUT_RUNNING",
+      "timestamp": "2026-10-30T15:39:05.712029+00:00"
+    },
+    {
+      "state": "AUT_COMPLETED",
+      "timestamp": "2026-10-30T15:39:48.951481+00:00"
+    },
+    {
+      "state": "CHECKER_FAILED",
+      "timestamp": "2026-10-30T15:41:47.448441+00:00"
+    }
+  ],
+  "aut_execution_success": true,
+  "checker_execution_success": false,
+  "task_success": null,
+  "source_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
+  "input_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
+  "prompt_sha256": "cad29452c38fdc0a05c74c299f0b489909f1465d2692dd51d314a278e7688a1a",
+  "prompt_sent_sha256": "cad29452c38fdc0a05c74c299f0b489909f1465d2692dd51d314a278e7688a1a",
+  "prompt_source": "prompt/base/small/10_nontechnical_unstructured_small.md",
+  "dns_skill_sha256": "47875126d56b0fc4d255ef606d5336cea6a0028841cc76c59b3c658189e1d03a",
+  "dns_skill_bundle_sha256": "0f1d5cc5f9de7241599cc14e8cd8b483b41310f4dbebc962d4119deb323a7ce9",
+  "creation_skill_sha256": null,
+  "creation_skill_bundle_sha256": null,
+  "correction_source": "scenarios/lab_01/tasks/base/small/correction.yaml",
+  "correction_sha256": "7d341718e0cd3a54953a80569a1b69d1cdb4d47c79fba1f69768866dfae0b0c2",
+  "sandbox_image": "python:3.14.6-bookworm",
+  "timeout_seconds": 900,
+  "evaluation_revision": 0,
+  "artifacts": {
+    "input_lab": "input/lab",
+    "lab": "lab",
+    "aut_logs": "logs/aut",
+    "inspect_eval_log": "logs/aut/12_thesis_final__6_lab_01__4_base__5_small__2_T4__8_dns_only__r001.eval",
+    "correction_snapshot": "evaluation/correction.yaml",
+    "results": "results"
+  },
+  "aut_measurement_ended_at": "2026-10-30T15:39:48.932552+00:00",
+  "codex_sandbox_version": "codex-cli 0.165.0",
+  "sbx_version": null,
+  "sandbox_cleanup_ok": true,
+  "final_lab_sha256": "9e3778c061c0e6e908ceeef30266772fab597789cf88eb96b5a77e7845515002",
+  "correction_snapshot": "evaluation/correction.yaml",
+  "pipeline_error": "RuntimeError: Lab AUT alterato durante il checker.",
+  "skill_gate_enabled": true,
+  "skill_gate_status": "completed",
+  "skill_gate_required_skills": [
+    "kathara-dns"
+  ],
+  "skill_gate_verified_skills": [
+    "kathara-dns"
+  ],
+  "skill_gate_read_seconds": 5.031306541999584,
+  "skill_gate_verification_seconds": 0.007700541998929111,
+  "skill_gate_blocked": false,
+  "skill_gate_write_attempts_blocked": null,
+  "skill_gate_backend_enforcement": "docker_sandbox:ro_nonroot_zero_caps_no_mcp",
+  "skill_gate_input_tokens": 24622,
+  "skill_gate_output_tokens": 149,
+  "skill_gate_write_seconds": 23.642503125000076,
+  "skill_gate_total_seconds": 43.14573037500122,
+  "write_phase_input_tokens": 136488,
+  "write_phase_output_tokens": 1913,
+  "skill_gate_isolation_verified": true,
+  "skill_gate_isolation_violations": 0,
+  "skill_gate_context_strategy": "explicit_resume_shared_state",
+  "skill_gate_backend": "docker_sandbox",
+  "skill_gate_protocol_version": "enforced_read_v1",
+  "skill_gate_state_history": [
+    {
+      "status": "preparing",
+      "timestamp": "2026-10-30T15:39:05.750172+00:00"
+    },
+    {
+      "status": "initial_read",
+      "timestamp": "2026-10-30T15:39:12.380916+00:00"
+    },
+    {
+      "status": "passed",
+      "timestamp": "2026-10-30T15:39:17.422063+00:00"
+    },
+    {
+      "status": "write_phase_running",
+      "timestamp": "2026-10-30T15:39:23.688940+00:00"
+    },
+    {
+      "status": "completed",
+      "timestamp": "2026-10-30T15:39:47.333659+00:00"
+    }
+  ],
+  "skill_gate_certification": "CERTIFIED",
+  "skill_gate_context_continuity_verified": true,
+  "skill_gate_load_methods": {
+    "kathara-dns": "read_verified"
+  },
+  "skill_gate_read_attempts": 1,
+  "skill_gate_retry_count": 0,
+  "skill_gate_fallback_used": false,
+  "skill_gate_fallback_skills": [],
+  "skill_gate_fallback_sha256_verified": null,
+  "skill_gate_context_delivery_verified": true,
+  "skill_gate_initial_read_seconds": 5.031306541999584,
+  "skill_gate_retry_seconds": null,
+  "skill_gate_fallback_seconds": null,
+  "skill_gate_initial_input_tokens": 24622,
+  "skill_gate_initial_output_tokens": 149,
+  "skill_gate_retry_input_tokens": null,
+  "skill_gate_retry_output_tokens": null,
+  "skill_gate_fallback_input_tokens": null,
+  "skill_gate_fallback_output_tokens": null,
+  "skill_gate_recovery_policy_version": "recovery_v1",
+  "skill_gate_session_id": "01a18d77-10ca-72e3-bc82-35edb9384f80",
+  "skill_gate_session_count": 1
+}

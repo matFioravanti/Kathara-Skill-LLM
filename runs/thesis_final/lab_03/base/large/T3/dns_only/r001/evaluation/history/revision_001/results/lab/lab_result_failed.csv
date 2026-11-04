@@ -1,0 +1,886 @@
+Test Description,Passed,Reason
+Checking that named is running on device `pc11`,False,Daemon named is not running on device `pc11`
+Checking that named is running on device `pc12`,False,Daemon named is not running on device `pc12`
+Checking that named is running on device `pc13`,False,Daemon named is not running on device `pc13`
+Checking that named is running on device `pc14`,False,Daemon named is not running on device `pc14`
+Checking that named is running on device `pc15`,False,Daemon named is not running on device `pc15`
+Checking that named is running on device `pc16`,False,Daemon named is not running on device `pc16`
+Checking that named is running on device `pc17`,False,Daemon named is not running on device `pc17`
+Checking that named is running on device `pc18`,False,Daemon named is not running on device `pc18`
+Checking that named is running on device `pc19`,False,Daemon named is not running on device `pc19`
+Checking that named is running on device `pc20`,False,Daemon named is not running on device `pc20`
+Checking that named is running on device `pc21`,False,Daemon named is not running on device `pc21`
+Checking that named is running on device `pc22`,False,Daemon named is not running on device `pc22`
+Checking that named is running on device `pc23`,False,Daemon named is not running on device `pc23`
+Checking that named is running on device `pc24`,False,Daemon named is not running on device `pc24`
+Checking that named is running on device `pc25`,False,Daemon named is not running on device `pc25`
+Checking that named is running on device `pc26`,False,Daemon named is not running on device `pc26`
+Checking that named is running on device `pc27`,False,Daemon named is not running on device `pc27`
+Checking that named is running on device `pc28`,False,Daemon named is not running on device `pc28`
+Checking that named is running on device `pc29`,False,Daemon named is not running on device `pc29`
+Checking that named is running on device `pc30`,False,Daemon named is not running on device `pc30`
+Checking that named is running on device `pc31`,False,Daemon named is not running on device `pc31`
+Checking that named is running on device `pc32`,False,Daemon named is not running on device `pc32`
+Checking that named is running on device `pc33`,False,Daemon named is not running on device `pc33`
+Checking that named is running on device `pc34`,False,Daemon named is not running on device `pc34`
+Checking that named is running on device `pc35`,False,Daemon named is not running on device `pc35`
+Checking that named is running on device `pc36`,False,Daemon named is not running on device `pc36`
+Checking that named is running on device `pc37`,False,Daemon named is not running on device `pc37`
+Checking that named is running on device `pc38`,False,Daemon named is not running on device `pc38`
+Checking that named is running on device `pc39`,False,Daemon named is not running on device `pc39`
+Checking that named is running on device `pc40`,False,Daemon named is not running on device `pc40`
+Checking that named is running on device `pc41`,False,Daemon named is not running on device `pc41`
+Checking that named is running on device `pc42`,False,Daemon named is not running on device `pc42`
+Checking that named is running on device `pc43`,False,Daemon named is not running on device `pc43`
+Checking that named is running on device `pc44`,False,Daemon named is not running on device `pc44`
+Checking that named is running on device `pc45`,False,Daemon named is not running on device `pc45`
+Checking that named is running on device `pc46`,False,Daemon named is not running on device `pc46`
+Checking that named is running on device `pc47`,False,Daemon named is not running on device `pc47`
+Checking that named is running on device `pc48`,False,Daemon named is not running on device `pc48`
+Checking that named is running on device `pc49`,False,Daemon named is not running on device `pc49`
+Checking that named is running on device `pc50`,False,Daemon named is not running on device `pc50`
+Checking on `pc50` that `10.16.1.11` is the authority for domain `.`,False,named not started in `pc50`.startup`
+Checking on `pc2` that `10.16.1.12` is the authority for domain `com`,False,The dns authorities for domain `com` have the following IPs ['10.16.1.13']
+Checking on `pc3` that `10.16.1.13` is the authority for domain `net`,False,named on pc3 is running but answered with REFUSED when quering for net
+Checking on `pc4` that `10.16.1.14` is the authority for domain `edu`,False,named on pc4 is running but answered with REFUSED when quering for edu
+Checking on `pc5` that `10.16.2.11` is the authority for domain `it`,False,named on pc5 is running but answered with REFUSED when quering for it
+Checking on `pc6` that `10.16.2.12` is the authority for domain `example.com`,False,named on pc6 is running but answered with REFUSED when quering for example.com
+Checking on `pc7` that `10.16.2.13` is the authority for domain `company.com`,False,named on pc7 is running but answered with REFUSED when quering for company.com
+Checking on `pc8` that `10.16.2.14` is the authority for domain `service.com`,False,named on pc8 is running but answered with REFUSED when quering for service.com
+Checking on `pc9` that `10.16.3.11` is the authority for domain `lab.net`,False,named on pc9 is running but answered with REFUSED when quering for lab.net
+Checking on `pc10` that `10.16.3.12` is the authority for domain `tools.net`,False,named on pc10 is running but answered with REFUSED when quering for tools.net
+Checking on `pc11` that `10.16.3.13` is the authority for domain `university.edu`,False,named not started in `pc11`.startup`
+Checking on `pc12` that `10.16.3.14` is the authority for domain `campus.edu`,False,named not started in `pc12`.startup`
+Checking on `pc13` that `10.16.4.11` is the authority for domain `unibo.it`,False,named not started in `pc13`.startup`
+Checking on `pc14` that `10.16.4.12` is the authority for domain `comune.it`,False,named not started in `pc14`.startup`
+Checking on `pc15` that `10.16.4.13` is the authority for domain `regione.it`,False,named not started in `pc15`.startup`
+Checking on `pc16` that `10.16.4.14` is the authority for domain `shop.example.com`,False,named not started in `pc16`.startup`
+Checking on `pc17` that `10.16.5.11` is the authority for domain `blog.example.com`,False,named not started in `pc17`.startup`
+Checking on `pc18` that `10.16.5.12` is the authority for domain `dept.company.com`,False,named not started in `pc18`.startup`
+Checking on `pc19` that `10.16.5.13` is the authority for domain `intranet.company.com`,False,named not started in `pc19`.startup`
+Checking on `pc20` that `10.16.5.14` is the authority for domain `api.service.com`,False,named not started in `pc20`.startup`
+Checking on `pc21` that `10.16.6.11` is the authority for domain `research.lab.net`,False,named not started in `pc21`.startup`
+Checking on `pc22` that `10.16.6.12` is the authority for domain `ai.research.lab.net`,False,named not started in `pc22`.startup`
+Checking on `pc23` that `10.16.6.13` is the authority for domain `data.research.lab.net`,False,named not started in `pc23`.startup`
+Checking on `pc24` that `10.16.6.14` is the authority for domain `dev.lab.net`,False,named not started in `pc24`.startup`
+Checking on `pc25` that `10.16.7.11` is the authority for domain `ci.tools.net`,False,named not started in `pc25`.startup`
+Checking on `pc26` that `10.16.7.12` is the authority for domain `vpn.university.edu`,False,named not started in `pc26`.startup`
+Checking on `pc27` that `10.16.7.13` is the authority for domain `courses.university.edu`,False,named not started in `pc27`.startup`
+Checking on `pc28` that `10.16.7.14` is the authority for domain `portal.campus.edu`,False,named not started in `pc28`.startup`
+Checking on `pc29` that `10.16.8.11` is the authority for domain `studenti.unibo.it`,False,named not started in `pc29`.startup`
+Checking on `pc30` that `10.16.8.12` is the authority for domain `servizi.comune.it`,False,named not started in `pc30`.startup`
+Checking on `pc31` that `10.16.8.13` is the authority for domain `dati.regione.it`,False,named not started in `pc31`.startup`
+Checking on `pc32` that `10.16.8.14` is the authority for domain `org`,False,named not started in `pc32`.startup`
+Checking on `pc33` that `10.16.9.11` is the authority for domain `io`,False,named not started in `pc33`.startup`
+Checking on `pc34` that `10.16.9.12` is the authority for domain `gov`,False,named not started in `pc34`.startup`
+Checking on `pc35` that `10.16.9.13` is the authority for domain `info`,False,named not started in `pc35`.startup`
+Checking on `pc36` that `10.16.9.14` is the authority for domain `foundation.org`,False,named not started in `pc36`.startup`
+Checking on `pc37` that `10.16.10.11` is the authority for domain `project.org`,False,named not started in `pc37`.startup`
+Checking on `pc38` that `10.16.10.12` is the authority for domain `startup.io`,False,named not started in `pc38`.startup`
+Checking on `pc39` that `10.16.10.13` is the authority for domain `platform.io`,False,named not started in `pc39`.startup`
+Checking on `pc40` that `10.16.10.14` is the authority for domain `ministero.gov`,False,named not started in `pc40`.startup`
+Checking on `pc41` that `10.16.11.11` is the authority for domain `news.info`,False,named not started in `pc41`.startup`
+Checking on `pc42` that `10.16.11.12` is the authority for domain `archive.foundation.org`,False,named not started in `pc42`.startup`
+Checking on `pc43` that `10.16.11.13` is the authority for domain `docs.project.org`,False,named not started in `pc43`.startup`
+Checking on `pc44` that `10.16.11.14` is the authority for domain `api.startup.io`,False,named not started in `pc44`.startup`
+Checking on `pc45` that `10.16.12.11` is the authority for domain `status.platform.io`,False,named not started in `pc45`.startup`
+Checking on `pc46` that `10.16.12.12` is the authority for domain `open.ministero.gov`,False,named not started in `pc46`.startup`
+Checking on `pc47` that `10.16.12.13` is the authority for domain `servizi.ministero.gov`,False,named not started in `pc47`.startup`
+Checking on `pc48` that `10.16.12.14` is the authority for domain `local.news.info`,False,named not started in `pc48`.startup`
+Checking on `pc49` that `10.16.13.11` is the authority for domain `media.news.info`,False,named not started in `pc49`.startup`
+Checking that `10.16.13.12` is the local name server for device `pc51`,False,There is no local name server for device `pc51` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc52`,False,There is no local name server for device `pc52` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc53`,False,There is no local name server for device `pc53` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc54`,False,There is no local name server for device `pc54` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc55`,False,There is no local name server for device `pc55` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc56`,False,There is no local name server for device `pc56` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc57`,False,There is no local name server for device `pc57` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc58`,False,There is no local name server for device `pc58` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc59`,False,There is no local name server for device `pc59` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking that `10.16.13.12` is the local name server for device `pc60`,False,There is no local name server for device `pc60` with IP `10.16.13.12`. Actual nameservers: ['10.16.1.12']
+Checking correctness of DNS records,False,pc51 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc52 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc53 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc54 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc55 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc56 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc57 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc58 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc59 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc60 resolve A example.com with IP  instead of ['10.16.2.12']
+Checking correctness of DNS records,False,pc51 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc52 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc53 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc54 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc55 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc56 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc57 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc58 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc59 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc60 resolve A company.com with IP  instead of ['10.16.2.13']
+Checking correctness of DNS records,False,pc51 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc52 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc53 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc54 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc55 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc56 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc57 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc58 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc59 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc60 resolve A service.com with IP  instead of ['10.16.2.14']
+Checking correctness of DNS records,False,pc51 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc52 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc53 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc54 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc55 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc56 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc57 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc58 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc59 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc60 resolve A lab.net with IP  instead of ['10.16.3.11']
+Checking correctness of DNS records,False,pc51 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc52 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc53 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc54 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc55 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc56 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc57 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc58 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc59 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc60 resolve A tools.net with IP  instead of ['10.16.3.12']
+Checking correctness of DNS records,False,pc51 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc52 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc53 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc54 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc55 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc56 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc57 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc58 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc59 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc60 resolve A university.edu with IP  instead of ['10.16.3.13']
+Checking correctness of DNS records,False,pc51 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc52 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc53 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc54 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc55 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc56 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc57 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc58 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc59 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc60 resolve A campus.edu with IP  instead of ['10.16.3.14']
+Checking correctness of DNS records,False,pc51 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc52 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc53 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc54 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc55 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc56 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc57 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc58 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc59 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc60 resolve A unibo.it with IP  instead of ['10.16.4.11']
+Checking correctness of DNS records,False,pc51 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc52 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc53 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc54 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc55 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc56 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc57 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc58 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc59 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc60 resolve A comune.it with IP  instead of ['10.16.4.12']
+Checking correctness of DNS records,False,pc51 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc52 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc53 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc54 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc55 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc56 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc57 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc58 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc59 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc60 resolve A regione.it with IP  instead of ['10.16.4.13']
+Checking correctness of DNS records,False,pc51 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc52 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc53 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc54 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc55 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc56 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc57 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc58 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc59 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc60 resolve A research.lab.net with IP  instead of ['10.16.6.11']
+Checking correctness of DNS records,False,pc51 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc52 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc53 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc54 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc55 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc56 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc57 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc58 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc59 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc60 resolve A foundation.org with IP  instead of ['10.16.9.14']
+Checking correctness of DNS records,False,pc51 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc52 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc53 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc54 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc55 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc56 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc57 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc58 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc59 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc60 resolve A project.org with IP  instead of ['10.16.10.11']
+Checking correctness of DNS records,False,pc51 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc52 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc53 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc54 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc55 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc56 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc57 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc58 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc59 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc60 resolve A startup.io with IP  instead of ['10.16.10.12']
+Checking correctness of DNS records,False,pc51 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc52 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc53 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc54 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc55 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc56 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc57 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc58 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc59 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc60 resolve A platform.io with IP  instead of ['10.16.10.13']
+Checking correctness of DNS records,False,pc51 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc52 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc53 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc54 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc55 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc56 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc57 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc58 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc59 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc60 resolve A ministero.gov with IP  instead of ['10.16.10.14']
+Checking correctness of DNS records,False,pc51 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc52 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc53 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc54 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc55 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc56 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc57 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc58 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc59 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc60 resolve A news.info with IP  instead of ['10.16.11.11']
+Checking correctness of DNS records,False,pc51 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc52 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc53 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc54 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc55 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc56 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc57 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc58 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc59 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc60 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
+Checking correctness of DNS records,False,pc51 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc52 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc53 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc54 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc55 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc56 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc57 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc58 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc59 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc60 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
+Checking correctness of DNS records,False,pc51 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc52 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc53 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc54 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc55 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc56 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc57 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc58 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc59 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc60 resolve MX dept.company.com with IP 10 mail.dept.company.com. instead of ['10 mail.dept.company.com']
+Checking correctness of DNS records,False,pc51 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc52 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc53 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc54 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc55 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc56 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc57 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc58 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc59 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+Checking correctness of DNS records,False,pc60 resolve MX servizi.ministero.gov with IP 10 mail.servizi.ministero.gov. instead of ['10 mail.servizi.ministero.gov']
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.1.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc2'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc11'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc12'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc13'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc14'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc15'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc16'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc17'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc18'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc19'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc20'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc21'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc22'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc23'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc24'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc25'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc26'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc27'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc28'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc29'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc30'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc31'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc32'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc33'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc34'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc35'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc36'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc37'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc38'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc39'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc40'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc41'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc42'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc43'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc44'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc45'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc46'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc47'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc48'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc49'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.1.12 com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.1.13 net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.1.14 edu. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""edu."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.11 it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.12 example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""example.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.13 company.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""company.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.14 service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""service.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.11 lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""lab.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.12 tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""tools.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.13 university.edu. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""university.edu."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.14 campus.edu. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""campus.edu."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.11 unibo.it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""unibo.it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.12 comune.it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""comune.it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.13 regione.it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""regione.it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.14 shop.example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.11 blog.example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""blog.example.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.12 dept.company.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dept.company.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.13 intranet.company.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""intranet.company.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.14 api.service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.11 research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""research.lab.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.12 ai.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.13 data.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.14 dev.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dev.lab.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.11 ci.tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.12 vpn.university.edu. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""vpn.university.edu."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.13 courses.university.edu. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""courses.university.edu."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.14 portal.campus.edu. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""portal.campus.edu."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.11 studenti.unibo.it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""studenti.unibo.it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.12 servizi.comune.it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""servizi.comune.it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.13 dati.regione.it. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dati.regione.it."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.14 org. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""org."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.11 io. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""io."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.12 gov. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""gov."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.13 info. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""info."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.14 foundation.org. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""foundation.org."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.11 project.org. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""project.org."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.12 startup.io. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""startup.io."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.13 platform.io. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""platform.io."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.14 ministero.gov. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ministero.gov."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.11 news.info. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""news.info."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.12 archive.foundation.org. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""archive.foundation.org."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.13 docs.project.org. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""docs.project.org."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.14 api.startup.io. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.startup.io."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.11 status.platform.io. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""status.platform.io."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.12 open.ministero.gov. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""open.ministero.gov."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.13 servizi.ministero.gov. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""servizi.ministero.gov."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.14 local.news.info. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""local.news.info."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.11 media.news.info. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""media.news.info."" && $4==""SOA"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.1.12 com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.1.12"" ] || exit 1; case ""$ns"" in ""com.""|*.""com."") b=$(dig @10.16.1.11 com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.1.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.1.13 net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.1.13"" ] || exit 1; case ""$ns"" in ""net.""|*.""net."") b=$(dig @10.16.1.11 net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.1.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 edu. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.1.14 edu. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.1.14"" ] || exit 1; case ""$ns"" in ""edu.""|*.""edu."") b=$(dig @10.16.1.11 edu. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.1.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.2.11 it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.2.11"" ] || exit 1; case ""$ns"" in ""it.""|*.""it."") b=$(dig @10.16.1.11 it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.2.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.2.12 example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.2.12"" ] || exit 1; case ""$ns"" in ""example.com.""|*.""example.com."") b=$(dig @10.16.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.2.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.12 company.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""company.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.2.13 company.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""company.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.2.13"" ] || exit 1; case ""$ns"" in ""company.com.""|*.""company.com."") b=$(dig @10.16.1.12 company.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.2.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.2.14 service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.2.14"" ] || exit 1; case ""$ns"" in ""service.com.""|*.""service.com."") b=$(dig @10.16.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.2.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.3.11 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.3.11"" ] || exit 1; case ""$ns"" in ""lab.net.""|*.""lab.net."") b=$(dig @10.16.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.3.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.3.12 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.3.12"" ] || exit 1; case ""$ns"" in ""tools.net.""|*.""tools.net."") b=$(dig @10.16.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.3.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.14 university.edu. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""university.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.3.13 university.edu. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""university.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.3.13"" ] || exit 1; case ""$ns"" in ""university.edu.""|*.""university.edu."") b=$(dig @10.16.1.14 university.edu. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.3.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.14 campus.edu. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""campus.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.3.14 campus.edu. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""campus.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.3.14"" ] || exit 1; case ""$ns"" in ""campus.edu.""|*.""campus.edu."") b=$(dig @10.16.1.14 campus.edu. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.3.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.11 unibo.it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""unibo.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.4.11 unibo.it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""unibo.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.4.11"" ] || exit 1; case ""$ns"" in ""unibo.it.""|*.""unibo.it."") b=$(dig @10.16.2.11 unibo.it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.4.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.11 comune.it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""comune.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.4.12 comune.it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""comune.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.4.12"" ] || exit 1; case ""$ns"" in ""comune.it.""|*.""comune.it."") b=$(dig @10.16.2.11 comune.it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.4.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.11 regione.it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""regione.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.4.13 regione.it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""regione.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.4.13"" ] || exit 1; case ""$ns"" in ""regione.it.""|*.""regione.it."") b=$(dig @10.16.2.11 regione.it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.4.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.12 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""shop.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.4.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""shop.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.4.14"" ] || exit 1; case ""$ns"" in ""shop.example.com.""|*.""shop.example.com."") b=$(dig @10.16.2.12 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.4.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.12 blog.example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""blog.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.5.11 blog.example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""blog.example.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.5.11"" ] || exit 1; case ""$ns"" in ""blog.example.com.""|*.""blog.example.com."") b=$(dig @10.16.2.12 blog.example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.5.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.13 dept.company.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""dept.company.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.5.12 dept.company.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""dept.company.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.5.12"" ] || exit 1; case ""$ns"" in ""dept.company.com.""|*.""dept.company.com."") b=$(dig @10.16.2.13 dept.company.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.5.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.13 intranet.company.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""intranet.company.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.5.13 intranet.company.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""intranet.company.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.5.13"" ] || exit 1; case ""$ns"" in ""intranet.company.com.""|*.""intranet.company.com."") b=$(dig @10.16.2.13 intranet.company.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.5.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.2.14 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""api.service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.5.14 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""api.service.com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.5.14"" ] || exit 1; case ""$ns"" in ""api.service.com.""|*.""api.service.com."") b=$(dig @10.16.2.14 api.service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.5.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.3.11 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.6.11 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.6.11"" ] || exit 1; case ""$ns"" in ""research.lab.net.""|*.""research.lab.net."") b=$(dig @10.16.3.11 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.6.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.6.11 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.6.12 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.6.12"" ] || exit 1; case ""$ns"" in ""ai.research.lab.net.""|*.""ai.research.lab.net."") b=$(dig @10.16.6.11 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.6.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.6.11 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.6.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.6.13"" ] || exit 1; case ""$ns"" in ""data.research.lab.net.""|*.""data.research.lab.net."") b=$(dig @10.16.6.11 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.6.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.3.11 dev.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""dev.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.6.14 dev.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""dev.lab.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.6.14"" ] || exit 1; case ""$ns"" in ""dev.lab.net.""|*.""dev.lab.net."") b=$(dig @10.16.3.11 dev.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.6.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.3.12 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.7.11 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.7.11"" ] || exit 1; case ""$ns"" in ""ci.tools.net.""|*.""ci.tools.net."") b=$(dig @10.16.3.12 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.7.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.3.13 vpn.university.edu. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""vpn.university.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.7.12 vpn.university.edu. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""vpn.university.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.7.12"" ] || exit 1; case ""$ns"" in ""vpn.university.edu.""|*.""vpn.university.edu."") b=$(dig @10.16.3.13 vpn.university.edu. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.7.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.3.13 courses.university.edu. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""courses.university.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.7.13 courses.university.edu. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""courses.university.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.7.13"" ] || exit 1; case ""$ns"" in ""courses.university.edu.""|*.""courses.university.edu."") b=$(dig @10.16.3.13 courses.university.edu. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.7.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.3.14 portal.campus.edu. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""portal.campus.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.7.14 portal.campus.edu. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""portal.campus.edu."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.7.14"" ] || exit 1; case ""$ns"" in ""portal.campus.edu.""|*.""portal.campus.edu."") b=$(dig @10.16.3.14 portal.campus.edu. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.7.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.4.11 studenti.unibo.it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""studenti.unibo.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.8.11 studenti.unibo.it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""studenti.unibo.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.8.11"" ] || exit 1; case ""$ns"" in ""studenti.unibo.it.""|*.""studenti.unibo.it."") b=$(dig @10.16.4.11 studenti.unibo.it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.8.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.4.12 servizi.comune.it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""servizi.comune.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.8.12 servizi.comune.it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""servizi.comune.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.8.12"" ] || exit 1; case ""$ns"" in ""servizi.comune.it.""|*.""servizi.comune.it."") b=$(dig @10.16.4.12 servizi.comune.it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.8.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.4.13 dati.regione.it. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""dati.regione.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.8.13 dati.regione.it. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""dati.regione.it."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.8.13"" ] || exit 1; case ""$ns"" in ""dati.regione.it.""|*.""dati.regione.it."") b=$(dig @10.16.4.13 dati.regione.it. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.8.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 org. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.8.14 org. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.8.14"" ] || exit 1; case ""$ns"" in ""org.""|*.""org."") b=$(dig @10.16.1.11 org. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.8.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 io. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.9.11 io. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.9.11"" ] || exit 1; case ""$ns"" in ""io.""|*.""io."") b=$(dig @10.16.1.11 io. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.9.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 gov. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.9.12 gov. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.9.12"" ] || exit 1; case ""$ns"" in ""gov.""|*.""gov."") b=$(dig @10.16.1.11 gov. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.9.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.1.11 info. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.9.13 info. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.9.13"" ] || exit 1; case ""$ns"" in ""info.""|*.""info."") b=$(dig @10.16.1.11 info. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.9.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.8.14 foundation.org. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""foundation.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.9.14 foundation.org. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""foundation.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.9.14"" ] || exit 1; case ""$ns"" in ""foundation.org.""|*.""foundation.org."") b=$(dig @10.16.8.14 foundation.org. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.9.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.8.14 project.org. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""project.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.10.11 project.org. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""project.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.10.11"" ] || exit 1; case ""$ns"" in ""project.org.""|*.""project.org."") b=$(dig @10.16.8.14 project.org. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.10.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.9.11 startup.io. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""startup.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.10.12 startup.io. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""startup.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.10.12"" ] || exit 1; case ""$ns"" in ""startup.io.""|*.""startup.io."") b=$(dig @10.16.9.11 startup.io. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.10.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.9.11 platform.io. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""platform.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.10.13 platform.io. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""platform.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.10.13"" ] || exit 1; case ""$ns"" in ""platform.io.""|*.""platform.io."") b=$(dig @10.16.9.11 platform.io. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.10.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.9.12 ministero.gov. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""ministero.gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.10.14 ministero.gov. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""ministero.gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.10.14"" ] || exit 1; case ""$ns"" in ""ministero.gov.""|*.""ministero.gov."") b=$(dig @10.16.9.12 ministero.gov. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.10.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.9.13 news.info. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""news.info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.11.11 news.info. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""news.info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.11.11"" ] || exit 1; case ""$ns"" in ""news.info.""|*.""news.info."") b=$(dig @10.16.9.13 news.info. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.11.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.9.14 archive.foundation.org. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""archive.foundation.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.11.12 archive.foundation.org. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""archive.foundation.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.11.12"" ] || exit 1; case ""$ns"" in ""archive.foundation.org.""|*.""archive.foundation.org."") b=$(dig @10.16.9.14 archive.foundation.org. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.11.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.10.11 docs.project.org. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""docs.project.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.11.13 docs.project.org. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""docs.project.org."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.11.13"" ] || exit 1; case ""$ns"" in ""docs.project.org.""|*.""docs.project.org."") b=$(dig @10.16.10.11 docs.project.org. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.11.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.10.12 api.startup.io. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""api.startup.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.11.14 api.startup.io. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""api.startup.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.11.14"" ] || exit 1; case ""$ns"" in ""api.startup.io.""|*.""api.startup.io."") b=$(dig @10.16.10.12 api.startup.io. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.11.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.10.13 status.platform.io. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""status.platform.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.12.11 status.platform.io. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""status.platform.io."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.12.11"" ] || exit 1; case ""$ns"" in ""status.platform.io.""|*.""status.platform.io."") b=$(dig @10.16.10.13 status.platform.io. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.12.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.10.14 open.ministero.gov. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""open.ministero.gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.12.12 open.ministero.gov. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""open.ministero.gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.12.12"" ] || exit 1; case ""$ns"" in ""open.ministero.gov.""|*.""open.ministero.gov."") b=$(dig @10.16.10.14 open.ministero.gov. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.12.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.10.14 servizi.ministero.gov. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""servizi.ministero.gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.12.13 servizi.ministero.gov. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""servizi.ministero.gov."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.12.13"" ] || exit 1; case ""$ns"" in ""servizi.ministero.gov.""|*.""servizi.ministero.gov."") b=$(dig @10.16.10.14 servizi.ministero.gov. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.12.13"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.11.11 local.news.info. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""local.news.info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.12.14 local.news.info. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""local.news.info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.12.14"" ] || exit 1; case ""$ns"" in ""local.news.info.""|*.""local.news.info."") b=$(dig @10.16.11.11 local.news.info. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.12.14"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'p=$(dig @10.16.11.11 media.news.info. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""media.news.info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.16.13.11 media.news.info. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""media.news.info."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.16.13.12 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.16.13.11"" ] || exit 1; case ""$ns"" in ""media.news.info.""|*.""media.news.info."") b=$(dig @10.16.11.11 media.news.info. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.16.13.11"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.12 example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""example.com."" && $4==""A"" && $5==""10.16.2.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.13 company.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""company.com."" && $4==""A"" && $5==""10.16.2.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.14 service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""service.com."" && $4==""A"" && $5==""10.16.2.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.11 lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""lab.net."" && $4==""A"" && $5==""10.16.3.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.12 tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""tools.net."" && $4==""A"" && $5==""10.16.3.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.13 university.edu. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""university.edu."" && $4==""A"" && $5==""10.16.3.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.14 campus.edu. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""campus.edu."" && $4==""A"" && $5==""10.16.3.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.11 unibo.it. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""unibo.it."" && $4==""A"" && $5==""10.16.4.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.12 comune.it. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""comune.it."" && $4==""A"" && $5==""10.16.4.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.13 regione.it. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""regione.it."" && $4==""A"" && $5==""10.16.4.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.4.14 shop.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.16.4.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.11 blog.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""blog.example.com."" && $4==""A"" && $5==""10.16.5.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.12 dept.company.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dept.company.com."" && $4==""A"" && $5==""10.16.5.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.13 intranet.company.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""intranet.company.com."" && $4==""A"" && $5==""10.16.5.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.14 api.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.service.com."" && $4==""A"" && $5==""10.16.5.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.11 research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""research.lab.net."" && $4==""A"" && $5==""10.16.6.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.12 ai.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ai.research.lab.net."" && $4==""A"" && $5==""10.16.6.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.13 data.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.16.6.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.6.14 dev.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dev.lab.net."" && $4==""A"" && $5==""10.16.6.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.11 ci.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ci.tools.net."" && $4==""A"" && $5==""10.16.7.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.12 vpn.university.edu. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""vpn.university.edu."" && $4==""A"" && $5==""10.16.7.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.13 courses.university.edu. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""courses.university.edu."" && $4==""A"" && $5==""10.16.7.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.7.14 portal.campus.edu. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""portal.campus.edu."" && $4==""A"" && $5==""10.16.7.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.11 studenti.unibo.it. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""studenti.unibo.it."" && $4==""A"" && $5==""10.16.8.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.12 servizi.comune.it. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""servizi.comune.it."" && $4==""A"" && $5==""10.16.8.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.8.13 dati.regione.it. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dati.regione.it."" && $4==""A"" && $5==""10.16.8.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.9.14 foundation.org. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""foundation.org."" && $4==""A"" && $5==""10.16.9.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.11 project.org. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""project.org."" && $4==""A"" && $5==""10.16.10.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.12 startup.io. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""startup.io."" && $4==""A"" && $5==""10.16.10.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.13 platform.io. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""platform.io."" && $4==""A"" && $5==""10.16.10.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.10.14 ministero.gov. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""ministero.gov."" && $4==""A"" && $5==""10.16.10.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.11 news.info. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""news.info."" && $4==""A"" && $5==""10.16.11.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.12 archive.foundation.org. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""archive.foundation.org."" && $4==""A"" && $5==""10.16.11.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.13 docs.project.org. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""docs.project.org."" && $4==""A"" && $5==""10.16.11.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.11.14 api.startup.io. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.startup.io."" && $4==""A"" && $5==""10.16.11.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.11 status.platform.io. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""status.platform.io."" && $4==""A"" && $5==""10.16.12.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.12 open.ministero.gov. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""open.ministero.gov."" && $4==""A"" && $5==""10.16.12.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.13 servizi.ministero.gov. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""servizi.ministero.gov."" && $4==""A"" && $5==""10.16.12.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.14 local.news.info. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""local.news.info."" && $4==""A"" && $5==""10.16.12.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.11 media.news.info. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""media.news.info."" && $4==""A"" && $5==""10.16.13.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.13 company.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""company.com."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.company.com."" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.2.13 mail.company.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""mail.company.com."" && $4==""A"" && $5==""10.16.2.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.13 university.edu. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""university.edu."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.university.edu."" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.3.13 mail.university.edu. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""mail.university.edu."" && $4==""A"" && $5==""10.16.3.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.12 dept.company.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""dept.company.com."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.dept.company.com."" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.5.12 mail.dept.company.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""mail.dept.company.com."" && $4==""A"" && $5==""10.16.5.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.13 servizi.ministero.gov. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""servizi.ministero.gov."" && $4==""MX"" && $5==""10"" && tolower($6)==""mail.servizi.ministero.gov."" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.12.13 mail.servizi.ministero.gov. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""mail.servizi.ministero.gov."" && $4==""A"" && $5==""10.16.12.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 shop.example.com. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""shop.example.com."" && $4==""A"" && $5==""10.16.4.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 data.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""data.research.lab.net."" && $4==""A"" && $5==""10.16.6.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 courses.university.edu. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""courses.university.edu."" && $4==""A"" && $5==""10.16.7.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 studenti.unibo.it. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""studenti.unibo.it."" && $4==""A"" && $5==""10.16.8.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 archive.foundation.org. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""archive.foundation.org."" && $4==""A"" && $5==""10.16.11.12"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 api.startup.io. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""api.startup.io."" && $4==""A"" && $5==""10.16.11.14"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 servizi.ministero.gov. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""servizi.ministero.gov."" && $4==""A"" && $5==""10.16.12.13"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"
+"Checking the exit code of the command 'sh -c 'out=$(dig @10.16.13.12 media.news.info. A +time=6 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$out"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)"" && printf ""%s\n"" ""$out"" | awk '""'""'tolower($1)==""media.news.info."" && $4==""A"" && $5==""10.16.13.11"" {found=1} END {exit !found}'""'""''' on 'pc50'",False,"The exit code of the command differs from the expected one.
+ Actual: 1
+ Expected: 0"

@@ -27,7 +27,7 @@
     "kathara-dns"
   ],
   "started_at": "2026-11-03T12:41:23.042169+00:00",
-  "completed_at": "2026-11-03T21:49:50.021542+00:00",
+  "completed_at": "2026-11-04T08:08:27.845672+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -58,6 +58,14 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-11-03T21:49:49.986591+00:00"
+    },
+    {
+      "state": "CHECKER_FAILED",
+      "timestamp": "2026-11-04T03:43:14.678592+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-04T08:08:27.815721+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -73,10 +81,10 @@
   "creation_skill_sha256": null,
   "creation_skill_bundle_sha256": null,
   "correction_source": "scenarios/lab_03/tasks/base/large/correction.yaml",
-  "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
+  "correction_sha256": "59bb0f54ad8dda6384292d3f9a4e5795dd425cbd60c527817b65eab1a0a2194b",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 1,
+  "evaluation_revision": 3,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -160,5 +168,5 @@
   "skill_gate_recovery_policy_version": "recovery_v1",
   "skill_gate_session_id": "01a1a16d-e704-7673-b470-2c5f93fe43d0",
   "skill_gate_session_count": 1,
-  "last_reevaluated_at": "2026-11-03T21:44:19.945389+00:00"
+  "last_reevaluated_at": "2026-11-04T08:03:48.165906+00:00"
 }

@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xlgqzf60/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-t2azunbr/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xlgqzf60/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-t2azunbr/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -1028,140 +1028,140 @@ Checking correctness of DNS records: [91m pc16 resolve MX example.com with IP ;
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.example.com'][00m
+;; no servers could be reached instead of ['10 mail.example.com.'][00m
 Checking correctness of DNS records: [91m pc17 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.example.com'][00m
+;; no servers could be reached instead of ['10 mail.example.com.'][00m
 Checking correctness of DNS records: [91m pc18 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.example.com'][00m
+;; no servers could be reached instead of ['10 mail.example.com.'][00m
 Checking correctness of DNS records: [91m pc19 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.example.com'][00m
+;; no servers could be reached instead of ['10 mail.example.com.'][00m
 Checking correctness of DNS records: [91m pc20 resolve MX example.com with IP ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for example.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.example.com'][00m
+;; no servers could be reached instead of ['10 mail.example.com.'][00m
 Checking correctness of DNS records: [91m pc16 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.service.com'][00m
+;; no servers could be reached instead of ['10 mail.service.com.'][00m
 Checking correctness of DNS records: [91m pc17 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.service.com'][00m
+;; no servers could be reached instead of ['10 mail.service.com.'][00m
 Checking correctness of DNS records: [91m pc18 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.service.com'][00m
+;; no servers could be reached instead of ['10 mail.service.com.'][00m
 Checking correctness of DNS records: [91m pc19 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.service.com'][00m
+;; no servers could be reached instead of ['10 mail.service.com.'][00m
 Checking correctness of DNS records: [91m pc20 resolve MX service.com with IP ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for service.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.service.com'][00m
+;; no servers could be reached instead of ['10 mail.service.com.'][00m
 Checking correctness of DNS records: [91m pc16 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.lab.net'][00m
+;; no servers could be reached instead of ['10 mail.lab.net.'][00m
 Checking correctness of DNS records: [91m pc17 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.lab.net'][00m
+;; no servers could be reached instead of ['10 mail.lab.net.'][00m
 Checking correctness of DNS records: [91m pc18 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.lab.net'][00m
+;; no servers could be reached instead of ['10 mail.lab.net.'][00m
 Checking correctness of DNS records: [91m pc19 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.lab.net'][00m
+;; no servers could be reached instead of ['10 mail.lab.net.'][00m
 Checking correctness of DNS records: [91m pc20 resolve MX lab.net with IP ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for lab.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.lab.net'][00m
+;; no servers could be reached instead of ['10 mail.lab.net.'][00m
 Checking correctness of DNS records: [91m pc16 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.tools.net'][00m
+;; no servers could be reached instead of ['10 mail.tools.net.'][00m
 Checking correctness of DNS records: [91m pc17 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.tools.net'][00m
+;; no servers could be reached instead of ['10 mail.tools.net.'][00m
 Checking correctness of DNS records: [91m pc18 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.tools.net'][00m
+;; no servers could be reached instead of ['10 mail.tools.net.'][00m
 Checking correctness of DNS records: [91m pc19 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.tools.net'][00m
+;; no servers could be reached instead of ['10 mail.tools.net.'][00m
 Checking correctness of DNS records: [91m pc20 resolve MX tools.net with IP ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for tools.net failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.tools.net'][00m
+;; no servers could be reached instead of ['10 mail.tools.net.'][00m
 Checking custom commands output...
 Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r1': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '"'"'^10\.14\.3\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''' on 'r1': [92m OK[00m
@@ -1460,6 +1460,6 @@ Checking the exit code of the command 'sh -c 'out=$(dig data.research.lab.net. A
 Undeploying Network Scenario
 Total Tests: 797
 Passed Tests: 616/797
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xlgqzf60/labs/lab as CSV report...
-100%|██████████| 1/1 [01:39<00:00, 99.30s/it]100%|██████████| 1/1 [01:39<00:00, 99.30s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-xlgqzf60/labs as CSV report...
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-t2azunbr/labs/lab as CSV report...
+100%|██████████| 1/1 [01:44<00:00, 104.25s/it]100%|██████████| 1/1 [01:44<00:00, 104.25s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-t2azunbr/labs as CSV report...

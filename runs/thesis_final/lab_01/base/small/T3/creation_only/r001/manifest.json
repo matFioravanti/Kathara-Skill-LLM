@@ -27,7 +27,7 @@
     "kathara-creation"
   ],
   "started_at": "2026-10-30T15:21:48.036812+00:00",
-  "completed_at": "2026-10-30T15:24:09.159458+00:00",
+  "completed_at": "2026-11-04T00:03:34.604388+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -37,7 +37,7 @@
     "PyYAML": "6.0.3",
     "openai": "3.16.2"
   },
-  "pipeline_state": "CHECKER_FAILED",
+  "pipeline_state": "COMPLETED",
   "state_history": [
     {
       "state": "PENDING",
@@ -54,11 +54,15 @@
     {
       "state": "CHECKER_FAILED",
       "timestamp": "2026-10-30T15:24:09.157471+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-04T00:03:34.596618+00:00"
     }
   ],
   "aut_execution_success": true,
-  "checker_execution_success": false,
-  "task_success": null,
+  "checker_execution_success": true,
+  "task_success": false,
   "source_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
   "input_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
   "prompt_sha256": "51e478d7a23a0b97b1b5c563086e117212a1e4e057bdf606f673c686faf21727",
@@ -69,10 +73,10 @@
   "creation_skill_sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
   "creation_skill_bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e",
   "correction_source": "scenarios/lab_01/tasks/base/small/correction.yaml",
-  "correction_sha256": "7d341718e0cd3a54953a80569a1b69d1cdb4d47c79fba1f69768866dfae0b0c2",
+  "correction_sha256": "6eacc54404a21b98b9f8a5bd7ea2ae91696efdc3c7d8ef557589fc3611ab9575",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 0,
+  "evaluation_revision": 1,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -87,7 +91,6 @@
   "sandbox_cleanup_ok": true,
   "final_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
   "correction_snapshot": "evaluation/correction.yaml",
-  "pipeline_error": "RuntimeError: Lab AUT alterato durante il checker.",
   "skill_gate_enabled": true,
   "skill_gate_status": "completed",
   "skill_gate_required_skills": [
@@ -156,5 +159,6 @@
   "skill_gate_fallback_output_tokens": null,
   "skill_gate_recovery_policy_version": "recovery_v1",
   "skill_gate_session_id": "01a18d67-4089-7070-9007-0d50ac7aa4f8",
-  "skill_gate_session_count": 1
+  "skill_gate_session_count": 1,
+  "last_reevaluated_at": "2026-11-04T00:01:55.619028+00:00"
 }

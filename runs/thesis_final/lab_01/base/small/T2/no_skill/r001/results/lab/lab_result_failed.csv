@@ -1,25 +1,5 @@
 Test Description,Passed,Reason
 Checking on `pc14` that `10.14.1.11` is the authority for domain `.`,False,named on pc14 is running but answered with REFUSED when quering for .
-Checking correctness of DNS records,False,pc16 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc17 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc18 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc19 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc20 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc16 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc17 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc18 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc19 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc20 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc16 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc17 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc18 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc19 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc20 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc16 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc17 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc18 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc19 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc20 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
 "Checking the exit code of the command 'sh -c 'p=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); c=$(dig @10.14.1.12 com. NS +norecurse +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""com."" && $4==""NS"" {print tolower($5)}'""'""' | sort -u); [ -n ""$p"" ] && [ ""$p"" = ""$c"" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 ""$ns"" A +time=5 +tries=1 +noall +answer | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$a"" = ""10.14.1.12"" ] || exit 1; case ""$ns"" in ""com.""|*.""com."") b=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns=""$ns"" '""'""'tolower($1)==tolower(ns) && $4==""A"" {print $5}'""'""' | sort -u); [ ""$b"" = ""10.14.1.12"" ] || exit 1 ;; *) : ;; esac; done'' on 'pc14'",False,"The exit code of the command differs from the expected one.
  Actual: 1
  Expected: 0"

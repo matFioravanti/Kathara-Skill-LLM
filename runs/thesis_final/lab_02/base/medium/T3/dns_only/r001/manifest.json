@@ -27,7 +27,7 @@
     "kathara-dns"
   ],
   "started_at": "2026-11-02T11:29:21.943096+00:00",
-  "completed_at": "2026-11-02T11:33:04.535578+00:00",
+  "completed_at": "2026-11-04T01:32:37.823334+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -37,7 +37,7 @@
     "PyYAML": "6.0.3",
     "openai": "3.16.2"
   },
-  "pipeline_state": "CHECKER_FAILED",
+  "pipeline_state": "COMPLETED",
   "state_history": [
     {
       "state": "PENDING",
@@ -54,11 +54,15 @@
     {
       "state": "CHECKER_FAILED",
       "timestamp": "2026-11-02T11:33:04.535129+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-04T01:32:37.792037+00:00"
     }
   ],
   "aut_execution_success": true,
-  "checker_execution_success": false,
-  "task_success": null,
+  "checker_execution_success": true,
+  "task_success": false,
   "source_lab_sha256": "239fbcca0d0bae29885f39b60da24bce7daaa3a71bfe6c649a1702487935d362",
   "input_lab_sha256": "239fbcca0d0bae29885f39b60da24bce7daaa3a71bfe6c649a1702487935d362",
   "prompt_sha256": "59619fca6374eb48c63905c6705fb3504d07e7b2d2ed4c6932d61f82bc1ec019",
@@ -69,10 +73,10 @@
   "creation_skill_sha256": null,
   "creation_skill_bundle_sha256": null,
   "correction_source": "scenarios/lab_02/tasks/base/medium/correction.yaml",
-  "correction_sha256": "5acd5e66998ba1015e6c3b413f68336baa385197f46c16f60d487390eafba517",
+  "correction_sha256": "100b1770780c231ae2bf3a0e1f5b19fa3763b1434a0a3dcc6293abcd1256652f",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 0,
+  "evaluation_revision": 1,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -87,7 +91,6 @@
   "sandbox_cleanup_ok": true,
   "final_lab_sha256": "0b2c1ccf7a94f7483a007cbe342f645afc8a8a667a8ee61db0cccc6c25b98c53",
   "correction_snapshot": "evaluation/correction.yaml",
-  "pipeline_error": "RuntimeError: Lab AUT alterato durante il checker.",
   "skill_gate_enabled": true,
   "skill_gate_status": "completed",
   "skill_gate_required_skills": [
@@ -156,5 +159,6 @@
   "skill_gate_fallback_output_tokens": null,
   "skill_gate_recovery_policy_version": "recovery_v1",
   "skill_gate_session_id": "01a19c05-a8ec-7772-a20a-73097102bed1",
-  "skill_gate_session_count": 1
+  "skill_gate_session_count": 1,
+  "last_reevaluated_at": "2026-11-04T01:30:11.535995+00:00"
 }

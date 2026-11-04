@@ -1,8 +1,8 @@
 Parsing test configuration...
 Parsing inline network scenarios template
-Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-qwknfkxx/labs
+Parsing network scenarios in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-11nu549s/labs
   0%|          | 0/1 [00:00<?, ?it/s]##################### lab #####################
-Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-qwknfkxx/labs/lab
+Parsing network scenario in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-11nu549s/labs/lab
 Network scenario name: lab
 Undeploying network scenario in case it was running...
 Deploying network scenario...
@@ -1535,7 +1535,7 @@ Verifying `10.15.2.12` reachable from device `pc32`: [92m OK[00m
 Verifying `10.15.2.13` reachable from device `pc32`: [92m OK[00m
 Verifying `10.15.2.14` reachable from device `pc32`: [92m OK[00m
 Verifying `10.15.3.11` reachable from device `pc32`: [92m OK[00m
-Verifying `10.15.3.12` reachable from device `pc32`: [92m OK[00m
+Verifying `10.15.3.12` reachable from device `pc32`: [91m [00m
 Verifying `10.15.3.13` reachable from device `pc32`: [92m OK[00m
 Verifying `10.15.3.14` reachable from device `pc32`: [92m OK[00m
 Verifying `10.15.4.11` reachable from device `pc32`: [92m OK[00m
@@ -2346,22 +2346,22 @@ Checking correctness of DNS records: [92m OK[00m
 Checking correctness of DNS records: [92m OK[00m
 Checking correctness of DNS records: [92m OK[00m
 Checking correctness of DNS records: [92m OK[00m
-Checking correctness of DNS records: [91m pc33 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc34 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc35 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc36 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc37 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc38 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc39 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc40 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com'][00m
-Checking correctness of DNS records: [91m pc33 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc34 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc35 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc36 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc37 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc38 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc39 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
-Checking correctness of DNS records: [91m pc40 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu'][00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
+Checking correctness of DNS records: [92m OK[00m
 Checking custom commands output...
 Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r1': [92m OK[00m
 Checking the exit code of the command 'sh -c 'ip -4 route show 10.15.3.0/24 | grep -Eq '"'"'^10\.15\.3\.0/24 via 172\.25\.1\.2 dev eth2([[:space:]]|$)'"'"''' on 'r1': [92m OK[00m
@@ -2807,7 +2807,7 @@ Checking the exit code of the command 'sh -c 'out=$(dig university.edu. MX +time
 Checking the exit code of the command 'sh -c 'out=$(dig mail.university.edu. A +time=5 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="mail.university.edu." && $4=="A" && $5=="10.15.3.13" {found=1} END {exit !found}'"'"''' on 'pc40': [92m OK[00m
 Undeploying Network Scenario
 Total Tests: 2609
-Passed Tests: 2593/2609
-Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-qwknfkxx/labs/lab as CSV report...
-100%|██████████| 1/1 [02:31<00:00, 151.34s/it]100%|██████████| 1/1 [02:31<00:00, 151.34s/it]
-Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-qwknfkxx/labs as CSV report...
+Passed Tests: 2608/2609
+Writing test report for lab in: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-11nu549s/labs/lab as CSV report...
+100%|██████████| 1/1 [02:28<00:00, 148.30s/it]100%|██████████| 1/1 [02:28<00:00, 148.30s/it]
+Writing All Test Results into: /var/folders/84/zz92dr1178v8z_tvd_q2dfw40000gn/T/kathara-checker-r001-11nu549s/labs as CSV report...

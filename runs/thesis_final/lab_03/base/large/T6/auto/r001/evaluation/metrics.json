@@ -128,7 +128,7 @@
   ],
   "forced_skills": [],
   "agent_success": true,
-  "status": "CHECKER_FAILED",
+  "status": "COMPLETED",
   "execution_backend": "docker_sandbox",
   "authentication": "sbx_oauth_proxy",
   "codex_host_version": "0.157.1",
@@ -143,11 +143,11 @@
     "cleanup_error": null,
     "error": null
   },
-  "pipeline_error": "RuntimeError: Lab AUT alterato durante il checker.",
+  "pipeline_error": null,
   "timing": {
     "agent_seconds": 30.061325459006184,
     "sandbox_overhead_seconds": 6.830723876002594,
-    "checker_seconds": 290.22148887500225,
+    "checker_seconds": 258.18316929100547,
     "total_seconds": 340.74320158299815
   },
   "tokens": {
@@ -181,12 +181,12 @@
     "details": null
   },
   "checker": {
-    "passed": 5335,
-    "failed": 227,
+    "passed": 5375,
+    "failed": 187,
     "total": 5562,
-    "pass_rate": 0.9591873426824883
+    "pass_rate": 0.9663790003595829
   },
-  "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "correction_sha256": "59bb0f54ad8dda6384292d3f9a4e5795dd425cbd60c527817b65eab1a0a2194b",
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-04T04:51:13.414226+00:00"
 }

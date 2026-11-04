@@ -1,18 +1,1 @@
 Test Description,Passed,Reason
-Verifying `10.15.8.11` reachable from device `pc8`,False,
-Checking correctness of DNS records,False,pc33 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc34 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc35 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc36 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc37 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc38 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc39 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc40 resolve MX company.com with IP 10 mail.company.com. instead of ['10 mail.company.com']
-Checking correctness of DNS records,False,pc33 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc34 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc35 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc36 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc37 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc38 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc39 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']
-Checking correctness of DNS records,False,pc40 resolve MX university.edu with IP 10 mail.university.edu. instead of ['10 mail.university.edu']

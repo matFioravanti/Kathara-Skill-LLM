@@ -1086,112 +1086,112 @@ Checking correctness of DNS records,False,"pc33 resolve MX company.com with IP ;
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc34 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc35 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc36 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc37 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc38 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc39 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc40 resolve MX company.com with IP ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for company.com failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.company.com']"
+;; no servers could be reached instead of ['10 mail.company.com.']"
 Checking correctness of DNS records,False,"pc33 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc34 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc35 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc36 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc37 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc38 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc39 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 Checking correctness of DNS records,False,"pc40 resolve MX university.edu with IP ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; no servers could be reached
 ;; UDP setup with ::1#53(::1) for university.edu failed: address not available.
 ;; communications error to 127.0.0.1#53: connection refused
-;; no servers could be reached instead of ['10 mail.university.edu']"
+;; no servers could be reached instead of ['10 mail.university.edu.']"
 "Checking the exit code of the command 'sh -c 'out=$(dig @10.15.1.11 www.unconfigured-outside.invalid. A +time=3 +tries=1 +noall +comments); printf ""%s\n"" ""$out"" | grep -q ""flags:"" && ! printf ""%s\n"" ""$out"" | grep -Eq ""flags:[^;]*[[:space:]]ra([;[:space:]]|$)""'' on 'pc1'",False,"The exit code of the command differs from the expected one.
  Actual: 1
  Expected: 0"

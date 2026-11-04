@@ -23,7 +23,7 @@
   "available_skills": [],
   "forced_skills": [],
   "started_at": "2026-11-03T12:59:29.346893+00:00",
-  "completed_at": "2026-11-03T22:19:41.942737+00:00",
+  "completed_at": "2026-11-04T03:56:03.034312+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -54,6 +54,10 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-11-03T22:19:41.913907+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-04T03:56:03.005060+00:00"
     }
   ],
   "aut_execution_success": true,
@@ -69,10 +73,10 @@
   "creation_skill_sha256": null,
   "creation_skill_bundle_sha256": null,
   "correction_source": "scenarios/lab_03/tasks/base/large/correction.yaml",
-  "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
+  "correction_sha256": "59bb0f54ad8dda6384292d3f9a4e5795dd425cbd60c527817b65eab1a0a2194b",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 1,
+  "evaluation_revision": 2,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -134,5 +138,5 @@
   "skill_gate_recovery_policy_version": null,
   "skill_gate_session_id": null,
   "skill_gate_session_count": null,
-  "last_reevaluated_at": "2026-11-03T22:13:24.188091+00:00"
+  "last_reevaluated_at": "2026-11-04T03:51:41.319276+00:00"
 }

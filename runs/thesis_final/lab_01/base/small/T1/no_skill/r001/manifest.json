@@ -23,7 +23,7 @@
   "available_skills": [],
   "forced_skills": [],
   "started_at": "2026-10-29T22:20:25.194143+00:00",
-  "completed_at": "2026-10-29T22:27:29.558004+00:00",
+  "completed_at": "2026-11-03T23:35:45.755417+00:00",
   "component_versions": {
     "inspect-ai": "0.3.266",
     "inspect-swe": "0.2.71",
@@ -50,11 +50,15 @@
     {
       "state": "COMPLETED",
       "timestamp": "2026-10-29T22:27:29.557545+00:00"
+    },
+    {
+      "state": "COMPLETED",
+      "timestamp": "2026-11-03T23:35:45.741010+00:00"
     }
   ],
   "aut_execution_success": true,
   "checker_execution_success": true,
-  "task_success": false,
+  "task_success": true,
   "source_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
   "input_lab_sha256": "24040ad733b00972f0e65066246a7510b4581226288b3e3d2895ddb7d12ca127",
   "prompt_sha256": "c4274d53c1858487fd317fbf73b0fa024395d5ec09d0141dbb2818191aac8213",
@@ -65,10 +69,10 @@
   "creation_skill_sha256": null,
   "creation_skill_bundle_sha256": null,
   "correction_source": "scenarios/lab_01/tasks/base/small/correction.yaml",
-  "correction_sha256": "7d341718e0cd3a54953a80569a1b69d1cdb4d47c79fba1f69768866dfae0b0c2",
+  "correction_sha256": "6eacc54404a21b98b9f8a5bd7ea2ae91696efdc3c7d8ef557589fc3611ab9575",
   "sandbox_image": "python:3.14.6-bookworm",
   "timeout_seconds": 900,
-  "evaluation_revision": 0,
+  "evaluation_revision": 1,
   "artifacts": {
     "input_lab": "input/lab",
     "lab": "lab",
@@ -129,5 +133,6 @@
   "skill_gate_fallback_output_tokens": null,
   "skill_gate_recovery_policy_version": null,
   "skill_gate_session_id": null,
-  "skill_gate_session_count": null
+  "skill_gate_session_count": null,
+  "last_reevaluated_at": "2026-11-03T23:33:54.867427+00:00"
 }

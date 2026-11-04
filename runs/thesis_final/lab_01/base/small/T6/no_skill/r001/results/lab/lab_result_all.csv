@@ -458,7 +458,7 @@ Verifying `10.14.1.14` reachable from device `pc18`,True,OK
 Verifying `10.14.2.11` reachable from device `pc18`,True,OK
 Verifying `10.14.2.12` reachable from device `pc18`,True,OK
 Verifying `10.14.2.13` reachable from device `pc18`,True,OK
-Verifying `10.14.3.11` reachable from device `pc18`,True,OK
+Verifying `10.14.3.11` reachable from device `pc18`,False,
 Verifying `10.14.3.12` reachable from device `pc18`,True,OK
 Verifying `10.14.3.13` reachable from device `pc18`,True,OK
 Verifying `10.14.4.11` reachable from device `pc18`,True,OK
@@ -646,26 +646,26 @@ Checking correctness of DNS records,True,OK
 Checking correctness of DNS records,True,OK
 Checking correctness of DNS records,True,OK
 Checking correctness of DNS records,True,OK
-Checking correctness of DNS records,False,pc16 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc17 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc18 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc19 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc20 resolve MX example.com with IP 10 mail.example.com. instead of ['10 mail.example.com']
-Checking correctness of DNS records,False,pc16 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc17 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc18 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc19 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc20 resolve MX service.com with IP 10 mail.service.com. instead of ['10 mail.service.com']
-Checking correctness of DNS records,False,pc16 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc17 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc18 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc19 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc20 resolve MX lab.net with IP 10 mail.lab.net. instead of ['10 mail.lab.net']
-Checking correctness of DNS records,False,pc16 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc17 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc18 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc19 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
-Checking correctness of DNS records,False,pc20 resolve MX tools.net with IP 10 mail.tools.net. instead of ['10 mail.tools.net']
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
+Checking correctness of DNS records,True,OK
 Checking the output of the command 'sysctl -n net.ipv4.ip_forward' on 'r1',True,OK
 "Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '""'""'^10\.14\.3\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK
 "Checking the exit code of the command 'sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '""'""'^10\.14\.4\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'""'""''' on 'r1'",True,OK

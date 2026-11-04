@@ -142,7 +142,7 @@
   "timing": {
     "agent_seconds": 47.49134849999973,
     "sandbox_overhead_seconds": 7.203347290997044,
-    "checker_seconds": 301.9106800410009,
+    "checker_seconds": 255.8707075840066,
     "total_seconds": 365.5298190829999
   },
   "tokens": {
@@ -176,12 +176,12 @@
     "details": null
   },
   "checker": {
-    "passed": 5356,
-    "failed": 206,
+    "passed": 5397,
+    "failed": 165,
     "total": 5562,
-    "pass_rate": 0.9629629629629629
+    "pass_rate": 0.9703344120819849
   },
-  "correction_sha256": "4a8f04ccce6e466cb739842d88dfcb74d251433517fdb3e754694bd451b1eb8b",
-  "evaluation_revision": 0,
-  "last_reevaluated_at": null
+  "correction_sha256": "59bb0f54ad8dda6384292d3f9a4e5795dd425cbd60c527817b65eab1a0a2194b",
+  "evaluation_revision": 1,
+  "last_reevaluated_at": "2026-11-04T04:12:43.807552+00:00"
 }
