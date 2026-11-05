@@ -1,0 +1,8 @@
+$TTL 300
+$ORIGIN comune.it.
+@ IN SOA ns.comune.it. hostmaster.comune.it. ( 2026110501 3600 600 604800 300 )
+@ IN NS ns.comune.it.
+ns.comune.it. IN A 10.16.4.12
+@ IN A 10.16.4.12
+servizi.comune.it. IN NS ns.servizi.comune.it.
+ns.servizi.comune.it. IN A 10.16.8.12

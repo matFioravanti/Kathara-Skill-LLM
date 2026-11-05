@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 69.32800341600023,
+  "sandbox_overhead_seconds": 24.938368208000156,
+  "usage": {
+    "input_tokens": 215836,
+    "output_tokens": 2783,
+    "cached_input_tokens": 187008,
+    "reasoning_output_tokens": 152,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Generated the DNS configuration for the existing laboratory. The 49 authoritative zones are assigned to pc1–pc49, with 48 delegations, their NS and glue records, and the four requested MX records. Pc50 (`10.16.13.12`) is configured as the recursive resolver, and all 60 PCs are configured to use it.\n\nThe existing topology, IP addresses, and routing commands were preserved. Static consistency checks passed for the zone assignments, delegations, glue, MX records, and resolver configuration.\n\nThe lab has not been started or validated at runtime; Kathara and the BIND validation tools are unavailable in this environment.",
+  "error": null
+}

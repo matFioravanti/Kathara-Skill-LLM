@@ -1,0 +1,6 @@
+$TTL 300
+$ORIGIN docs.project.org.
+@ IN SOA ns.docs.project.org. hostmaster.docs.project.org. ( 2026110501 3600 600 604800 300 )
+@ IN NS ns.docs.project.org.
+ns.docs.project.org. IN A 10.16.11.13
+@ IN A 10.16.11.13

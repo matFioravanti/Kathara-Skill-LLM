@@ -1,0 +1,6 @@
+$TTL 300
+$ORIGIN intranet.company.com.
+@ IN SOA ns.intranet.company.com. hostmaster.intranet.company.com. ( 2026110501 3600 600 604800 300 )
+@ IN NS ns.intranet.company.com.
+ns.intranet.company.com. IN A 10.16.5.13
+@ IN A 10.16.5.13

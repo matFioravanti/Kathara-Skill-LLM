@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 53.462634999999864,
+  "sandbox_overhead_seconds": 5.0768245820008815,
+  "final_message": "Configured the 49 authoritative zones on pc1–pc49, with 48 delegations and glue records. The four requested MX records point to the existing addresses of their assigned machines. pc50 is the recursive resolver, and pc51–pc60 use it for DNS.\n\nThe configuration uses the existing `kathara/base` images and preserves the topology, addresses, and routes. Static checks passed for all PC-to-PC routing paths and startup-script syntax. BIND validation tools were unavailable locally, so the zones and live DNS resolution were not tested at runtime.",
+  "usage": {
+    "input_tokens": 141469,
+    "cached_input_tokens": 127104,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2224,
+    "reasoning_output_tokens": 93
+  },
+  "error": null
+}

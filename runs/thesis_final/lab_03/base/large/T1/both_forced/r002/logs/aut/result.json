@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 69.81742670799986,
+  "sandbox_overhead_seconds": 25.226408790999812,
+  "usage": {
+    "input_tokens": 277087,
+    "output_tokens": 2852,
+    "cached_input_tokens": 235904,
+    "reasoning_output_tokens": 58,
+    "cache_write_input_tokens": 0
+  },
+  "final_message": "Configurazione DNS generata: **pc1–pc49** servono le 49 zone assegnate, con 48 deleghe e relativi record glue. **pc50** è il resolver ricorsivo (`10.16.13.12`); **pc51–pc60** sono configurati come client. Sono presenti i quattro record MX richiesti.\n\nHo aggiunto i file BIND e le righe DNS agli startup, senza modificare topologia, indirizzi, rotte o immagini. La verifica statica ha controllato zone, deleghe, glue, MX, client e presenza delle rotte verso le LAN.\n\nLa risoluzione non è stata verificata in esecuzione: gli strumenti `named-checkzone` e `named-checkconf` non sono disponibili localmente; la validazione dinamica del laboratorio resta da eseguire esternamente.",
+  "error": null
+}

@@ -1,0 +1,8 @@
+$ORIGIN servizi.ministero.gov.
+$TTL 3600
+@ IN SOA ns.servizi.ministero.gov. hostmaster.servizi.ministero.gov. ( 2026110501 3600 900 604800 300 )
+@ IN NS ns.servizi.ministero.gov.
+@ IN A 10.16.12.13
+ns.servizi.ministero.gov. IN A 10.16.12.13
+@ IN MX 10 mail.servizi.ministero.gov.
+mail.servizi.ministero.gov. IN A 10.16.12.13

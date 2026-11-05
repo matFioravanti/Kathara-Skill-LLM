@@ -1,0 +1,6 @@
+$TTL 300
+$ORIGIN local.news.info.
+@ IN SOA ns.local.news.info. hostmaster.local.news.info. ( 2026110501 3600 600 604800 300 )
+@ IN NS ns.local.news.info.
+ns.local.news.info. IN A 10.16.12.14
+@ IN A 10.16.12.14

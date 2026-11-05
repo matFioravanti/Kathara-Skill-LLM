@@ -1,0 +1,6 @@
+$ORIGIN portal.campus.edu.
+$TTL 3600
+@ IN SOA ns.portal.campus.edu. hostmaster.portal.campus.edu. ( 2026110501 3600 900 604800 300 )
+@ IN NS ns.portal.campus.edu.
+@ IN A 10.16.7.14
+ns.portal.campus.edu. IN A 10.16.7.14

@@ -1,0 +1,12 @@
+$TTL 300
+$ORIGIN university.edu.
+@ IN SOA ns.university.edu. hostmaster.university.edu. ( 2026110501 3600 600 604800 300 )
+@ IN NS ns.university.edu.
+ns.university.edu. IN A 10.16.3.13
+@ IN A 10.16.3.13
+@ IN MX 10 mail.university.edu.
+mail.university.edu. IN A 10.16.3.13
+vpn.university.edu. IN NS ns.vpn.university.edu.
+ns.vpn.university.edu. IN A 10.16.7.12
+courses.university.edu. IN NS ns.courses.university.edu.
+ns.courses.university.edu. IN A 10.16.7.13
