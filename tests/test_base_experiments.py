@@ -9,7 +9,7 @@ from benchmark_core.config import load_config
 from benchmark_core.experiment import build_run_matrix, load_experiment, validate_experiment_prerequisites
 from benchmark_core.prompts import missing_prompts, render_task_prompt, resolve_prompt
 from benchmark_core.scenario_loader import discover_scenarios
-from benchmark_core.task_catalog import TaskAssignment
+from benchmark_core.task_catalog import TaskAssignment, task_correction_path
 
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORIES = ('technical_structured', 'technical_discursive', 'nontechnical_discursive',
@@ -24,6 +24,7 @@ def test_base_resources(lab, level, offset):
     assert discover_scenarios(ROOT / 'scenarios') == {}
     assert (ROOT / 'scenarios' / lab / 'lab' / '.gitkeep').is_file()
     assert (ROOT / 'scenarios' / lab / 'tasks' / 'base' / level / '.gitkeep').is_file()
+    assert task_correction_path(ROOT, assignment).is_file()
     for index, category in enumerate(CATEGORIES):
         kind = f'T{index + 1}'
         expected = ROOT / 'prompt' / 'base' / level / f'{3 * index + offset:02d}_{category}_{level}.md'

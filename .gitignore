@@ -13,8 +13,6 @@ __pycache__/
 /reports/*
 !/reports/.gitkeep
 
-# Local scenario baselines and manual corrections
+# Ignore only local Kathara baseline files; keep canonical corrections tracked
 /scenarios/*/lab/*
 !/scenarios/*/lab/.gitkeep
-/scenarios/*/tasks/*/*/correction.yaml
-/scenarios/*/tasks/*/*/bindings.yaml
