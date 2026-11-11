@@ -1,5 +1,0 @@
-$TTL 300
-@ IN SOA ns.ai.research.lab.net. hostmaster.ai.research.lab.net. ( 1 3600 600 604800 300 )
-@ IN NS ns.ai.research.lab.net.
-ns.ai.research.lab.net. IN A 10.16.6.12
-@ IN A 10.16.6.12

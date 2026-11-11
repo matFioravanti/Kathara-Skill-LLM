@@ -1,6 +1,0 @@
-$ORIGIN open.ministero.gov.
-$TTL 3600
-@ IN SOA ns.open.ministero.gov. hostmaster.open.ministero.gov. ( 2026110501 3600 900 604800 300 )
-@ IN NS ns.open.ministero.gov.
-@ IN A 10.16.12.12
-ns.open.ministero.gov. IN A 10.16.12.12

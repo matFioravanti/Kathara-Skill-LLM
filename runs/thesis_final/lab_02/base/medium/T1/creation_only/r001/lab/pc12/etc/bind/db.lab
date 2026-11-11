@@ -1,6 +1,0 @@
-$TTL 300
-@ IN SOA ns.campus.edu. hostmaster.campus.edu. ( 1 3600 600 86400 300 )
-@ IN NS ns.campus.edu.
-ns.campus.edu. IN A 10.15.3.14
-portal.campus.edu. IN NS ns.portal.campus.edu.
-ns.portal.campus.edu. IN A 10.15.7.14

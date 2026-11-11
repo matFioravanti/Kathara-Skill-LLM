@@ -1,5 +1,8 @@
 # Kathara-Skill-LLM — benchmark DNS su laboratori Kathara
 
+> **Repository con struttura del benchmark e correction canoniche.** I laboratori Kathara (`lab.conf`, `.startup` e altri file di baseline) non sono inclusi nel repository: nelle directory `scenarios/<lab_id>/lab/` rimangono solo i segnaposto `.gitkeep`. Le tre `correction.yaml` Base (small, medium, large) sono invece mantenute e versionate in `scenarios/<lab_id>/tasks/base/<level>/`. Le directory `runs/`, `results/` e `reports/` contengono solo segnaposto e ignorano i risultati generati. Codice, Skill, test, prompt e configurazioni rimangono disponibili. Gli esperimenti richiedono ancora l'inserimento locale dei laboratori baseline.
+
+
 Il progetto valuta il comportamento di agenti LLM nella configurazione di servizi DNS su **laboratori Kathara preesistenti**, utilizzando un correttore manuale (`correction.yaml`) e il Kathara Lab Checker. Ogni esecuzione conserva la baseline, il prompt inviato, la soluzione prodotta dall'agente e le metriche di valutazione. Sono supportati gli agenti Codex e Antigravity; le cinque modalità Skill Codex sono descritte più avanti.
 
 ## Stato del benchmark e ambito attuale

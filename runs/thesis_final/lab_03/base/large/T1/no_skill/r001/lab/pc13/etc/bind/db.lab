@@ -1,9 +1,0 @@
-$TTL 3600
-$ORIGIN unibo.it.
-@ IN SOA ns.unibo.it. hostmaster.unibo.it. (
-    2026110301 3600 900 604800 3600 )
-@ IN NS ns.unibo.it.
-@ IN A 10.16.4.11
-ns.unibo.it. IN A 10.16.4.11
-studenti.unibo.it. IN NS ns.studenti.unibo.it.
-ns.studenti.unibo.it. IN A 10.16.8.11

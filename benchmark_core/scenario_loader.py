@@ -27,13 +27,25 @@ def discover_scenarios(directory: Path) -> dict[str, Scenario]:
             raise ValueError(f"Scenario ID non valido: {path.name}")
         if path.is_symlink() or (path / "lab").is_symlink() or (path / "correction.yaml").is_symlink():
             raise ValueError(f"Scenario con directory simboliche non supportato: {path}")
-        # Una struttura predisposta ma priva di dati non è ancora un lab.
-        # Qualunque file diverso da .gitkeep, anche sotto tasks/, rende invece
-        # esplicito un errore di configurazione se lab.conf è assente.
+        # Una struttura con sole correction canoniche e segnaposto non è un lab
+        # eseguibile finché manca il lab.conf della baseline. Mantenerla senza
+        # segnalarla come scenario malformato; altri file reali restano errori.
         if not (path / "lab/lab.conf").is_file() and (path / "lab").is_dir():
-            entries = list(path.rglob("*"))
-            if all(not entry.is_symlink() and (entry.is_dir() or
-                   (entry.is_file() and entry.name == ".gitkeep")) for entry in entries):
+            tasks_root = path / "tasks"
+
+            def scaffold_entry(entry: Path) -> bool:
+                if entry.is_symlink():
+                    return False
+                if entry.is_dir():
+                    return True
+                if not entry.is_file():
+                    return False
+                if entry.name == ".gitkeep":
+                    return True
+                return (entry.name in {"correction.yaml", "bindings.yaml"}
+                        and tasks_root in entry.parents)
+
+            if all(scaffold_entry(entry) for entry in path.rglob("*")):
                 continue
         required_files = [path / "lab/lab.conf"]
         for required in required_files:

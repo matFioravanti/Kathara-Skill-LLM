@@ -22,12 +22,19 @@ def test_placeholder_ignored_beside_complete_lab(tmp_path):
     assert found["ready"].lab == (complete / "lab").resolve()
 
 
-@pytest.mark.parametrize("relative", ["lab/pc1.startup", "tasks/aurora/small/correction.yaml"])
+@pytest.mark.parametrize("relative", ["lab/pc1.startup", "tasks/aurora/small/unexpected.txt"])
 def test_real_file_without_lab_conf_is_error(tmp_path, relative):
     scenario = _placeholder(tmp_path, "partial")
     (scenario / relative).write_text("content\n")
     with pytest.raises(ValueError, match="lab.conf"):
         discover_scenarios(tmp_path)
+
+
+def test_canonical_correction_without_baseline_is_scaffold(tmp_path):
+    scenario = _placeholder(tmp_path, "pending")
+    (scenario / "tasks/aurora/small/correction.yaml").write_text("test: {}\n")
+    (scenario / "tasks/aurora/small/bindings.yaml").write_text("{}\n")
+    assert discover_scenarios(tmp_path) == {}
 
 
 def test_missing_lab_directory_is_error(tmp_path):

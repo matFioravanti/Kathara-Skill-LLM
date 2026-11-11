@@ -1,6 +1,0 @@
-$TTL 3600
-$ORIGIN dept.company.com.
-@ IN SOA ns.dept.company.com. hostmaster.dept.company.com. ( 2026110301 3600 900 604800 300 )
-@ IN NS ns.dept.company.com.
-ns.dept.company.com. IN A 10.15.5.12
-@ IN A 10.15.5.12

@@ -4,3 +4,15 @@ __pycache__/
 .DS_Store
 .env
 ~$*.xlsx
+
+# Generated benchmark runs and evaluation outputs
+/runs/*
+!/runs/.gitkeep
+/results/*
+!/results/.gitkeep
+/reports/*
+!/reports/.gitkeep
+
+# Ignore only local Kathara baseline files; keep canonical corrections tracked
+/scenarios/*/lab/*
+!/scenarios/*/lab/.gitkeep

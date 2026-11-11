@@ -1,8 +1,0 @@
-$TTL 300
-$ORIGIN tools.net.
-@ IN SOA ns.tools.net. hostmaster.tools.net. (
-  2026110301 3600 600 604800 300 )
-@ IN NS ns.tools.net.
-ns.tools.net. IN A 10.15.3.12
-ci.tools.net. IN NS ns.ci.tools.net.
-ns.ci.tools.net. IN A 10.15.7.11

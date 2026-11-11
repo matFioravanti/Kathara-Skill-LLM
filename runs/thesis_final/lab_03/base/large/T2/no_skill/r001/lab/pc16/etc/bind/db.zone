@@ -1,6 +1,0 @@
-$TTL 300
-$ORIGIN shop.example.com.
-@ IN SOA ns.shop.example.com. hostmaster.shop.example.com. ( 2026110301 3600 600 604800 300 )
-@ IN NS ns.shop.example.com.
-ns.shop.example.com. IN A 10.16.4.14
-@ IN A 10.16.4.14

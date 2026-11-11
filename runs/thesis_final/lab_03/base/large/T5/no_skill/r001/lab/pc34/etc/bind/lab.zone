@@ -1,7 +1,0 @@
-$TTL 3600
-$ORIGIN gov.
-@ IN SOA ns.gov. hostmaster.gov. ( 1 3600 900 604800 3600 )
-@ IN NS ns.gov.
-ns.gov. IN A 10.16.9.12
-ministero.gov. IN NS ns.ministero.gov.
-ns.ministero.gov. IN A 10.16.10.14

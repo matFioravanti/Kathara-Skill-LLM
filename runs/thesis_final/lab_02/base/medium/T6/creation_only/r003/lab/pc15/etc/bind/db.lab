@@ -1,7 +1,0 @@
-$ORIGIN regione.it.
-$TTL 300
-@ IN SOA ns.regione.it. hostmaster.regione.it. ( 1 3600 600 604800 300 )
-@ IN NS ns.regione.it.
-ns.regione.it. IN A 10.15.4.13
-dati.regione.it. IN NS ns.dati.regione.it.
-ns.dati.regione.it. IN A 10.15.8.13

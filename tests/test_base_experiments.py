@@ -1,4 +1,4 @@
-"""Check the committed Base resources and experiment plans without starting services."""
+"""Check the repository scaffold and retained prompt and experiment templates."""
 from collections import Counter
 from dataclasses import replace
 from pathlib import Path
@@ -21,7 +21,9 @@ CATEGORIES = ('technical_structured', 'technical_discursive', 'nontechnical_disc
                                                ('lab_03', 'large', 3)])
 def test_base_resources(lab, level, offset):
     assignment = TaskAssignment(lab, 'base', level)
-    assert lab in discover_scenarios(ROOT / 'scenarios')
+    assert discover_scenarios(ROOT / 'scenarios') == {}
+    assert (ROOT / 'scenarios' / lab / 'lab' / '.gitkeep').is_file()
+    assert (ROOT / 'scenarios' / lab / 'tasks' / 'base' / level / '.gitkeep').is_file()
     assert task_correction_path(ROOT, assignment).is_file()
     for index, category in enumerate(CATEGORIES):
         kind = f'T{index + 1}'
@@ -49,7 +51,8 @@ def test_experiment_plans_and_prerequisites():
     quick = load_experiment(ROOT / 'experiments/quick_test.yaml')
     final = load_experiment(ROOT / 'experiments/thesis_final.yaml')
     for spec in (quick, final):
-        validate_experiment_prerequisites(spec, config, labs)
+        with pytest.raises(ValueError, match='Scenari non trovati'):
+            validate_experiment_prerequisites(spec, config, labs)
     cells = build_run_matrix(quick)
     assert len(cells) == 1
     assert (cells[0].lab_id, cells[0].dns_tree_id, cells[0].task_level,

@@ -1,7 +1,0 @@
-$TTL 3600
-$ORIGIN data.research.lab.net.
-@ IN SOA ns.data.research.lab.net. hostmaster.data.research.lab.net. (
-    2026110301 3600 900 604800 3600 )
-@ IN NS ns.data.research.lab.net.
-@ IN A 10.16.6.13
-ns.data.research.lab.net. IN A 10.16.6.13

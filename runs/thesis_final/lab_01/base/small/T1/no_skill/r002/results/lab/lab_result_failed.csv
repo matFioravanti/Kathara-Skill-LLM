@@ -1,2 +1,0 @@
-Test Description,Passed,Reason
-Checking correctness of DNS records,False,pc20 resolve A shop.example.com with IP  instead of ['10.14.3.11']

@@ -1,1 +1,0 @@
-Continue this exact session. Write ONLY the session secret given in the previous turn to lab.conf using a tool. Do not read files to recover it.

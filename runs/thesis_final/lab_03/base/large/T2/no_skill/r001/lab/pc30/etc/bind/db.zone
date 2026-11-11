@@ -1,6 +1,0 @@
-$TTL 300
-$ORIGIN servizi.comune.it.
-@ IN SOA ns.servizi.comune.it. hostmaster.servizi.comune.it. ( 2026110301 3600 600 604800 300 )
-@ IN NS ns.servizi.comune.it.
-ns.servizi.comune.it. IN A 10.16.8.12
-@ IN A 10.16.8.12
