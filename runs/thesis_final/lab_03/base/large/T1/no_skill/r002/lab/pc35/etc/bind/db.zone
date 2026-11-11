@@ -1,8 +1,0 @@
-$TTL 300
-$ORIGIN info.
-@ IN SOA ns.info. hostmaster.info. ( 2026110501 3600 600 604800 300 )
-@ IN NS ns.info.
-ns.info. IN A 10.16.9.13
-@ IN A 10.16.9.13
-news.info. IN NS ns.news.info.
-ns.news.info. IN A 10.16.11.11

@@ -1,5 +1,0 @@
-$TTL 3600
-@ IN SOA ns.lab.net. hostmaster.lab.net. (
-    2026110201 3600 900 604800 3600 )
-  IN NS ns.lab.net.
-api IN A 10.15.5.14

@@ -1,6 +1,0 @@
-Test Description,Passed,Reason
-Verifying `10.14.2.13` reachable from device `pc10`,False,
-Verifying `10.14.4.11` reachable from device `pc10`,False,
-"Checking the exit code of the command 'sh -c 'x=$(dig @10.14.1.14 www.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf ""%s\n"" ""$x"" | grep -q ""status: NOERROR"" && printf ""%s\n"" ""$x"" | grep -Eq ""flags:[^;]*[[:space:]]aa([;[:space:]]|$)"" && a=$(printf ""%s\n"" ""$x"" | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ -n ""$a"" ] || exit 1; for ip in $a; do case "" 10.14.1.11 10.14.1.12 10.14.1.13 10.14.1.14 10.14.2.11 10.14.2.12 10.14.2.13 10.14.3.11 10.14.3.12 10.14.3.13 10.14.4.11 10.14.4.12 10.14.4.13 10.14.4.14 10.14.5.11 10.14.5.12 10.14.5.13 10.14.6.11 10.14.6.12 10.14.6.13 "" in *"" $ip ""*) ;; *) exit 1 ;; esac; done; y=$(dig @10.14.4.14 www.example.com. A +time=5 +tries=1 +noall +answer | awk '""'""'tolower($1)==""www.example.com."" && $4==""A"" {print $5}'""'""'); [ ""$y"" = ""$a"" ]'' on 'pc14'",False,"The exit code of the command differs from the expected one.
- Actual: 1
- Expected: 0"

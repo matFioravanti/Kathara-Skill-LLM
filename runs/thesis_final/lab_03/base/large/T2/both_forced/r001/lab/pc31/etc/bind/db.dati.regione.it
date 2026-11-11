@@ -1,5 +1,0 @@
-$TTL 3600
-@ IN SOA ns.dati.regione.it. hostmaster.dati.regione.it. ( 1 3600 900 604800 300 )
-@ IN NS ns.dati.regione.it.
-@ IN A 10.16.8.13
-ns IN A 10.16.8.13

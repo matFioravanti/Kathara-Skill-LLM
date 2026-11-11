@@ -1,5 +1,0 @@
-$TTL 300
-@ IN SOA ns.project.org. hostmaster.project.org. ( 2026110301 3600 600 604800 300 )
-@ IN NS ns.project.org.
-ns IN A 10.16.1.11
-docs IN A 10.16.11.13

@@ -1,6 +1,0 @@
-$TTL 3600
-@ IN SOA ns.info. hostmaster.info. ( 1 3600 900 604800 300 )
-@ IN NS ns.info.
-ns IN A 10.16.3.14
-local.news.info. IN A 10.16.12.14
-media.news.info. IN A 10.16.13.11

@@ -1,7 +1,0 @@
-$TTL 300
-$ORIGIN ai.research.lab.net.
-@ IN SOA ns.ai.research.lab.net. hostmaster.ai.research.lab.net. (
-  2026110301 3600 600 604800 300 )
-@ IN NS ns.ai.research.lab.net.
-ns.ai.research.lab.net. IN A 10.15.6.12
-@ IN A 10.15.6.12

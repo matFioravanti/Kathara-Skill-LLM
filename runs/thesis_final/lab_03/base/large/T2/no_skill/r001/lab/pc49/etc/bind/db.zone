@@ -1,6 +1,0 @@
-$TTL 300
-$ORIGIN media.news.info.
-@ IN SOA ns.media.news.info. hostmaster.media.news.info. ( 2026110301 3600 600 604800 300 )
-@ IN NS ns.media.news.info.
-ns.media.news.info. IN A 10.16.13.11
-@ IN A 10.16.13.11

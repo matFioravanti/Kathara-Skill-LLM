@@ -4,3 +4,17 @@ __pycache__/
 .DS_Store
 .env
 ~$*.xlsx
+
+# Generated benchmark runs and evaluation outputs
+/runs/*
+!/runs/.gitkeep
+/results/*
+!/results/.gitkeep
+/reports/*
+!/reports/.gitkeep
+
+# Local scenario baselines and manual corrections
+/scenarios/*/lab/*
+!/scenarios/*/lab/.gitkeep
+/scenarios/*/tasks/*/*/correction.yaml
+/scenarios/*/tasks/*/*/bindings.yaml

@@ -1,9 +1,0 @@
-{
-  "returncode": -1,
-  "timed_out": false,
-  "duration_seconds": 0.0,
-  "sandbox_overhead_seconds": 13.953370291997999,
-  "final_message": null,
-  "usage": null,
-  "error": "Impossibile creare il sandbox 'kathara-lab-02-r001-1b55cbb6':\n{\"time\":\"2026-11-03T03:01:10.819377+01:00\",\"level\":\"WARN\",\"msg\":\"failed to refresh token and existing token is unusable\",\"error\":\"token is unverifiable: error while executing keyfunc: Get \\\"https://login.docker.com/.well-known/jwks.json\\\": read tcp [2001:b07:2ec:3015:3801:c8c7:d67a:fd48]:58291->[2a06:98c1:3109::ac40:904a]:443: read: connection reset by peer\",\"usable_error\":\"docker session has expired\"}\nerror: failed to check if sandbox exists: lookup runtime: request failed: 503 Service Unavailable: docker login service unavailable: the host is not fully awake docker session could not be refreshed due to a network issue; this should resolve automatically, try again shortly"
-}

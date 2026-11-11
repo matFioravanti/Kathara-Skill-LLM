@@ -1,7 +1,0 @@
-$TTL 300
-@ IN SOA ns.lab.net. hostmaster.lab.net. ( 2026110301 3600 600 604800 300 )
-@ IN NS ns.lab.net.
-ns IN A 10.16.1.11
-ai.research IN A 10.16.6.12
-data.research IN A 10.16.6.13
-dev IN A 10.16.6.14

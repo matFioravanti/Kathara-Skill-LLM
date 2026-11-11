@@ -1,4 +1,4 @@
-"""Check the committed Base resources and experiment plans without starting services."""
+"""Check the repository scaffold and retained prompt and experiment templates."""
 from collections import Counter
 from dataclasses import replace
 from pathlib import Path
@@ -9,7 +9,7 @@ from benchmark_core.config import load_config
 from benchmark_core.experiment import build_run_matrix, load_experiment, validate_experiment_prerequisites
 from benchmark_core.prompts import missing_prompts, render_task_prompt, resolve_prompt
 from benchmark_core.scenario_loader import discover_scenarios
-from benchmark_core.task_catalog import TaskAssignment, task_correction_path
+from benchmark_core.task_catalog import TaskAssignment
 
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORIES = ('technical_structured', 'technical_discursive', 'nontechnical_discursive',
@@ -21,8 +21,9 @@ CATEGORIES = ('technical_structured', 'technical_discursive', 'nontechnical_disc
                                                ('lab_03', 'large', 3)])
 def test_base_resources(lab, level, offset):
     assignment = TaskAssignment(lab, 'base', level)
-    assert lab in discover_scenarios(ROOT / 'scenarios')
-    assert task_correction_path(ROOT, assignment).is_file()
+    assert discover_scenarios(ROOT / 'scenarios') == {}
+    assert (ROOT / 'scenarios' / lab / 'lab' / '.gitkeep').is_file()
+    assert (ROOT / 'scenarios' / lab / 'tasks' / 'base' / level / '.gitkeep').is_file()
     for index, category in enumerate(CATEGORIES):
         kind = f'T{index + 1}'
         expected = ROOT / 'prompt' / 'base' / level / f'{3 * index + offset:02d}_{category}_{level}.md'
@@ -49,7 +50,8 @@ def test_experiment_plans_and_prerequisites():
     quick = load_experiment(ROOT / 'experiments/quick_test.yaml')
     final = load_experiment(ROOT / 'experiments/thesis_final.yaml')
     for spec in (quick, final):
-        validate_experiment_prerequisites(spec, config, labs)
+        with pytest.raises(ValueError, match='Scenari non trovati'):
+            validate_experiment_prerequisites(spec, config, labs)
     cells = build_run_matrix(quick)
     assert len(cells) == 1
     assert (cells[0].lab_id, cells[0].dns_tree_id, cells[0].task_level,

@@ -1,5 +1,0 @@
-$TTL 300
-@ IN SOA ns.studenti.unibo.it. hostmaster.studenti.unibo.it. ( 1 3600 600 604800 300 )
-@ IN NS ns.studenti.unibo.it.
-ns.studenti.unibo.it. IN A 10.16.8.11
-@ IN A 10.16.8.11

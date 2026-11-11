@@ -1,5 +1,8 @@
 # Kathara Skill LLM Benchmark
 
+> **Distribuzione come struttura del benchmark.** I dati dei laboratori e le correction sono stati esclusi da Git: in `scenarios/` rimangono soltanto directory con `.gitkeep`. Le cartelle `runs/`, `results/` e `reports/` non contengono risultati versionati. Rimangono sorgenti, test, Skill, prompt e configurazioni. Per eseguire gli esperimenti di esempio occorre inserire localmente le baseline e le correction mancanti.
+
+
 Benchmark riproducibile per valutare agenti LLM CLI che configurano DNS e servizi web in laboratori di emulazione di rete Kathara. Gli agenti supportati sono **Codex CLI** e **Antigravity CLI (agy)**, ciascuno con autenticazione rigorosamente locale. Per Codex è inoltre supportata l'esecuzione totalmente isolata all'interno di container effimeri gestiti tramite **Docker Sandboxes (`sbx`)**.
 
 ## Architettura

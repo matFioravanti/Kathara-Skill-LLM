@@ -1,9 +1,0 @@
-{
-  "returncode": -1,
-  "timed_out": false,
-  "duration_seconds": 0.0,
-  "sandbox_overhead_seconds": 5.070784916999401,
-  "final_message": null,
-  "usage": null,
-  "error": "Policy di rete errata per kathara-lab-02-r001-a90f91b3: connessione necessaria a api.openai.com:443 negata.\n{\"time\":\"2026-11-03T06:47:49.77024+01:00\",\"level\":\"WARN\",\"msg\":\"failed to refresh token and existing token is unusable\",\"error\":\"token is unverifiable: error while executing keyfunc: Get \\\"https://login.docker.com/.well-known/jwks.json\\\": read tcp 192.168.1.65:58951->104.18.43.182:443: read: connection reset by peer\",\"usable_error\":\"docker session has expired\"}\nerror: check network policy: request failed: 503 Service Unavailable: docker login service unavailable: the host is not fully awake docker session could not be refreshed due to a network issue; this should resolve automatically, try again shortly"
-}

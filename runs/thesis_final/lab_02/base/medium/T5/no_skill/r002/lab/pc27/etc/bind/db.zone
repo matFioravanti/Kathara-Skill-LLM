@@ -1,5 +1,0 @@
-$TTL 300
-@ IN SOA ns.courses.university.edu. hostmaster.courses.university.edu. ( 1 3600 600 86400 300 )
-@ IN NS ns.courses.university.edu.
-ns.courses.university.edu. IN A 10.15.7.13
-@ IN A 10.15.7.13
