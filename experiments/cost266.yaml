@@ -1,0 +1,17 @@
+experiment:
+  id: cost266
+dataset: experiments/cost266_data
+protocol: cost266_incremental_no_feedback_v1
+strategies: [one_shot, incremental]
+prompt_types: [T1, T2, T3, T4, T5, T6]
+# Il benchmark.yaml corrente usa recovery_v1: le modalità forzate richiedono
+# più chiamate/sandbox e sono rifiutate da questo protocollo single-call.
+# Tutte le cinque modalità restano selezionabili con config esplicito compatibile.
+skill_modes: [no_skill, auto]
+repetitions: 1
+budgets:
+  # Stesso limite per chiamata in entrambe le strategie; misurare costo cumulativo.
+  stage_seconds: 900
+  # Tempo attivo cumulativo inclusi controlli, copie e overhead; downtime resume escluso.
+  total_seconds: 9000
+  checker_seconds: 1800

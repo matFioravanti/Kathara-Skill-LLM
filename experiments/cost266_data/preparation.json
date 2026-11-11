@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "assets": {
+    "cost266.json": "38613c37949367270c8f936d83417f86f636129037a5aa74014fe1142a2b2801",
+    "europa_cost266_static.zip": "8890fb31f3f5981e2320ac477e79a51ac13989f216ba2b8cf1835f00b0a2b08c",
+    "cost266_dns_multitld_v2.zip": "83e8795f6225a348c0d8baf931f3ee023806eb514a6d5d501b0ba0667370390b"
+  },
+  "validation": {
+    "nodes": 37,
+    "edges": 57,
+    "zone_counts": {
+      "root": 1,
+      "tld": 6,
+      "paese": 22,
+      "citta": 37,
+      "sottozona_citta": 111,
+      "zona_funzionale": 24
+    },
+    "zones": 201,
+    "delegations": 200,
+    "simulated_paths": 5587,
+    "max_hops": 11,
+    "dynamic_validation": "NOT_RUN"
+  },
+  "baseline_sha256": "3a62f9ff9df77ad9b2d24d91862b39f17b07344d9a3548e62c1428d7dadab706",
+  "inventory_sha256": "0ddf319d6dffb44b91ece5c1ad0bd5659a270e10c505abe4f77874ee9527ed12",
+  "correction_sha256": "bd6de3e9392e8f9c40618fb9d90e81f73a0655b46586f03d02ae4951084a517f",
+  "status": "STATICALLY_PREPARED_DYNAMIC_NOT_RUN"
+}

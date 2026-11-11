@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="5100" height="4100" viewBox="0 0 5100 4100">
+<rect x="0" y="0" width="5100" height="4100" rx="0" fill="#F5F8FC" stroke="none" stroke-width="1"/>
+<defs><filter id="shadow" x="-10%" y="-10%" width="130%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="11" flood-color="#173A60" flood-opacity="0.09"/></filter></defs>
+<text x="180" y="140" font-size="93" font-weight="750" font-family="Inter, Arial, sans-serif" fill="#102845" text-anchor="start">COST266 · Gerarchia DNS europea multi-TLD</text>
+<text x="180" y="210" font-size="46" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#51647C" text-anchor="start">37 città · 22 paesi · 6 TLD artificiali · 201 zone · 200 deleghe</text>
+<rect x="2364" y="280" width="370" height="90" rx="18" fill="#203A63" stroke="#BED5EE" stroke-width="3"/>
+<text x="2549.0" y="340.75" font-size="45" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#FFFFFF" text-anchor="middle">.  ROOT</text>
+<path d="M 2550,370 L 2550,414" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<path d="M 550,414 L 4550,414" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<path d="M 450,414 L 450,460" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="260" y="460" width="380" height="88" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="450.0" y="520.1" font-size="46" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">europa.</text>
+<path d="M 1280,414 L 1280,460" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="1090" y="460" width="380" height="88" rx="18" fill="#E6EAFB" stroke="#BED5EE" stroke-width="3"/>
+<text x="1280.0" y="520.1" font-size="46" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">infra.</text>
+<path d="M 2110,414 L 2110,460" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="1920" y="460" width="380" height="88" rx="18" fill="#E6EAFB" stroke="#BED5EE" stroke-width="3"/>
+<text x="2110.0" y="520.1" font-size="46" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">research.</text>
+<path d="M 2940,414 L 2940,460" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="2750" y="460" width="380" height="88" rx="18" fill="#E6EAFB" stroke="#BED5EE" stroke-width="3"/>
+<text x="2940.0" y="520.1" font-size="46" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">services.</text>
+<path d="M 3770,414 L 3770,460" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="3580" y="460" width="380" height="88" rx="18" fill="#E6EAFB" stroke="#BED5EE" stroke-width="3"/>
+<text x="3770.0" y="520.1" font-size="46" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">lab.</text>
+<path d="M 4600,414 L 4600,460" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="4410" y="460" width="380" height="88" rx="18" fill="#E6EAFB" stroke="#BED5EE" stroke-width="3"/>
+<text x="4600.0" y="520.1" font-size="46" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">test.</text>
+<path d="M 450,548 L 450,632" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<path d="M 450,632 L 680,632" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<path d="M 680,632 L 680,700" fill="none" stroke="#567DA5" stroke-width="6" stroke-linecap="round"/>
+<rect x="130" y="700" width="3860" height="3200" rx="30" fill="#FFFFFF" stroke="#DAE4F0" stroke-width="4"/>
+<rect x="4020" y="700" width="950" height="3200" rx="30" fill="#FFFFFF" stroke="#DAE4F0" stroke-width="4"/>
+<text x="250" y="790" font-size="64" font-weight="700" font-family="Inter, Arial, sans-serif" fill="#153354" text-anchor="start">EUROPA · 22 domini-paese → 37 città</text>
+<text x="250" y="850" font-size="43" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#62778D" text-anchor="start">Ogni città delega: services · research · admin</text>
+<rect x="230" y="925" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="925" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="957" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="1004.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">at.</text>
+<text x="435" y="1002" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Austria</text>
+<text x="280" y="1080" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Vienna</text>
+<text x="279" y="1224" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="1508" y="925" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="925" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="957" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="1004.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">be.</text>
+<text x="1713" y="1002" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Belgio</text>
+<text x="1558" y="1080" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Brussels</text>
+<text x="1557" y="1224" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="2786" y="925" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="925" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="957" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="1004.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">bg.</text>
+<text x="2991" y="1002" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Bulgaria</text>
+<text x="2836" y="1080" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Sofia</text>
+<text x="2835" y="1224" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="230" y="1293" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="1293" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="1325" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="1372.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">ch.</text>
+<text x="435" y="1370" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Svizzera</text>
+<text x="280" y="1448" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Zurich</text>
+<text x="279" y="1592" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="1508" y="1293" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="1293" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="1325" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="1372.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">cz.</text>
+<text x="1713" y="1370" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Repubblica Ceca</text>
+<text x="1558" y="1448" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Prague</text>
+<text x="1557" y="1592" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="2786" y="1293" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="1293" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="1325" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="1372.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">de.</text>
+<text x="2991" y="1370" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Germania</text>
+<text x="2836" y="1448" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Berlin, Dusseldorf, Frankfurt</text>
+<text x="2836" y="1506" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Hamburg, Munich</text>
+<text x="2835" y="1592" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">5 città  ·  15 sottozone delegate</text>
+<rect x="230" y="1661" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="1661" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="1693" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="1740.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">dk.</text>
+<text x="435" y="1738" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Danimarca</text>
+<text x="280" y="1816" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Copenhagen</text>
+<text x="279" y="1960" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="1508" y="1661" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="1661" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="1693" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="1740.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">es.</text>
+<text x="1713" y="1738" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Spagna</text>
+<text x="1558" y="1816" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Barcelona, Madrid</text>
+<text x="1558" y="1874" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Seville</text>
+<text x="1557" y="1960" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">3 città  ·  9 sottozone delegate</text>
+<rect x="2786" y="1661" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="1661" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="1693" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="1740.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">fi.</text>
+<text x="2991" y="1738" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Finlandia</text>
+<text x="2836" y="1816" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Helsinki</text>
+<text x="2835" y="1960" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="230" y="2029" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="2029" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="2061" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="2108.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">fr.</text>
+<text x="435" y="2106" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Francia</text>
+<text x="280" y="2184" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Bordeaux, Lyon, Marseille</text>
+<text x="280" y="2242" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Paris, Strasbourg</text>
+<text x="279" y="2328" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">5 città  ·  15 sottozone delegate</text>
+<rect x="1508" y="2029" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="2029" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="2061" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="2108.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">gr.</text>
+<text x="1713" y="2106" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Grecia</text>
+<text x="1558" y="2184" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Athens</text>
+<text x="1557" y="2328" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="2786" y="2029" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="2029" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="2061" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="2108.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">hr.</text>
+<text x="2991" y="2106" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Croazia</text>
+<text x="2836" y="2184" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Zagreb</text>
+<text x="2835" y="2328" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="230" y="2397" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="2397" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="2429" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="2476.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">hu.</text>
+<text x="435" y="2474" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Ungheria</text>
+<text x="280" y="2552" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Budapest</text>
+<text x="279" y="2696" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="1508" y="2397" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="2397" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="2429" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="2476.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">ie.</text>
+<text x="1713" y="2474" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Irlanda</text>
+<text x="1558" y="2552" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Dublin</text>
+<text x="1557" y="2696" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="2786" y="2397" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="2397" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="2429" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="2476.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">it.</text>
+<text x="2991" y="2474" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Italia</text>
+<text x="2836" y="2552" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Milan, Palermo</text>
+<text x="2836" y="2610" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Rome</text>
+<text x="2835" y="2696" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">3 città  ·  9 sottozone delegate</text>
+<rect x="230" y="2765" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="2765" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="2797" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="2844.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">nl.</text>
+<text x="435" y="2842" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Paesi Bassi</text>
+<text x="280" y="2920" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Amsterdam</text>
+<text x="279" y="3064" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="1508" y="2765" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="2765" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="2797" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="2844.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">no.</text>
+<text x="1713" y="2842" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Norvegia</text>
+<text x="1558" y="2920" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Oslo</text>
+<text x="1557" y="3064" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="2786" y="2765" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="2765" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="2797" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="2844.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">pl.</text>
+<text x="2991" y="2842" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Polonia</text>
+<text x="2836" y="2920" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Krakow, Warsaw</text>
+<text x="2835" y="3064" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">2 città  ·  6 sottozone delegate</text>
+<rect x="230" y="3133" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="3133" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="3165" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="3212.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">pt.</text>
+<text x="435" y="3210" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Portogallo</text>
+<text x="280" y="3288" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Lisbon</text>
+<text x="279" y="3432" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="1508" y="3133" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="1508" y="3133" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="1546" y="3165" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="1618.5" y="3212.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">rs.</text>
+<text x="1713" y="3210" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Serbia</text>
+<text x="1558" y="3288" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Belgrade</text>
+<text x="1557" y="3432" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="2786" y="3133" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="2786" y="3133" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="2824" y="3165" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="2896.5" y="3212.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">se.</text>
+<text x="2991" y="3210" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Svezia</text>
+<text x="2836" y="3288" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Stockholm</text>
+<text x="2835" y="3432" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">1 città  ·  3 sottozone delegate</text>
+<rect x="230" y="3501" width="1180" height="335" rx="22" fill="#F8FBFF" stroke="#DAE7F6" stroke-width="3"/>
+<rect x="230" y="3501" width="14" height="335" rx="7" fill="#4D86C4" stroke="none" stroke-width="1"/>
+<rect x="268" y="3533" width="145" height="66" rx="18" fill="#DDEDFE" stroke="#BED5EE" stroke-width="3"/>
+<text x="340.5" y="3580.7" font-size="42" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#244C77" text-anchor="middle">uk.</text>
+<text x="435" y="3578" font-size="48" font-weight="650" font-family="Inter, Arial, sans-serif" fill="#1A3554" text-anchor="start">Regno Unito</text>
+<text x="280" y="3656" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">Birmingham, Glasgow</text>
+<text x="280" y="3714" font-size="46" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#304760" text-anchor="start">London</text>
+<text x="279" y="3800" font-size="36" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7290B1" text-anchor="start">3 città  ·  9 sottozone delegate</text>
+<rect x="4110" y="815" width="765" height="450" rx="25" fill="#F8FBFF" stroke="#DCE3F1" stroke-width="3"/>
+<text x="4157" y="908" font-size="63" font-weight="700" font-family="Inter, Arial, sans-serif" fill="#1C3A70" text-anchor="start">infra.</text>
+<path d="M 4155 936 L 4815 936" stroke="#C5D5EA" stroke-width="3"/>
+<text x="4155" y="1010" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">dns  /  routing  /  monitoring</text>
+<text x="4155" y="1095" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">dns → root  ·  tld  ·  resolvers</text>
+<text x="4155" y="1207" font-size="29" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7B8A9F" text-anchor="start">TLD autonomo, delegato dalla root</text>
+<rect x="4110" y="1355" width="765" height="450" rx="25" fill="#F8FBFF" stroke="#DCE3F1" stroke-width="3"/>
+<text x="4157" y="1448" font-size="63" font-weight="700" font-family="Inter, Arial, sans-serif" fill="#1C3A70" text-anchor="start">research.</text>
+<path d="M 4155 1476 L 4815 1476" stroke="#C5D5EA" stroke-width="3"/>
+<text x="4155" y="1550" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">universities  /  experiments  /  datasets</text>
+<text x="4155" y="1635" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">experiments → latency  ·  failures</text>
+<text x="4155" y="1747" font-size="29" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7B8A9F" text-anchor="start">TLD autonomo, delegato dalla root</text>
+<rect x="4110" y="1895" width="765" height="450" rx="25" fill="#F8FBFF" stroke="#DCE3F1" stroke-width="3"/>
+<text x="4157" y="1988" font-size="63" font-weight="700" font-family="Inter, Arial, sans-serif" fill="#1C3A70" text-anchor="start">services.</text>
+<path d="M 4155 2016 L 4815 2016" stroke="#C5D5EA" stroke-width="3"/>
+<text x="4155" y="2090" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">web  /  api  /  mail</text>
+<text x="4155" y="2175" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">web → portals</text>
+<text x="4155" y="2287" font-size="29" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7B8A9F" text-anchor="start">TLD autonomo, delegato dalla root</text>
+<rect x="4110" y="2435" width="765" height="450" rx="25" fill="#F8FBFF" stroke="#DCE3F1" stroke-width="3"/>
+<text x="4157" y="2528" font-size="63" font-weight="700" font-family="Inter, Arial, sans-serif" fill="#1C3A70" text-anchor="start">lab.</text>
+<path d="M 4155 2556 L 4815 2556" stroke="#C5D5EA" stroke-width="3"/>
+<text x="4155" y="2630" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">benchmark  /  checker  /  clients</text>
+<text x="4155" y="2715" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">benchmark → scenarios</text>
+<text x="4155" y="2827" font-size="29" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7B8A9F" text-anchor="start">TLD autonomo, delegato dalla root</text>
+<rect x="4110" y="2975" width="765" height="450" rx="25" fill="#F8FBFF" stroke="#DCE3F1" stroke-width="3"/>
+<text x="4157" y="3068" font-size="63" font-weight="700" font-family="Inter, Arial, sans-serif" fill="#1C3A70" text-anchor="start">test.</text>
+<path d="M 4155 3096 L 4815 3096" stroke="#C5D5EA" stroke-width="3"/>
+<text x="4155" y="3170" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">positive  /  negative  /  dnssec</text>
+<text x="4155" y="3255" font-size="37" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#364C65" text-anchor="start">negative → nxdomain  ·  delegation</text>
+<text x="4155" y="3367" font-size="29" font-weight="400" font-family="Inter, Arial, sans-serif" fill="#7B8A9F" text-anchor="start">TLD autonomo, delegato dalla root</text>
+<rect x="140" y="3932" width="4810" height="115" rx="16" fill="#E9F2FB" stroke="none" stroke-width="1"/>
+<text x="240" y="4005" font-size="38" font-weight="680" font-family="Inter, Arial, sans-serif" fill="#1B3C65" text-anchor="start">TIPI DI NODO:    </text>
+<text x="700" y="4005" font-size="38" font-weight="500" font-family="Inter, Arial, sans-serif" fill="#395673" text-anchor="start">root / TLD     •     dominio-paese     •     città     •     sottozona delegata</text>
+</svg>
