@@ -112,7 +112,7 @@ class RunLayoutTest(unittest.TestCase):
                  patch.object(pipeline, "run_aut", side_effect=fake_run_aut), \
                  patch.object(pipeline, "read_correction", return_value=(b"canonical correction", "sha")), \
                  patch.object(pipeline, "validate_correction", return_value="sha"), \
-                 patch.object(pipeline, "run_checker", return_value={"task_success": True}) as checker, \
+                 patch.object(pipeline, "run_checker", return_value={"task_success": True, "checks_passed": 1, "checks_failed": 0, "checks_total": 1, "check_pass_rate": 1.0}) as checker, \
                  patch.object(_sm, "validate_mode_sources", side_effect=lambda config, mode: _sm.mode_details(mode)):
                 for mode in modes:
                     runs.append(pipeline.run_one(config, scenario, "codex", "T1", mode))
@@ -154,7 +154,7 @@ class RunLayoutTest(unittest.TestCase):
             self.assertEqual(manifest["run_directory"], "example_dns_001/T1/dns_only/r001")
             self.assertEqual(manifest["run_number"], 1)
             self.assertEqual([item["state"] for item in manifest["state_history"]],
-                             ["PENDING", "AUT_RUNNING", "AUT_COMPLETED", "COMPLETED"])
+                             ["PENDING", "AUT_RUNNING", "AUT_COMPLETED", "FINALIZING", "COMPLETED"])
             self.assertNotIn("all", manifest["run_id"])
             self.assertEqual(manifest["correction_source"], "scenarios/example_dns_001/correction.yaml")
             self.assertEqual(manifest["correction_snapshot"], "evaluation/correction.yaml")

@@ -73,7 +73,8 @@ def setup(tmp_path):
         aut[key]=str(path.relative_to(root)); metadata[key+'_sha256']=hashlib.sha256(raw).hexdigest()
     write_json(run/'manifest.json',metadata)
     config=SimpleNamespace(root=root,data={'aut':aut,'benchmark':{'timeout_seconds':5},'docker_sandbox':{'execution_backend':'docker_sandbox'}},
-                           path=lambda p:root/p,model=lambda:None,reasoning_effort=lambda:None)
+                           path=lambda p:root/p,model=lambda:None,reasoning_effort=lambda:None,
+                           sampling_telemetry_config=lambda:{'enabled':False,'mode':'passive'})
     ScriptedSession.schedule=[]; ScriptedSession.truncate=False; ScriptedSession.fail_at=None
     ScriptedSession.mutate_at=None; ScriptedSession.instances=[]
     def execute(mode='both_forced'):
@@ -82,6 +83,15 @@ def setup(tmp_path):
 
 
 def record(run): return json.loads((run/'logs/aut/skill_gate.json').read_text())
+
+
+def test_telemetry_error_does_not_mask_gate_failure(setup):
+    config, run, _, execute = setup
+    config.sampling_telemetry_config = lambda: (_ for _ in ()).throw(ValueError('telemetry failure'))
+    ScriptedSession.fail_at = 0
+    with pytest.raises(RuntimeError, match='Infrastructure failure'):
+        execute('dns_only')
+    assert 'telemetry failure' in record(run)['sampling_telemetry_error']
 
 
 @pytest.mark.parametrize('mode,skills',[('dns_only',['kathara-dns']),('creation_only',['kathara-creation']),('both_forced',['kathara-creation','kathara-dns'])])
@@ -239,7 +249,8 @@ def test_ordinary_pipeline_reaches_checker(setup,monkeypatch,mode,skills):
 def test_real_launcher_checks_thread_and_privilege_events(tmp_path,monkeypatch,kind):
     import subprocess
     from benchmark_core.docker_sandbox_runner import ProtectedCodexSession, SandboxError
-    config=SimpleNamespace(model=lambda:None,reasoning_effort=lambda:None)
+    config=SimpleNamespace(model=lambda:None,reasoning_effort=lambda:None,
+                           sampling_telemetry_config=lambda:{'enabled':False,'mode':'passive'})
     session=ProtectedCodexSession(workspace=tmp_path,state=tmp_path/'state',logs=tmp_path/'logs',config=config)
     session.name='unit-only'; session.thread_id='expected-thread'
     status='NoNewPrivs:\t1\n'+''.join(f'{key}:\t0000000000000000\n' for key in ('CapEff','CapPrm','CapBnd','CapAmb'))

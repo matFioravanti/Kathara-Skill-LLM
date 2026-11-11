@@ -111,7 +111,7 @@ Non impostare `OPENAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY` o `INSPECT_EVA
 
 Ogni agente dispone del proprio file di configurazione:
 
-* `benchmark.yaml` — configurazione **Codex** (`gpt-5.6-terra`, reasoning effort `low`)
+* `benchmark.yaml` — configurazione **Codex** (`gpt-6.1-sol`, reasoning effort `ultra`)
 * `benchmark_antigravity.yaml` — configurazione **Antigravity** (`gemini-3.8-flash`, reasoning effort `low`)
 
 L'agente attivo è specificato in `aut.agent`. L'opzione CLI `--agent` funge da verifica di coerenza: deve coincidere con `aut.agent` nel file YAML, altrimenti il comando viene rifiutato.
@@ -320,14 +320,17 @@ Per un uso scientifico verificare la traccia in `stderr.log`, gli ID di risposta
 
 ```bash
 python scripts/aggregate_results.py
-python scripts/analyze_results.py
+python scripts/aggregate_results.py --experiment thesis_final
+python scripts/analyze_results.py --results results/thesis_final
 ```
 
-L'aggregatore analizza i file `evaluation/metrics.json` e i report del checker presenti in `runs/`:
-- `results/runs.csv`: Una riga per run con identificatori, configurazione, stato, percentuale superamento, tempi, token e hash delle correction.
-- `results/checks.csv`: Una riga per ogni singola asserzione verificata dal checker.
-- `results/summary.csv`: Statistiche descrittive raggruppate per esperimento, scenario, prompt, modalità skill e modello.
-- `results/benchmark.xlsx`: Foglio di lavoro Excel formattato con i fogli `Runs`, `Checks` e `Summary`, corredato da filtri, righe separate per scenario e colonne dimensionate.
+L'aggregatore analizza i file `evaluation/metrics.json` e i report del checker presenti in `runs/`. Ogni esperimento ha una directory `results/<experiment_id>/`, aggiornata automaticamente dopo ogni run e rivalutazione. Per esempio:
+- `results/thesis_final/runs.csv`: una riga per run con configurazione, stato, tempi, token e conteggi dei controlli per categoria.
+- `results/thesis_final/checks.csv`: una riga per controllo, con categoria principale, sottocategoria, tipo di record DNS, fonte della classificazione ed esito.
+- `results/thesis_final/summary.csv`: statistiche raggruppate, comprese le categorie di errore tecnico e del checker.
+- `results/thesis_final/benchmark.xlsx`: gli stessi dati nei fogli `Runs`, `Checks` e `Summary`. Per report grandi i fogli sono scritti in streaming; quelli oltre il limite Excel vengono suddivisi.
+
+Le generazioni precedenti sono conservate in `.generations` e `current` indica quella pubblicata. Il CSV dei controlli elenca anche i tentativi fisici duplicati o parziali; consultare `duplicates.json` e le colonne di copertura prima di interpretare i conteggi. L'aggregazione può richiedere tempo per laboratori molto grandi.
 
 ## Smoke check
 
@@ -346,9 +349,9 @@ Lo smoke test convalida staticamente l'intero impianto senza chiamare gli LLM o 
 
 ## Agent supportati
 
-| Agente | CLI / Tool | File Config | Modello verificato | Autenticazione / Backend |
+| Agente | CLI / Tool | File Config | Modello configurato | Autenticazione / Backend |
 |---|---|---|---|---|
-| Codex | `codex` / `sbx` | `benchmark.yaml` | `gpt-5.6-terra` | Login ChatGPT locale (Host CLI) / Docker Sandbox (`sbx` OAuth proxy) |
+| Codex | `codex` / `sbx` | `benchmark.yaml` | `gpt-6.1-sol` | Login ChatGPT locale (Host CLI) / Docker Sandbox (`sbx` OAuth proxy) |
 | Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Login Google locale (Host CLI) |
 
 Entrambi gli agenti condividono i medesimi principi operativi: l'agente configura i file all'interno di un workspace isolato e il Kathara Lab Checker valuta la correction canonica sul laboratorio risultante in modo deterministico, senza alcun intervento dell'LLM nella fase di giudizio.

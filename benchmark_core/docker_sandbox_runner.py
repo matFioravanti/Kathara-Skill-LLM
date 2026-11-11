@@ -381,7 +381,18 @@ def sbx_check_sandbox_codex(*, expected_version: str | None = None) -> str:
         create_cmd = [exe, "create", "codex", tmpdir, "--name", probe_name, "--skills", "off"]
 
         try:
-            create_res = subprocess.run(create_cmd, capture_output=True, text=True, timeout=60)
+            try:
+                create_res = subprocess.run(create_cmd, capture_output=True, text=True, timeout=120)
+            except subprocess.TimeoutExpired as exc:
+                detail = exc.stderr or exc.stdout or b""
+                if isinstance(detail, bytes):
+                    detail = detail.decode("utf-8", errors="replace")
+                raise SandboxProbeError(
+                    f"Creazione del sandbox di preflight {probe_name} scaduta dopo 120 secondi.\n"
+                    "Verificare Docker e il daemon con `docker info` e `sbx daemon status`; "
+                    "controllare anche `sbx ls` per eventuali sandbox residui."
+                    + (f"\nOutput parziale: {detail.strip()}" if detail.strip() else "")
+                ) from exc
             if create_res.returncode != 0:
                 raise SandboxProbeError(
                     f"Impossibile creare probe sandbox per verifica Codex:\n{create_res.stderr.strip() or create_res.stdout.strip()}"

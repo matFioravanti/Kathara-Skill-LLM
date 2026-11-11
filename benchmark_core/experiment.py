@@ -175,11 +175,14 @@ def _is_valid_run_dir(path: Path) -> bool:
 def _read_manifest(run: Path) -> dict | None:
     manifest_path = run / "manifest.json"
     if not manifest_path.is_file():
-        return None
+        raise ValueError(f"Manifest mancante per la run esistente: {manifest_path}")
     try:
-        return json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, UnicodeError) as exc:
+        raise ValueError(f"Manifest non leggibile o JSON non valido: {manifest_path}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise ValueError(f"Manifest non è un oggetto JSON: {manifest_path}")
+    return data
 
 
 def _run_replicate(manifest: dict) -> int | None:
@@ -196,6 +199,7 @@ class RunStatus:
     replicate: int | None
     pipeline_state: str | None
     experiment_id: str | None
+    manifest: dict = field(default_factory=dict)
 
     @property
     def is_completed(self) -> bool:
@@ -253,9 +257,11 @@ def analyse_existing_runs(
                 if cell.assignment:
                     if (run_exp_id, manifest.get("lab_id"), manifest.get("dns_tree_id"), manifest.get("task_level"), manifest.get("prompt_type"), manifest.get("skill_mode")) != (spec.experiment_id, cell.lab_id, cell.dns_tree_id, cell.task_level, cell.prompt_type, cell.skill_mode):
                         continue
+                    if type(manifest.get('replicate')) is not int or manifest['replicate'] < 1 or not isinstance(manifest.get('pipeline_state'), str):
+                        raise ValueError(f"Manifest con replicate o pipeline_state non valido: {run_dir / 'manifest.json'}")
                 elif run_exp_id is not None and run_exp_id != spec.experiment_id:
                     continue
-                analysis.all_runs.append(RunStatus(run_dir, int(run_dir.name[1:]), _run_replicate(manifest), manifest.get("pipeline_state"), run_exp_id))
+                analysis.all_runs.append(RunStatus(run_dir, int(run_dir.name[1:]), _run_replicate(manifest), manifest.get("pipeline_state"), run_exp_id, manifest))
         analyses[key] = analysis
     return analyses
 
@@ -374,3 +380,48 @@ def validate_experiment_prerequisites(
             for prompt_type in spec.prompt_types:
                 resolve_prompt(config.root, scenario_id, prompt_type)
             validate_correction(correction_path(config.root, scenario_id))
+
+
+def completed_artifact_error(run: RunStatus) -> str | None:
+    """Validate a completed observation without changing historical artifacts."""
+    import hashlib
+    from .checker_runner import parse_reports
+    from .workspace import tree_hash
+    manifest = run.manifest
+    path = run.run / 'evaluation/metrics.json'
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+        if not isinstance(data, dict):
+            raise ValueError('non è un oggetto JSON')
+        if data.get('status') != 'COMPLETED' or data.get('replicate') != run.replicate:
+            raise ValueError('stato o replicate incoerente con il manifest')
+        if manifest.get('checker_execution_success') is not True or type(manifest.get('task_success')) is not bool:
+            raise ValueError('esito tecnico o task mancante')
+        if data.get('run_id') != manifest.get('run_id') or not manifest.get('run_id'):
+            raise ValueError('run_id mancante o incoerente')
+        for key in ('experiment_id', 'lab_id', 'dns_tree_id', 'task_level', 'prompt_type', 'skill_mode'):
+            if data.get(key) != manifest.get(key) or manifest.get(key) is None:
+                raise ValueError(f'{key} mancante o incoerente')
+        for key in ('agent', 'model', 'reasoning_effort'):
+            if key in manifest and data.get(key) != manifest[key]:
+                raise ValueError(f'{key} incoerente')
+        checker = data.get('checker')
+        if not isinstance(checker, dict):
+            raise ValueError('checker non valido')
+        parsed, _ = parse_reports(run.run / 'results')
+        if (checker.get('total') != parsed['checks_total'] or
+            checker.get('passed') != parsed['checks_passed'] or
+            checker.get('failed') != parsed['checks_failed'] or
+            manifest['task_success'] != parsed['task_success']):
+            raise ValueError('metriche e report checker incoerenti')
+        correction = run.run / 'evaluation/correction.yaml'
+        if not manifest.get('correction_sha256') or hashlib.sha256(correction.read_bytes()).hexdigest() != manifest['correction_sha256']:
+            raise ValueError('snapshot correction mancante o hash incoerente')
+        if not (run.run / 'lab').is_dir() or not (run.run / 'input/lab').is_dir():
+            raise ValueError('laboratorio o baseline mancante')
+        for lab, key in ((run.run / 'lab', 'final_lab_sha256'), (run.run / 'input/lab', 'input_lab_sha256')):
+            if manifest.get(key) is not None and tree_hash(lab) != manifest[key]:
+                raise ValueError(f'{key} incoerente: {lab}')
+    except (OSError, ValueError, TypeError, KeyError, UnicodeError) as exc:
+        return f'{path}: {exc}'
+    return None

@@ -276,13 +276,18 @@ def run_http_trace_command(
     is written to disk or accumulated across the run. A fixed, non-sensitive
     diagnostic replaces stderr in this mode.
     """
+    import os
+    import signal
     import subprocess
     import threading
+    import time
 
     collector = SamplingCollector(collection_mode="http_trace", backend=backend)
     stdout_chunks: list[bytes] = []
-    with subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE, env=env, cwd=cwd) as process:
+    process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, env=env, cwd=cwd,
+                               start_new_session=True)
+    try:
         assert process.stdin is not None and process.stdout is not None and process.stderr is not None
 
         def read_stdout() -> None:
@@ -324,21 +329,52 @@ def run_http_trace_command(
         for worker in threads:
             worker.start()
         timed_out = False
+        def kill_group() -> None:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+
         try:
             code = process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
-            process.kill()
+            kill_group()
             code = 124
             process.wait()
+        except BaseException:
+            kill_group()
+            process.wait()
+            raise
+        deadline = time.monotonic() + 2
         for worker in threads:
-            worker.join(timeout=15)
+            worker.join(timeout=max(0, deadline - time.monotonic()))
+        if any(worker.is_alive() for worker in threads):
+            # A descendant may have inherited a pipe after the CLI exited.
+            kill_group()
+            for worker in threads:
+                worker.join(timeout=1)
+            if not timed_out:
+                code = 1
         # Do not infer unreported sampling parameters from model defaults.
         telemetry = collector.finish()
         diagnostic = (b"Codex HTTP/SSE execution timed out.\n" if timed_out else
                       b"Codex HTTP/SSE execution failed; raw trace intentionally redacted.\n"
                       if code else b"")
         return b"".join(stdout_chunks), diagnostic, code, timed_out, telemetry
+    finally:
+        # Closing a pipe while a reader holds its lock can itself block forever.
+        # Daemon readers release their own handles when an escaped child exits.
+        if process.poll() is None:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait()
+        if 'threads' in locals() and not any(worker.is_alive() for worker in threads):
+            for pipe in (process.stdin, process.stdout, process.stderr):
+                if pipe is not None and not pipe.closed:
+                    pipe.close()
 
 
 def extract_sampling_telemetry(

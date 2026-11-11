@@ -23,7 +23,9 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -43,9 +45,39 @@ from benchmark_core.sampling_telemetry import (
     SamplingTelemetry,
     extract_sampling_telemetry,
     parse_sampling_telemetry,
+    run_http_trace_command,
     save_sampling_telemetry,
 )
 from benchmark_core.workspace import write_json
+
+
+def test_trace_timeout_terminates_descendant_with_inherited_pipes():
+    script = (
+        "import subprocess, sys, time; "
+        "subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)']); "
+        "time.sleep(30)"
+    )
+    started = time.monotonic()
+    _, _, code, timed_out, _ = run_http_trace_command(
+        [sys.executable, '-c', script], input_bytes=b'', timeout=1,
+        env=os.environ.copy(), backend='codex_cli',
+    )
+    assert timed_out and code == 124
+    assert time.monotonic() - started < 8
+
+
+def test_trace_fails_if_exited_parent_leaves_pipes_open():
+    script = (
+        "import subprocess, sys; "
+        "subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'])"
+    )
+    started = time.monotonic()
+    _, _, code, timed_out, _ = run_http_trace_command(
+        [sys.executable, '-c', script], input_bytes=b'', timeout=5,
+        env=os.environ.copy(), backend='codex_cli',
+    )
+    assert not timed_out and code != 0
+    assert time.monotonic() - started < 8
 
 
 class TestSamplingTelemetry(unittest.TestCase):

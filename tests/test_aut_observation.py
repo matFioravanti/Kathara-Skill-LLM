@@ -97,17 +97,17 @@ def test_backfill_rolls_back_on_aggregation_error(tmp_path, monkeypatch):
     path.write_text('{"checker": {"passed": 1}}')
     before = path.read_bytes()
     output = tmp_path / 'results'
-    output.mkdir()
+    from benchmark_core import aggregation
+    aggregation.aggregate(tmp_path / 'runs', output)
     report = output / 'runs.csv'
-    report.write_text('original')
-    def broken(runs, results):
-        report.write_text('partial')
+    before_report = report.read_bytes()
+    def broken(*args, **kwargs):
         raise RuntimeError('failure')
-    monkeypatch.setattr(backfill, 'aggregate', broken)
+    monkeypatch.setattr(aggregation, '_write_excel', broken)
     monkeypatch.setattr(sys, 'argv', ['backfill', '--runs', str(tmp_path / 'runs'), '--output', str(output)])
     with pytest.raises(RuntimeError):
         backfill.main()
-    assert path.read_bytes() == before and report.read_text() == 'original'
+    assert path.read_bytes() == before and report.read_bytes() == before_report
 
 
 @pytest.mark.parametrize('command', [
@@ -228,7 +228,7 @@ def test_backfill_idempotent_and_preserves_checker(tmp_path, monkeypatch):
     path.write_text(json.dumps({'checker': {'passed': 2}, 'tokens': {'total': 100}, 'timing': {'agent_seconds': 3}}))
     monkeypatch.setattr(sys, 'argv', ['backfill', '--runs', str(tmp_path / 'runs'), '--output', str(tmp_path / 'results')])
     backfill.main()
-    first = {p: p.read_bytes() for p in [path, *(tmp_path / 'results').iterdir()]}
+    first = {p: p.read_bytes() for p in [path, *(tmp_path / 'results' / name for name in ('runs.csv', 'checks.csv', 'summary.csv', 'benchmark.xlsx', 'duplicates.json'))]}
     backfill.main()
     assert first == {p: p.read_bytes() for p in first}
     data = json.loads(path.read_text())

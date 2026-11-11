@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from benchmark_core.agent_factory import AGENTS
-from benchmark_core.aggregation import aggregate
+from benchmark_core.aggregation import aggregate, validate_report_destination
 from benchmark_core.config import load_config, verify_skills
 from benchmark_core.pipeline import reevaluate_run, run_one
 from benchmark_core.preflight import preflight
@@ -57,6 +57,8 @@ def main() -> int:
     if args.rerun_correction and (args.check_skills or args.preflight):
         parser.error("--rerun-correction si usa con --scenario o --all, non con --check-skills/--preflight")
     config = load_config(args.config)
+    report_output = config.path(config.data['results']['directory']) / '_legacy'
+    validate_report_destination(report_output)
     if args.check_skills:
         for name, path in verify_skills(config).items():
             print(f"OK {name}: {path}")
@@ -114,7 +116,13 @@ def main() -> int:
                     print(f"Errore rivalutazione {run}: {exc}", file=sys.stderr)
                     failed = True
         finally:
-            aggregate(runs_root, config.path(config.data["results"]["directory"]))
+            pending = sys.exc_info()[1]
+            try:
+                aggregate(runs_root, report_output, legacy_only=True)
+            except Exception as exc:
+                if pending is None:
+                    raise
+                print(f"Errore aggiuntivo aggregazione: {exc}", file=sys.stderr)
         return 1 if failed else 0
     skill_mode = ("all" if args.all_skill_modes else (args.skill_mode or "dns_only")) if agent == "codex" else None
     preflight(config, agent, skill_mode=skill_mode,
@@ -155,7 +163,13 @@ def main() -> int:
                     if run_failed and not config.data["benchmark"]["continue_on_error"]:
                         return 1
     finally:
-        aggregate(config.root / "runs", config.path(config.data["results"]["directory"]))
+        pending = sys.exc_info()[1]
+        try:
+            aggregate(config.root / "runs", report_output, legacy_only=True)
+        except Exception as exc:
+            if pending is None:
+                raise
+            print(f"Errore aggiuntivo aggregazione: {exc}", file=sys.stderr)
         terminal_ui.pipeline_event("Results aggregated")
         terminal_ui.result_table(result_rows, multiple_scenarios=bool(args.all))
     # Un task scorretto con checker completato è un risultato valido, non un errore CLI.

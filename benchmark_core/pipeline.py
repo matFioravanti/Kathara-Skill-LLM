@@ -128,6 +128,10 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             "results": "results",
         },
     }
+    if assignment is not None:
+        from .fingerprint import conditions, fingerprint
+        manifest['experimental_conditions'] = conditions(config, scenario, prompt_type, skill_mode, assignment, agent=agent)
+        manifest['experimental_fingerprint'] = fingerprint(manifest['experimental_conditions'])
 
     def state(value: str):
         manifest["pipeline_state"] = value
@@ -222,7 +226,8 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         manifest["task_success"] = outcome["task_success"]
         if tree_hash(run / "input/lab") != manifest["input_lab_sha256"]:
             raise RuntimeError("Il baseline input/lab è cambiato durante la run.")
-        state("COMPLETED")
+        # Do not publish COMPLETED until the metrics have been atomically written.
+        state("FINALIZING")
     except (Exception, KeyboardInterrupt) as exc:
         if stage == "AUT":
             failure_state, field = "AUT_FAILED", "aut_execution_success"
@@ -251,13 +256,25 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         write_json(run / "manifest.json", manifest)
         evaluation = run / "evaluation"
         evaluation.mkdir(parents=True, exist_ok=True)
+        finalizing = manifest["pipeline_state"] == "FINALIZING"
+        metrics_manifest = {**manifest, "pipeline_state": "COMPLETED"} if finalizing else manifest
         metrics = make_metrics(
-            run, manifest,
+            run, metrics_manifest,
             total_seconds=time.monotonic() - total_started,
             checker_seconds=checker_seconds,
             checker_outcome=checker_outcome,
         )
         write_json(evaluation / "metrics.json", metrics)
+        if finalizing:
+            saved = json.loads((evaluation / "metrics.json").read_text(encoding="utf-8"))
+            checker = saved.get("checker") if isinstance(saved, dict) else None
+            if (not isinstance(checker, dict) or type(checker.get("total")) is not int
+                    or checker["total"] < 1 or type(checker.get("passed")) is not int
+                    or not 0 <= checker["passed"] <= checker["total"]
+                    or saved.get("status") != "COMPLETED"
+                    or type(manifest.get("task_success")) is not bool):
+                raise RuntimeError(f"Metriche finali incomplete o non valide: {evaluation / 'metrics.json'}")
+            state("COMPLETED")
         if event_callback:
             event_callback("metrics_collected")
             event_callback("result", metrics={**metrics, "task_success": manifest.get("task_success")})
@@ -321,6 +338,11 @@ def reevaluate_run(config, run: Path) -> Path:
     manifest["correction_source"] = source.relative_to(config.root).as_posix()
     manifest["correction_snapshot"] = "evaluation/correction.yaml"
     manifest["correction_sha256"] = digest
+    if isinstance(manifest.get('experimental_conditions'), dict):
+        from .fingerprint import fingerprint
+        updated_conditions = {**manifest['experimental_conditions'], 'correction_sha256': digest}
+        manifest['experimental_conditions'] = updated_conditions
+        manifest['experimental_fingerprint'] = fingerprint(updated_conditions)
     manifest["evaluation_revision"] = manifest.get("evaluation_revision", 0) + 1
     manifest["last_reevaluated_at"] = utc_now()
     manifest["checker_execution_success"] = None

@@ -165,7 +165,8 @@ class ResultCollectionTest(unittest.TestCase):
                 "ID", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type", "experiment_id", "skill_mode",
                 "repetition", "replicate",
                 "agent", "model",
-                "category", "test_description", "passed", "reason",
+                "category", "primary_category", "subcategory", "record_type", "classification_source",
+                "test_description", "passed", "reason",
             ])
             self.assertEqual(checks_frame.loc[0, "category"], "other")
             self.assertEqual(run_frame.loc[2, "status"], "AUT_FAILED")
@@ -247,7 +248,7 @@ class ResultCollectionTest(unittest.TestCase):
             self.assertTrue(checks_frame.empty)
             self.assertTrue(summary_frame.empty)
             self.assertEqual(set(path.name for path in output.iterdir()),
-                             {"runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx"})
+                             {"runs.csv", "checks.csv", "summary.csv", "benchmark.xlsx", "duplicates.json", "report_manifest.json", "current", ".generations"})
             self.assertEqual(list(pd.read_csv(output / "runs.csv").columns), run_frame.columns.tolist())
             with pd.ExcelFile(output / "benchmark.xlsx") as workbook:
                 # I fogli di base devono essere presenti (possono esserci anche fogli extra)

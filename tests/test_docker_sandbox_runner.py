@@ -200,6 +200,20 @@ class TestCheckSandboxCodex(unittest.TestCase):
     @patch("benchmark_core.docker_sandbox_runner._sbx_rm", return_value=(True, None))
     @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
     @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
+    def test_create_timeout_reports_diagnostics_and_cleans_up(self, _which, mock_run, mock_rm):
+        mock_run.side_effect = subprocess.TimeoutExpired("sbx create", 120, stderr=b"daemon busy")
+        with self.assertRaises(SandboxError) as ctx:
+            sbx_check_sandbox_codex()
+        self.assertIn("120 secondi", str(ctx.exception))
+        self.assertIn("daemon busy", str(ctx.exception))
+        self.assertIn("sbx daemon status", str(ctx.exception))
+        self.assertEqual(mock_run.call_args.kwargs["timeout"], 120)
+        mock_rm.assert_called_once()
+        self.assertTrue(mock_rm.call_args.args[0].startswith("sbx-preflight-"))
+
+    @patch("benchmark_core.docker_sandbox_runner._sbx_rm", return_value=(True, None))
+    @patch("benchmark_core.docker_sandbox_runner.subprocess.run")
+    @patch("benchmark_core.docker_sandbox_runner.shutil.which", return_value="/usr/bin/sbx")
     def test_check_sandbox_codex_success(self, _which, mock_run, _rm):
         # 1: create probe, 2: codex --version, 3: mem_test (features list), 4: policy check api.openai.com, 5: policy check chatgpt.com, 6: policy check unauthorized, 7: policy check google.com
         mock_run.side_effect = [

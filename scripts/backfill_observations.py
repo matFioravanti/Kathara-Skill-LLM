@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from benchmark_core.aut_observation import observe
 from benchmark_core.run_metrics import load_jsonl
-from benchmark_core.aggregation import aggregate
+from benchmark_core.aggregation import aggregate, validate_report_destination
 
 
 def main():
@@ -33,8 +33,8 @@ def main():
     if args.dry_run:
         return
     # Backup before the first write; restore all affected files if aggregation fails.
-    outputs = [args.output / x for x in ('runs.csv', 'checks.csv', 'summary.csv', 'benchmark.xlsx')]
-    originals = {p: p.read_bytes() if p.exists() else None for p in [*updates, *outputs]}
+    validate_report_destination(args.output)
+    originals = {p: p.read_bytes() for p in updates}
     try:
         for path, data in updates.items():
             with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as f:
@@ -44,11 +44,10 @@ def main():
         aggregate(args.runs, args.output)
     except BaseException:
         for path, data in originals.items():
-            if data is None:
-                path.unlink(missing_ok=True)
-            else:
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_bytes(data)
+            with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as f:
+                f.write(data)
+                temp = f.name
+            os.replace(temp, path)
         raise
     print(f'CSV e workbook rigenerati in {args.output}')
 

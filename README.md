@@ -167,7 +167,7 @@ Il runner `scripts/run_benchmark.py` può delegare all'interfaccia attuale usand
 
 Ogni run ha la propria directory sotto `runs/<experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/` e conserva, tra gli altri, `manifest.json`, `input/lab/`, `input/prompt.md`, `lab/`, i log dell'agente e `evaluation/correction.yaml`.
 
-L'aggregazione produce `results/runs.csv`, `results/checks.csv`, `results/summary.csv` e `results/benchmark.xlsx`. Lo stato dell'esecuzione (`pipeline_state`) va distinto dall'esito funzionale (`task_success`): una run `COMPLETED` può correttamente avere `task_success: false`.
+L'aggregazione produce i report in `results/<experiment_id>/`. Lo stato dell'esecuzione (`pipeline_state`) va distinto dall'esito funzionale (`task_success`): una run `COMPLETED` può correttamente avere `task_success: false`.
 
 ## Estensioni future
 
@@ -292,7 +292,7 @@ Do not set `OPENAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY`, or `INSPECT_EVAL
 
 Each agent has a dedicated configuration file:
 
-* `benchmark.yaml` — **Codex** configuration (`gpt-5.6-terra`, reasoning effort `low`)
+* `benchmark.yaml` — **Codex** configuration (`gpt-6.1-sol`, reasoning effort `ultra`)
 * `benchmark_antigravity.yaml` — **Antigravity** configuration (`gemini-3.8-flash`, reasoning effort `low`)
 
 The active agent is defined by `aut.agent` in the configuration file. The `--agent` CLI flag acts as a strict consistency check: it must match `aut.agent` in the YAML, otherwise the command is rejected.
@@ -501,14 +501,13 @@ For scientific use, inspect the raw `stderr.log` trace and response IDs alongsid
 
 ```bash
 python scripts/aggregate_results.py
-python scripts/analyze_results.py
+python scripts/aggregate_results.py --experiment thesis_final
+python scripts/analyze_results.py --results results/thesis_final
 ```
 
-The aggregator processes all `evaluation/metrics.json` files and checker reports in `runs/`. It produces:
-- `results/runs.csv`: One row per run detailing identifiers, configuration, status, pass rate, timings, token counts, and correction digests.
-- `results/checks.csv`: One row per individual checker test assertion.
-- `results/summary.csv`: Aggregated statistics grouped by experiment, scenario, prompt type, skill mode, and model.
-- `results/benchmark.xlsx`: Formatted Excel workbook containing `Runs`, `Checks`, and `Summary` sheets with grouped rows, filters, and custom column styling.
+The aggregator processes `evaluation/metrics.json` and checker reports in `runs/`. Reports are separated under `results/<experiment_id>/` and refreshed after each run or reevaluation. Each folder contains `runs.csv`, `checks.csv`, `summary.csv`, and `benchmark.xlsx`. Check rows retain their primary category, subcategory, DNS record type, classification source and result; the summary also retains technical and checker error categories. Large workbooks are streamed and sheets exceeding Excel's row limit are split.
+
+Previous generations remain in `.generations`, with `current` identifying the published generation. Checks include duplicate and partial physical attempts: consult `duplicates.json` and the coverage fields before interpreting counts. Aggregation can take time for large labs.
 
 ## Smoke Check
 
@@ -527,9 +526,9 @@ The smoke test runs statically without invoking LLM models or launching containe
 
 ## Supported Agents
 
-| Agent | CLI / Tool | Config File | Verified Model | Authentication / Execution Backend |
+| Agent | CLI / Tool | Config File | Configured Model | Authentication / Execution Backend |
 |---|---|---|---|---|
-| Codex | `codex` / `sbx` | `benchmark.yaml` | `gpt-5.6-terra` | Local ChatGPT login (Host CLI) / Docker Sandbox (`sbx` OAuth proxy) |
+| Codex | `codex` / `sbx` | `benchmark.yaml` | `gpt-6.1-sol` | Local ChatGPT login (Host CLI) / Docker Sandbox (`sbx` OAuth proxy) |
 | Antigravity | `agy` | `benchmark_antigravity.yaml` | `gemini-3.8-flash` | Local Google login (Host CLI) |
 
 Both agents operate on the same principle: the agent configures lab files inside an isolated workspace, and Kathara Lab Checker deterministically evaluates the canonical correction on the resulting lab without LLM involvement in evaluation.
