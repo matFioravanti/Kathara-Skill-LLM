@@ -1,104 +1,128 @@
 #!/bin/sh
-# COST266 node 1: Athens (r_athens)
-# IP link 10.100.0.0/24 suddiviso in /30; loopback 10.200.0.0/24.
-# Script rigenerato deterministicamente dal JSON COST266.
+# COST266 European backbone | r_athens | static IPv4 routing
+# Reconstructed from the working COST266 topology and verified against correction.yaml.
 set -eu
-sysctl -w net.ipv4.ip_forward=1 >/dev/null
-sysctl -w net.ipv4.conf.all.rp_filter=0 >/dev/null
-sysctl -w net.ipv4.conf.default.rp_filter=0 >/dev/null
-ip -4 addr replace 10.200.0.2/32 dev lo
-ip -4 addr replace 10.100.0.17/30 dev eth0 # link to r_palermo
-ip -4 addr replace 10.100.0.21/30 dev eth1 # link to r_sofia
-ip -4 addr replace 10.100.0.25/30 dev eth2 # link to r_zagreb
+exec > /tmp/cost266-r_athens-startup.log 2>&1
+echo "[COST266] START r_athens"
 
-# Routing statico per ogni rete WAN remota e per le loopback remote.
-ip -4 route replace 10.100.0.0/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.4/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.8/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.12/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.28/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.32/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.36/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.40/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.44/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.48/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.52/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.56/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.60/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.64/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.68/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.72/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.76/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.80/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.84/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.88/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.92/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.96/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.100/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.104/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.108/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.112/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.116/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.120/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.124/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.128/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.132/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.136/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.140/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.144/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.148/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.152/30 via 10.100.0.22 dev eth1
-ip -4 route replace 10.100.0.156/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.160/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.164/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.168/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.172/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.176/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.180/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.184/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.188/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.192/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.196/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.200/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.204/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.208/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.212/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.216/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.100.0.220/30 via 10.100.0.18 dev eth0
-ip -4 route replace 10.100.0.224/30 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.1/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.3/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.4/32 via 10.100.0.22 dev eth1
-ip -4 route replace 10.200.0.5/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.6/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.7/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.8/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.9/32 via 10.100.0.22 dev eth1
-ip -4 route replace 10.200.0.10/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.11/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.12/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.13/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.14/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.15/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.16/32 via 10.100.0.22 dev eth1
-ip -4 route replace 10.200.0.17/32 via 10.100.0.22 dev eth1
-ip -4 route replace 10.200.0.18/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.19/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.20/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.21/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.22/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.23/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.24/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.25/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.26/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.27/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.28/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.29/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.30/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.31/32 via 10.100.0.22 dev eth1
-ip -4 route replace 10.200.0.32/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.33/32 via 10.100.0.18 dev eth0
-ip -4 route replace 10.200.0.34/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.35/32 via 10.100.0.22 dev eth1
-ip -4 route replace 10.200.0.36/32 via 10.100.0.26 dev eth2
-ip -4 route replace 10.200.0.37/32 via 10.100.0.18 dev eth0
+# Apply all interface addresses using one iproute2 invocation.
+ip -4 -batch - <<'COST266_ADDRESSES'
+address replace 10.200.0.2/32 dev lo
+address replace 10.100.0.17/30 dev eth0
+address replace 10.100.0.21/30 dev eth1
+address replace 10.100.0.25/30 dev eth2
+COST266_ADDRESSES
+
+# Forwarding is enabled by lab.conf; try to enforce it here as well.
+if [ "$(cat /proc/sys/net/ipv4/ip_forward)" != "1" ]; then
+  if ! sysctl -q -w net.ipv4.ip_forward=1; then
+    echo "[COST266] WARNING: cannot enable IPv4 forwarding from startup"
+  fi
+fi
+# Disable strict reverse-path filtering, including the already-created eth interfaces.
+for flag in /proc/sys/net/ipv4/conf/*/rp_filter; do
+  [ -e "$flag" ] || continue
+  if ! printf "0\n" > "$flag"; then
+    echo "[COST266] WARNING: cannot disable rp_filter on $flag"
+  fi
+done
+
+# Apply all original static routes as one atomic batch of iproute2 commands.
+# ip -batch exits non-zero if applying a route fails; the log identifies the failed line.
+ip -4 -batch - <<'COST266_ROUTES'
+route replace 10.100.0.0/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.4/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.8/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.12/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.28/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.32/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.36/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.40/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.44/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.48/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.52/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.56/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.60/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.64/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.68/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.72/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.76/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.80/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.84/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.88/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.92/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.96/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.100/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.104/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.108/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.112/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.116/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.120/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.124/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.128/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.132/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.136/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.140/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.144/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.148/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.152/30 via 10.100.0.22 dev eth1
+route replace 10.100.0.156/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.160/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.164/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.168/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.172/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.176/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.180/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.184/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.188/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.192/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.196/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.200/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.204/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.208/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.212/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.216/30 via 10.100.0.26 dev eth2
+route replace 10.100.0.220/30 via 10.100.0.18 dev eth0
+route replace 10.100.0.224/30 via 10.100.0.26 dev eth2
+route replace 10.200.0.1/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.3/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.4/32 via 10.100.0.22 dev eth1
+route replace 10.200.0.5/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.6/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.7/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.8/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.9/32 via 10.100.0.22 dev eth1
+route replace 10.200.0.10/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.11/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.12/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.13/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.14/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.15/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.16/32 via 10.100.0.22 dev eth1
+route replace 10.200.0.17/32 via 10.100.0.22 dev eth1
+route replace 10.200.0.18/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.19/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.20/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.21/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.22/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.23/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.24/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.25/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.26/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.27/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.28/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.29/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.30/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.31/32 via 10.100.0.22 dev eth1
+route replace 10.200.0.32/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.33/32 via 10.100.0.18 dev eth0
+route replace 10.200.0.34/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.35/32 via 10.100.0.22 dev eth1
+route replace 10.200.0.36/32 via 10.100.0.26 dev eth2
+route replace 10.200.0.37/32 via 10.100.0.18 dev eth0
+COST266_ROUTES
+
+echo "[COST266] READY r_athens: 4 IPv4 addresses, 90 static routes"
+if [ "$(cat /proc/sys/net/ipv4/ip_forward)" != "1" ]; then
+  echo "[COST266] WARNING: IPv4 forwarding remains disabled"
+fi
