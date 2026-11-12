@@ -178,11 +178,14 @@ def read_gate_metrics(run: Path):
     return {field: None for field in FIELDS}
 
 
-def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_factory=None):
+def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_factory=None,
+                      writable_phase=None, timeout_provider=None):
     """Ordinary-run recovery_v1 orchestration; only missing reads trigger recovery.
 
     Technical, isolation, integrity and continuity errors always fail closed.
     Fallback proves delivery of exact input bytes, never autonomous reading.
+    writable_phase(session) optionally owns several functional turns, inside
+    the same verified writable environment. Default ordinary runs are unchanged.
     """
     import hashlib
     import tempfile
@@ -219,7 +222,7 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
                 raise SkillGateError('skill_hash_mismatch: canonical source changed: '+skill)
     def turn(directory,prompt):
         events,result=session.turn(prompt=prompt,directory=logs/directory,
-                                   timeout=config.data['benchmark']['timeout_seconds'])
+                                   timeout=timeout_provider() if timeout_provider else config.data['benchmark']['timeout_seconds'])
         record['skill_gate_session_id']=session.thread_id; record['skill_gate_session_count']=1
         record['skill_gate_context_continuity_verified']=True
         return events,result
@@ -307,8 +310,11 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
                 session.create(readonly=False)
                 record['skill_gate_blocked']=False
                 state('write_phase_running')
-                _,result=turn('phase_b',original_prompt.encode('utf-8'))
-                record['skill_gate_write_seconds']=result['duration_seconds']
+                if writable_phase is None:
+                    _,result=turn('phase_b',original_prompt.encode('utf-8'))
+                    record['skill_gate_write_seconds']=result['duration_seconds']
+                else:
+                    writable_phase(session)
                 state('completed')
             finally:
                 session.close()
@@ -325,7 +331,9 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
         initial=[r for p,r in turns if p.name=='phase_a']
         retries=[r for p,r in turns if p.parent.name=='retries']
         fallback=[r for p,r in turns if p.name=='fallback']
-        writable=[r for p,r in turns if p.name=='phase_b']
+        def protected_turn(path):
+            return path == logs/'phase_a' or path == logs/'fallback' or path.parent == logs/'retries'
+        writable=[r for p,r in turns if not protected_turn(p)]
         record['skill_gate_initial_read_seconds']=sum(r['duration_seconds'] for r in initial) if initial else None
         record['skill_gate_retry_seconds']=sum(r['duration_seconds'] for r in retries) if retries else None
         record['skill_gate_fallback_seconds']=sum(r['duration_seconds'] for r in fallback) if fallback else None
@@ -338,8 +346,8 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
                            ('fallback',[t for t in turns if t[0].name=='fallback'])]:
             for kind in ('input','output'):
                 record[f'skill_gate_{name}_{kind}_tokens']=sum_usage(parts,kind+'_tokens')
-        protected=[t for t in turns if t[0].name!='phase_b']
-        writable=[t for t in turns if t[0].name=='phase_b']
+        protected=[t for t in turns if protected_turn(t[0])]
+        writable=[t for t in turns if not protected_turn(t[0])]
         for kind in ('input','output'):
             record[f'skill_gate_{kind}_tokens']=sum_usage(protected,kind+'_tokens')
             record[f'write_phase_{kind}_tokens']=sum_usage(writable,kind+'_tokens')
@@ -350,7 +358,8 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
             for line in (path/'events.jsonl').read_text(encoding='utf-8',errors='replace').splitlines():
                 try:
                     event=json.loads(line)
-                    phase=str(path.relative_to(logs))
+                    import os
+                    phase=os.path.relpath(path,logs)
                     event['_skill_gate_phase']=phase
                     # Codex restarts item numbering on every resumed turn.
                     # Keep raw phase logs unchanged; namespace compatibility IDs

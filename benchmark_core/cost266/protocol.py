@@ -17,6 +17,7 @@ from ..workspace import manifest, tree_hash
 STRATEGIES = ("one_shot", "incremental")
 STAGES = ("root_hints", "tlds", "countries", "cities", "subzones_records", "resolvers_clients")
 VERSION = "cost266_incremental_no_feedback_v1"
+CONTINUOUS_VERSION = "cost266_incremental_continuous_session_v2"
 
 
 def digest(value: bytes) -> str:
@@ -57,6 +58,7 @@ class Spec:
     total_timeout: int
     checker_timeout: int
     source: Path
+    protocol: str = VERSION
 
 
 @dataclass(frozen=True)
@@ -92,7 +94,7 @@ class Cell:
 def load_spec(path: Path, root: Path) -> Spec:
     data = yaml.safe_load(safe_path(path).read_text())
     required = {'experiment', 'dataset', 'strategies', 'prompt_types', 'skill_modes', 'repetitions', 'budgets', 'protocol'}
-    if not isinstance(data, dict) or set(data) != required or data['protocol'] != VERSION:
+    if not isinstance(data, dict) or set(data) != required or data['protocol'] not in (VERSION, CONTINUOUS_VERSION):
         raise ValueError('Configurazione COST266 non valida o protocollo non supportato')
     if not isinstance(data['experiment'], dict) or set(data['experiment']) != {'id'}:
         raise ValueError('experiment deve contenere solo id')
@@ -116,7 +118,7 @@ def load_spec(path: Path, root: Path) -> Spec:
         raise ValueError('dataset deve risiedere sotto experiments/')
     return Spec(data['experiment']['id'], dataset, tuple(data['strategies']), tuple(data['prompt_types']),
                 tuple(data['skill_modes']), data['repetitions'], budgets['stage_seconds'], budgets['total_seconds'],
-                budgets['checker_seconds'], path)
+                budgets['checker_seconds'], path, data['protocol'])
 
 
 def cells(spec: Spec):
@@ -127,7 +129,7 @@ def cells(spec: Spec):
                     yield Cell(spec.experiment_id, prompt, strategy, mode, repetition)
 
 
-def validate_backend(config, mode: str):
+def validate_backend(config, mode: str, *, strategy=None, protocol=VERSION):
     agent = config.data['aut']['agent']
     backend = config.data.get('docker_sandbox', {}).get('execution_backend')
     if backend not in (None, 'host', 'codex_cli', 'antigravity_cli', 'docker_sandbox'):
@@ -136,7 +138,13 @@ def validate_backend(config, mode: str):
         raise ValueError('Backend/agente/Skill incompatibili')
     if (agent=='codex' and backend=='antigravity_cli') or (agent=='antigravity' and backend=='codex_cli'):
         raise ValueError('Backend/agente incompatibili: nessun fallback')
+    if protocol == CONTINUOUS_VERSION and strategy == 'incremental':
+        if agent != 'codex' or backend != 'docker_sandbox':
+            raise ValueError('La sessione continua v2 richiede Codex e docker_sandbox: nessun fallback')
     if agent == 'codex' and configured_protocol(config) == PROTOCOL and mode_details(mode).forced_skills:
+        from ..skill_gate import recovery_enabled
+        if protocol == CONTINUOUS_VERSION and backend == 'docker_sandbox' and recovery_enabled(config):
+            return
         raise ValueError('enforced_read_v1 usa più chiamate/sandbox: incompatibile con una chiamata AUT per fase. '
                          'Selezionare esplicitamente un config con explicit_read_v2 oppure no_skill/auto; nessun downgrade automatico.')
 

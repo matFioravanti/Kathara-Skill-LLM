@@ -11,7 +11,11 @@ from .protocol import safe_path
 from .runner import read_json, verify_run
 
 EXTRA = ['strategy','stage_count','completed_stages','aut_calls','sandbox_count','cumulative_agent_seconds',
-         'cumulative_input_tokens','cumulative_output_tokens','final_pass_rate','pairing_sha256']
+         'cumulative_input_tokens','cumulative_output_tokens','final_pass_rate','pairing_sha256',
+         'protocol_version','thread_id','sandbox_id','sandbox_name','session_count','writable_sandbox_count',
+         'protected_sandbox_count','context_continuity_verified','session_cleanup_ok','session_wall_seconds',
+         'functional_turns','gate_turns','gate_agent_seconds','gate_input_tokens','gate_output_tokens',
+         'functional_input_tokens','functional_output_tokens','functional_agent_seconds']
 PROPERTY_TYPES = ('soa','authority','apex_ns','ns_address','delegation_glue','record','client_resolver','client_resolution')
 PROPERTY_COLUMNS = [f'{kind}_{field}' for kind in PROPERTY_TYPES for field in ('passed','observed','expected','pass_rate','coverage_complete')]
 
@@ -43,6 +47,7 @@ def aggregate_cost266(root: Path, output: Path):
         # riconcilia i conteggi con i CSV reali del checker.
         check_rows = _check_records(run,record)
         record.update({key:metrics.get(key,metadata.get(key)) for key in EXTRA})
+        record['protocol_version'] = record.get('protocol_version') or metadata['conditions']['protocol']
         for kind in PROPERTY_TYPES:
             property_metrics = (metrics.get('dns_property_checks') or {}).get(kind) or {}
             record.update({f'{kind}_{field}':property_metrics.get(field) for field in ('passed','observed','expected','pass_rate','coverage_complete')})
@@ -59,13 +64,23 @@ def aggregate_cost266(root: Path, output: Path):
                 'agent_seconds':item['timing']['agent_seconds'],'wall_seconds':item['timing']['total_seconds'],
                 'input_tokens':item['tokens']['input'],'output_tokens':item['tokens']['output'],
                 'reasoning_tokens':item['tokens']['reasoning'],'cached_input_tokens':item['tokens']['cached_input'],
+                'cache_write_input_tokens':item['tokens']['cache_write_input'],'total_tokens':item['tokens']['total'],
+                'aut_calls':int(item.get('aut_call_observed',False)),
                 'skill_gate_status':item.get('skill_gate_status'),'prompt_sent_sha256':stage.get('prompt_sent_sha256'),
                 'static_validation_seconds':item.get('static_validation_seconds'),
                 'static_regressions':';'.join(item.get('static_regressions') or []),
+                'thread_id':stage.get('thread_id'),'sandbox_id':stage.get('sandbox_id'),
+                'sandbox_name':stage.get('sandbox_name'),'context_continuity_verified':stage.get('context_continuity_verified'),
+                'stage_completed':stage.get('stage_completed'),'stage_prompt_sha256':stage.get('stage_prompt_sha256'),
+                'checkpoint_sha256':item.get('checkpoint_sha256'),'checkpoint_bytes':item.get('checkpoint_bytes'),
+                'protocol_version':metadata.get('protocol_version') or metadata['conditions']['protocol'],
                 'error':stage.get('pipeline_error')})
     summaries = []
     for strategy in ('one_shot','incremental'):
-        summaries += [{**row,'strategy':strategy} for row in _summary_records([r for r in records if r['strategy']==strategy])]
+        for version in sorted({r.get('protocol_version') or r['_manifest']['conditions']['protocol'] for r in records}):
+            summaries += [{**row,'strategy':strategy,'protocol_version':version} for row in
+                _summary_records([r for r in records if r['strategy']==strategy and
+                    (r.get('protocol_version') or r['_manifest']['conditions']['protocol'])==version])]
     pairs = []
     grouped = {}
     for record in records:
@@ -83,7 +98,7 @@ def aggregate_cost266(root: Path, output: Path):
         pairs.append(row)
     frames = (pd.DataFrame(records,columns=list(dict.fromkeys(RUN_COLUMNS+EXTRA+PROPERTY_COLUMNS))),
               pd.DataFrame(checks,columns=CHECK_COLUMNS+['strategy']),
-              pd.DataFrame(summaries,columns=SUMMARY_COLUMNS+['strategy']))
+              pd.DataFrame(summaries,columns=SUMMARY_COLUMNS+['strategy','protocol_version']))
     extras = {'Stages':pd.DataFrame(phases),'Pairs':pd.DataFrame(pairs)}
     output.mkdir(parents=True,exist_ok=True)
     for name, frame in [*zip(('runs','checks','summary'),frames),('stages',extras['Stages']),('pairs',extras['Pairs'])]:

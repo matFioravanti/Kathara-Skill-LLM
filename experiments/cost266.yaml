@@ -1,12 +1,12 @@
 experiment:
-  id: cost266
+  id: cost266_continuous_v2
 dataset: experiments/cost266_data
-protocol: cost266_incremental_no_feedback_v1
+protocol: cost266_incremental_continuous_session_v2
 strategies: [one_shot, incremental]
 prompt_types: [T1, T2, T3, T4, T5, T6]
-# Il benchmark.yaml corrente usa recovery_v1: le modalità forzate richiedono
-# più chiamate/sandbox e sono rifiutate da questo protocollo single-call.
-# Tutte le cinque modalità restano selezionabili con config esplicito compatibile.
+# La v2 ammette anche le modalità forzate con recovery_v1: un gate iniziale,
+# poi una sandbox scrivibile e un thread per tutti i sei turni funzionali.
+# Selezione attuale conservata; aggiungere qui altre modalità per pianificarle.
 skill_modes: [no_skill, auto]
 repetitions: 1
 budgets:

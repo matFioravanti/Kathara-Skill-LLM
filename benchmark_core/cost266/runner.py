@@ -22,7 +22,7 @@ from ..skill_modes import mode_details
 from ..workspace import (component_versions, copy_lab, manifest, manifest_changes, manifest_hash,
                          tree_hash, utc_now, write_json)
 from .protocol import (Cell, Spec, STAGES, VERSION, clean_lab, digest, fingerprint,
-                       prompts, safe_path, validate_backend)
+                       prompts, safe_path, validate_backend, CONTINUOUS_VERSION)
 
 
 def read_json(path: Path) -> dict:
@@ -55,13 +55,13 @@ def timed_config(config, timeout: int):
 
 
 def conditions(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict) -> dict:
-    validate_backend(config, cell.skill_mode)
+    validate_backend(config, cell.skill_mode, strategy=cell.strategy, protocol=spec.protocol)
     details = mode_details(cell.skill_mode)
     paths = skill_paths(config, details.available_skills)
     # Antigravity usa la Skill DNS anche in no_skill: mantiene la semantica standard.
     if config.data['aut']['agent'] == 'antigravity':
         paths = skill_paths(config, ('kathara-dns',))
-    return {'protocol': VERSION, 'identity': cell.relative.as_posix(),
+    return {'protocol': spec.protocol, 'identity': cell.relative.as_posix(),
             'component_versions': component_versions(), 'repository_revision': _revision(config.root),
             'implementation_sha256': fingerprint({p.name:digest(p.read_bytes()) for p in sorted(Path(__file__).parent.glob('*.py'))}),
             'baseline_sha256': preparation['baseline_sha256'], 'correction_sha256': preparation['correction_sha256'],
@@ -174,6 +174,23 @@ def verify_run(run: Path, expected: dict) -> tuple[dict, list[dict]]:
                 raise ValueError('Artefatti fase modificati')
         completed.append(record)
         previous = record['checkpoint_sha256']
+    if expected.get('protocol') == CONTINUOUS_VERSION and metadata.get('strategy')=='incremental':
+        identities = set()
+        for step in list(_step_dirs(run,len(expected['prompts'])))[:len(completed)]:
+            record = read_json(step/'completed.json')
+            stage = read_json(step/record['attempt']/'manifest.json')
+            identity = (stage.get('thread_id'),stage.get('sandbox_id'),stage.get('sandbox_name'))
+            if (not all(isinstance(v,str) and v for v in identity) or stage.get('stage_completed') is not True
+                    or stage.get('context_continuity_verified') is not True or stage.get('session_count')!=1):
+                raise ValueError('Evidenza di continuità fase non valida')
+            identities.add(identity)
+        if len(identities)>1:
+            raise ValueError('Thread o sandbox differenti tra checkpoint v2')
+        if metadata.get('pipeline_state')=='COMPLETED' and (
+                metadata.get('session_cleanup_ok') is not True or metadata.get('context_continuity_verified') is not True
+                or metadata.get('session_count')!=1 or metadata.get('writable_sandbox_count')!=1
+                or (metadata.get('thread_id'),metadata.get('sandbox_id'),metadata.get('sandbox_name')) not in identities):
+            raise ValueError('Sessione continua COMPLETED priva di continuità/cleanup verificati')
     if metadata.get('pipeline_state') == 'COMPLETED':
         if len(completed) != len(expected['prompts']) or tree_hash(run/'lab') != previous:
             raise ValueError('Run COMPLETED priva del laboratorio finale valido')
@@ -195,11 +212,18 @@ def plan(config, spec, cell, inventory, preparation, *, resume=False, rerun=Fals
         if rerun:
             if len(completed) != len(expected['prompts']):
                 raise ValueError('AUT incompleto: impossibile rivalutare')
+            if spec.protocol==CONTINUOUS_VERSION and cell.strategy=='incremental' and metadata.get('session_cleanup_ok') is not True:
+                raise ValueError('Cleanup sessione non verificato: rivalutazione non consentita')
             return 'RECHECK', run
         if not resume:
             raise ValueError(f'Run già presente: {run}; usare --resume o un nuovo experiment_id')
         if metadata['pipeline_state'] == 'COMPLETED':
             return 'SKIP', run
+        if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental':
+            if len(completed) < len(expected['prompts']):
+                raise ValueError('Sessione continua terminata: --resume AUT richiede la stessa sandbox/thread; usare un nuovo experiment_id')
+            if metadata.get('session_cleanup_ok') is not True:
+                raise ValueError('Cleanup sessione non verificato: rivalutazione non consentita')
         # Nessun replay di un tentativo AUT che potrebbe essere stato interrotto:
         # si crea un nuovo tentativo preservando quello precedente.
         return 'RESUME', run
@@ -228,6 +252,63 @@ def collect_metrics(run: Path, metadata: dict, *, checker_outcome=None) -> dict:
     metrics['completed_stages'] = sum(p.exists() for p in (run/'steps').glob('*/completed.json'))
     metrics['aut_calls'] = sum(m.get('aut_call_observed',False) for m in stage_metrics)
     metrics['sandbox_count'] = sum(1 for path in attempts if (path.parents[1]/'logs/aut/sandbox_metadata.json').exists())
+    metrics['protocol_version'] = metadata.get('protocol_version') or metadata['conditions']['protocol']
+    if metrics['protocol_version'] == CONTINUOUS_VERSION:
+        metrics['functional_turns'] = metrics['aut_calls']
+        session_file = run/'logs/aut/continuous_session.json'
+        gate_turns = []
+        if session_file.exists():
+            session = read_json(session_file)
+            gate_turns = read_json(run/'logs/aut/gate_turn_metrics.json')['turns']
+            metrics.update({key:session.get(key) for key in (
+                'sandbox_name','sandbox_id','thread_id','session_count','sandbox_count',
+                'writable_sandbox_count','protected_sandbox_count','context_continuity_verified','session_wall_seconds')})
+            metrics['session_cleanup_ok'] = session['cleanup_ok']
+            metrics['timing']['sandbox_overhead_seconds'] = session['overhead_seconds']
+            for key in tokens:
+                tokens[key] = _sum_known([m['tokens'].get(key) for m in stage_metrics]+[t['tokens'].get(key) for t in gate_turns])
+            metrics['timing']['agent_seconds'] = _sum_known(
+                [m['timing']['agent_seconds'] for m in stage_metrics]+[t['agent_seconds'] for t in gate_turns])
+        else:
+            # One-shot v2 conserva run_aut e il gate ordinari. La metrica della
+            # singola fase include già i turni protetti: qui si separano, non si risommano.
+            from ..run_metrics import load_jsonl, codex_usage
+            from ..skill_gate import read_gate_metrics
+            threads = set()
+            environments = []
+            for path in attempts:
+                attempt = path.parents[1]
+                logs = attempt/'logs/aut'
+                for event in load_jsonl(logs/'events.jsonl'):
+                    if event.get('type')=='thread.started' and event.get('thread_id'):
+                        threads.add(event['thread_id'])
+                sandbox = read_json(logs/'sandbox_metadata.json') if (logs/'sandbox_metadata.json').exists() else {}
+                environments.extend(sandbox.get('environments') or ([sandbox] if sandbox else []))
+                gate = read_gate_metrics(attempt)
+                for part in [logs/'phase_a', *sorted((logs/'retries').glob('attempt_*')), logs/'fallback']:
+                    if (part/'result.json').exists():
+                        result = read_json(part/'result.json')
+                        gate_turns.append({'tokens':codex_usage([{'type':'turn.completed','usage':result.get('usage')}]),
+                                           'agent_seconds':result.get('duration_seconds')})
+            metrics.update(session_count=len(threads),thread_id=next(iter(threads)) if len(threads)==1 else None,
+                sandbox_count=len(environments),writable_sandbox_count=metrics['functional_turns'],
+                protected_sandbox_count=len(environments)-metrics['functional_turns'],
+                context_continuity_verified=len(threads)==1)
+        metrics['gate_turns'] = len(gate_turns)
+        metrics['aut_calls'] += len(gate_turns)
+        metrics['gate_agent_seconds'] = _sum_known([t['agent_seconds'] for t in gate_turns]) if gate_turns else 0
+        metrics['gate_input_tokens'] = _sum_known([t['tokens']['input'] for t in gate_turns]) if gate_turns else 0
+        metrics['gate_output_tokens'] = _sum_known([t['tokens']['output'] for t in gate_turns]) if gate_turns else 0
+        if session_file.exists():
+            metrics['functional_input_tokens'] = _sum_known([m['tokens']['input'] for m in stage_metrics])
+            metrics['functional_output_tokens'] = _sum_known([m['tokens']['output'] for m in stage_metrics])
+            metrics['functional_agent_seconds'] = _sum_known([m['timing']['agent_seconds'] for m in stage_metrics])
+        else:
+            for field,total,gate_value in (
+                ('functional_input_tokens',tokens['input'],metrics['gate_input_tokens']),
+                ('functional_output_tokens',tokens['output'],metrics['gate_output_tokens']),
+                ('functional_agent_seconds',metrics['timing']['agent_seconds'],metrics['gate_agent_seconds'])):
+                metrics[field] = total-gate_value if total is not None and gate_value is not None else None
     metrics['cumulative_agent_seconds'] = metrics['timing']['agent_seconds']
     metrics['cumulative_input_tokens'] = tokens['input']
     metrics['cumulative_output_tokens'] = tokens['output']
@@ -340,7 +421,7 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             'conditions':expected,'conditions_sha256':fingerprint(expected),'pairing_sha256':fingerprint(pairing),
             'source_lab_sha256':expected['baseline_sha256'],'input_lab_sha256':expected['baseline_sha256'],
             'correction_sha256':expected['correction_sha256'],'prompt_sha256':fingerprint(expected['prompts']),
-            'stage_count':len(sent),'active_seconds':0,'checker_seconds':0,'evaluation_revision':0,
+            'protocol_version':spec.protocol,'stage_count':len(sent),'active_seconds':0,'checker_seconds':0,'evaluation_revision':0,
             'started_at':utc_now(),'pipeline_state':'PENDING','aut_execution_success':None,
             'checker_execution_success':None,'task_success':None,'attempt_history':[]}
         for name,path in skill_paths(config,details.available_skills).items():
@@ -367,7 +448,7 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
     outcome = None
     def remaining():
         return spec.total_timeout - previous_active - (time.monotonic()-started)
-    try:
+    def execute_stages(continuous=None):
         for index in range(len(completed),len(sent)):
             if rerun:
                 raise ValueError('Rivalutazione non può avviare AUT')
@@ -380,7 +461,9 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             for name in ('input','logs/aut','evaluation','results'):
                 (attempt/name).mkdir(parents=True,exist_ok=True)
             source = run/'input/lab' if index == 0 else run/'steps'/f'{index:02d}'/'checkpoint'
-            copy_lab(source,attempt/'input/lab'); copy_lab(source,attempt/'lab')
+            copy_lab(source,attempt/'input/lab')
+            if continuous is None:
+                copy_lab(source,attempt/'lab')
             initial = clean_lab(attempt/'input/lab')
             stage_id = cell.run_id + f'__stage{index+1:02d}__attempt{number:03d}'
             stage_metadata = {**metadata, 'run_id':stage_id,'parent_run_id':cell.run_id,'stage_index':index+1,
@@ -392,14 +475,20 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             write_json(run/'manifest.json',metadata)
             stage_started = time.monotonic()
             try:
-                run_aut(timed_config(config,min(spec.stage_timeout,max(1,math.floor(remaining())))),
-                        SimpleNamespace(scenario_id='cost266'),attempt,config.data['aut']['agent'],sent[index],
-                        skill_mode=cell.skill_mode,run_id=stage_id)
+                timeout = min(spec.stage_timeout,max(1,math.floor(remaining())))
+                if continuous is None:
+                    run_aut(timed_config(config,timeout), SimpleNamespace(scenario_id='cost266'),
+                            attempt,config.data['aut']['agent'],sent[index],skill_mode=cell.skill_mode,run_id=stage_id)
+                else:
+                    continuous.turn(attempt,stage_id,sent[index],index+1,timeout)
                 if not (attempt/'logs/aut'/f'{stage_id}.eval').is_file():
                     raise RuntimeError('Log Inspect .eval mancante: fase non promossa a checkpoint')
                 actual_prompt = (attempt/'logs/aut/prompt_sent.md').read_bytes()
                 from ..skill_modes import execution_prompt
-                if config.data['aut']['agent']=='codex' and actual_prompt != execution_prompt(cell.skill_mode,sent[index]).encode():
+                from ..skill_gate import recovery_enabled
+                expected_prompt = (sent[index] if recovery_enabled(config) and mode_details(cell.skill_mode).forced_skills
+                                   else execution_prompt(cell.skill_mode,sent[index]))
+                if config.data['aut']['agent']=='codex' and actual_prompt != expected_prompt.encode():
                     raise RuntimeError('Prompt effettivamente inviato diverso dal protocollo')
                 if remaining() <= 0:
                     raise TimeoutError('Budget totale superato dopo AUT (cleanup incluso)')
@@ -417,17 +506,27 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
                 stage_metadata['static_regressions'] = validation['regressions']
                 write_json(attempt/'evaluation/static.json',validation)
                 copy_lab(attempt/'lab',step/'checkpoint')
-                stage_metadata.update(pipeline_state='COMPLETED',aut_execution_success=True)
+                stage_metadata['checkpoint_sha256'] = tree_hash(step/'checkpoint')
+                stage_metadata['checkpoint_bytes'] = sum(p.stat().st_size for p in (step/'checkpoint').rglob('*') if p.is_file())
+                stage_metadata.update(pipeline_state='COMPLETED',aut_execution_success=True,stage_completed=True)
             except BaseException as exc:
                 stage_metadata.update(pipeline_state='AUT_FAILED',aut_execution_success=False,pipeline_error=f'{type(exc).__name__}: {exc}')
                 raise
             finally:
+                if continuous is not None:
+                    stage_metadata.update(continuous.stage_state)
+                    stage_metadata['stage_completed'] = stage_metadata['pipeline_state']=='COMPLETED'
                 stage_metadata['stage_wall_seconds'] = time.monotonic()-stage_started
                 prompt_file = attempt/'logs/aut/prompt_sent.md'
                 stage_metadata['prompt_sent_sha256'] = digest(prompt_file.read_bytes()) if prompt_file.exists() else None
                 write_json(attempt/'manifest.json',stage_metadata)
                 metrics = make_metrics(attempt,stage_metadata,total_seconds=stage_metadata['stage_wall_seconds'],checker_seconds=None,checker_outcome=None)
                 metrics.update(aut_call_attempted=True,stage_index=index+1,attempt=number)
+                for field in ('thread_id','sandbox_id','sandbox_name','session_count','sandbox_count',
+                              'context_continuity_verified','stage_completed','stage_prompt_sha256'):
+                    if field in stage_metadata: metrics[field]=stage_metadata[field]
+                for field in ('checkpoint_sha256','checkpoint_bytes'):
+                    metrics[field] = stage_metadata.get(field)
                 metrics.update(static_validation_seconds=stage_metadata.get('static_validation_seconds'),
                                static_regressions=stage_metadata.get('static_regressions'))
                 invocation = read_json(attempt/'logs/aut/invocation.json') if (attempt/'logs/aut/invocation.json').is_file() else {}
@@ -446,12 +545,27 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
                          and ('logs' in p.relative_to(attempt).parts or 'evaluation' in p.relative_to(attempt).parts or p.name=='manifest.json')}
             record = {'input_sha256':manifest_hash(initial),'checkpoint_sha256':tree_hash(step/'checkpoint'),
                 'prompt_sha256':expected['prompts'][index],'attempt':str(attempt.relative_to(step)),
-                'artifacts':artifacts,'static_checks':validation['checks']}
+                'artifacts':artifacts,'static_checks':validation['checks'],
+                'checkpoint_bytes':sum(p.stat().st_size for p in (step/'checkpoint').rglob('*') if p.is_file())}
             write_json(step/'completed.json',record)
             completed.append(record)
             _replace_lab(step/'checkpoint',run/'lab')
             metadata['completed_stages'] = len(completed)
             write_json(run/'manifest.json',metadata)
+    continuous = None
+    try:
+        if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental' and not rerun and len(completed)<len(sent):
+            from .continuous import ContinuousAutSession
+            def turn_timeout():
+                if remaining()<1:
+                    raise TimeoutError('Budget totale esaurito nel gate')
+                return min(spec.stage_timeout,max(1,math.floor(remaining())))
+            continuous = ContinuousAutSession(config,run,cell.skill_mode,turn_timeout)
+            continuous.run_all(execute_stages)
+            if any(e['cleanup_ok'] is not True for e in continuous.environments):
+                raise RuntimeError('Cleanup della sessione continua non verificato')
+        elif len(completed)<len(sent):
+            execute_stages()
         metadata.update(aut_execution_success=True,pipeline_state='AUT_COMPLETED',final_lab_sha256=tree_hash(run/'lab'))
         if remaining() < 1 and not rerun:
             raise TimeoutError('Budget totale esaurito prima del checker finale')
@@ -465,6 +579,12 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
         if isinstance(exc,(KeyboardInterrupt,SystemExit)):
             raise
     finally:
+        if continuous is not None:
+            session_record = read_json(run/'logs/aut/continuous_session.json')
+            metadata.update({key:session_record.get(key) for key in (
+                'sandbox_name','sandbox_id','thread_id','session_count','sandbox_count',
+                'writable_sandbox_count','protected_sandbox_count','context_continuity_verified')})
+            metadata['session_cleanup_ok'] = session_record.get('cleanup_ok')
         metadata['active_seconds'] = previous_active + time.monotonic()-started
         metadata['completed_at'] = utc_now()
         if tree_hash(spec.dataset/'lab') != expected['baseline_sha256']:

@@ -496,3 +496,14 @@ def test_experiment_lock_excludes_second_launcher(case):
     with runner.experiment_lock(case.root,'test'):
         with pytest.raises(ValueError,match='già in esecuzione'):
             with runner.experiment_lock(case.root,'test'):pass
+
+
+def test_continuous_protocol_is_explicit_and_legacy_default_is_preserved(case):
+    from benchmark_core.cost266.protocol import CONTINUOUS_VERSION
+    assert case.spec.protocol==VERSION
+    data={'experiment':{'id':'cost266_continuous_v2'},'dataset':'experiments/data',
+          'protocol':CONTINUOUS_VERSION,'strategies':['one_shot','incremental'],
+          'prompt_types':['T1'],'skill_modes':['no_skill'],'repetitions':1,
+          'budgets':{'stage_seconds':10,'total_seconds':100,'checker_seconds':10}}
+    path=case.root/'continuous.yaml';path.write_text(yaml.safe_dump(data))
+    assert load_spec(path,case.root).protocol==CONTINUOUS_VERSION
