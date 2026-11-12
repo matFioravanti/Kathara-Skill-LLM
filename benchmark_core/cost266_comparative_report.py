@@ -5,6 +5,7 @@ from pathlib import Path
 import hashlib
 import json
 import math
+import os
 import re
 import statistics
 import zipfile
@@ -221,6 +222,7 @@ def _pair(a,b,kind,key):
 
 def compare(root, output, experiments=None):
     root=safe_path(Path(root).absolute());output=safe_path(Path(output).absolute())
+    root=Path(os.path.abspath(root));output=Path(os.path.abspath(output))
     if output.exists() or output==root or output.is_relative_to(root/'runs') or output.is_relative_to(root/'experiments'):
         raise ValueError('Output deve essere una nuova directory esterna alle run e agli asset')
     selected=set(experiments or [])

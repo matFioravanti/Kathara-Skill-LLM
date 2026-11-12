@@ -26,6 +26,7 @@ from benchmark_core.prompts import PROMPT_TYPES, resolve_prompt
 from benchmark_core.scenario_loader import discover_scenarios
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, validate_mode_sources
 from benchmark_core.task_catalog import TASK_LEVELS
+from benchmark_core.report_paths import general_experiment
 
 
 def _notify_benchmark_finished():
@@ -117,7 +118,7 @@ def main(argv=None):
             verify_skills(config, ("kathara-dns",))
         runs_root = config.root / "runs"
         report_output = (args.report_output or
-                         config.path(config.data["results"]["directory"]) / spec.experiment_id).resolve()
+                         general_experiment(config, spec.experiment_id)).resolve()
         if report_output == config.root or any(report_output.is_relative_to(config.root / name)
                                                for name in ('runs', 'scenarios', 'skills', 'prompt')):
             raise ValueError(f"Directory report non consentita: {report_output}")

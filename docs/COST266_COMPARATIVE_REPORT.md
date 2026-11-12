@@ -4,11 +4,13 @@ Il comando legge le osservazioni COST266 già presenti in `runs/` e scrive un
 report separato. Non esegue AUT, Docker, Kathara, checker o ricalcoli token.
 
 ```bash
-.venv/bin/python -B scripts/compare_cost266.py --output results/cost266_comparison
-.venv/bin/python -B scripts/compare_cost266.py --experiments cost266 cost266_continuous_v2 --output results/cost266_comparison_selected
+.venv/bin/python -B scripts/compare_cost266.py
+.venv/bin/python -B scripts/compare_cost266.py --experiments cost266 cost266_continuous_v2 --output results/cost266/comparisons/confronto_v1
 ```
 
-L'output deve essere una directory nuova, fuori da `runs/` ed `experiments/`.
+Senza `--output` la destinazione è `results/cost266/comparisons/comparison`;
+`--comparison-id` sceglie un altro nome. L'output deve essere una directory
+nuova, fuori da `runs/` ed `experiments/`.
 `--root /percorso/canonico` consente di analizzare un'altra radice contenente
 `runs/`. I nomi esperimento non sono fissi. Se la scoperta automatica non trova
 osservazioni, produce report vuoti con intestazioni; un esperimento richiesto

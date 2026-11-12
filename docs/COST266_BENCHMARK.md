@@ -1,5 +1,9 @@
 # COST266: selezione one-shot, incrementale isolato o continuo
 
+I report COST266 sono pubblicati in `results/cost266/experiments/<experiment_id>/`;
+i confronti usano `results/cost266/comparisons/<comparison_id>/`. Le run non
+cambiano percorso. Per rigenerazione e sicurezza vedere `RESULTS_LAYOUT.md`.
+
 Implementazione a partire dal commit `2f389f4f73d55f32ccba68c3f99f8e3727cb5e10`.
 Il protocollo `cost266_incremental_continuous_session_v2` usa una sola sandbox
 scrivibile e un solo thread Codex per i sei turni incrementali. L'esperimento

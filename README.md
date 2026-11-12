@@ -46,10 +46,10 @@ experiments/
 runs/
   <experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/
 results/
-  runs.csv
-  checks.csv
-  summary.csv
-  benchmark.xlsx
+  general/_legacy/
+  general/<experiment_id>/
+  cost266/experiments/<experiment_id>/
+  cost266/comparisons/<comparison_id>/
 ```
 
 Le cartelle `tasks/aster`, `tasks/aurora` e `tasks/meridian` possono rimanere vuote: sono riservate a correction specifiche da creare solo quando si deciderà di testare tali alberi. **Non copiare automaticamente la correction `base`**, perché gli altri alberi prevedono nomi di zone e assegnazioni di macchine differenti.
@@ -167,7 +167,7 @@ Il runner `scripts/run_benchmark.py` può delegare all'interfaccia attuale usand
 
 Ogni run ha la propria directory sotto `runs/<experiment_id>/<lab_id>/<dns_tree_id>/<task_level>/<prompt_type>/<skill_mode>/rNNN/` e conserva, tra gli altri, `manifest.json`, `input/lab/`, `input/prompt.md`, `lab/`, i log dell'agente e `evaluation/correction.yaml`.
 
-L'aggregazione produce i report in `results/<experiment_id>/`. Lo stato dell'esecuzione (`pipeline_state`) va distinto dall'esito funzionale (`task_success`): una run `COMPLETED` può correttamente avere `task_success: false`.
+L'aggregazione generale produce i report in `results/general/<experiment_id>/`. Lo stato dell'esecuzione (`pipeline_state`) va distinto dall'esito funzionale (`task_success`): una run `COMPLETED` può correttamente avere `task_success: false`.
 
 ## Estensioni future
 
@@ -502,10 +502,10 @@ For scientific use, inspect the raw `stderr.log` trace and response IDs alongsid
 ```bash
 python scripts/aggregate_results.py
 python scripts/aggregate_results.py --experiment thesis_final
-python scripts/analyze_results.py --results results/thesis_final
+python scripts/analyze_results.py --results results/general/thesis_final
 ```
 
-The aggregator processes `evaluation/metrics.json` and checker reports in `runs/`. Reports are separated under `results/<experiment_id>/` and refreshed after each run or reevaluation. Each folder contains `runs.csv`, `checks.csv`, `summary.csv`, and `benchmark.xlsx`. Check rows retain their primary category, subcategory, DNS record type, classification source and result; the summary also retains technical and checker error categories. Large workbooks are streamed and sheets exceeding Excel's row limit are split.
+The aggregator processes `evaluation/metrics.json` and checker reports in `runs/`. General reports are separated under `results/general/<experiment_id>/`, with legacy reports under `results/general/_legacy/`. COST266 reports use `results/cost266/experiments/<experiment_id>/`, and comparisons use `results/cost266/comparisons/<comparison_id>/`. Each general experiment folder contains `runs.csv`, `checks.csv`, `summary.csv`, and `benchmark.xlsx`. Check rows retain their primary category, subcategory, DNS record type, classification source and result; the summary also retains technical and checker error categories. Large workbooks are streamed and sheets exceeding Excel's row limit are split.
 
 Previous generations remain in `.generations`, with `current` identifying the published generation. Checks include duplicate and partial physical attempts: consult `duplicates.json` and the coverage fields before interpreting counts. Aggregation can take time for large labs.
 

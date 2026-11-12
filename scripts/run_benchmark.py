@@ -17,6 +17,7 @@ from benchmark_core.scenario_loader import discover_scenarios
 from benchmark_core.prompts import PROMPT_TYPES, missing_prompts
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, execute_skill_modes, mode_details
 from benchmark_core import terminal_ui
+from benchmark_core.report_paths import general_legacy
 
 
 def main() -> int:
@@ -57,7 +58,7 @@ def main() -> int:
     if args.rerun_correction and (args.check_skills or args.preflight):
         parser.error("--rerun-correction si usa con --scenario o --all, non con --check-skills/--preflight")
     config = load_config(args.config)
-    report_output = config.path(config.data['results']['directory']) / '_legacy'
+    report_output = general_legacy(config)
     validate_report_destination(report_output)
     if args.check_skills:
         for name, path in verify_skills(config).items():

@@ -91,7 +91,7 @@ def test_selector_executes_existing_engines_and_records_mode(selection,mode):
         assert not ScriptedSession.instances
     metrics=json.loads((manifests[0].parent/'evaluation/metrics.json').read_text())
     assert metrics['execution_mode']==mode
-    report=selection.root/'results'/metadata['experiment_id']
+    report=selection.root/'results/cost266/experiments'/metadata['experiment_id']
     for filename in ('runs.csv','checks.csv','summary.csv','stages.csv'):
         frame=pd.read_csv(report/filename)
         assert set(frame['execution_mode'])=={mode}
@@ -257,7 +257,7 @@ def test_pairs_report_marks_mismatched_conditions_non_comparable(selection):
     assert cli.main(arguments('one_shot'))==0
     selection.config.data['aut']['model']='other-model'
     assert cli.main(arguments('incremental_continuous'))==0
-    pairs=pd.read_csv(selection.root/'results/test_continuous/pairs.csv')
+    pairs=pd.read_csv(selection.root/'results/cost266/experiments/test_continuous/pairs.csv')
     assert len(pairs)==1 and not pairs['comparable_evaluated_pair'].iloc[0]
     assert 'model' in pairs['reason'].iloc[0]
     assert pd.isna(pairs['delta_final_pass_rate'].iloc[0])

@@ -18,6 +18,7 @@ from .checker_runner import category as checker_category
 from .checker_runner import checker_test_rows, parse_reports
 from .check_classification import classify_rows, PRIMARY, SUBCATEGORIES
 from .skill_gate import FIELDS as SKILL_GATE_FIELDS
+from .report_paths import is_cost266_manifest
 
 RECOVERY_MEAN_FIELDS = (
     'skill_gate_initial_read_seconds', 'skill_gate_retry_seconds', 'skill_gate_fallback_seconds',
@@ -953,6 +954,8 @@ def _aggregate_impl(runs: Path, results: Path, *, experiment_id: str | None = No
         if len(parts) not in (5, 8) or not re.fullmatch(r'r\d{3,}', parts[-2]):
             continue
         manifest = _read_json(manifest_path)
+        if is_cost266_manifest(manifest):
+            continue
         if experiment_id is not None and manifest.get('experiment_id') != experiment_id:
             raise ValueError(f"Esperimento incoerente nel manifest: {manifest_path}")
         if manifest.get('pipeline_state') == 'COMPLETED' and not (manifest_path.parent / 'evaluation/metrics.json').is_file():
@@ -974,11 +977,13 @@ def _aggregate_impl(runs: Path, results: Path, *, experiment_id: str | None = No
                 or not re.fullmatch(r"r\d{3,}", parts[-3])):
             continue
         run = metrics_path.parent.parent
-        metrics = _read_json(metrics_path)
         manifest_path = run / "manifest.json"
         if not manifest_path.is_file():
             raise ValueError(f"Manifest mancante per metriche esistenti: {manifest_path}")
         manifest = _read_json(manifest_path)
+        if is_cost266_manifest(manifest):
+            continue
+        metrics = _read_json(metrics_path)
         for key in ('timing', 'tokens', 'checker', 'internet', 'skill_compliance', 'llm_sampling'):
             if metrics.get(key) is not None and not isinstance(metrics[key], dict):
                 raise ValueError(f"Campo {key} non valido in {metrics_path}: atteso oggetto JSON")
@@ -1086,6 +1091,9 @@ def _aggregate_impl(runs: Path, results: Path, *, experiment_id: str | None = No
 
 
 def validate_report_destination(results: Path):
+    for path in (results,*results.parents):
+        if path.exists() and not path.is_dir():
+            raise ValueError(f'Percorso report occupato, preservato: {path}')
     names = ('runs.csv', 'checks.csv', 'summary.csv', 'benchmark.xlsx', 'duplicates.json', 'report_manifest.json')
     for name in names:
         path = results / name

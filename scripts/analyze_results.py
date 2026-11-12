@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from benchmark_core.analysis import analyze
 from benchmark_core.config import load_config
+from benchmark_core.report_paths import general_legacy
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
     parser.add_argument("--results", type=Path)
     args = parser.parse_args()
     config = load_config(args.config)
-    results = args.results or config.path(config.data["results"]["directory"])
+    results = args.results or general_legacy(config)
     output = analyze(results)
     print(output.to_string(index=False))
 

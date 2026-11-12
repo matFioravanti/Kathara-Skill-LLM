@@ -14,7 +14,7 @@ from benchmark_core.cost266.assets import load_dataset, prepare
 from benchmark_core.cost266.protocol import STRATEGIES, load_spec, EXECUTION_MODES, validate_backend
 from benchmark_core.cost266.selection import resolve_selection, describe_cell
 from benchmark_core.cost266.runner import execute, experiment_lock, plan
-from benchmark_core.cost266.reports import aggregate_cost266
+from benchmark_core.report_paths import cost266_experiment, publish_cost266_report, validate_cost266_report_destination
 from benchmark_core.preflight import preflight
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, validate_mode_sources
 from benchmark_core.prompts import PROMPT_TYPES
@@ -65,6 +65,9 @@ def main(argv=None):
             return 0
         with experiment_lock(config.root,spec.experiment_id):
             decisions = planned()
+            report_output = cost266_experiment(config,spec.experiment_id)
+            if any(action not in ('SKIP','MISSING') for _,action,_ in decisions):
+                validate_cost266_report_destination(report_output)
             if any(action in ('RUN','RESUME') for _,action,_ in decisions):
                 for mode in dict.fromkeys(c.skill_mode for c,action,_ in decisions if action in ('RUN','RESUME')):
                     if config.data['aut']['agent']=='codex':
@@ -76,8 +79,9 @@ def main(argv=None):
                     print(f'MISSING {cell.relative}')
                     continue
                 if action != 'SKIP':
+                    validate_cost266_report_destination(report_output)
                     run = execute(config,spec,cell,inventory,preparation,resume=args.resume,rerun=args.rerun_correction)
-                    aggregate_cost266(config.root,config.path(config.data['results']['directory'])/spec.experiment_id)
+                    publish_cost266_report(config.root,report_output)
                 metadata = json.loads((run/'manifest.json').read_text())
                 print(f'{cell.relative}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}')
                 failed |= metadata.get('task_success') is not True
