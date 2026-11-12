@@ -7,7 +7,8 @@ import pandas as pd
 from ..aggregation import (RUN_COLUMNS, CHECK_COLUMNS, SUMMARY_COLUMNS, _run_record,
                            _check_records, _summary_records, _atomic_csv, _write_excel)
 from ..workspace import write_json
-from .protocol import safe_path
+from .protocol import safe_path, execution_mode
+from .comparison import comparison_mismatches
 from .runner import read_json, verify_run
 
 EXTRA = ['strategy','stage_count','completed_stages','aut_calls','sandbox_count','cumulative_agent_seconds',
@@ -15,7 +16,8 @@ EXTRA = ['strategy','stage_count','completed_stages','aut_calls','sandbox_count'
          'protocol_version','thread_id','sandbox_id','sandbox_name','session_count','writable_sandbox_count',
          'protected_sandbox_count','context_continuity_verified','session_cleanup_ok','session_wall_seconds',
          'functional_turns','gate_turns','gate_agent_seconds','gate_input_tokens','gate_output_tokens',
-         'functional_input_tokens','functional_output_tokens','functional_agent_seconds']
+         'functional_input_tokens','functional_output_tokens','functional_agent_seconds','execution_mode',
+         'usage_semantics','usage_verified']
 PROPERTY_TYPES = ('soa','authority','apex_ns','ns_address','delegation_glue','record','client_resolver','client_resolution')
 PROPERTY_COLUMNS = [f'{kind}_{field}' for kind in PROPERTY_TYPES for field in ('passed','observed','expected','pass_rate','coverage_complete')]
 
@@ -48,23 +50,31 @@ def aggregate_cost266(root: Path, output: Path):
         check_rows = _check_records(run,record)
         record.update({key:metrics.get(key,metadata.get(key)) for key in EXTRA})
         record['protocol_version'] = record.get('protocol_version') or metadata['conditions']['protocol']
+        record['execution_mode'] = execution_mode(record['protocol_version'],metadata['strategy'])
+        record['usage_semantics'] = record.get('usage_semantics') or 'legacy_unverified'
+        record['usage_verified'] = record.get('usage_verified') is True
         for kind in PROPERTY_TYPES:
             property_metrics = (metrics.get('dns_property_checks') or {}).get(kind) or {}
             record.update({f'{kind}_{field}':property_metrics.get(field) for field in ('passed','observed','expected','pass_rate','coverage_complete')})
         record['run_directory'] = str(run.relative_to(root/'runs'))
         record['observation_selection'] = 'included' if record['_evaluated'] else 'unevaluated'
         records.append(record)
-        checks += [{**row,'strategy':metadata['strategy']} for row in check_rows]
+        checks += [{**row,'strategy':metadata['strategy'],'execution_mode':record['execution_mode']} for row in check_rows]
         for metric_path in sorted((run/'steps').glob('*/attempts/*/evaluation/metrics.json')):
             item = read_json(metric_path)
             stage = read_json(metric_path.parents[1]/'manifest.json')
             phases.append({'ID':stage['run_id'],'parent_run_id':metadata['run_id'],'strategy':metadata['strategy'],
+                'execution_mode':record['execution_mode'],
                 'prompt_type':metadata['prompt_type'],'skill_mode':metadata['skill_mode'],'replicate':metadata['replicate'],
                 'stage_index':item['stage_index'],'attempt':item['attempt'],'status':item['status'],
                 'agent_seconds':item['timing']['agent_seconds'],'wall_seconds':item['timing']['total_seconds'],
                 'input_tokens':item['tokens']['input'],'output_tokens':item['tokens']['output'],
                 'reasoning_tokens':item['tokens']['reasoning'],'cached_input_tokens':item['tokens']['cached_input'],
                 'cache_write_input_tokens':item['tokens']['cache_write_input'],'total_tokens':item['tokens']['total'],
+                'total_tokens_reported':item['tokens'].get('total_reported'),
+                'total_tokens_calculated':item['tokens'].get('total_calculated'),
+                'usage_semantics':item.get('usage_semantics','legacy_unverified'),
+                'usage_verified':item.get('usage_verified') is True,
                 'aut_calls':int(item.get('aut_call_observed',False)),
                 'skill_gate_status':item.get('skill_gate_status'),'prompt_sent_sha256':stage.get('prompt_sent_sha256'),
                 'static_validation_seconds':item.get('static_validation_seconds'),
@@ -78,27 +88,38 @@ def aggregate_cost266(root: Path, output: Path):
     summaries = []
     for strategy in ('one_shot','incremental'):
         for version in sorted({r.get('protocol_version') or r['_manifest']['conditions']['protocol'] for r in records}):
-            summaries += [{**row,'strategy':strategy,'protocol_version':version} for row in
+            summaries += [{**row,'strategy':strategy,'protocol_version':version,
+                'execution_mode':execution_mode(version,strategy),
+                'usage_verified':all(r.get('usage_verified') is True for r in records
+                    if r['strategy']==strategy and r['protocol_version']==version)} for row in
                 _summary_records([r for r in records if r['strategy']==strategy and
                     (r.get('protocol_version') or r['_manifest']['conditions']['protocol'])==version])]
     pairs = []
     grouped = {}
     for record in records:
-        grouped.setdefault(record['pairing_sha256'],{})[record['strategy']] = record
-    for key, group in sorted(grouped.items()):
+        logical=tuple(record.get(key) for key in ('experiment_id','lab_id','dns_tree_id','task_level',
+                                                 'prompt_type','skill_mode','replicate'))
+        grouped.setdefault(logical,{})[record['strategy']] = record
+    for key, group in sorted(grouped.items(),key=lambda item:str(item[0])):
         one, inc = group.get('one_shot'), group.get('incremental')
-        evaluated = bool(one and inc and one['_evaluated'] and inc['_evaluated'])
-        row = {'pairing_sha256':key,'one_shot_id':one['ID'] if one else None,
+        differences=comparison_mismatches(one['_manifest'],inc['_manifest']) if one and inc else []
+        evaluated = bool(one and inc and one['_evaluated'] and inc['_evaluated'] and not differences)
+        row = {'pairing_sha256':(one or inc)['pairing_sha256'],'one_shot_id':one['ID'] if one else None,
                'incremental_id':inc['ID'] if inc else None,'comparable_evaluated_pair':evaluated,
-               'reason':None if evaluated else 'Coppia mancante o valutazione finale incompleta'}
+               'one_shot_execution_mode':one['execution_mode'] if one else None,
+               'incremental_execution_mode':inc['execution_mode'] if inc else None,
+               'cross_protocol': bool(one and inc and one['protocol_version']!=inc['protocol_version']),
+               'reason': ('Condizioni non confrontabili: '+', '.join(differences)) if differences else
+                         None if evaluated else 'Coppia mancante o valutazione finale incompleta'}
         for field in ('final_pass_rate','cumulative_agent_seconds','cumulative_input_tokens','cumulative_output_tokens'):
             a,b = (one.get(field) if one else None),(inc.get(field) if inc else None)
             row['one_shot_'+field],row['incremental_'+field] = a,b
-            row['delta_'+field] = b-a if evaluated and a is not None and b is not None else None
+            token_valid = not field.endswith('_tokens') or bool(one and inc and one['usage_verified'] and inc['usage_verified'])
+            row['delta_'+field] = b-a if evaluated and token_valid and a is not None and b is not None else None
         pairs.append(row)
     frames = (pd.DataFrame(records,columns=list(dict.fromkeys(RUN_COLUMNS+EXTRA+PROPERTY_COLUMNS))),
-              pd.DataFrame(checks,columns=CHECK_COLUMNS+['strategy']),
-              pd.DataFrame(summaries,columns=SUMMARY_COLUMNS+['strategy','protocol_version']))
+              pd.DataFrame(checks,columns=CHECK_COLUMNS+['strategy','execution_mode']),
+              pd.DataFrame(summaries,columns=SUMMARY_COLUMNS+['strategy','protocol_version','execution_mode','usage_verified']))
     extras = {'Stages':pd.DataFrame(phases),'Pairs':pd.DataFrame(pairs)}
     output.mkdir(parents=True,exist_ok=True)
     for name, frame in [*zip(('runs','checks','summary'),frames),('stages',extras['Stages']),('pairs',extras['Pairs'])]:

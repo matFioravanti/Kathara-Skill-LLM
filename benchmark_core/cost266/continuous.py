@@ -184,6 +184,8 @@ class ContinuousAutSession:
             self.continuity = False
             raise
         finally:
+            from ..token_usage import normalize_session
+            normalize_session(self.session)
             # Il launcher può conservare anche un turno parziale prima di sollevare errore.
             raw = logs/'turn'
             if raw.exists():
@@ -244,12 +246,13 @@ class ContinuousAutSession:
             self._finish(error)
 
     def _finish(self, error):
+        from ..token_usage import effective_usage, save_session_aggregate
         gate_turns = []
         if self.session:
             for directory,result in self.session.turns:
                 if directory == self.logs/'phase_a' or directory == self.logs/'fallback' or directory.parent == self.logs/'retries':
                     gate_turns.append({'path':str(directory.relative_to(self.run)),
-                        'tokens':codex_usage([{'type':'turn.completed','usage':result.get('usage')}]),
+                        'tokens':codex_usage([{'type':'turn.completed','usage':effective_usage(directory,result)}]),
                         'agent_seconds':result.get('duration_seconds')})
             for _,result in self.session.turns:
                 value = result.get('session_id')
@@ -272,6 +275,8 @@ class ContinuousAutSession:
         write_json(self.logs/'continuous_session.json',fields)
         write_json(self.logs/'sandbox_metadata.json',fields)
         write_json(self.logs/'gate_turn_metrics.json',{'turns':gate_turns})
+        if self.session:
+            save_session_aggregate(self.session,self.logs)
         # Anche le letture/retry/fallback conservano un log Inspect individuale.
         for item in gate_turns:
             directory=self.run/item['path']

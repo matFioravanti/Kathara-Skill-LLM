@@ -36,6 +36,8 @@ def create_inspect_eval_log(
     prompt: str = "",
     agent: str = "codex",
     model: str | None = None,
+    *, usage_accounting: dict | None = None,
+    output_path: Path | None = None,
 ) -> Path | None:
     """Crea il log .eval nativo Inspect AI leggendo result.json ed events.jsonl.
 
@@ -71,7 +73,9 @@ def create_inspect_eval_log(
         status = "success" if returncode == 0 and not timed_out and not result.get("error") else "error"
         final_message = result.get("final_message", "") or ""
 
-        usage = result.get("usage") or {}
+        from .token_usage import load_accounting
+        accounting = usage_accounting if usage_accounting is not None else load_accounting(logs)
+        usage = (accounting.get('usage_delta') if accounting is not None else result.get("usage")) or {}
         if agent == "antigravity":
             input_tokens = usage.get("input_tokens")
             output_tokens = usage.get("output_tokens")
@@ -91,9 +95,9 @@ def create_inspect_eval_log(
             input_tokens=input_tokens or 0,
             output_tokens=output_tokens or 0,
             total_tokens=total_tokens or ((input_tokens or 0) + (output_tokens or 0)),
-            reasoning_tokens=reasoning_tokens or 0,
-            input_tokens_cache_read=input_tokens_cache_read or 0,
-            input_tokens_cache_write=0,
+            reasoning_tokens=reasoning_tokens if accounting is not None else reasoning_tokens or 0,
+            input_tokens_cache_read=input_tokens_cache_read if accounting is not None else input_tokens_cache_read or 0,
+            input_tokens_cache_write=usage.get('cache_write_input_tokens') if accounting is not None else 0,
             total_cost=None,  # costo monetario non disponibile se non misurabile
         )
 
@@ -202,6 +206,9 @@ def create_inspect_eval_log(
                 "sampling_distinct_temperatures": sampling_meta.get("distinct_temperatures"),
                 "sampling_distinct_top_p": sampling_meta.get("distinct_top_p"),
                 "sampling_collection_mode": sampling_meta.get("collection_mode"),
+                "token_accounting": ({key:accounting.get(key) for key in
+                    ('usage_raw','usage_delta','usage_semantics','usage_verified','usage_diagnostics')}
+                    if accounting is not None else {'usage_semantics':'legacy_unverified','usage_verified':False}),
             },
         )
 
@@ -229,14 +236,16 @@ def create_inspect_eval_log(
             stats=EvalStats(
                 started_at=utc_now(),
                 completed_at=utc_now(),
-                model_usage={inspect_model: model_usage},
+                model_usage=({} if accounting is not None and (input_tokens is None or output_tokens is None)
+                             else {inspect_model: model_usage}),
             ),
             results=EvalResults(total_samples=1, completed_samples=1 if status == "success" else 0),
             samples=[sample],
             error=error_obj,
         )
 
-        eval_path = logs / f"{run_id}.eval"
+        eval_path = output_path if output_path is not None else logs / f"{run_id}.eval"
+        eval_path.parent.mkdir(parents=True,exist_ok=True)
         write_eval_log(eval_log, str(eval_path))
         return eval_path
     except Exception as exc:

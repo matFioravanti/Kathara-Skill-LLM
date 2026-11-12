@@ -325,6 +325,9 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
         state('technical_error')
         raise
     finally:
+        from .token_usage import normalize_session, effective_usage, save_session_aggregate, sum_counters
+        if session:
+            normalize_session(session)
         record['skill_gate_total_seconds']=time.monotonic()-started
         record['skill_gate_verification_seconds']=verification
         turns=session.turns if session else []
@@ -339,7 +342,8 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
         record['skill_gate_fallback_seconds']=sum(r['duration_seconds'] for r in fallback) if fallback else None
         record['skill_gate_write_seconds']=sum(r['duration_seconds'] for r in writable) if writable else None
         def sum_usage(items,key):
-            values=[result.get('usage',{}).get(key) if isinstance(result.get('usage'),dict) else None for _,result in items]
+            values=[usage.get(key) if isinstance(usage,dict) else None
+                    for path,result in items for usage in [effective_usage(path,result)]]
             return sum(values) if values and all(type(v) is int for v in values) else None
         for name,parts in [('initial',[t for t in turns if t[0].name=='phase_a']),
                            ('retry',[t for t in turns if t[0].parent.name=='retries']),
@@ -381,7 +385,9 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
             # Diagnostics must not replace a prior gate failure in the finally block.
             record['sampling_telemetry_error'] = f'{type(exc).__name__}: {exc}'
         (logs/'prompt_sent.md').write_bytes(original_prompt.encode('utf-8'))
-        usage={k:sum_usage(turns,k) for k in ('input_tokens','output_tokens','cached_input_tokens','reasoning_output_tokens','cache_write_input_tokens')}
+        # Preserve the historical raw aggregate as evidence. Consumers use the
+        # separate accounting sidecar, never this sum of provider counters.
+        usage=sum_counters([result.get('usage') for _,result in turns])
         write_json(logs/'result.json',{'returncode':0 if record['skill_gate_status']=='completed' else 1,
             'timed_out':any(r.get('timed_out') for _,r in turns),
             'duration_seconds':sum(r['duration_seconds'] for _,r in turns) if turns else None,
@@ -400,3 +406,5 @@ def run_recovery_gate(*, config, run, workspace, original_prompt, mode, session_
                 'continuity':record['skill_gate_context_continuity_verified'],
                 'phase_b':True if record['skill_gate_status']=='completed' else None}))
         write_json(logs/'skill_gate.json',record)
+        if session:
+            save_session_aggregate(session,logs)

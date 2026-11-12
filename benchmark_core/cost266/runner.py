@@ -22,7 +22,7 @@ from ..skill_modes import mode_details
 from ..workspace import (component_versions, copy_lab, manifest, manifest_changes, manifest_hash,
                          tree_hash, utc_now, write_json)
 from .protocol import (Cell, Spec, STAGES, VERSION, clean_lab, digest, fingerprint,
-                       prompts, safe_path, validate_backend, CONTINUOUS_VERSION)
+                       prompts, safe_path, validate_backend, CONTINUOUS_VERSION, execution_mode, stage_requirements)
 
 
 def read_json(path: Path) -> dict:
@@ -132,6 +132,9 @@ def verify_run(run: Path, expected: dict) -> tuple[dict, list[dict]]:
     metadata = read_json(run/'manifest.json')
     if metadata.get('conditions') != expected or metadata.get('conditions_sha256') != fingerprint(expected):
         raise ValueError('Condizioni/hash cambiati: resume rifiutato; usare un nuovo experiment_id')
+    mode = execution_mode(expected['protocol'],metadata['strategy'])
+    if metadata.get('execution_mode',mode) != mode:
+        raise ValueError('Execution mode incoerente con protocollo/strategia della run')
     if tree_hash(run/'input/lab') != expected['baseline_sha256']:
         raise ValueError('Baseline input alterata')
     if digest((run/'evaluation/correction.yaml').read_bytes()) != expected['correction_sha256']:
@@ -242,12 +245,19 @@ def collect_metrics(run: Path, metadata: dict, *, checker_outcome=None) -> dict:
     stage_metrics = [read_json(path) for path in attempts]
     metrics = make_metrics(run, metadata, total_seconds=metadata.get('active_seconds',0),
                            checker_seconds=metadata.get('checker_seconds'), checker_outcome=checker_outcome)
+    from ..token_usage import load_accounting, aggregate_accounting
+    from ..run_metrics import accounting_fields
+    if load_accounting(run/'logs/aut') is None:
+        accounting = [load_accounting(p.parents[1]/'logs/aut') for p in attempts]
+        if accounting and all(item is not None for item in accounting):
+            metrics.update(accounting_fields(aggregate_accounting(accounting)))
     tokens = {key: _sum_known([m['tokens'].get(key) for m in stage_metrics])
               for key in ('input','output','reasoning','cached_input','cache_write_input','total','total_reported','total_calculated')}
     metrics['tokens'] = tokens
     metrics['timing']['agent_seconds'] = _sum_known([m['timing']['agent_seconds'] for m in stage_metrics])
     metrics['timing']['sandbox_overhead_seconds'] = _sum_known([m['timing'].get('sandbox_overhead_seconds') for m in stage_metrics])
     metrics['strategy'] = metadata['strategy']
+    metrics['execution_mode'] = execution_mode(metadata['conditions']['protocol'],metadata['strategy'])
     metrics['stage_count'] = metadata['stage_count']
     metrics['completed_stages'] = sum(p.exists() for p in (run/'steps').glob('*/completed.json'))
     metrics['aut_calls'] = sum(m.get('aut_call_observed',False) for m in stage_metrics)
@@ -272,7 +282,7 @@ def collect_metrics(run: Path, metadata: dict, *, checker_outcome=None) -> dict:
         else:
             # One-shot v2 conserva run_aut e il gate ordinari. La metrica della
             # singola fase include già i turni protetti: qui si separano, non si risommano.
-            from ..run_metrics import load_jsonl, codex_usage
+            from ..run_metrics import load_jsonl, accounted_codex_tokens
             from ..skill_gate import read_gate_metrics
             threads = set()
             environments = []
@@ -288,7 +298,7 @@ def collect_metrics(run: Path, metadata: dict, *, checker_outcome=None) -> dict:
                 for part in [logs/'phase_a', *sorted((logs/'retries').glob('attempt_*')), logs/'fallback']:
                     if (part/'result.json').exists():
                         result = read_json(part/'result.json')
-                        gate_turns.append({'tokens':codex_usage([{'type':'turn.completed','usage':result.get('usage')}]),
+                        gate_turns.append({'tokens':accounted_codex_tokens(part,result),
                                            'agent_seconds':result.get('duration_seconds')})
             metrics.update(session_count=len(threads),thread_id=next(iter(threads)) if len(threads)==1 else None,
                 sandbox_count=len(environments),writable_sandbox_count=metrics['functional_turns'],
@@ -421,6 +431,8 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             'conditions':expected,'conditions_sha256':fingerprint(expected),'pairing_sha256':fingerprint(pairing),
             'source_lab_sha256':expected['baseline_sha256'],'input_lab_sha256':expected['baseline_sha256'],
             'correction_sha256':expected['correction_sha256'],'prompt_sha256':fingerprint(expected['prompts']),
+            'execution_mode':execution_mode(spec.protocol,cell.strategy),
+            'requirements_sha256':fingerprint(stage_requirements(inventory)),
             'protocol_version':spec.protocol,'stage_count':len(sent),'active_seconds':0,'checker_seconds':0,'evaluation_revision':0,
             'started_at':utc_now(),'pipeline_state':'PENDING','aut_execution_success':None,
             'checker_execution_success':None,'task_success':None,'attempt_history':[]}

@@ -145,6 +145,8 @@ def test_exact_calls_isolation_common_oracle_and_aggregate(case,monkeypatch):
         assert not any('correction' in f or 'logs/' in f or '.codex' in f or '.eval' in f for f in call['files'])
     metrics=json.loads((inc/'evaluation/metrics.json').read_text())
     assert metrics['aut_calls']==6 and metrics['sandbox_count']==6 and metrics['completed_stages']==6
+    assert metrics['execution_mode']=='incremental_isolated'
+    assert json.loads((one/'manifest.json').read_text())['execution_mode']=='one_shot'
     assert metrics['tokens']['input']==60 and metrics['tokens']['output']==30
     assert metrics['tokens']['reasoning']==12 and metrics['tokens']['total']==90
     assert metrics['timing']['agent_seconds']==12 and metrics['final_pass_rate']==1

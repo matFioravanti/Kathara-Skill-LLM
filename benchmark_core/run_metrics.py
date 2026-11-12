@@ -5,6 +5,7 @@ import hashlib
 import json
 
 from .checker_runner import checker_test_rows, parse_reports
+from .token_usage import load_accounting, effective_usage
 
 
 
@@ -98,6 +99,18 @@ def antigravity_usage(events: list[dict]) -> dict:
 
 def _token_value(value):
     return value if type(value) is int and value >= 0 else None
+
+
+def accounted_codex_tokens(directory, result=None):
+    return codex_usage([{'type':'turn.completed','usage':effective_usage(directory,result)}])
+
+
+def accounting_fields(accounting):
+    if accounting is None:
+        return {'usage_semantics':'legacy_unverified','usage_verified':False,
+                'usage_diagnostics':{'accounting':'No verified token normalization; explicit recalculation required'}}
+    return {key:accounting.get(key) for key in (
+        'usage_raw','usage_delta','usage_semantics','usage_verified','usage_diagnostics','history_complete')}
 
 
 
@@ -355,13 +368,16 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
     delivery = {'skill_autonomous_read_before_write': None,
                 'skill_delivery_before_write': None, 'skill_delivery_details': None}
     if gate.get('skill_gate_recovery_policy_version') == 'recovery_v1':
-        # The compatibility stream contains several turns; its last usage is
-        # only phase B. The runner result holds their non-overlapping sum.
+        # Preserve readable legacy aggregates, explicitly unverified. New runs
+        # replace these values with the accounting sidecar below.
         try:
             result_usage = json.loads((logs / 'result.json').read_text()).get('usage')
         except (OSError, ValueError):
             result_usage = None
         tokens = codex_usage([{'type': 'turn.completed', 'usage': result_usage}])
+    accounting = load_accounting(logs) if agent == 'codex' else None
+    if accounting is not None:
+        tokens = accounted_codex_tokens(logs)
     if (gate.get('skill_gate_recovery_policy_version') == 'recovery_v1'
             and protocol == 'enforced_read_v1' and agent == 'codex'
             and metadata.get('skill_mode') in ('dns_only', 'creation_only', 'both_forced')):
@@ -403,6 +419,7 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
                                  read_before_modification=None, verification_status='unverified')
         skill_compliance.update(delivery)
     return {
+        **accounting_fields(accounting),
         **gate,
         **delivery,
         "internet": internet,

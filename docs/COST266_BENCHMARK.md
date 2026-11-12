@@ -1,4 +1,4 @@
-# COST266: sessione incrementale continua v2
+# COST266: selezione one-shot, incrementale isolato o continuo
 
 Implementazione a partire dal commit `2f389f4f73d55f32ccba68c3f99f8e3727cb5e10`.
 Il protocollo `cost266_incremental_continuous_session_v2` usa una sola sandbox
@@ -9,6 +9,37 @@ La configurazione precedente è conservata in `experiments/cost266_v1.yaml`.
 ## Esecuzione
 
 Dalla checkout, dopo aver verificato asset e prerequisiti:
+
+```bash
+.venv/bin/python scripts/run_cost266.py --execution-mode one_shot
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_isolated
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous
+```
+
+| Modalità | Configurazione predefinita | Protocollo / strategia | Richieste funzionali |
+|---|---|---|---|
+| `one_shot` | `experiments/cost266.yaml` | v2 / `one_shot` | Un prompt completo, percorso originale |
+| `incremental_isolated` | `experiments/cost266_v1.yaml` | v1 / `incremental` | Sei sessioni indipendenti, file dal checkpoint precedente |
+| `incremental_continuous` | `experiments/cost266.yaml` | v2 / `incremental` | Sei turni, un thread e una sandbox scrivibile |
+
+Tutte terminano con il checker finale. La modalità viene risolta sull'host
+prima del dataset, della pianificazione e di qualunque avvio AUT. `--mode`
+è un alias di `--execution-mode`. I filtri, resume e rivalutazione restano
+disponibili:
+
+```bash
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous --prompt-type T1 --skill-mode auto --only-replicate 1 --dry-run
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_isolated --prompt-type T1 --skill-mode no_skill --only-replicate 1 --resume
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous --prompt-type T1 --skill-mode no_skill --only-replicate 1 --rerun-correction
+.venv/bin/python scripts/run_cost266.py experiments/cost266_v1.yaml --execution-mode one_shot --dry-run
+```
+
+L'ultimo comando mantiene one-shot v1 per il confronto con l'incrementale
+isolato. Un file esplicito incompatibile viene rifiutato: il selettore non ne
+sostituisce protocollo, dataset o experiment_id. Anche una combinazione come
+`--execution-mode incremental_continuous --strategy one_shot` è un errore.
+Senza il nuovo parametro valgono la configurazione e la matrice precedenti,
+compreso il vecchio filtro `--strategy`:
 
 ```bash
 .venv/bin/python scripts/run_cost266.py --dry-run
@@ -24,11 +55,29 @@ e richiedono l'ambiente Docker/Kathara funzionante.
 
 `benchmark.yaml` conserva agente, modello, effort, Skill e backend attivi.
 Non vengono modificati autenticazione, policy di rete o memorie. Il piano
-mantiene `no_skill` e `auto`; per pianificare le altre modalità aggiungerle
-esplicitamente a `skill_modes` in una configurazione sperimentale dedicata.
+mantiene `no_skill` e `auto`. Con `--execution-mode`, senza file sperimentale
+esplicito, `--skill-mode` seleziona il trattamento richiesto anche per una Skill
+forzata. Non viene riscritto lo YAML. Con un file esplicito, la Skill richiesta
+deve essere inclusa in `skill_modes`; senza `--execution-mode` il parametro
+conserva il comportamento storico di filtro della matrice.
 La v2 supporta anche `dns_only`, `creation_only`, `both_forced` con il gate
 `enforced_read_v1/recovery_v1` originale. Le combinazioni non supportate falliscono
 prima dell'AUT; l'incrementale v2 richiede Codex e `docker_sandbox`.
+
+```bash
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous --skill-mode dns_only --prompt-type T1
+```
+
+Il gate originale conserva retry, fallback e sandbox protetta. L'incrementale
+isolato conserva il rifiuto delle Skill forzate con recovery_v1. I percorsi
+delle Skill in `benchmark.yaml` non vengono modificati.
+
+Il dry-run stampa modalità, protocollo, experiment_id, prompt type, Skill,
+ripetizione, numero di turni, policy di sessione/sandbox e checker finale.
+Non avvia Codex, Docker o Kathara e non crea osservazioni. Continua però a
+verificare gli hash del dataset: la discrepanza locale già documentata blocca
+anche il dry-run. Test e verifica del selettore usano dataset temporanei
+coerenti; baseline e `preparation.json` della checkout restano invariati.
 
 ## Ciclo di vita
 
@@ -120,11 +169,28 @@ sandbox, continuità, conteggi di ambienti protetti/scrivibili, turni funzionali
 e gate, tempi e token separati. Le fasi includono hash/dimensione checkpoint,
 token cached/reasoning, numero chiamate e stato del turno.
 
-I token sono letti dal singolo turno. Il totale somma i sei utilizzi funzionali
-più i turni protetti/retry/fallback, senza usare l'ultimo evento della
-conversazione come totale e senza sommare reasoning o cache una seconda volta.
-Valori non osservati rimangono null. I costi dei tentativi falliti sono inclusi.
-L'overhead della sandbox è conteggiato una volta a livello sessione.
+Il campo `execution_mode` compare nei manifest nuovi, nelle metriche e nei
+fogli Runs, Checks, Summary e Stages. Per le run storiche è ricavato da
+protocollo e strategia senza riscrivere i manifest. Identificativi e directory
+restano quelli esistenti: i piani predefiniti v1/v2 hanno experiment_id distinti.
+Un'etichetta esplicita incoerente viene rifiutata anche durante resume.
+
+Con Codex Docker Sandbox 0.165.0, verificato nei controlli reali, i contatori
+`turn.completed.usage` sono cumulativi del thread anche dopo resume. Il runner
+conserva eventi e result originali e salva in `usage_accounting.json` gli
+incrementi fra contatori successivi dello stesso thread. Gate, retry, fallback
+e turni funzionali sono normalizzati in ordine prima di essere separati.
+I totali sommano questi incrementi; reasoning e cache restano sottoinsiemi.
+Valori non ricostruibili rimangono null con una diagnosi. I consumi osservati
+dei tentativi falliti sono inclusi; l'overhead resta misurato una volta per
+sessione. CSV/Excel espongono `usage_semantics` e `usage_verified`.
+
+Le osservazioni storiche non vengono riscritte automaticamente e restano
+esplicitamente non certificate per i token finché non vengono ricalcolate.
+Il comando offline `scripts/recalculate_cost266_tokens.py` produce nuovi JSON,
+CSV, Excel e log Inspect in una cartella esterna nuova, con copie dei risultati
+precedenti e hash delle sorgenti. Procedura, test e limiti:
+[`COST266_TOKEN_ACCOUNTING.md`](COST266_TOKEN_ACCOUNTING.md).
 
 Il gate conserva anche `phase_b` come copia host delle evidenze della prima
 scrittura: il verificatore recovery_v1 esistente può così verificare la
@@ -132,6 +198,16 @@ consegna delle Skill prima del lavoro. Questa copia non è un turno aggiuntivo
 e non viene sommata di nuovo. Le sei directory di turno contengono le evidenze
 originali; i log Inspect del gate sono conservati separatamente.
 
-Reports e statistiche distinguono protocolli v1/v2; le coppie richiedono le
-medesime condizioni registrate. Non è stato eseguito un benchmark a consumo.
-Risultati dei test e problemi del dataset locale: `COST266_CONTINUOUS_VALIDATION.md`.
+Reports e statistiche distinguono protocolli v1/v2. Il foglio Pairs verifica
+baseline, correction, inventario, requisiti DNS, prompt type, modello, effort,
+Skill/bundle, budget, configurazione e versioni dei componenti prima di
+calcolare differenze. Le coppie incompatibili riportano la causa e delta nulli.
+Per i requisiti storici senza hash dedicato servono inventario e hash
+dell'implementazione identici; altrimenti il confronto resta non verificabile.
+Il controllo è riutilizzabile per confronti v1/v2 espliciti; i report standard
+restano separati per experiment_id e non accorpano automaticamente esperimenti.
+La conformità dei manifest non prova l'equivalenza runtime dei trasporti:
+rimane necessario il collaudo reale già descritto sopra.
+Non è stato eseguito un benchmark a consumo. Verifiche del selettore:
+`COST266_SELECTION_VALIDATION.md`. Dettagli v2 e problema del dataset locale:
+`COST266_CONTINUOUS_VALIDATION.md`.

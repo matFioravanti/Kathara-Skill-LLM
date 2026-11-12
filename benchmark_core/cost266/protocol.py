@@ -18,6 +18,16 @@ STRATEGIES = ("one_shot", "incremental")
 STAGES = ("root_hints", "tlds", "countries", "cities", "subzones_records", "resolvers_clients")
 VERSION = "cost266_incremental_no_feedback_v1"
 CONTINUOUS_VERSION = "cost266_incremental_continuous_session_v2"
+EXECUTION_MODES = ('one_shot', 'incremental_isolated', 'incremental_continuous')
+
+
+def execution_mode(protocol: str, strategy: str) -> str:
+    """Etichetta descrittiva derivata, senza cambiare l'identità della run."""
+    if protocol not in (VERSION, CONTINUOUS_VERSION) or strategy not in STRATEGIES:
+        raise ValueError(f'Protocollo/strategia COST266 non supportati: {protocol!r}/{strategy!r}')
+    if strategy == 'one_shot':
+        return 'one_shot'
+    return 'incremental_isolated' if protocol == VERSION else 'incremental_continuous'
 
 
 def digest(value: bytes) -> str:

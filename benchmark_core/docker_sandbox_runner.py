@@ -781,6 +781,9 @@ def run_codex_in_sandbox(
         if log_errors:
             print(f"Avviso scrittura log sandbox in {logs}: {'; '.join(log_errors)}", file=sys.stderr)
 
+        from .token_usage import normalize_standalone
+        normalize_standalone(logs, detected_codex_version)
+
     result = SandboxRun(
         sandbox_name=sandbox_name,
         sandbox_id=sandbox_id,
@@ -1043,7 +1046,8 @@ print(json.dumps(r))
         command += ['python3','-c',wrapper]+args
         self.commands.append(command)
         write_json(directory/'invocation.json',{'command':command,'stdin_bytes':len(prompt),
-                  'stdin_sha256':__import__('hashlib').sha256(prompt).hexdigest(),'session_expected':self.thread_id})
+                  'stdin_sha256':__import__('hashlib').sha256(prompt).hexdigest(),'session_expected':self.thread_id,
+                  'codex_sandbox_version':self.version})
         started=time.monotonic(); timed_out=False
         try:
             if sampling_mode == "http_trace":
@@ -1086,6 +1090,8 @@ print(json.dumps(r))
             raise
         finally:
             write_json(directory/'result.json',result)
+            from .token_usage import normalize_session
+            normalize_session(self)
 
     def close(self):
         if self.name:

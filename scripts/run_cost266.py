@@ -11,7 +11,8 @@ sys.path.insert(0,str(ROOT))
 
 from benchmark_core.config import load_config
 from benchmark_core.cost266.assets import load_dataset, prepare
-from benchmark_core.cost266.protocol import STRATEGIES, cells, load_spec
+from benchmark_core.cost266.protocol import STRATEGIES, load_spec, EXECUTION_MODES, validate_backend
+from benchmark_core.cost266.selection import resolve_selection, describe_cell
 from benchmark_core.cost266.runner import execute, experiment_lock, plan
 from benchmark_core.cost266.reports import aggregate_cost266
 from benchmark_core.preflight import preflight
@@ -20,12 +21,14 @@ from benchmark_core.prompts import PROMPT_TYPES
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description='Benchmark COST266 incremental_no_feedback')
-    parser.add_argument('experiment',nargs='?',type=Path,default=ROOT/'experiments/cost266.yaml')
+    parser = argparse.ArgumentParser(description='Benchmark COST266: one-shot, incrementale isolato o continuo')
+    parser.add_argument('experiment',nargs='?',type=Path,default=None)
     parser.add_argument('--config',type=Path,default=ROOT/'benchmark.yaml')
     parser.add_argument('--prepare',nargs='?',type=Path,default=argparse.SUPPRESS,metavar='INPUT_DIRECTORY',
                         help='Prepara offline dai sorgenti della checkout (override: directory o COST266_INPUTS)')
     parser.add_argument('--strategy',choices=STRATEGIES)
+    parser.add_argument('--execution-mode','--mode',choices=EXECUTION_MODES,
+                        help='seleziona automaticamente configurazione e protocollo v1/v2')
     parser.add_argument('--skill-mode',choices=SKILL_MODE_CHOICES)
     parser.add_argument('--prompt-type',choices=PROMPT_TYPES)
     parser.add_argument('--only-replicate',type=int)
@@ -36,7 +39,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         config = load_config(args.config)
-        spec = load_spec(args.experiment,config.root)
+        selection = resolve_selection(ROOT,config.root,args.experiment,args.execution_mode,args.strategy,loader=load_spec)
+        spec = selection.spec
         if hasattr(args,'prepare'):
             if args.dry_run or args.resume or args.rerun_correction:
                 raise ValueError('--prepare è separato da dry-run/resume/rerun-correction')
@@ -44,18 +48,19 @@ def main(argv=None):
                 report = prepare(args.prepare,spec.dataset)
             print(json.dumps(report,indent=2))
             return 0
-        inventory, preparation = load_dataset(spec.dataset)
-        selected = [cell for cell in cells(spec) if
-            (not args.strategy or cell.strategy==args.strategy) and
-            (not args.skill_mode or cell.skill_mode==args.skill_mode) and
-            (not args.prompt_type or cell.prompt_type==args.prompt_type) and
-            (args.only_replicate is None or cell.repetition==args.only_replicate)]
+        selected = selection.selected_cells(prompt_type=args.prompt_type,skill_mode=args.skill_mode,
+                                            repetition=args.only_replicate)
         if not selected:
             raise ValueError('Nessuna cella selezionata; controllare filtri/ripetizione')
+        if args.execution_mode:
+            for cell in selected:
+                validate_backend(config,cell.skill_mode,strategy=cell.strategy,protocol=spec.protocol)
+        inventory, preparation = load_dataset(spec.dataset)
         def planned():
             return [(cell,*plan(config,spec,cell,inventory,preparation,resume=args.resume,rerun=args.rerun_correction)) for cell in selected]
         if args.dry_run:
             for cell,action,run in planned():
+                print(describe_cell(spec,cell))
                 print(f'{action} {cell.relative} stages={1 if cell.strategy=="one_shot" else 6} baseline={preparation["baseline_sha256"]} oracle={preparation["correction_sha256"]}')
             return 0
         with experiment_lock(config.root,spec.experiment_id):
