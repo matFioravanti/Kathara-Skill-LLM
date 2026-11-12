@@ -161,6 +161,7 @@ def test_only_replicate_resume_uses_logical_number(synthetic, capsys, third_stat
     outcome = {'checks_passed': 1, 'checks_failed': 0, 'checks_total': 1,
                'check_pass_rate': 1.0, 'task_success': True}
     with patch.object(run_experiment, 'preflight'), \
+         patch.object(run_experiment, 'run_one', run_one), \
          patch.object(run_experiment, 'aggregate'), \
          patch.object(run_experiment, '_notify_benchmark_finished'), \
          patch('benchmark_core.pipeline.component_versions', return_value={}), \
@@ -218,7 +219,8 @@ def test_interrupted_finalization_is_not_completed(synthetic):
         recover(run, root / 'runs/recovered')
     args = [str(root/'experiment.yaml'), '--config', str(config_path), '--lab', 'lab_03', '--prompt-type', 'T1',
             '--repetitions', '3', '--only-replicate', '3', '--resume', '--dry-run']
-    assert main(args) == 1
+    # A valid final AUT checkpoint is now recoverable, rather than a conflict.
+    assert main(args) == 0
 
 
 def test_resume_requires_complete_and_compatible_observation(synthetic, capsys):

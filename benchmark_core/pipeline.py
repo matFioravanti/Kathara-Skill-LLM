@@ -6,6 +6,7 @@ import shutil
 import time
 import traceback
 
+from .standard_runtime import atomic_json as write_json
 from .checker_runner import run_checker
 from .config import skill_paths
 from .correction_input import correction_path, read_correction, validate_correction, validate_correction_lab
@@ -14,7 +15,7 @@ from .inspect_runner import run_aut
 from .skill_modes import mode_details
 from .run_metrics import make_metrics, print_run_summary
 from .workspace import (check_lab_integrity, component_versions, create_workspace, logical_run_id,
-                        manifest as lab_manifest, manifest_hash, tree_hash, utc_now, write_json)
+                        manifest as lab_manifest, manifest_hash, tree_hash, utc_now)
 
 
 def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
@@ -215,6 +216,7 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         input_before_checker = lab_manifest(run / "input/lab")
         if manifest_hash(input_before_checker) != manifest["input_lab_sha256"]:
             raise RuntimeError("Il baseline input/lab è cambiato durante la run.")
+        state("CHECKER_RUNNING")
         checker_started = time.monotonic()
         try:
             outcome = run_checker(config, run, correction_snapshot)
@@ -290,7 +292,7 @@ def reevaluate_run(config, run: Path) -> Path:
         raise ValueError(f"Run incompleta: attesi manifest.json, lab/ e input/lab/: {run}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("aut_execution_success") is not True or manifest.get("pipeline_state") not in (
-        "AUT_COMPLETED", "COMPLETED", "CHECKER_FAILED", "CORRECTION_MISSING", "CORRECTION_INVALID"
+        "AUT_COMPLETED", "CHECKER_RUNNING", "FINALIZING", "COMPLETED", "CHECKER_FAILED", "CORRECTION_MISSING", "CORRECTION_INVALID"
     ):
         raise ValueError(f"AUT non completato; run non rivalutata: {run}")
 
@@ -359,14 +361,16 @@ def reevaluate_run(config, run: Path) -> Path:
 
     for name in ("checker_invocation.json", "checker_execution.json", "checker_stdout.log", "checker_stderr.log"):
         (run / "logs" / name).unlink(missing_ok=True)
+    manifest["pipeline_state"] = "CHECKER_RUNNING"
+    write_json(manifest_path, manifest)
     started = time.monotonic()
     outcome = None
     try:
         outcome = run_checker(config, run, snapshot)
         manifest["checker_execution_success"] = True
         manifest["task_success"] = outcome["task_success"]
-        manifest["pipeline_state"] = "COMPLETED"
-        manifest.setdefault("state_history", []).append({"state": "COMPLETED", "timestamp": utc_now()})
+        manifest["pipeline_state"] = "FINALIZING"
+        manifest.setdefault("state_history", []).append({"state": "FINALIZING", "timestamp": utc_now()})
     except Exception as exc:
         if isinstance(exc, MissingCorrectionError):
             state = "CORRECTION_MISSING"
@@ -385,7 +389,8 @@ def reevaluate_run(config, run: Path) -> Path:
     check_lab_integrity(run, checker_snapshots)
     manifest["completed_at"] = utc_now()
     write_json(manifest_path, manifest)
-    metrics = make_metrics(run, manifest,
+    metrics_manifest = {**manifest,"pipeline_state":"COMPLETED"} if manifest["pipeline_state"]=="FINALIZING" else manifest
+    metrics = make_metrics(run, metrics_manifest,
                            total_seconds=previous_total_seconds,
                            checker_seconds=checker_seconds,
                            checker_outcome=outcome)
@@ -393,6 +398,10 @@ def reevaluate_run(config, run: Path) -> Path:
     if outcome is None:
         metrics["checker"] = {"passed": None, "failed": None, "total": None, "pass_rate": None}
     write_json(evaluation / "metrics.json", metrics)
+    if manifest["pipeline_state"]=="FINALIZING":
+        manifest["pipeline_state"]="COMPLETED"
+        manifest.setdefault("state_history", []).append({"state":"COMPLETED","timestamp":utc_now()})
+        write_json(manifest_path,manifest)
     print_run_summary({**metrics, "task_success": manifest.get("task_success")})
     return run
 

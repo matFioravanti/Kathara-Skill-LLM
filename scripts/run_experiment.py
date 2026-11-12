@@ -20,7 +20,8 @@ from benchmark_core.config import load_config
 from benchmark_core.correction_input import correction_path
 from benchmark_core.experiment import (analyse_existing_runs, build_run_matrix,
     compute_resume_plan, load_experiment, validate_experiment_prerequisites)
-from benchmark_core.pipeline import reevaluate_run, run_one
+from benchmark_core.pipeline import reevaluate_run
+from benchmark_core.standard_runtime import run_supervised as run_one, guarded_preflight, Policy, retry_reports
 from benchmark_core.preflight import preflight
 from benchmark_core.prompts import PROMPT_TYPES, resolve_prompt
 from benchmark_core.scenario_loader import discover_scenarios
@@ -68,6 +69,8 @@ def main(argv=None):
     experiment_lock = None
     try:
         config = load_config(args.config)
+        if not args.rerun_correction and Policy.from_config(config).auto_resume:
+            args.resume = True
         spec = load_experiment(args.experiment)
         if not args.dry_run:
             # Lock the entire experiment before planning, so two launchers cannot
@@ -122,10 +125,12 @@ def main(argv=None):
         if report_output == config.root or any(report_output.is_relative_to(config.root / name)
                                                for name in ('runs', 'scenarios', 'skills', 'prompt')):
             raise ValueError(f"Directory report non consentita: {report_output}")
+        report_failed = False
         def update_reports():
+            nonlocal report_failed
             print(f"Aggiornamento report di {spec.experiment_id} in {report_output}...", flush=True)
-            aggregate(runs_root, report_output, experiment_id=spec.experiment_id)
-            print("Report aggiornati.", flush=True)
+            report_failed = not retry_reports(lambda: aggregate(runs_root, report_output, experiment_id=spec.experiment_id),config)
+            print("Report da rigenerare: run conservate." if report_failed else "Report aggiornati.", flush=True)
         analyses = analyse_existing_runs(runs_root, spec)
         decisions = compute_resume_plan(spec, analyses)
         if args.rerun_correction:
@@ -148,13 +153,14 @@ def main(argv=None):
                     failed = True
                 finally:
                     update_reports()
-            return int(failed)
+            return int(failed or report_failed)
         if not args.resume:
             from benchmark_core.experiment import ResumeDecision
             decisions = [ResumeDecision(c, True, "requested") for c in build_run_matrix(spec)]
         if args.only_replicate is not None:
             decisions = [d for d in decisions if d.cell.replicate == args.only_replicate]
         conflicts = {}
+        recoverable = {}
         if args.resume:
             from benchmark_core.experiment import completed_artifact_error
             from benchmark_core.fingerprint import conditions, compare
@@ -178,10 +184,13 @@ def main(argv=None):
                         elif comparison == 'unverified':
                             print(f'AVVISO: condizioni storiche non verificabili: {run.run}')
                 else:
-                    interrupted = [r for r in existing if r.pipeline_state in ('PENDING', 'AUT_RUNNING', 'AUT_COMPLETED', 'FINALIZING') or
+                    interrupted = [r for r in existing if r.pipeline_state in ('PENDING', 'AUT_RUNNING', 'AUT_COMPLETED', 'CHECKER_RUNNING', 'FINALIZING') or
                                    (r.pipeline_state in ('CHECKER_FAILED', 'CORRECTION_INVALID', 'CORRECTION_MISSING') and r.manifest.get('aut_execution_success') is True)]
                     if interrupted:
-                        conflicts[c] = 'run interrotta o valutazione recuperabile; esaminare prima di rilanciare: ' + ', '.join(str(r.run) for r in interrupted)
+                        if len(interrupted)>1:
+                            conflicts[c] = 'più run interrotte: selezione ambigua'
+                        elif interrupted[0].manifest.get('aut_execution_success') is True:
+                            recoverable[c] = interrupted[0].run
             for cell, reason in conflicts.items():
                 print(f'CONFLICT {cell.lab_id}/{cell.dns_tree_id}/{cell.task_level}/{cell.prompt_type}/{cell.skill_mode} rep={cell.replicate}: {reason}', file=sys.stderr)
         selected = [d for d in decisions if d.should_run and d.cell not in conflicts]
@@ -196,27 +205,31 @@ def main(argv=None):
         if not selected:
             return 0
         validate_report_destination(report_output)
-        preflight(config, agent, skill_mode=skills[0] if agent == "codex" else None, assignments=assignments)
+        guarded_preflight(preflight,config, agent, skill_mode=skills[0] if agent == "codex" else None, assignments=assignments)
         benchmark_started = True
         failed = False
         needs_aggregation = False
         try:
             for decision in selected:
                 c = decision.cell
+                cell_failed = False
                 needs_aggregation = True
                 try:
                     run = run_one(config, labs[c.lab_id], agent, c.prompt_type, skill_mode=c.skill_mode,
-                                  experiment_id=c.experiment_id, replicate=c.replicate, assignment=c.assignment)
+                                  experiment_id=c.experiment_id, replicate=c.replicate, assignment=c.assignment,
+                                  **({"resume_run":recoverable[c]} if c in recoverable else {}))
                     state = json.loads((run / "manifest.json").read_text()).get("pipeline_state")
                     print(f"{run.relative_to(config.root)}: {state}")
                     if state != "COMPLETED":
                         failed = True
+                        cell_failed = True
                 except Exception as exc:
                     print(f"Errore esecuzione {c}: {exc}", file=sys.stderr)
                     failed = True
+                    cell_failed = True
                 needs_aggregation = False
                 update_reports()
-                if failed and not config.data["benchmark"]["continue_on_error"]:
+                if cell_failed and not config.data["benchmark"]["continue_on_error"]:
                     break
         finally:
             pending = sys.exc_info()[1]
@@ -227,7 +240,7 @@ def main(argv=None):
                 if pending is None:
                     raise
                 print(f"Errore aggiuntivo aggregazione: {exc}", file=sys.stderr)
-        return int(failed)
+        return int(failed or report_failed)
     except (ValueError, RuntimeError, OSError) as exc:
         print(f"Errore: {exc}", file=sys.stderr)
         return 1

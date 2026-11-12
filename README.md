@@ -617,3 +617,9 @@ Preview the planned run matrix and resume status without executing tasks:
 ```bash
 python scripts/run_experiment.py experiments/thesis_final.yaml --resume --dry-run
 ```
+
+Long standard benchmark batches use atomic checkpoints, supervised workers,
+bounded retries and Codex authentication recovery. Existing CLI arguments remain
+available; automatic resume is enabled by default. See
+[standard pipeline resilience](docs/STANDARD_RESILIENCE.md) for configuration,
+heartbeat files, recovery behavior and limitations.

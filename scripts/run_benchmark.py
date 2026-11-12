@@ -11,7 +11,8 @@ sys.path.insert(0, str(ROOT))
 from benchmark_core.agent_factory import AGENTS
 from benchmark_core.aggregation import aggregate, validate_report_destination
 from benchmark_core.config import load_config, verify_skills
-from benchmark_core.pipeline import reevaluate_run, run_one
+from benchmark_core.pipeline import reevaluate_run
+from benchmark_core.standard_runtime import run_supervised as run_one, guarded_preflight, Policy, retry_reports
 from benchmark_core.preflight import preflight
 from benchmark_core.scenario_loader import discover_scenarios
 from benchmark_core.prompts import PROMPT_TYPES, missing_prompts
@@ -124,9 +125,9 @@ def main() -> int:
                 if pending is None:
                     raise
                 print(f"Errore aggiuntivo aggregazione: {exc}", file=sys.stderr)
-        return 1 if failed else 0
+        return 1 if failed or (config.root/"runs/.supervision/report_failure.json").exists() else 0
     skill_mode = ("all" if args.all_skill_modes else (args.skill_mode or "dns_only")) if agent == "codex" else None
-    preflight(config, agent, skill_mode=skill_mode,
+    guarded_preflight(preflight,config, agent, skill_mode=skill_mode,
               scenario_ids=[scenario.scenario_id for scenario in selected])
     if args.preflight:
         print("Prerequisiti disponibili; nessuna chiamata modello eseguita.")
@@ -150,10 +151,12 @@ def main() -> int:
                                             "forced_skills": list(selection.forced_skills)})
                         run = run_one(
                             config, scenario, agent, args.prompt_type, skill_mode=effective_mode,
-                            ui_context=context, event_callback=terminal_ui.render_run_event,
+                            ui_context=context, event_callback=terminal_ui.render_run_event, replicate=repetition,
                         )
                         metadata = json.loads((run / "manifest.json").read_text())
                         result_rows.append({"run": run, "metrics": json.loads((run / "evaluation/metrics.json").read_text())})
+                        retry_reports(lambda: aggregate(config.root / "runs", report_output, legacy_only=True),config)
+                        if len(result_rows)>20: del result_rows[:-20]
                         return metadata["pipeline_state"] != "COMPLETED"
                     except Exception as exc:
                         terminal_ui.pipeline_state("PREPARATION_FAILED", error=str(exc))
@@ -166,7 +169,7 @@ def main() -> int:
     finally:
         pending = sys.exc_info()[1]
         try:
-            aggregate(config.root / "runs", report_output, legacy_only=True)
+            retry_reports(lambda: aggregate(config.root / "runs", report_output, legacy_only=True),config)
         except Exception as exc:
             if pending is None:
                 raise
@@ -174,7 +177,7 @@ def main() -> int:
         terminal_ui.pipeline_event("Results aggregated")
         terminal_ui.result_table(result_rows, multiple_scenarios=bool(args.all))
     # Un task scorretto con checker completato è un risultato valido, non un errore CLI.
-    return 1 if failed else 0
+    return 1 if failed or (config.root/"runs/.supervision/report_failure.json").exists() else 0
 
 
 if __name__ == "__main__":

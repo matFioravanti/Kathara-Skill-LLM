@@ -154,7 +154,7 @@ class RunLayoutTest(unittest.TestCase):
             self.assertEqual(manifest["run_directory"], "example_dns_001/T1/dns_only/r001")
             self.assertEqual(manifest["run_number"], 1)
             self.assertEqual([item["state"] for item in manifest["state_history"]],
-                             ["PENDING", "AUT_RUNNING", "AUT_COMPLETED", "FINALIZING", "COMPLETED"])
+                             ["PENDING", "AUT_RUNNING", "AUT_COMPLETED", "CHECKER_RUNNING", "FINALIZING", "COMPLETED"])
             self.assertNotIn("all", manifest["run_id"])
             self.assertEqual(manifest["correction_source"], "scenarios/example_dns_001/correction.yaml")
             self.assertEqual(manifest["correction_snapshot"], "evaluation/correction.yaml")
