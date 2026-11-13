@@ -113,14 +113,14 @@ def isolate_checker_copy(lab_conf: Path) -> str:
     lines = lab_conf.read_text(encoding="utf-8").splitlines(keepends=True)
     output, found = [], False
     for line in lines:
-        if re.match(r"^\\s*LAB_NAME\\s*=", line):
+        if re.match(r"^\s*LAB_NAME\s*=", line):
             if not found:
-                output.append(f'LAB_NAME="{identity}"\\n')
+                output.append(f'LAB_NAME="{identity}"\n')
                 found = True
         else:
             output.append(line)
     if not found:
-        output.insert(0, f'LAB_NAME="{identity}"\\n')
+        output.insert(0, f'LAB_NAME="{identity}"\n')
     lab_conf.write_text("".join(output), encoding="utf-8")
     return identity
 
