@@ -96,7 +96,11 @@ def run_aut(config, scenario, run: Path, agent: str, original_prompt: str, skill
                         run_number = 1
                     scenario_id = scenario.scenario_id
                     sandbox_name = _unique_sandbox_name(scenario_id, run_number)
+                    gen_cfg = config.data.get("parallel_execution", {})
+                    limits = gen_cfg.get("generation", {}) if gen_cfg.get("enabled") else {}
                     codex_sbx_kwargs = {
+                        "memory": limits.get("sandbox_memory"),
+                        "cpus": limits.get("sandbox_cpus"),
                         "prompt": prompt,
                         "workspace": temp_lab,
                         "logs": aut_logs,
