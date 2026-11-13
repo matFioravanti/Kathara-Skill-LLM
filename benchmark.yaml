@@ -9,8 +9,8 @@ aut:
   skill_protocol: enforced_read_v1
   skill_gate_recovery_policy: recovery_v1
   skill_gate_max_retries: 2
-  model: gpt-6.1-sol
-  reasoning_effort: ultra
+  model: gpt-6.1-terra
+  reasoning_effort: low
   version: "0.157.1"
   dns_skill: skills/dns/SKILL.md
   creation_skill: skills/kathara-creation/SKILL.md
