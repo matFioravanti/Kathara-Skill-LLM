@@ -59,8 +59,8 @@ def test_isolation_adds_one_identity(tmp_path):
 def test_phased_order_with_two_workers(tmp_path):
     InlinePool.starts = []
     assignment = {
-        level: TaskAssignment("lab_" + level, "base", level)
-        for level in ("small", "medium", "large")
+        level: TaskAssignment(lab, "base", level)
+        for level, lab in (("small", "lab_01"), ("medium", "lab_02"), ("large", "lab_03"))
     }
     cells = [
         RunCell("thesis_final", item.lab_id, "T1", "no_skill", 3, item)
