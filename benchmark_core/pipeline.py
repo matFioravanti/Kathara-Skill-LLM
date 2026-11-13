@@ -383,7 +383,8 @@ def reevaluate_run(config, run: Path, *, isolated_checker: bool = False,
     started = time.monotonic()
     outcome = None
     try:
-        outcome = run_checker(config, run, snapshot, isolated=isolated_checker)
+        outcome = (run_checker(config, run, snapshot, isolated=True) if isolated_checker
+                   else run_checker(config, run, snapshot))
         manifest["checker_execution_success"] = True
         manifest["task_success"] = outcome["task_success"]
         manifest["pipeline_state"] = "FINALIZING"
