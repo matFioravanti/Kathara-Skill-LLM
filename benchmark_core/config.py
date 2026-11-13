@@ -74,6 +74,21 @@ def load_config(path: Path) -> Config:
                 raise ValueError("aut.sampling_telemetry.enabled deve essere booleano.")
             if "mode" in telemetry and telemetry["mode"] not in ("passive", "http_trace"):
                 raise ValueError("aut.sampling_telemetry.mode deve essere 'passive' o 'http_trace'.")
+    parallel = data.get("parallel_execution", {})
+    if parallel is None:
+        parallel = {}
+    if not isinstance(parallel, dict):
+        raise ValueError("parallel_execution deve essere un mapping")
+    if "enabled" in parallel and type(parallel["enabled"]) is not bool:
+        raise ValueError("parallel_execution.enabled deve essere booleano")
+    for group, fields in (("generation", ("workers",)), ("checker", ("small_workers", "medium_workers", "large_workers"))):
+        section = parallel.get(group, {})
+        if not isinstance(section, dict):
+            raise ValueError(f"parallel_execution.{group} deve essere un mapping")
+        for field in fields:
+            value = section.get(field)
+            if value is not None and (type(value) is not int or value not in (1, 2)):
+                raise ValueError(f"parallel_execution.{group}.{field} deve essere 1 oppure 2")
     config = Config(path.parent, data)
     from .skill_gate import recovery_enabled
     if recovery_enabled(config) and data.get('docker_sandbox', {}).get('execution_backend') != 'docker_sandbox':
