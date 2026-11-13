@@ -89,6 +89,15 @@ def load_config(path: Path) -> Config:
             value = section.get(field)
             if value is not None and (type(value) is not int or value not in (1, 2)):
                 raise ValueError(f"parallel_execution.{group}.{field} deve essere 1 oppure 2")
+    generation = parallel.get("generation", {})
+    memory = generation.get("sandbox_memory")
+    cpus = generation.get("sandbox_cpus")
+    if memory is not None:
+        import re
+        if not isinstance(memory, str) or not re.fullmatch(r"[1-9][0-9]*[mg]", memory):
+            raise ValueError("parallel_execution.generation.sandbox_memory richiede una dimensione tipo 3g")
+    if cpus is not None and (type(cpus) is not int or cpus not in range(1, 9)):
+        raise ValueError("parallel_execution.generation.sandbox_cpus deve essere tra 1 e 8")
     config = Config(path.parent, data)
     from .skill_gate import recovery_enabled
     if recovery_enabled(config) and data.get('docker_sandbox', {}).get('execution_backend') != 'docker_sandbox':
