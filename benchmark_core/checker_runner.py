@@ -8,6 +8,8 @@ import signal
 import subprocess
 import sys
 import tempfile
+import secrets
+import re
 
 from .workspace import copy_lab, write_json
 
@@ -103,7 +105,27 @@ def checker_test_rows(reports: Path) -> list[dict]:
     } for row in rows if row["Passed"] in ("True", "False")]
 
 
-def run_checker(config, run: Path, correction: Path) -> dict:
+def isolate_checker_copy(lab_conf: Path) -> str:
+    """Unique Kathara identity for the temporary checker copy only."""
+    if lab_conf.is_symlink() or not lab_conf.is_file():
+        raise RuntimeError(f"lab.conf temporaneo mancante o simbolico: {lab_conf}")
+    identity = "ParallelChecker" + secrets.token_hex(12)
+    lines = lab_conf.read_text(encoding="utf-8").splitlines(keepends=True)
+    output, found = [], False
+    for line in lines:
+        if re.match(r"^\\s*LAB_NAME\\s*=", line):
+            if not found:
+                output.append(f'LAB_NAME="{identity}"\\n')
+                found = True
+        else:
+            output.append(line)
+    if not found:
+        output.insert(0, f'LAB_NAME="{identity}"\\n')
+    lab_conf.write_text("".join(output), encoding="utf-8")
+    return identity
+
+
+def run_checker(config, run: Path, correction: Path, *, isolated: bool = False) -> dict:
     lab = run / "lab"
     results = run / "results"
     if not correction.is_file():
@@ -119,6 +141,8 @@ def run_checker(config, run: Path, correction: Path) -> dict:
         tmp_labs = tmp / "labs"
         tmp_labs.mkdir()
         copy_lab(lab, tmp_labs / "lab")
+        if isolated:
+            isolate_checker_copy(tmp_labs / "lab" / "lab.conf")
         # Rimuovi eventuali report iniettati dall'AUT nella copia temporanea.
         for name in ("lab_result_all.csv", "lab_result_failed.csv", "lab_result_summary.csv", "lab_result.xlsx"):
             (tmp_labs / "lab" / name).unlink(missing_ok=True)
