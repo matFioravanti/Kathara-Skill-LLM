@@ -356,7 +356,7 @@ def run_supervised(config, scenario, agent, prompt_type, *, resume_run=None, **k
     directory.mkdir(parents=True,exist_ok=True)
     checkpoint=directory/'checkpoint.json'
     phased_generation = kwargs.get('generation_only') is True
-    with (cell_lock(identity) if phased_generation else serial_lock()):
+    with (cell_lock((str(config.root.resolve()), identity)) if phased_generation else serial_lock()):
         cleanup_blocked=config.root/'runs/.supervision/cleanup_blocked.json'
         if cleanup_blocked.exists():
             cleanup_resources(Path(load(cleanup_blocked)['journal']))
