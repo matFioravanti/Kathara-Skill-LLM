@@ -41,6 +41,8 @@ parallel_execution:
   enabled: false
   generation:
     workers: 2
+    sandbox_memory: "3g"
+    sandbox_cpus: 2
   checker:
     small_workers: 2
     medium_workers: 2
