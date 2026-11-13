@@ -35,6 +35,19 @@ docker_sandbox:
   cleanup_on_error: true             # elimina il sandbox anche in caso di errore (sempre true)
   verify_sandbox_codex: true         # verifica versione e login di Codex dentro il sandbox in preflight
 
+# Orchestration parameters are excluded from experimental fingerprints:
+# they do not change prompts, Skills, input labs or scoring.
+parallel_execution:
+  enabled: false
+  generation:
+    workers: 2
+    sandbox_memory: "3g"
+    sandbox_cpus: 2
+  checker:
+    small_workers: 2
+    medium_workers: 2
+    large_workers: 1
+
 checker:
   no_cache: true
   report_type: csv

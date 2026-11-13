@@ -85,6 +85,19 @@ def serial_lock():
         yield
 
 
+@contextmanager
+def cell_lock(identity):
+    """Per-observation lock used only by phased generation workers."""
+    digest = hashlib.sha256(json.dumps(identity, sort_keys=True, default=str).encode()).hexdigest()
+    path = Path(tempfile.gettempdir()) / f'tesi-phased-{os.getuid()}-{digest}.lock'
+    with path.open('a+') as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise RecoveryRequired("La stessa osservazione è già in esecuzione") from None
+        yield
+
+
 def classify(message):
     text = message.lower()
     if any(s in text for s in ('auth_failed','unauthorized','401','token expired','expired token',
@@ -342,7 +355,8 @@ def run_supervised(config, scenario, agent, prompt_type, *, resume_run=None, **k
     directory=config.root/'runs/.supervision'/fingerprint(identity)
     directory.mkdir(parents=True,exist_ok=True)
     checkpoint=directory/'checkpoint.json'
-    with serial_lock():
+    phased_generation = kwargs.get('generation_only') is True
+    with (cell_lock((str(config.root.resolve()), identity)) if phased_generation else serial_lock()):
         cleanup_blocked=config.root/'runs/.supervision/cleanup_blocked.json'
         if cleanup_blocked.exists():
             cleanup_resources(Path(load(cleanup_blocked)['journal']))
@@ -376,6 +390,10 @@ def run_supervised(config, scenario, agent, prompt_type, *, resume_run=None, **k
             # Reconcile crashes after a completed manifest, before supervisor checkpoint.
             if 'aut_receipt' in data: check_receipt(run,data['aut_receipt'])
             m=load(run/'manifest.json') if (run/'manifest.json').exists() else {}
+            if m.get('pipeline_state')=='AUT_COMPLETED' and phased_generation:
+                validate_artifacts(run,expected)
+                if 'aut_receipt' in data: check_receipt(run,data['aut_receipt'])
+                data['status']='AUT_COMPLETED'; atomic_json(checkpoint,data); return run
             if m.get('pipeline_state')=='COMPLETED':
                 validate_artifacts(run,expected,completed=True)
                 data['status']='COMPLETED'; atomic_json(checkpoint,data); return run
@@ -409,6 +427,12 @@ def run_supervised(config, scenario, agent, prompt_type, *, resume_run=None, **k
                 if 'aut_receipt' in data: check_receipt(result,data['aut_receipt'])
                 data['run']=str(result)
                 m=load(result/'manifest.json')
+                if m.get('pipeline_state')=='AUT_COMPLETED' and phased_generation:
+                    validate_artifacts(result,expected)
+                    data['status']='AUT_COMPLETED'
+                    data['attempts'][-1]['finished_at']=utc_now()
+                    atomic_json(checkpoint,data)
+                    return result
                 if m.get('pipeline_state')=='COMPLETED':
                     validate_artifacts(result,expected,completed=True)
                     data['status']='COMPLETED'; data['attempts'][-1]['finished_at']=utc_now(); atomic_json(checkpoint,data); return result

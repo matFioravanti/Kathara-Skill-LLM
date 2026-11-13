@@ -520,6 +520,8 @@ def run_codex_in_sandbox(
     auto_start_daemon: bool = True,
     daemon_wait_seconds: int = 30,
     sampling_mode: str = "passive",
+    memory: str | None = None,
+    cpus: int | None = None,
 ) -> SandboxRun:
     """Crea un sandbox Codex monouso, esegue il prompt, raccoglie i risultati ed elimina il sandbox.
 
@@ -574,6 +576,10 @@ def run_codex_in_sandbox(
             "--name", sandbox_name,
             "--skills", "off",
         ]
+        if memory is not None:
+            create_cmd.extend(["--memory", memory])
+        if cpus is not None:
+            create_cmd.extend(["--cpus", str(cpus)])
         create_result = subprocess.run(create_cmd, capture_output=True, text=True, timeout=120)
         overhead_times.append(time.monotonic() - create_start)
 
@@ -929,9 +935,17 @@ class ProtectedCodexSession:
         self.readonly = readonly
         self.name = 'kathara-gate-' + uuid.uuid4().hex[:12]
         self.state.mkdir(parents=True, exist_ok=True)
-        self.checked([sbx_executable(), 'create', 'codex', str(self.state),
+        create_cmd = [sbx_executable(), 'create', 'codex', str(self.state),
                       str(self.workspace)+(':ro' if readonly else ''), '--name', self.name,
-                      '--skills', 'off', '--pull', 'missing'], timeout=120)
+                      '--skills', 'off', '--pull', 'missing']
+        parallel = self.config.data.get('parallel_execution', {})
+        if parallel.get('enabled'):
+            resources = parallel.get('generation', {})
+            if resources.get('sandbox_memory'):
+                create_cmd.extend(['--memory', resources['sandbox_memory']])
+            if resources.get('sandbox_cpus'):
+                create_cmd.extend(['--cpus', str(resources['sandbox_cpus'])])
+        self.checked(create_cmd, timeout=120)
         # Keep only the proxy provider configuration, never MCP, hooks, plugins,
         # inherited model instructions or exec policies. No secret is logged.
         setup = r'''

@@ -20,7 +20,8 @@ from .workspace import (check_lab_integrity, component_versions, create_workspac
 
 def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | None = None,
             ui_context: dict | None = None, event_callback=None,
-            experiment_id: str | None = None, replicate: int | None = None, assignment=None) -> Path:
+            experiment_id: str | None = None, replicate: int | None = None, assignment=None,
+            generation_only: bool = False) -> Path:
     # The five Codex skill modes are EXCLUSIVE to agent=="codex".
     # For any other agent (e.g. Antigravity) skill_mode is forced to "no_skill"
     # so that available_skills/forced_skills are both empty and no $skill directive
@@ -129,6 +130,16 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             "results": "results",
         },
     }
+    if generation_only:
+        settings = config.data.get("parallel_execution", {})
+        resources = settings.get("generation", {})
+        manifest["orchestration"] = {
+            "mode": "phased",
+            "generation_workers": resources.get("workers", 2),
+            "sandbox_memory": resources.get("sandbox_memory"),
+            "sandbox_cpus": resources.get("sandbox_cpus"),
+            "generation_only": True,
+        }
     if assignment is not None:
         from .fingerprint import conditions, fingerprint
         manifest['experimental_conditions'] = conditions(config, scenario, prompt_type, skill_mode, assignment, agent=agent)
@@ -199,7 +210,8 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             raise RuntimeError("Il baseline input/lab è cambiato durante la run.")
         lab_before_checker = lab_manifest(run / "lab")
         manifest["final_lab_sha256"] = manifest_hash(lab_before_checker)
-        state("AUT_COMPLETED")
+        if not generation_only:
+            state("AUT_COMPLETED")
         stage = "EVALUATION"
         evaluation = run / "evaluation"
         evaluation.mkdir()
@@ -210,6 +222,11 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             raise RuntimeError("Lo snapshot della correction non corrisponde all'input letto prima della run.")
         manifest["correction_snapshot"] = "evaluation/correction.yaml"
         write_json(run / "manifest.json", manifest)
+        if generation_only:
+            # A generation checkpoint must include an immutable correction snapshot.
+            manifest["generation_completed_at"] = utc_now()
+            state("AUT_COMPLETED")
+            return run
         if event_callback:
             event_callback("correction_ready")
             event_callback("checker_running")
@@ -283,7 +300,8 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
     return run
 
 
-def reevaluate_run(config, run: Path) -> Path:
+def reevaluate_run(config, run: Path, *, isolated_checker: bool = False,
+                   initial_evaluation: bool = False) -> Path:
     """Riesegue solo checker/evaluation su una run AUT completata, in-place."""
     from .correction_input import InvalidCorrectionError, MissingCorrectionError
 
@@ -319,13 +337,18 @@ def reevaluate_run(config, run: Path) -> Path:
     content, digest = read_correction(source)
     if tree is not None:
         validate_correction_lab(source, run / "input/lab")
+    if initial_evaluation and (manifest.get("pipeline_state") != "AUT_COMPLETED" or
+                               manifest.get("evaluation_revision", 0) != 0):
+        raise ValueError("Prima valutazione consentita solo da AUT_COMPLETED con revisione zero")
+    if initial_evaluation and hashlib.sha256((run / "evaluation/correction.yaml").read_bytes()).hexdigest() != manifest.get("correction_sha256"):
+        raise ValueError("Snapshot della correction alterato prima della valutazione")
     previous_total_seconds = _metric_total_seconds(run)
     checker_snapshots = {path: lab_manifest(run / path) for path in ("lab", "input/lab")}
     evaluation = run / "evaluation"
     evaluation.mkdir(parents=True, exist_ok=True)
     revision = manifest.get("evaluation_revision", 0)
     history = evaluation / "history" / f"revision_{revision:03d}"
-    if not history.exists():
+    if not initial_evaluation and not history.exists():
         history.mkdir(parents=True)
         for old in (evaluation / "correction.yaml", evaluation / "metrics.json", manifest_path):
             if old.is_file():
@@ -333,7 +356,11 @@ def reevaluate_run(config, run: Path) -> Path:
         if (run / "results").is_dir():
             shutil.copytree(run / "results", history / "results")
     snapshot = evaluation / "correction.yaml"
-    snapshot.write_bytes(content)
+    if initial_evaluation:
+        if digest != manifest.get("correction_sha256"):
+            raise ValueError("Correction corrente differente da quella della generazione")
+    else:
+        snapshot.write_bytes(content)
     if validate_correction(snapshot) != digest:
         raise InvalidCorrectionError(f"Invalid correction snapshot: {snapshot}")
 
@@ -345,8 +372,9 @@ def reevaluate_run(config, run: Path) -> Path:
         updated_conditions = {**manifest['experimental_conditions'], 'correction_sha256': digest}
         manifest['experimental_conditions'] = updated_conditions
         manifest['experimental_fingerprint'] = fingerprint(updated_conditions)
-    manifest["evaluation_revision"] = manifest.get("evaluation_revision", 0) + 1
-    manifest["last_reevaluated_at"] = utc_now()
+    if not initial_evaluation:
+        manifest["evaluation_revision"] = manifest.get("evaluation_revision", 0) + 1
+        manifest["last_reevaluated_at"] = utc_now()
     manifest["checker_execution_success"] = None
     manifest["task_success"] = None
     manifest.pop("pipeline_error", None)
@@ -362,11 +390,13 @@ def reevaluate_run(config, run: Path) -> Path:
     for name in ("checker_invocation.json", "checker_execution.json", "checker_stdout.log", "checker_stderr.log"):
         (run / "logs" / name).unlink(missing_ok=True)
     manifest["pipeline_state"] = "CHECKER_RUNNING"
+    manifest["checker_started_at"] = utc_now()
     write_json(manifest_path, manifest)
     started = time.monotonic()
     outcome = None
     try:
-        outcome = run_checker(config, run, snapshot)
+        outcome = (run_checker(config, run, snapshot, isolated=True) if isolated_checker
+                   else run_checker(config, run, snapshot))
         manifest["checker_execution_success"] = True
         manifest["task_success"] = outcome["task_success"]
         manifest["pipeline_state"] = "FINALIZING"
@@ -386,12 +416,19 @@ def reevaluate_run(config, run: Path) -> Path:
         (run / "logs").mkdir(parents=True, exist_ok=True)
         (run / "logs/pipeline_error.log").write_text(traceback.format_exc())
     checker_seconds = time.monotonic() - started
+    manifest["checker_completed_at"] = utc_now()
     check_lab_integrity(run, checker_snapshots)
     manifest["completed_at"] = utc_now()
     write_json(manifest_path, manifest)
     metrics_manifest = {**manifest,"pipeline_state":"COMPLETED"} if manifest["pipeline_state"]=="FINALIZING" else manifest
+    # A phased first evaluation combines AUT and checker durations, without
+    # charging the queue wait to a single observation. Legacy re-evaluations
+    # preserve their preexisting total_seconds semantics.
+    total_seconds = (previous_total_seconds + checker_seconds
+                     if initial_evaluation and previous_total_seconds is not None
+                     else previous_total_seconds)
     metrics = make_metrics(run, metrics_manifest,
-                           total_seconds=previous_total_seconds,
+                           total_seconds=total_seconds,
                            checker_seconds=checker_seconds,
                            checker_outcome=outcome)
     # Nessun report valido dopo un errore tecnico: non recuperare conteggi da artefatti parziali.

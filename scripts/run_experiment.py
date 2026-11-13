@@ -64,6 +64,12 @@ def main(argv=None):
     parser.add_argument("--resume-allow-unverified", action="store_true",
                         help="consenti il riuso di manifest storici senza fingerprint completa, se i campi disponibili coincidono")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--pipeline-mode", choices=("sequential", "phased"), default="sequential",
+                        help="phased: generate all labs before starting independent Kathara checks")
+    parser.add_argument("--generation-workers", type=int, choices=(1, 2))
+    parser.add_argument("--checker-workers-small", type=int, choices=(1, 2))
+    parser.add_argument("--checker-workers-medium", type=int, choices=(1, 2))
+    parser.add_argument("--checker-workers-large", type=int, choices=(1, 2))
     args = parser.parse_args(argv)
     benchmark_started = False
     experiment_lock = None
@@ -95,6 +101,12 @@ def main(argv=None):
             raise ValueError("Nessuna combinazione abilitata corrisponde ai filtri")
         if args.repetitions is not None and args.repetitions < 1:
             raise ValueError("repetitions deve essere positivo")
+        if args.pipeline_mode == "phased" and args.rerun_correction:
+            raise ValueError("--rerun-correction richiede la modalità sequenziale esistente")
+        if args.pipeline_mode == "sequential" and any(v is not None for v in (
+                args.generation_workers, args.checker_workers_small,
+                args.checker_workers_medium, args.checker_workers_large)):
+            raise ValueError("Le opzioni worker richiedono --pipeline-mode phased")
         if args.rerun_correction and args.repetitions is not None:
             raise ValueError("--repetitions non si applica alla rivalutazione")
         if args.rerun_correction and args.only_replicate is not None:
@@ -198,15 +210,38 @@ def main(argv=None):
         if args.dry_run:
             for d in decisions:
                 c = d.cell
-                print(f"{'CONFLICT' if c in conflicts else 'RUN' if d.should_run else 'SKIP'} {c.lab_id}/{c.dns_tree_id}/{c.task_level}/{c.prompt_type}/{c.skill_mode} rep={c.replicate} prompt={resolve_prompt(config.root, c.dns_tree_id, c.prompt_type, c.task_level).relative_to(config.root)} correction={correction_path(config.root, c.assignment).relative_to(config.root)}")
+                label = ('CONFLICT' if c in conflicts else
+                         'CHECK' if args.pipeline_mode == 'phased' and c in recoverable else
+                         'GENERATE' if args.pipeline_mode == 'phased' and d.should_run else
+                         'RUN' if d.should_run else 'SKIP')
+                print(f"{label} {c.lab_id}/{c.dns_tree_id}/{c.task_level}/{c.prompt_type}/{c.skill_mode} rep={c.replicate} prompt={resolve_prompt(config.root, c.dns_tree_id, c.prompt_type, c.task_level).relative_to(config.root)} correction={correction_path(config.root, c.assignment).relative_to(config.root)}")
             return int(bool(conflicts))
         if conflicts:
             return 1
         if not selected:
             return 0
+        if args.pipeline_mode == "phased" and not args.resume:
+            raise ValueError("--pipeline-mode phased richiede --resume per evitare duplicazioni")
         validate_report_destination(report_output)
         guarded_preflight(preflight,config, agent, skill_mode=skills[0] if agent == "codex" else None, assignments=assignments)
         benchmark_started = True
+        if args.pipeline_mode == "phased":
+            from benchmark_core.phased_execution import execute_phased
+            pc = config.data.get("parallel_execution", {})
+            generation_cfg = pc.get("generation", {})
+            checker_cfg = pc.get("checker", {})
+            failed = execute_phased(
+                config, spec, labs, agent, selected, recoverable,
+                generation_workers=args.generation_workers or generation_cfg.get("workers", 2),
+                checker_workers={
+                    "small": args.checker_workers_small or checker_cfg.get("small_workers", 2),
+                    "medium": args.checker_workers_medium or checker_cfg.get("medium_workers", 2),
+                    "large": args.checker_workers_large or checker_cfg.get("large_workers", 1),
+                },
+                update_reports=update_reports,
+                continue_on_error=config.data["benchmark"]["continue_on_error"],
+            )
+            return int(failed or report_failed)
         failed = False
         needs_aggregation = False
         try:
