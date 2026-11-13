@@ -24,6 +24,10 @@ def _manifest(run: Path) -> dict:
 def _generate(config, scenario, agent, cell):
     """Executed in a fresh spawned process, not a thread that forks."""
     from .standard_runtime import run_supervised
+    from dataclasses import replace
+    # Enable resource bounds only for phased AUT; source config stays unchanged.
+    parallel = {**config.data.get("parallel_execution", {}), "enabled": True}
+    config = replace(config, data={**config.data, "parallel_execution": parallel})
     run = run_supervised(
         config, scenario, agent, cell.prompt_type,
         skill_mode=cell.skill_mode, experiment_id=cell.experiment_id,
