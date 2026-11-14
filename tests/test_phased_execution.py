@@ -109,6 +109,76 @@ def test_invalid_worker_count_fails_closed(tmp_path):
     config = SimpleNamespace(root=tmp_path,
                              data={"docker_sandbox": {"execution_backend": "docker_sandbox"}})
     with pytest.raises(ValueError, match="generation_workers"):
-        execute_phased(config, None, {}, "codex", [], {}, generation_workers=3,
+        execute_phased(config, None, {}, "codex", [], {}, generation_workers=6,
                        checker_workers={"small": 2, "medium": 2, "large": 1},
                        update_reports=lambda: None)
+
+
+@pytest.mark.parametrize("level, count", [
+    ("small", 0),
+    ("small", 5),
+    ("medium", 5),
+    ("large", 3),
+])
+def test_invalid_checker_count_fails_closed(tmp_path, level, count):
+    config = SimpleNamespace(
+        root=tmp_path,
+        data={"docker_sandbox": {"execution_backend": "docker_sandbox"}},
+    )
+    counts = {"small": 4, "medium": 4, "large": 2}
+    counts[level] = count
+    with pytest.raises(ValueError, match=fr"checker_workers\[{level}\]"):
+        execute_phased(config, None, {}, "codex", [], {},
+                       generation_workers=5, checker_workers=counts,
+                       update_reports=lambda: None)
+
+
+def test_five_generators_and_four_checkers_keep_phase_boundaries(tmp_path):
+    """Exercise configured worker limits and checker waves without Docker."""
+    InlinePool.starts = []
+    small = TaskAssignment("lab_01", "base", "small")
+    medium = TaskAssignment("lab_02", "base", "medium")
+    cells = [
+        RunCell("thesis_final", assignment.lab_id, f"T{number}",
+                "no_skill", 4, assignment)
+        for assignment in (small, medium)
+        for number in range(1, 6)
+    ]
+    decisions = [ResumeDecision(cell, True, "missing") for cell in cells]
+    config = SimpleNamespace(
+        root=tmp_path,
+        data={"docker_sandbox": {"execution_backend": "docker_sandbox"}},
+    )
+    stages = []
+    updates = []
+
+    def generated(cfg, scenario, agent, cell):
+        stages.append(("generate", cell.task_level))
+        run = tmp_path / f"{cell.task_level}_{cell.prompt_type}"
+        run.mkdir()
+        (run / "manifest.json").write_text('{"pipeline_state":"AUT_COMPLETED"}')
+        return str(run), "AUT_COMPLETED"
+
+    def evaluated(cfg, run_name):
+        level = Path(run_name).name.split("_", 1)[0]
+        stages.append(("check", level))
+        return str(run_name), "COMPLETED"
+
+    with (
+        patch("benchmark_core.phased_execution.ProcessPoolExecutor", InlinePool),
+        patch("benchmark_core.phased_execution._generate", generated),
+        patch("benchmark_core.phased_execution._evaluate", evaluated),
+        patch("benchmark_core.phased_execution.get_context", return_value=None),
+    ):
+        failed = execute_phased(
+            config, SimpleNamespace(), {cell.lab_id: object() for cell in cells},
+            "codex", decisions, {}, generation_workers=5,
+            checker_workers={"small": 4, "medium": 4, "large": 2},
+            update_reports=lambda: updates.append("aggregate"),
+        )
+
+    assert failed is False
+    assert stages[:10] == [("generate", cell.task_level) for cell in cells]
+    assert stages[10:] == [("check", "small")] * 5 + [("check", "medium")] * 5
+    assert InlinePool.starts == [5, 4, 4, 4, 4]
+    assert len(updates) == 5  # generation + four checker waves
