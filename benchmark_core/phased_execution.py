@@ -62,12 +62,16 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
         raise ValueError("Parallel phased mode currently requires Codex")
     if config.data.get("docker_sandbox", {}).get("execution_backend") != "docker_sandbox":
         raise ValueError("Parallel phased mode requires Docker Sandboxes")
-    if generation_workers not in (1, 2):
-        raise ValueError("generation_workers must be 1 or 2 on this host")
-    for level in ("small", "medium", "large"):
+    # Match the limits in the CLI and configuration validator.
+    if type(generation_workers) is not int or not 1 <= generation_workers <= 5:
+        raise ValueError("generation_workers must be between 1 and 5")
+    checker_limits = {"small": 4, "medium": 4, "large": 2}
+    for level, maximum in checker_limits.items():
         count = checker_workers[level]
-        if type(count) is not int or count not in (1, 2):
-            raise ValueError(f"checker_workers[{level}] must be 1 or 2")
+        if type(count) is not int or not 1 <= count <= maximum:
+            raise ValueError(
+                f"checker_workers[{level}] must be between 1 and {maximum}"
+            )
     mp = get_context("spawn")
     generated = {}
     failures = []
