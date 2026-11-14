@@ -1,0 +1,11 @@
+experiment:
+  id: phased_smoke_2aut
+
+assignments:
+  - lab_id: lab_01
+    dns_tree_id: base
+    task_levels: [small]
+
+prompt_types: [T1]
+skill_modes: [no_skill, dns_only]
+repetitions: 1

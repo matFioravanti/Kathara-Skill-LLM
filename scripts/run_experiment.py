@@ -66,9 +66,9 @@ def main(argv=None):
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--pipeline-mode", choices=("sequential", "phased"), default="sequential",
                         help="phased: generate all labs before starting independent Kathara checks")
-    parser.add_argument("--generation-workers", type=int, choices=(1, 2))
-    parser.add_argument("--checker-workers-small", type=int, choices=(1, 2))
-    parser.add_argument("--checker-workers-medium", type=int, choices=(1, 2))
+    parser.add_argument("--generation-workers", type=int, choices=(1, 2, 3, 4, 5))
+    parser.add_argument("--checker-workers-small", type=int, choices=(1, 2, 3, 4))
+    parser.add_argument("--checker-workers-medium", type=int, choices=(1, 2, 3, 4))
     parser.add_argument("--checker-workers-large", type=int, choices=(1, 2))
     args = parser.parse_args(argv)
     benchmark_started = False

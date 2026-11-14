@@ -550,6 +550,17 @@ The experiment layer orchestrates full matrix runs defined in YAML configuration
 
 `replicate` and `run_number` match under normal execution. If a run fails due to an infrastructure issue and is retried, the retried run receives a new physical `run_number` while fulfilling the original `replicate`.
 
+For `thesis_final`, the experiment assignments identify `lab_01 / base / small`,
+`lab_02 / base / medium`, and `lab_03 / base / large`. A complete observation
+identity also includes the prompt type, skill mode, and statistical `replicate`.
+The `rNNN` directory identifies a physical execution within that combination;
+it is not necessarily the replicate number. For example, `r003` with
+`replicate: 4` is the third physical execution and the fourth planned replicate.
+Inspect the manifest or the `replicate` and `run_number` columns in `runs.csv`
+when selecting existing observations. `--only-replicate` selects the statistical
+replicate, not the `rNNN` directory. Use `--dry-run --resume` to preview what
+will be generated, checked, or skipped before starting an experiment.
+
 ### Experiment YAML Specification
 
 Create an experiment file under `experiments/` (e.g., `experiments/thesis_final.yaml`):

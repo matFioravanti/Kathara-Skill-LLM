@@ -57,7 +57,10 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
         event_callback(
             "run_started", scenario_id=scenario.scenario_id, prompt_type=prompt_type,
             agent=agent, skill_mode=skill_mode, repetition=run_number,
-            run_path=run.relative_to(config.root).as_posix(), **context,
+            run_path=run.relative_to(config.root).as_posix(),
+            replicate=replicate if replicate is not None else run_number,
+            task_level=assignment.task_level if assignment else None,
+            dns_tree_id=assignment.dns_tree_id if assignment else None, **context,
         )
     manifest = {
         "run_id": run_id, "run_number": run_number,

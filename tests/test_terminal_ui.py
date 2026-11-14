@@ -6,7 +6,7 @@ import unittest
 from contextlib import redirect_stdout
 from unittest.mock import patch
 
-from benchmark_core.terminal_ui import pipeline_state, result, result_table
+from benchmark_core.terminal_ui import benchmark_header, pipeline_state, result, result_table
 
 
 class TerminalUiTest(unittest.TestCase):
@@ -46,6 +46,32 @@ class TerminalUiTest(unittest.TestCase):
         self.assertIn("Checker failed", rendered)
         self.assertIn("checker exited with code 1", rendered)
         self.assertIn("logs/checker_stderr.log", rendered)
+
+    def test_run_folder_and_statistical_repetition_are_distinct(self):
+        metrics = {"scenario": "lab_01", "lab_id": "lab_01", "dns_tree_id": "base",
+                   "task_level": "small", "run_number": 3, "replicate": 4,
+                   "status": "COMPLETED"}
+        output = io.StringIO()
+        with redirect_stdout(output):
+            result(metrics)
+            result_table([{"metrics": metrics}, {"metrics": metrics}], multiple_scenarios=True)
+        rendered = output.getvalue()
+        self.assertIn("r003 · replicate 4", rendered)
+        self.assertIn("Run folder", rendered)
+        self.assertIn("Repetition", rendered)
+        self.assertIn("small", rendered)
+        self.assertIn("base", rendered)
+        self.assertRegex(rendered, r"r003\s+4")
+
+    def test_header_identifies_lab_and_both_numbers(self):
+        output = io.StringIO()
+        with redirect_stdout(output):
+            benchmark_header("lab_02", "T1", "codex", "auto", 3, "runs/example/r003",
+                             replicate=4, task_level="medium", dns_tree_id="base")
+        rendered = output.getvalue()
+        self.assertIn("lab_02 / base / medium", rendered)
+        self.assertIn("Run folder     r003", rendered)
+        self.assertIn("Repetition     4", rendered)
 
     def test_multi_run_summary_has_semantic_columns_and_rows(self):
         rows = [{"metrics": {"scenario": "lab00_five_router", "prompt_type": "T1",

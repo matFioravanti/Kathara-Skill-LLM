@@ -21,20 +21,26 @@ def _rule(title: str, width: int = 64) -> str:
 
 def benchmark_header(scenario_id: str, prompt_type: str, agent: str, skill_mode: str,
                      repetition: int, run_path: str, run_index: int | None = None,
-                     run_total: int | None = None) -> None:
+                     run_total: int | None = None, *, replicate: int | None = None,
+                     task_level: str | None = None, dns_tree_id: str | None = None) -> None:
+    lab_label = " / ".join(str(v) for v in (scenario_id, dns_tree_id, task_level) if v)
     if run_index is not None and run_total is not None:
         print(f"\n{_rule(f'RUN {run_index} / {run_total}')}")
-        print(f"\n {skill_mode} · r{repetition:03d}")
+        print(f"\n {lab_label} · {prompt_type} · {skill_mode} · r{repetition:03d}")
+        if replicate is not None:
+            print(f" Statistical repetition  {replicate}")
         print(f" Run path\n {run_path}\n")
     else:
         print("╭──────────────────────────────────────────────────────────────╮")
         print("│                  KATHARA SKILL BENCHMARK                     │")
         print("╰──────────────────────────────────────────────────────────────╯")
-        print(f"\n Scenario       {scenario_id}")
+        print(f"\n Lab            {lab_label}")
         print(f" Prompt         {prompt_type}")
         print(f" Agent          {agent}")
         print(f" Skill mode     {skill_mode}")
-        print(f" Repetition     r{repetition:03d}")
+        print(f" Run folder     r{repetition:03d}")
+        if replicate is not None:
+            print(f" Repetition     {replicate}")
         print(f"\n Run path\n {run_path}")
     print(f"\n{_rule('PIPELINE')}\n", flush=True)
 
@@ -81,9 +87,12 @@ def result(metrics: dict) -> None:
     _metric("Duration", f"{duration:.1f} s" if isinstance(duration, (int, float)) else None)
     status = metrics.get("status")
     symbol = "✓" if status == "COMPLETED" else "✗"
-    identity = [metrics.get("scenario"), metrics.get("prompt_type"), metrics.get("skill_mode")]
+    identity = [metrics.get("lab_id") or metrics.get("scenario"), metrics.get("dns_tree_id"),
+                metrics.get("task_level"), metrics.get("prompt_type"), metrics.get("skill_mode")]
     identity = [str(value) for value in identity if value]
     identity.append(f"r{metrics.get('run_number'):03d}" if isinstance(metrics.get("run_number"), int) else None)
+    if isinstance(metrics.get("replicate"), int):
+        identity.append(f"replicate {metrics['replicate']}")
     label = " · ".join(value for value in identity if value)
     print(f"\n {symbol} {label} {'completed' if status == 'COMPLETED' else 'failed'}\n", flush=True)
 
@@ -106,9 +115,9 @@ def _integer(value) -> str | None:
 def result_table(rows: list[dict], *, multiple_scenarios: bool) -> None:
     if len(rows) < 2:
         return
-    columns = (["Scenario", "Prompt", "Skill mode", "Repetition", "Result", "Checks", "Pass rate", "Duration"]
+    columns = (["Scenario", "DNS tree", "Task level", "Prompt", "Skill mode", "Run folder", "Repetition", "Result", "Checks", "Pass rate", "Duration"]
                if multiple_scenarios else
-               ["Skill mode", "Repetition", "Result", "Checks", "Pass rate", "Duration"])
+               ["Skill mode", "Run folder", "Repetition", "Result", "Checks", "Pass rate", "Duration"])
     data = []
     for row in rows:
         metrics = row["metrics"]
@@ -118,8 +127,12 @@ def result_table(rows: list[dict], *, multiple_scenarios: bool) -> None:
         result_label = ("PASS" if task_result is True else "FAIL" if task_result is False else
                         "COMPLETED" if metrics.get("status") == "COMPLETED" else "FAILED")
         values = {
-            "Scenario": metrics.get("scenario"), "Prompt": metrics.get("prompt_type"),
-            "Skill mode": metrics.get("skill_mode"), "Repetition": f"r{metrics.get('run_number') or 0:03d}",
+            "Scenario": metrics.get("lab_id") or metrics.get("scenario"),
+            "DNS tree": metrics.get("dns_tree_id"), "Task level": metrics.get("task_level"),
+            "Prompt": metrics.get("prompt_type"),
+            "Skill mode": metrics.get("skill_mode"),
+            "Run folder": f"r{metrics['run_number']:03d}" if isinstance(metrics.get("run_number"), int) else "—",
+            "Repetition": metrics.get("replicate"),
             "Result": result_label,
             "Checks": _pair(checker.get("passed"), checker.get("total")) or "—",
             "Pass rate": f"{checker['pass_rate']:.2%}" if isinstance(checker.get("pass_rate"), (int, float)) else "—",
@@ -141,6 +154,8 @@ def render_run_event(event: str, **data) -> None:
         benchmark_header(
             data["scenario_id"], data["prompt_type"], data["agent"], data["skill_mode"],
             data["repetition"], data["run_path"], data.get("run_index"), data.get("run_total"),
+            replicate=data.get("replicate"), task_level=data.get("task_level"),
+            dns_tree_id=data.get("dns_tree_id"),
         )
         if "available_skills" in data:
             skill_details(data["skill_mode"], data["available_skills"], data.get("forced_skills", []))
