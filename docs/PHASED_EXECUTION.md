@@ -1,21 +1,22 @@
 # Phased experiment execution (opt-in preview)
 
-This document describes the experimental implementation on branch
-`feature/phased-parallel-benchmark`. This path has **not** yet been validated
-against live Codex OAuth, sbx v0.48.0 and concurrent Kathara Docker workloads
-on the target Mac. Do not use it to generate scientific observations before
-testing its equivalence to the existing sequential protocol.
+This document describes the opt-in phased executor. It supports up to 5
+concurrent Codex generation workers, 4 Small checkers, 4 Medium checkers and
+2 Large checkers. These higher settings have **not** yet been validated against
+live Codex OAuth, sbx v0.48.0 and concurrent Kathara Docker workloads on the
+target Mac. Verify live isolation and equivalence before relying on new
+scientific observations at higher concurrency.
 
 ## Design
 
 `scripts/run_experiment.py --pipeline-mode phased` orchestrates two stages:
 
-1. Generate *all* pending AUT observations with up to two isolated, supervised
+1. Generate *all* pending AUT observations with up to five isolated, supervised
    Codex processes. No checker starts during this phase. Each worker writes
    its own manifest, input/output lab, skill-gate evidence, AUT telemetry and
    correction snapshot before returning `AUT_COMPLETED`.
 2. Check all eligible labs in order **Small, Medium, Large** with maximum
-   worker counts **2, 2, 1**. Only the temporary checker copies receive
+   worker counts **4, 4, 2**. Only the temporary checker copies receive
    unique Kathara `LAB_NAME` values. The generated lab and correction remain
    unchanged. Each run writes metrics, status and CSV results as soon as its
    checker finishes. Aggregate CSV/Excel files are refreshed after every
@@ -45,9 +46,34 @@ parallel_execution:
 `sbx create` supports `--memory` and `--cpus`. These limits are applied
 only when phased generation is explicitly selected, including the protected
 Skill-gate sandbox. Verify the installed sbx binary's `create --help`.
-The memory allocations are *limits*, not guaranteed free RAM. If the Mac
-uses excessive swap or Codex fails to initialize, use
-`--generation-workers 1` and reduce memory pressure.
+The defaults above remain unchanged unless overridden. The configured 3g
+per-sandbox limit across five concurrent sandboxes allows up to 15 GB of
+sandbox memory consumption, before other Docker/host overhead. These limits
+are *ceilings*, not guaranteed free RAM. Monitor swap and memory pressure on
+a 16 GB Mac, and lower worker counts if required.
+
+## Five-generator / four-checker configuration
+
+Run the offline tests and inspect the planned work before a live experiment:
+
+```bash
+.venv/bin/python -m pytest tests/test_phased_execution.py -q
+
+for level in small medium; do
+  .venv/bin/python scripts/run_experiment.py experiments/thesis_final.yaml \
+    --task-level "$level" --repetitions 4 --only-replicate 4 \
+    --pipeline-mode phased --generation-workers 5 \
+    --checker-workers-small 4 --checker-workers-medium 4 \
+    --checker-workers-large 2 --resume --dry-run
+done
+```
+
+Remove `--dry-run` and prefix the Python command with `caffeinate -i`
+only after checking isolation, memory headroom and smoke-test results.
+Small and Medium run in sequence in this shell loop. Existing observations
+are reused under `--resume` when the fingerprint and artifacts validate.
+Note that a statistical replicate (4) is not necessarily a physical directory
+named `r004`.
 
 ## Offline verification (no LLM calls)
 
