@@ -81,14 +81,19 @@ def load_config(path: Path) -> Config:
         raise ValueError("parallel_execution deve essere un mapping")
     if "enabled" in parallel and type(parallel["enabled"]) is not bool:
         raise ValueError("parallel_execution.enabled deve essere booleano")
-    for group, fields in (("generation", ("workers",)), ("checker", ("small_workers", "medium_workers", "large_workers"))):
+    # Keep YAML validation aligned with the CLI and phased executor.
+    worker_limits = (
+        ("generation", {"workers": 5}),
+        ("checker", {"small_workers": 4, "medium_workers": 4, "large_workers": 2}),
+    )
+    for group, fields in worker_limits:
         section = parallel.get(group, {})
         if not isinstance(section, dict):
             raise ValueError(f"parallel_execution.{group} deve essere un mapping")
-        for field in fields:
+        for field, maximum in fields.items():
             value = section.get(field)
-            if value is not None and (type(value) is not int or value not in (1, 2)):
-                raise ValueError(f"parallel_execution.{group}.{field} deve essere 1 oppure 2")
+            if value is not None and (type(value) is not int or not 1 <= value <= maximum):
+                raise ValueError(f"parallel_execution.{group}.{field} deve essere tra 1 e {maximum}")
     generation = parallel.get("generation", {})
     memory = generation.get("sandbox_memory")
     cpus = generation.get("sandbox_cpus")
