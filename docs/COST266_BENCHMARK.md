@@ -46,11 +46,28 @@ Le nuove osservazioni sono separate in `runs/cost266/cost266_one_shot/` e i repo
 `results/cost266/experiments/cost266_one_shot/`. Le run degli altri piani
 non vengono spostate. Senza `--execution-mode` resta selezionato il piano
 storico `cost266.yaml`.
+
+Per eseguire GPT-6.1 Terra con reasoning `xhigh` in un esperimento separato:
+
+```bash
+.venv/bin/python scripts/run_cost266.py --execution-mode one_shot --model gpt-6.1-terra --reasoning-effort xhigh --experiment-id cost266_one_shot_terra_xhigh
+```
+
+Senza questi parametri restano validi modello ed effort di `benchmark.yaml`.
+Riutilizzare lo stesso `--experiment-id` e le stesse opzioni per `--resume` e
+`--rerun-correction`; le condizioni sono verificate e non si sovrascrivono run
+esistenti con impostazioni differenti. L'effettiva disponibilità del modello e
+del livello richiesti dipende dal backend e dall'account.
 Con `--execution-mode one_shot` si avviano fino a cinque generazioni in
-parallelo; i checker finali sono serializzati, uno alla volta. Il numero di
-generazioni si può cambiare con `--generation-workers N`. L'attesa del checker
-è registrata nel manifest come `checker_queue_seconds` ed esclusa dal budget
-attivo della run. Il report è pubblicato dopo il completamento del gruppo.
+parallelo. Ogni run passa al checker appena termina la generazione, con un
+massimo di cinque checker contemporanei; le correction della singola run restano
+sequenziali. Ogni checker usa una copia temporanea con un'identità Kathara
+distinta. Il numero di generazioni si può cambiare con `--generation-workers N`;
+uno slot di generazione si libera prima dell'attesa o dell'esecuzione del
+checker. Le attese sono registrate nel manifest come `generation_queue_seconds`
+e `checker_queue_seconds` ed escluse dal budget attivo della run. Il report
+aggregato è pubblicato dopo il completamento del gruppo. Il carico e l'isolamento
+dei cinque checker concorrenti richiedono verifica sul sistema Kathara utilizzato.
 
 L'avanzamento è stampato in tempo reale e aggiunto a
 `logs/cost266/<experiment_id>.log`: ogni riga identifica strategia, prompt,

@@ -1,0 +1,206 @@
+[16:32:11] [COST266/one_shot/T1/no_skill/r001] Pianificata: 1 run, fino a 1 generazioni parallele; 1 checker alla volta
+[16:32:11] [COST266/one_shot/T1/no_skill/r001] START RUN
+[16:32:11] [COST266/one_shot/T1/no_skill/r001] Generazione avviata: fase 1/1, tentativo 001
+[16:33:47] [COST266/one_shot/T1/no_skill/r001] Generazione agente terminata: fase 1/1; durata: 1m 35s; verifica checkpoint in corso
+[16:33:47] [COST266/one_shot/T1/no_skill/r001] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[16:33:47] [COST266/one_shot/T1/no_skill/r001] Fase 1/1 completata; durata: 1m 36s
+[16:33:47] [COST266/one_shot/T1/no_skill/r001] Generazione completata: 1/1 fasi promosse; durata: 1m 36s
+[16:33:47] [COST266/one_shot/T1/no_skill/r001] Avvio Kathara Lab Checker...
+[16:47:00] [COST266/one_shot/T1/no_skill/r001] Checker terminato: COMPLETED; durata: 13m 12s; task_success=False
+[16:47:00] [COST266/one_shot/T1/no_skill/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 14m 48s
+[16:47:00] [COST266/one_shot/T1/no_skill/r001] Generazione report XLSX/CSV avviata...
+[16:47:01] [COST266/one_shot/T1/no_skill/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 1s
+[17:17:55] [COST266/one_shot/T1/auto/r001] ERRORE CLI/preparazione o report: ValueError: Hash dataset non corrispondente: importare in un nuovo percorso
+[17:17:55] [COST266/one_shot/T1/dns_only/r001] ERRORE CLI/preparazione o report: ValueError: Hash dataset non corrispondente: importare in un nuovo percorso
+[17:17:55] [COST266/one_shot/T1/creation_only/r001] ERRORE CLI/preparazione o report: ValueError: Hash dataset non corrispondente: importare in un nuovo percorso
+[17:17:55] [COST266/one_shot/T1/both_forced/r001] ERRORE CLI/preparazione o report: ValueError: Hash dataset non corrispondente: importare in un nuovo percorso
+[17:21:00] [COST266/one_shot/T1/auto/r001] Pianificata: 4 run, fino a 4 generazioni parallele; fino a 3 checker paralleli
+[17:21:00] [COST266/one_shot/T1/dns_only/r001] Pianificata: 4 run, fino a 4 generazioni parallele; fino a 3 checker paralleli
+[17:21:00] [COST266/one_shot/T1/creation_only/r001] Pianificata: 4 run, fino a 4 generazioni parallele; fino a 3 checker paralleli
+[17:21:00] [COST266/one_shot/T1/both_forced/r001] Pianificata: 4 run, fino a 4 generazioni parallele; fino a 3 checker paralleli
+[17:21:00] [COST266/one_shot/T1/auto/r001] START RUN
+[17:21:00] [COST266/one_shot/T1/dns_only/r001] START RUN
+[17:21:00] [COST266/one_shot/T1/creation_only/r001] START RUN
+[17:21:00] [COST266/one_shot/T1/both_forced/r001] START RUN
+[17:21:01] [COST266/one_shot/T1/both_forced/r001] Generazione avviata: fase 1/1, tentativo 001
+[17:21:01] [COST266/one_shot/T1/dns_only/r001] Generazione avviata: fase 1/1, tentativo 001
+[17:21:01] [COST266/one_shot/T1/auto/r001] Generazione avviata: fase 1/1, tentativo 001
+[17:21:01] [COST266/one_shot/T1/creation_only/r001] Generazione avviata: fase 1/1, tentativo 001
+[17:23:26] [COST266/one_shot/T1/auto/r001] Generazione agente terminata: fase 1/1; durata: 2m 24s; verifica checkpoint in corso
+[17:23:26] [COST266/one_shot/T1/auto/r001] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[17:23:26] [COST266/one_shot/T1/auto/r001] Fase 1/1 completata; durata: 2m 25s
+[17:23:26] [COST266/one_shot/T1/auto/r001] Generazione completata: 1/1 fasi promosse; durata: 2m 25s
+[17:23:26] [COST266/one_shot/T1/auto/r001] Avvio Kathara Lab Checker...
+[17:24:10] [COST266/one_shot/T1/dns_only/r001] Generazione agente terminata: fase 1/1; durata: 3m 9s; verifica checkpoint in corso
+[17:24:11] [COST266/one_shot/T1/dns_only/r001] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[17:24:11] [COST266/one_shot/T1/dns_only/r001] Fase 1/1 completata; durata: 3m 10s
+[17:24:11] [COST266/one_shot/T1/dns_only/r001] Generazione completata: 1/1 fasi promosse; durata: 3m 10s
+[17:24:11] [COST266/one_shot/T1/dns_only/r001] Avvio Kathara Lab Checker...
+[17:24:22] [COST266/one_shot/T1/creation_only/r001] Generazione agente terminata: fase 1/1; durata: 3m 20s; verifica checkpoint in corso
+[17:24:22] [COST266/one_shot/T1/creation_only/r001] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[17:24:23] [COST266/one_shot/T1/creation_only/r001] Fase 1/1 completata; durata: 3m 21s
+[17:24:23] [COST266/one_shot/T1/creation_only/r001] Generazione completata: 1/1 fasi promosse; durata: 3m 21s
+[17:24:23] [COST266/one_shot/T1/creation_only/r001] Avvio Kathara Lab Checker...
+[17:24:39] [COST266/one_shot/T1/both_forced/r001] Generazione agente terminata: fase 1/1; durata: 3m 38s; verifica checkpoint in corso
+[17:24:40] [COST266/one_shot/T1/both_forced/r001] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[17:24:40] [COST266/one_shot/T1/both_forced/r001] Fase 1/1 completata; durata: 3m 39s
+[17:24:40] [COST266/one_shot/T1/both_forced/r001] Generazione completata: 1/1 fasi promosse; durata: 3m 39s
+[17:24:40] [COST266/one_shot/T1/both_forced/r001] In attesa del checker...
+[17:24:52] [COST266/one_shot/T1/auto/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 25s
+[17:25:35] [COST266/one_shot/T1/dns_only/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 23s
+[17:25:57] [COST266/one_shot/T1/creation_only/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 34s
+[17:26:18] [COST266/one_shot/T1/auto/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 25s
+[17:26:56] [COST266/one_shot/T1/dns_only/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 21s
+[17:27:19] [COST266/one_shot/T1/creation_only/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 21s
+[17:27:40] [COST266/one_shot/T1/auto/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 22s
+[17:28:24] [COST266/one_shot/T1/dns_only/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 27s
+[17:28:44] [COST266/one_shot/T1/creation_only/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 25s
+[17:29:06] [COST266/one_shot/T1/auto/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 25s
+[17:29:48] [COST266/one_shot/T1/dns_only/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 23s
+[17:30:12] [COST266/one_shot/T1/creation_only/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 27s
+[17:30:34] [COST266/one_shot/T1/auto/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 27s
+[17:31:11] [COST266/one_shot/T1/dns_only/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 22s
+[17:31:37] [COST266/one_shot/T1/creation_only/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=204/215, falliti=11; durata: 1m 25s
+[17:32:35] [COST266/one_shot/T1/auto/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 1s
+[17:33:12] [COST266/one_shot/T1/dns_only/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 1s
+[17:33:45] [COST266/one_shot/T1/creation_only/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 8s
+[17:34:42] [COST266/one_shot/T1/auto/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 7s
+[17:35:20] [COST266/one_shot/T1/dns_only/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 7s
+[17:35:53] [COST266/one_shot/T1/creation_only/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 7s
+[17:36:50] [COST266/one_shot/T1/auto/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 7s
+[17:37:28] [COST266/one_shot/T1/dns_only/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 8s
+[17:38:04] [COST266/one_shot/T1/creation_only/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 10s
+[17:38:58] [COST266/one_shot/T1/auto/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 7s
+[17:38:58] [COST266/one_shot/T1/auto/r001] Checker terminato: COMPLETED; durata: 15m 31s; task_success=False
+[17:38:58] [COST266/one_shot/T1/both_forced/r001] Avvio Kathara Lab Checker...
+[17:38:58] [COST266/one_shot/T1/auto/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 17m 58s
+[17:39:45] [COST266/one_shot/T1/dns_only/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 17s
+[17:39:45] [COST266/one_shot/T1/dns_only/r001] Checker terminato: COMPLETED; durata: 15m 33s; task_success=False
+[17:39:45] [COST266/one_shot/T1/dns_only/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 18m 45s
+[17:40:13] [COST266/one_shot/T1/creation_only/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 9s
+[17:40:13] [COST266/one_shot/T1/creation_only/r001] Checker terminato: COMPLETED; durata: 15m 50s; task_success=False
+[17:40:13] [COST266/one_shot/T1/creation_only/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 19m 13s
+[17:40:23] [COST266/one_shot/T1/both_forced/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 24s
+[17:41:40] [COST266/one_shot/T1/both_forced/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 17s
+[17:42:59] [COST266/one_shot/T1/both_forced/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 18s
+[17:44:17] [COST266/one_shot/T1/both_forced/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 18s
+[17:45:35] [COST266/one_shot/T1/both_forced/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 18s
+[17:47:32] [COST266/one_shot/T1/both_forced/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 1m 57s
+[17:49:34] [COST266/one_shot/T1/both_forced/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 2s
+[17:51:36] [COST266/one_shot/T1/both_forced/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 1s
+[17:53:39] [COST266/one_shot/T1/both_forced/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 2s
+[17:53:39] [COST266/one_shot/T1/both_forced/r001] Checker terminato: COMPLETED; durata: 14m 40s; task_success=False
+[17:53:39] [COST266/one_shot/T1/both_forced/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 32m 38s
+[17:53:39] [COST266/one_shot/T1/auto/r001] Generazione report XLSX/CSV avviata...
+[17:53:39] [COST266/one_shot/T1/dns_only/r001] Generazione report XLSX/CSV avviata...
+[17:53:39] [COST266/one_shot/T1/creation_only/r001] Generazione report XLSX/CSV avviata...
+[17:53:39] [COST266/one_shot/T1/both_forced/r001] Generazione report XLSX/CSV avviata...
+[17:53:43] [COST266/one_shot/T1/auto/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[17:53:43] [COST266/one_shot/T1/dns_only/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[17:53:43] [COST266/one_shot/T1/creation_only/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[17:53:43] [COST266/one_shot/T1/both_forced/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[18:06:09] [COST266/one_shot/T1/no_skill/r002] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 5 checker paralleli
+[18:06:09] [COST266/one_shot/T1/auto/r002] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 5 checker paralleli
+[18:06:09] [COST266/one_shot/T1/dns_only/r002] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 5 checker paralleli
+[18:06:09] [COST266/one_shot/T1/creation_only/r002] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 5 checker paralleli
+[18:06:09] [COST266/one_shot/T1/both_forced/r002] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 5 checker paralleli
+[18:06:09] [COST266/one_shot/T1/no_skill/r002] START RUN
+[18:06:09] [COST266/one_shot/T1/auto/r002] START RUN
+[18:06:09] [COST266/one_shot/T1/dns_only/r002] START RUN
+[18:06:09] [COST266/one_shot/T1/creation_only/r002] START RUN
+[18:06:09] [COST266/one_shot/T1/both_forced/r002] START RUN
+[18:06:10] [COST266/one_shot/T1/no_skill/r002] Generazione avviata: fase 1/1, tentativo 001
+[18:06:10] [COST266/one_shot/T1/dns_only/r002] Generazione avviata: fase 1/1, tentativo 001
+[18:06:10] [COST266/one_shot/T1/creation_only/r002] Generazione avviata: fase 1/1, tentativo 001
+[18:06:10] [COST266/one_shot/T1/auto/r002] Generazione avviata: fase 1/1, tentativo 001
+[18:06:10] [COST266/one_shot/T1/both_forced/r002] Generazione avviata: fase 1/1, tentativo 001
+[18:09:37] [COST266/one_shot/T1/auto/r002] Generazione agente terminata: fase 1/1; durata: 3m 26s; verifica checkpoint in corso
+[18:09:37] [COST266/one_shot/T1/auto/r002] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[18:09:38] [COST266/one_shot/T1/auto/r002] Fase 1/1 completata; durata: 3m 27s
+[18:09:38] [COST266/one_shot/T1/auto/r002] Generazione completata: 1/1 fasi promosse; durata: 3m 27s
+[18:09:38] [COST266/one_shot/T1/auto/r002] Avvio Kathara Lab Checker...
+[18:09:42] [COST266/one_shot/T1/no_skill/r002] Generazione agente terminata: fase 1/1; durata: 3m 31s; verifica checkpoint in corso
+[18:09:42] [COST266/one_shot/T1/no_skill/r002] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[18:09:42] [COST266/one_shot/T1/no_skill/r002] Fase 1/1 completata; durata: 3m 32s
+[18:09:42] [COST266/one_shot/T1/no_skill/r002] Generazione completata: 1/1 fasi promosse; durata: 3m 32s
+[18:09:42] [COST266/one_shot/T1/no_skill/r002] Avvio Kathara Lab Checker...
+[18:10:05] [COST266/one_shot/T1/creation_only/r002] Generazione agente terminata: fase 1/1; durata: 3m 54s; verifica checkpoint in corso
+[18:10:06] [COST266/one_shot/T1/creation_only/r002] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[18:10:06] [COST266/one_shot/T1/creation_only/r002] Fase 1/1 completata; durata: 3m 55s
+[18:10:06] [COST266/one_shot/T1/creation_only/r002] Generazione completata: 1/1 fasi promosse; durata: 3m 55s
+[18:10:06] [COST266/one_shot/T1/creation_only/r002] Avvio Kathara Lab Checker...
+[18:10:14] [COST266/one_shot/T1/dns_only/r002] Generazione agente terminata: fase 1/1; durata: 4m 3s; verifica checkpoint in corso
+[18:10:14] [COST266/one_shot/T1/dns_only/r002] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[18:10:15] [COST266/one_shot/T1/dns_only/r002] Fase 1/1 completata; durata: 4m 4s
+[18:10:15] [COST266/one_shot/T1/dns_only/r002] Generazione completata: 1/1 fasi promosse; durata: 4m 4s
+[18:10:15] [COST266/one_shot/T1/dns_only/r002] Avvio Kathara Lab Checker...
+[18:10:46] [COST266/one_shot/T1/both_forced/r002] Generazione agente terminata: fase 1/1; durata: 4m 35s; verifica checkpoint in corso
+[18:10:47] [COST266/one_shot/T1/both_forced/r002] Validazione statica fase 1/1: 201/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[18:10:47] [COST266/one_shot/T1/both_forced/r002] Fase 1/1 completata; durata: 4m 36s
+[18:10:47] [COST266/one_shot/T1/both_forced/r002] Generazione completata: 1/1 fasi promosse; durata: 4m 36s
+[18:10:47] [COST266/one_shot/T1/both_forced/r002] Avvio Kathara Lab Checker...
+[18:11:20] [COST266/one_shot/T1/auto/r002] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 42s
+[18:11:21] [COST266/one_shot/T1/no_skill/r002] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 38s
+[18:11:52] [COST266/one_shot/T1/creation_only/r002] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 46s
+[18:12:20] [COST266/one_shot/T1/dns_only/r002] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 2m 5s
+[18:12:45] [COST266/one_shot/T1/both_forced/r002] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 58s
+[18:13:23] [COST266/one_shot/T1/no_skill/r002] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 2m 2s
+[18:13:24] [COST266/one_shot/T1/auto/r002] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 2m 4s
+[18:13:51] [COST266/one_shot/T1/creation_only/r002] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 58s
+[18:14:29] [COST266/one_shot/T1/dns_only/r002] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 2m 8s
+[18:14:57] [COST266/one_shot/T1/both_forced/r002] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 2m 11s
+[18:15:30] [COST266/one_shot/T1/no_skill/r002] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 2m 7s
+[18:15:32] [COST266/one_shot/T1/auto/r002] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 2m 7s
+[18:16:02] [COST266/one_shot/T1/creation_only/r002] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 2m 11s
+[18:16:39] [COST266/one_shot/T1/dns_only/r002] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 2m 9s
+[18:17:03] [COST266/one_shot/T1/both_forced/r002] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 2m 6s
+[18:17:34] [COST266/one_shot/T1/auto/r002] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 2m 1s
+[18:17:34] [COST266/one_shot/T1/no_skill/r002] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 2m 3s
+[18:18:11] [COST266/one_shot/T1/creation_only/r002] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 2m 9s
+[18:18:36] [COST266/one_shot/T1/dns_only/r002] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 56s
+[18:19:09] [COST266/one_shot/T1/both_forced/r002] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 2m 5s
+[18:19:32] [COST266/one_shot/T1/no_skill/r002] Correction 5/9 completata: correction_5.yaml; controlli superati=202/215, falliti=13; durata: 1m 58s
+[18:19:32] [COST266/one_shot/T1/auto/r002] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 58s
+[18:20:03] [COST266/one_shot/T1/creation_only/r002] Correction 5/9 completata: correction_5.yaml; controlli superati=202/215, falliti=13; durata: 1m 51s
+[18:20:34] [COST266/one_shot/T1/dns_only/r002] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 57s
+[18:20:58] [COST266/one_shot/T1/both_forced/r002] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 49s
+[18:22:05] [COST266/one_shot/T1/no_skill/r002] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 32s
+[18:22:07] [COST266/one_shot/T1/auto/r002] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 34s
+[18:22:39] [COST266/one_shot/T1/creation_only/r002] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 36s
+[18:23:04] [COST266/one_shot/T1/dns_only/r002] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 29s
+[18:23:22] [COST266/one_shot/T1/both_forced/r002] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 2m 24s
+[18:24:30] [COST266/one_shot/T1/no_skill/r002] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 25s
+[18:24:37] [COST266/one_shot/T1/auto/r002] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 29s
+[18:25:14] [COST266/one_shot/T1/creation_only/r002] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 35s
+[18:25:37] [COST266/one_shot/T1/dns_only/r002] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 33s
+[18:25:52] [COST266/one_shot/T1/both_forced/r002] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 2m 29s
+[18:26:35] [COST266/one_shot/T1/no_skill/r002] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 4s
+[18:27:09] [COST266/one_shot/T1/creation_only/r002] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 1m 54s
+[18:27:18] [COST266/one_shot/T1/auto/r002] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 40s
+[18:28:22] [COST266/one_shot/T1/dns_only/r002] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 45s
+[18:28:33] [COST266/one_shot/T1/no_skill/r002] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 1m 58s
+[18:28:33] [COST266/one_shot/T1/no_skill/r002] Checker terminato: COMPLETED; durata: 18m 50s; task_success=False
+[18:28:33] [COST266/one_shot/T1/no_skill/r002] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 22m 23s
+[18:28:51] [COST266/one_shot/T1/both_forced/r002] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 59s
+[18:29:17] [COST266/one_shot/T1/creation_only/r002] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 7s
+[18:29:17] [COST266/one_shot/T1/creation_only/r002] Checker terminato: COMPLETED; durata: 19m 10s; task_success=False
+[18:29:17] [COST266/one_shot/T1/creation_only/r002] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 23m 7s
+[18:29:58] [COST266/one_shot/T1/auto/r002] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 40s
+[18:29:58] [COST266/one_shot/T1/auto/r002] Checker terminato: COMPLETED; durata: 20m 20s; task_success=False
+[18:29:58] [COST266/one_shot/T1/auto/r002] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 23m 49s
+[18:30:50] [COST266/one_shot/T1/dns_only/r002] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 27s
+[18:30:50] [COST266/one_shot/T1/dns_only/r002] Checker terminato: COMPLETED; durata: 20m 34s; task_success=False
+[18:30:50] [COST266/one_shot/T1/dns_only/r002] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 24m 40s
+[18:31:12] [COST266/one_shot/T1/both_forced/r002] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 20s
+[18:31:12] [COST266/one_shot/T1/both_forced/r002] Checker terminato: COMPLETED; durata: 20m 24s; task_success=False
+[18:31:12] [COST266/one_shot/T1/both_forced/r002] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 25m 3s
+[18:31:12] [COST266/one_shot/T1/no_skill/r002] Generazione report XLSX/CSV avviata...
+[18:31:12] [COST266/one_shot/T1/auto/r002] Generazione report XLSX/CSV avviata...
+[18:31:12] [COST266/one_shot/T1/dns_only/r002] Generazione report XLSX/CSV avviata...
+[18:31:12] [COST266/one_shot/T1/creation_only/r002] Generazione report XLSX/CSV avviata...
+[18:31:12] [COST266/one_shot/T1/both_forced/r002] Generazione report XLSX/CSV avviata...
+[18:31:17] [COST266/one_shot/T1/no_skill/r002] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[18:31:17] [COST266/one_shot/T1/auto/r002] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[18:31:17] [COST266/one_shot/T1/dns_only/r002] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[18:31:17] [COST266/one_shot/T1/creation_only/r002] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s
+[18:31:17] [COST266/one_shot/T1/both_forced/r002] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_one_shot; durata: 0m 4s

@@ -32,6 +32,25 @@ from .protocol import (Cell, Spec, STAGES, VERSION, clean_lab, digest, fingerpri
 _progress_lock = threading.Lock()
 
 
+def _selected_prompts(config, spec, cell, inventory):
+    if spec.protocol != CONTINUOUS_VERSION or cell.strategy != 'incremental':
+        return prompts(inventory, cell)
+    if cell.prompt_type != 'T1':
+        raise ValueError('I prompt incrementali da file sono disponibili solo per T1')
+    folder = safe_path(config.root/'prompt/cost266/incremental')
+    files = sorted(folder.glob('*.md'))
+    import re
+    if len(files) != 6 or any(not re.fullmatch(fr'{i:02d}_.+\.md', p.name) for i, p in enumerate(files, 1)):
+        raise ValueError('Servono sei prompt incrementali .md numerati da 01_ a 06_')
+    result = []
+    for path in files:
+        content = safe_path(path).read_bytes().decode('utf-8')
+        if not content.strip():
+            raise ValueError(f'Prompt incrementale vuoto: {path}')
+        result.append(content)
+    return result
+
+
 def progress(root: Path, experiment_id: str, cell: Cell, message: str):
     """Una riga atomica nel terminale e nel log persistente dell'esperimento."""
     label = f'COST266/{cell.strategy}/{cell.prompt_type}/{cell.skill_mode}/r{cell.repetition:03d}'
@@ -97,7 +116,7 @@ def conditions(config, spec: Spec, cell: Cell, inventory: dict, preparation: dic
             'skill_mode': cell.skill_mode, 'skill_protocol': config.data['aut'].get('skill_protocol', 'explicit_read_v2'),
             'skill_bundles': {name: tree_hash(path.parent) for name, path in paths.items()},
             'budgets': [spec.stage_timeout, spec.total_timeout, spec.checker_timeout],
-            'prompts': [digest(p.encode()) for p in prompts(inventory, cell)]}
+            'prompts': [digest(p.encode()) for p in _selected_prompts(config, spec, cell, inventory)]}
 
 
 def invariant_checks(baseline: Path, current: Path, inventory: dict):
@@ -396,9 +415,9 @@ def _replace_lab(source: Path, target: Path):
     staging.rename(target)
 
 
-def _evaluate(config, spec, run, metadata, remaining):
+def _evaluate(config, spec, run, metadata, remaining, *, isolated=False, emit=None):
     if metadata['conditions'].get('correction_files'):
-        return _evaluate_sequence(config, spec, run, metadata, remaining)
+        return _evaluate_sequence(config, spec, run, metadata, remaining, isolated=isolated, emit=emit)
     oracle = run/'evaluation/correction.yaml'
     if digest(oracle.read_bytes()) != metadata['correction_sha256']:
         raise ValueError('Snapshot correction alterato prima del checker')
@@ -407,7 +426,8 @@ def _evaluate(config, spec, run, metadata, remaining):
     write_json(run/'manifest.json', metadata)
     started = time.monotonic()
     try:
-        outcome = run_checker(timed_config(config, min(spec.checker_timeout, max(1,math.floor(remaining)))), run, oracle)
+        checker_args = {'isolated': True} if isolated else {}
+        outcome = run_checker(timed_config(config, min(spec.checker_timeout, max(1,math.floor(remaining)))), run, oracle, **checker_args)
         if (tree_hash(run/'lab') != before or digest(oracle.read_bytes()) != metadata['correction_sha256']
                 or tree_hash(run/'input/lab') != metadata['input_lab_sha256']):
             raise RuntimeError('Checker ha alterato laboratorio o oracle')
@@ -422,7 +442,7 @@ def _evaluate(config, spec, run, metadata, remaining):
         metadata['checker_seconds'] = metadata.get('checker_seconds',0) + time.monotonic()-started
 
 
-def _evaluate_sequence(config, spec, run, metadata, remaining):
+def _evaluate_sequence(config, spec, run, metadata, remaining, *, isolated=False, emit=None):
     from ..checker_runner import parse_reports, REPORT_COLUMNS
     corrections = dict(sorted(metadata['conditions']['correction_files'].items(), key=lambda item: int(Path(item[0]).stem.split('_')[1])))
     before = tree_hash(run/'lab')
@@ -431,7 +451,8 @@ def _evaluate_sequence(config, spec, run, metadata, remaining):
     started = time.monotonic()
     rows, summaries = [], []
     try:
-        for name, sha in corrections.items():
+        for index, (name, sha) in enumerate(corrections.items(), 1):
+            correction_started = time.monotonic()
             oracle = run/'evaluation'/name
             if digest(oracle.read_bytes()) != sha:
                 raise ValueError(f'Snapshot correction alterato: {name}')
@@ -446,7 +467,8 @@ def _evaluate_sequence(config, spec, run, metadata, remaining):
                 def __truediv__(self, key):
                     return run/'lab' if key == 'lab' else part/key
                 name = oracle.stem
-            result = run_checker(timed_config(config, max(1, math.floor(left))), CheckerRun(), oracle)
+            checker_args = {'isolated': True} if isolated else {}
+            result = run_checker(timed_config(config, max(1, math.floor(left))), CheckerRun(), oracle, **checker_args)
             _, details = parse_reports(part/'results')
             if not details:
                 raise ValueError(f'Report dettagliato assente: {name}')
@@ -454,6 +476,10 @@ def _evaluate_sequence(config, spec, run, metadata, remaining):
             summaries.append((name, result, details))
             if tree_hash(run/'lab') != before or tree_hash(run/'input/lab') != metadata['input_lab_sha256']:
                 raise RuntimeError('Checker ha alterato il laboratorio')
+            if emit is not None:
+                emit(f'Correction {index}/{len(corrections)} completata: {name}; '
+                     f'controlli superati={result["checks_passed"]}/{result["checks_total"]}, '
+                     f'falliti={result["checks_failed"]}; durata: {_duration(time.monotonic()-correction_started)}')
         if any(digest((run/'evaluation'/name).read_bytes()) != sha for name, sha in corrections.items()):
             raise ValueError('Snapshot correction alterato durante il checker')
         total, passed = len(rows), sum(row['Passed'] == 'True' for row in rows)
@@ -513,11 +539,11 @@ def _write_run_workbook(run, metadata, metrics):
     temporary.replace(run/'evaluation'/'benchmark.xlsx')
 
 
-def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None) -> Path:
+def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None, generation_lock=None, checker_isolated=False) -> Path:
     started = time.monotonic()
     progress(config.root, spec.experiment_id, cell, 'START RUN')
     try:
-        run = _execute(config, spec, cell, inventory, preparation, resume=resume, rerun=rerun, checker_lock=checker_lock)
+        run = _execute(config, spec, cell, inventory, preparation, resume=resume, rerun=rerun, checker_lock=checker_lock, generation_lock=generation_lock, checker_isolated=checker_isolated)
         if (run/'manifest.json').is_file():
             metadata = read_json(run/'manifest.json')
             progress(config.root, spec.experiment_id, cell,
@@ -531,13 +557,13 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
         raise
 
 
-def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None) -> Path:
+def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None, generation_lock=None, checker_isolated=False) -> Path:
     invocation_started = time.monotonic()
     action, run = plan(config,spec,cell,inventory,preparation,resume=resume,rerun=rerun)
     if action in ('SKIP','MISSING'):
         return run
     expected = conditions(config,spec,cell,inventory,preparation)
-    sent = prompts(inventory,cell)
+    sent = _selected_prompts(config,spec,cell,inventory)
     if action == 'RUN':
         run.mkdir(parents=True,exist_ok=False)
         for name in ('logs/aut','results','evaluation','steps','input'):
@@ -604,6 +630,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
     previous_active = metadata.get('active_seconds',0)
     outcome = None
     checker_wait_seconds = 0.0
+    generation_wait_seconds = 0.0
     phase_name = 'generazione'
     def emit(message):
         progress(config.root, spec.experiment_id, cell, message)
@@ -614,7 +641,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
         checker_started = time.monotonic()
         emit('Avvio Kathara Lab Checker...')
         try:
-            result = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
+            result = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining(), isolated=checker_isolated, emit=emit)
         except BaseException as exc:
             emit(f'Checker terminato: CHECKER_FAILED; durata: {_duration(time.monotonic()-checker_started)}; causa: {type(exc).__name__}: {exc}')
             raise
@@ -622,7 +649,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
         return result
 
     def remaining():
-        return spec.total_timeout - previous_active - (time.monotonic()-started-checker_wait_seconds)
+        return spec.total_timeout - previous_active - (time.monotonic()-started-checker_wait_seconds-generation_wait_seconds)
     def execute_stages(continuous=None):
         nonlocal phase_name
         for index in range(len(completed),len(sent)):
@@ -721,7 +748,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
                 write_json(attempt/'receipt.json',receipt)
                 metadata['attempt_history'].append({'receipt':str((attempt/'receipt.json').relative_to(run)),
                                                     'sha256':digest((attempt/'receipt.json').read_bytes())})
-                metadata['active_seconds'] = previous_active + time.monotonic()-started
+                metadata['active_seconds'] = previous_active + time.monotonic()-started-generation_wait_seconds
                 write_json(run/'manifest.json',metadata)
             artifacts = {str(p.relative_to(attempt)):digest(p.read_bytes()) for p in attempt.rglob('*') if p.is_file()
                          and ('logs' in p.relative_to(attempt).parts or 'evaluation' in p.relative_to(attempt).parts or p.name=='manifest.json')}
@@ -739,18 +766,31 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
     try:
         initial_completed = len(completed)
         generation_started = time.monotonic()
-        if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental' and not rerun and len(completed)<len(sent):
-            from .continuous import ContinuousAutSession
-            def turn_timeout():
-                if remaining()<1:
-                    raise TimeoutError('Budget totale esaurito nel gate')
-                return min(spec.stage_timeout,max(1,math.floor(remaining())))
-            continuous = ContinuousAutSession(config,run,cell.skill_mode,turn_timeout)
-            continuous.run_all(execute_stages)
-            if any(e['cleanup_ok'] is not True for e in continuous.environments):
-                raise RuntimeError('Cleanup della sessione continua non verificato')
-        elif len(completed)<len(sent):
-            execute_stages()
+        acquired_generation = False
+        try:
+            if len(completed)<len(sent) and generation_lock is not None:
+                wait_started = time.monotonic()
+                if not generation_lock.acquire(blocking=False):
+                    emit('In attesa di uno slot di generazione...')
+                    generation_lock.acquire()
+                acquired_generation = True
+                generation_wait_seconds = time.monotonic()-wait_started
+                metadata['generation_queue_seconds'] = generation_wait_seconds
+            if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental' and not rerun and len(completed)<len(sent):
+                from .continuous import ContinuousAutSession
+                def turn_timeout():
+                    if remaining()<1:
+                        raise TimeoutError('Budget totale esaurito nel gate')
+                    return min(spec.stage_timeout,max(1,math.floor(remaining())))
+                continuous = ContinuousAutSession(config,run,cell.skill_mode,turn_timeout)
+                continuous.run_all(execute_stages)
+                if any(e['cleanup_ok'] is not True for e in continuous.environments):
+                    raise RuntimeError('Cleanup della sessione continua non verificato')
+            elif len(completed)<len(sent):
+                execute_stages()
+        finally:
+            if acquired_generation:
+                generation_lock.release()
         if len(completed) > initial_completed:
             emit(f'Generazione completata: {len(completed)}/{len(sent)} fasi promosse; durata: {_duration(time.monotonic()-generation_started)}')
         metadata.update(aut_execution_success=True,pipeline_state='AUT_COMPLETED',final_lab_sha256=tree_hash(run/'lab'))
@@ -788,7 +828,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
                 'sandbox_name','sandbox_id','thread_id','session_count','sandbox_count',
                 'writable_sandbox_count','protected_sandbox_count','context_continuity_verified')})
             metadata['session_cleanup_ok'] = session_record.get('cleanup_ok')
-        metadata['active_seconds'] = previous_active + time.monotonic()-started-checker_wait_seconds
+        metadata['active_seconds'] = previous_active + time.monotonic()-started-checker_wait_seconds-generation_wait_seconds
         metadata['completed_at'] = utc_now()
         if tree_hash(spec.dataset/'lab') != expected['baseline_sha256']:
             metadata.update(pipeline_state='INCOMPLETE',task_success=None,pipeline_error='Baseline sorgente alterata')
@@ -797,7 +837,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
         write_json(run/'logs/diff.json',changes)
         metrics = collect_metrics(run,metadata,checker_outcome=outcome)
         metrics['file_changes'] = changes
-        metadata['active_seconds'] = previous_active + time.monotonic()-started-checker_wait_seconds
+        metadata['active_seconds'] = previous_active + time.monotonic()-started-checker_wait_seconds-generation_wait_seconds
         metrics['timing']['total_seconds'] = metadata['active_seconds']
         write_json(run/'evaluation/metrics.json',metrics)
         write_json(run/'manifest.json',metadata)

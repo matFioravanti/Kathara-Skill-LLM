@@ -98,6 +98,12 @@ class ScriptedSession:
 @pytest.fixture
 def v2(case,monkeypatch):
     case.spec=replace(case.spec,protocol=CONTINUOUS_VERSION)
+    from benchmark_core.cost266.protocol import prompts
+    directory = case.root/'prompt/cost266/incremental'
+    directory.mkdir(parents=True, exist_ok=True)
+    values = prompts(case.inventory, Cell(case.spec.experiment_id,'T1','incremental','no_skill',1))
+    for index, value in enumerate(values, 1):
+        (directory/f'{index:02d}_fase.md').write_text(value)
     ScriptedSession.instances=[];ScriptedSession.fault=None;ScriptedSession.read_schedule=None
     monkeypatch.setattr(continuous,'ProtectedCodexSession',ScriptedSession)
     monkeypatch.setattr(continuous,'sbx_get_sandbox_id',lambda name:'id-'+name if name else None)

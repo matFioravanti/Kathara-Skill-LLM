@@ -21,7 +21,8 @@ def test_numbered_corrections_are_combined_in_order(tmp_path, monkeypatch):
     metadata = {'conditions': {'correction_files': {name: digest(name.encode()) for name in reversed(names)}},
                 'input_lab_sha256': tree_hash(run / 'input/lab')}
     seen = []
-    def fake_checker(config, checker_run, oracle):
+    def fake_checker(config, checker_run, oracle, *, isolated=False):
+        assert isolated is True
         seen.append(oracle.name)
         results = checker_run / 'results'
         (results / 'lab').mkdir()
@@ -42,8 +43,12 @@ def test_numbered_corrections_are_combined_in_order(tmp_path, monkeypatch):
         return {'checks_passed':int(passed),'checks_failed':int(not passed),'checks_total':1,'check_pass_rate':float(passed),'task_success':passed}
     monkeypatch.setattr(runner, 'run_checker', fake_checker)
     config = SimpleNamespace(root=tmp_path, data={'benchmark': {}})
-    outcome = runner._evaluate_sequence(config, SimpleNamespace(checker_timeout=30), run, metadata, 30)
+    messages = []
+    outcome = runner._evaluate_sequence(config, SimpleNamespace(checker_timeout=30), run, metadata, 30, isolated=True, emit=messages.append)
     assert seen == names
+    assert len(messages) == 3
+    assert all(f'Correction {index}/3 completata: {name}' in message for index, (name, message) in enumerate(zip(names, messages), 1))
+    assert 'controlli superati=0/1, falliti=1' in messages[1]
     assert (outcome['checks_passed'], outcome['checks_total'], outcome['task_success']) == (2, 3, False)
     runner._write_run_workbook(run, metadata, {'timing': {'total_seconds': 2}})
     book = load_workbook(run / 'evaluation/benchmark.xlsx', read_only=True)

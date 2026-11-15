@@ -77,7 +77,7 @@ def fake_aut(case, fail_at=None):
 
 
 def fake_checker(success=True):
-    def checker(config,run,correction):
+    def checker(config,run,correction, *, isolated=False):
         assert not (run/'lab/correction.yaml').exists()
         results=run/'results'; (results/'lab').mkdir(parents=True,exist_ok=True)
         rows=[{'Test Description':'Checking correctness of DNS records','Passed':str(success),'Reason':'' if success else 'test failure'}]

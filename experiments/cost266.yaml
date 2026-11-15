@@ -3,11 +3,10 @@ experiment:
 dataset: experiments/cost266_data
 protocol: cost266_incremental_continuous_session_v2
 strategies: [one_shot, incremental]
-prompt_types: [T1, T2, T3, T4, T5, T6]
+prompt_types: [T1]
 # La v2 ammette anche le modalità forzate con recovery_v1: un gate iniziale,
 # poi una sandbox scrivibile e un thread per tutti i sei turni funzionali.
-# Selezione attuale conservata; aggiungere qui altre modalità per pianificarle.
-skill_modes: [no_skill, auto]
+skill_modes: [no_skill, auto, dns_only, creation_only, both_forced]
 repetitions: 1
 budgets:
   # Stesso limite per chiamata in entrambe le strategie; misurare costo cumulativo.

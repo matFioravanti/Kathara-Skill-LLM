@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """CLI separata per preparazione, dry-run, esecuzione e resume COST266."""
 from dataclasses import replace
+from copy import deepcopy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import argparse
@@ -12,7 +13,7 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 
-from benchmark_core.config import load_config
+from benchmark_core.config import Config, load_config
 from benchmark_core.cost266.assets import load_dataset, prepare
 from benchmark_core.cost266.protocol import STRATEGIES, load_spec, EXECUTION_MODES, validate_backend
 from benchmark_core.cost266.selection import resolve_selection, describe_cell
@@ -27,6 +28,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='Benchmark COST266: one-shot, incrementale isolato o continuo')
     parser.add_argument('experiment',nargs='?',type=Path,default=None)
     parser.add_argument('--config',type=Path,default=ROOT/'benchmark.yaml')
+    parser.add_argument('--model',help='Modello AUT per questa esecuzione')
+    parser.add_argument('--reasoning-effort',choices=('low','medium','high','xhigh'),
+                        help='Livello di reasoning per questa esecuzione')
+    parser.add_argument('--experiment-id',help='Identificativo separato per run e report')
     parser.add_argument('--prepare',nargs='?',type=Path,default=argparse.SUPPRESS,metavar='INPUT_DIRECTORY',
                         help='Prepara offline dai sorgenti della checkout (override: directory o COST266_INPUTS)')
     parser.add_argument('--strategy',choices=STRATEGIES)
@@ -36,7 +41,7 @@ def main(argv=None):
     parser.add_argument('--prompt-type',choices=PROMPT_TYPES)
     parser.add_argument('--only-replicate',type=int, help='Seleziona una ripetizione positiva, anche oltre repetitions nello YAML')
     parser.add_argument('--generation-workers',type=int,default=5,
-                        help='Generazioni parallele one-shot (predefinito: 5); checker sempre uno alla volta')
+                        help='Generazioni parallele one-shot o incrementali continue (predefinito: 5)')
     parser.add_argument('--dry-run',action='store_true')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--resume',action='store_true')
@@ -44,7 +49,21 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         config = load_config(args.config)
+        if args.model is not None or args.reasoning_effort is not None:
+            data = deepcopy(config.data)
+            if args.model is not None:
+                if not args.model.strip():
+                    raise ValueError('--model non può essere vuoto')
+                data['aut']['model'] = args.model.strip()
+            if args.reasoning_effort is not None:
+                data['aut']['reasoning_effort'] = args.reasoning_effort
+            config = Config(config.root, data)
         selection = resolve_selection(ROOT,config.root,args.experiment,args.execution_mode,args.strategy,loader=load_spec)
+        if args.experiment_id is not None:
+            import re
+            if not re.fullmatch(r'[A-Za-z0-9_-]+',args.experiment_id):
+                raise ValueError('--experiment-id non valido')
+            selection = replace(selection, spec=replace(selection.spec, experiment_id=args.experiment_id))
         spec = selection.spec
         if args.generation_workers < 1:
             raise ValueError('--generation-workers deve essere positivo')
@@ -66,6 +85,7 @@ def main(argv=None):
         def planned():
             return [(cell,*plan(config,spec,cell,inventory,preparation,resume=args.resume,rerun=args.rerun_correction)) for cell in selected]
         if args.dry_run:
+            print(f'Modello: {config.model()} | Reasoning effort: {config.reasoning_effort()}')
             for cell,action,run in planned():
                 print(describe_cell(spec,cell))
                 print(f'{action} {run} stages={1 if cell.strategy=="one_shot" else 6} baseline={preparation["baseline_sha256"]} oracle={preparation["correction_sha256"]}')
@@ -95,8 +115,9 @@ def main(argv=None):
                 for cell in report_cells:
                     progress(config.root,spec.experiment_id,cell,
                              f'Report salvati: {report_output}; durata: {_duration(time.monotonic()-started)}')
-            if args.execution_mode == 'one_shot':
-                checker_lock = threading.Lock()
+            if args.execution_mode in ('one_shot', 'incremental_continuous'):
+                checker_lock = threading.BoundedSemaphore(5)
+                generation_lock = threading.BoundedSemaphore(args.generation_workers)
                 active = [(cell,action,run) for cell,action,run in decisions if action not in ('SKIP','MISSING')]
                 for cell,action,run in decisions:
                     if action == 'MISSING':
@@ -107,10 +128,11 @@ def main(argv=None):
                         failed |= metadata.get('task_success') is not True
                 if active:
                     for cell,_,_ in active:
-                        progress(config.root,spec.experiment_id,cell,f'Pianificata: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; 1 checker alla volta')
-                    with ThreadPoolExecutor(max_workers=args.generation_workers) as pool:
+                        progress(config.root,spec.experiment_id,cell,f'Pianificata: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; fino a 5 checker paralleli')
+                    with ThreadPoolExecutor(max_workers=len(active)) as pool:
                         futures = {pool.submit(execute,config,spec,cell,inventory,preparation,
-                                               resume=args.resume,rerun=args.rerun_correction,checker_lock=checker_lock): cell
+                                               resume=args.resume,rerun=args.rerun_correction,checker_lock=checker_lock,
+                                               generation_lock=generation_lock,checker_isolated=True): cell
                                    for cell,_,_ in active}
                         for future in as_completed(futures):
                             cell = futures[future]

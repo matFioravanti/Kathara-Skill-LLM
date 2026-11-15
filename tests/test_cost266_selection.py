@@ -68,10 +68,24 @@ def test_project_one_shot_plan_has_own_identity_and_all_skill_modes():
     assert not one.selected_cells(prompt_type='T2')
 
 
-def test_one_shot_generations_overlap_and_checkers_are_serial(selection,monkeypatch):
+def test_cli_model_effort_and_experiment_override_are_recorded(selection, capsys):
+    args = arguments('one_shot', '--model', 'gpt-6.1-terra', '--reasoning-effort', 'xhigh',
+                     '--experiment-id', 'terra_xhigh_test')
+    assert cli.main(args + ['--dry-run']) == 0
+    assert 'Modello: gpt-6.1-terra | Reasoning effort: xhigh' in capsys.readouterr().out
+    assert cli.main(args) == 0
+    path = next(iter(manifest_paths(selection.root)))
+    data = json.loads(path.read_text())
+    assert data['experiment_id'] == 'terra_xhigh_test'
+    assert data['model'] == data['conditions']['model'] == 'gpt-6.1-terra'
+    assert data['reasoning_effort'] == data['conditions']['reasoning_effort'] == 'xhigh'
+    assert selection.config.reasoning_effort() != 'xhigh'
+
+
+def test_one_shot_generations_overlap_and_five_checkers_run(selection,monkeypatch):
     path=selection.root/'experiments/cost266_one_shot.yaml'
     data=yaml.safe_load(path.read_text())
-    data.update(prompt_types=['T1'],skill_modes=['no_skill'],repetitions=5)
+    data.update(prompt_types=['T1'],skill_modes=['no_skill'],repetitions=6)
     path.write_text(yaml.safe_dump(data))
     barrier=threading.Barrier(5)
     original_aut=runner.run_aut
@@ -79,15 +93,17 @@ def test_one_shot_generations_overlap_and_checkers_are_serial(selection,monkeypa
     counters={'active':0,'peak':0,'calls':0}
     guard=threading.Lock()
     def concurrent_aut(*args,**kwargs):
-        barrier.wait(timeout=10)
+        if '__r006__' not in kwargs['run_id']:
+            barrier.wait(timeout=10)
         return original_aut(*args,**kwargs)
     def monitored_checker(*args,**kwargs):
+        assert kwargs.get('isolated') is True
         with guard:
             counters['active']+=1
             counters['peak']=max(counters['peak'],counters['active'])
             counters['calls']+=1
         try:
-            time.sleep(.15)
+            time.sleep(.3)
             return original_checker(*args,**kwargs)
         finally:
             with guard: counters['active']-=1
@@ -96,9 +112,35 @@ def test_one_shot_generations_overlap_and_checkers_are_serial(selection,monkeypa
     assert cli.main(['--execution-mode','one_shot','--generation-workers','5'])==0
     manifests=list((selection.root/'runs/cost266/test_one_shot').glob('**/manifest.json'))
     top=[json.loads(p.read_text()) for p in manifests if p.parent.name.startswith('r')]
-    assert len(top)==5 and all(m['pipeline_state']=='COMPLETED' for m in top)
-    assert counters['calls']==5 and counters['peak']==1
+    assert len(top)==6 and all(m['pipeline_state']=='COMPLETED' for m in top)
+    assert counters['calls']==6 and counters['peak']==5
     assert max(m['checker_queue_seconds'] for m in top)>.05
+
+
+def test_next_generation_starts_while_checkers_are_busy(selection, monkeypatch):
+    path=selection.root/'experiments/cost266_one_shot.yaml'
+    data=yaml.safe_load(path.read_text())
+    data.update(prompt_types=['T1'],skill_modes=['no_skill'],repetitions=6)
+    path.write_text(yaml.safe_dump(data))
+    first_five=threading.Barrier(5)
+    sixth_started=threading.Event()
+    checker_waited=threading.Event()
+    original_aut=runner.run_aut
+    original_checker=runner.run_checker
+    def aut(*args,**kwargs):
+        if '__r006__' in kwargs['run_id']:
+            sixth_started.set()
+        else:
+            first_five.wait(timeout=10)
+        return original_aut(*args,**kwargs)
+    def checker(*args,**kwargs):
+        checker_waited.set()
+        assert sixth_started.wait(10), 'la generazione successiva è bloccata dal checker'
+        return original_checker(*args,**kwargs)
+    monkeypatch.setattr(runner,'run_aut',aut)
+    monkeypatch.setattr(runner,'run_checker',checker)
+    assert cli.main(['--execution-mode','one_shot'])==0
+    assert checker_waited.is_set() and sixth_started.is_set()
 
 
 @pytest.mark.parametrize('mode,protocol,strategy,identity',[

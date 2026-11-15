@@ -3,8 +3,9 @@
 # IP link 10.100.0.0/24 suddiviso in /30; loopback 10.200.0.0/24.
 # Script rigenerato deterministicamente dal JSON COST266.
 set -eu
-# ip_forward e rp_filter sono impostati tramite le opzioni [sysctl] di lab.conf.
-# Questa scelta evita che un fallimento di sysctl interrompa la configurazione IP.
+sysctl -w net.ipv4.ip_forward=1 >/dev/null
+sysctl -w net.ipv4.conf.all.rp_filter=0 >/dev/null
+sysctl -w net.ipv4.conf.default.rp_filter=0 >/dev/null
 ip -4 addr replace 10.200.0.9/32 dev lo
 ip -4 addr replace 10.100.0.42/30 dev eth0 # link to r_belgrade
 ip -4 addr replace 10.100.0.101/30 dev eth1 # link to r_krakow

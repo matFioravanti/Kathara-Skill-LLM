@@ -1,0 +1,562 @@
+# COST266 / T1 — correction_2.yaml (2/9)
+# Controlli: Routing — router 1–13
+# Eseguibile autonomamente con --config; include la topologia completa.
+# PRECONDIZIONE: laboratorio Kathara con tutti i dispositivi elencati in lab_inline.
+# Non verificato in esecuzione su un laboratorio Kathara completo.
+lab_inline: |
+  r_amsterdam[0]="wan_00_07"
+  r_amsterdam[1]="wan_00_13"
+  r_amsterdam[2]="wan_00_14"
+  r_amsterdam[3]="wan_00_18"
+  r_athens[0]="wan_01_25"
+  r_athens[1]="wan_01_30"
+  r_athens[2]="wan_01_35"
+  r_barcelona[0]="wan_02_20"
+  r_barcelona[1]="wan_02_21"
+  r_barcelona[2]="wan_02_29"
+  r_belgrade[0]="wan_03_08"
+  r_belgrade[1]="wan_03_30"
+  r_belgrade[2]="wan_03_35"
+  r_berlin[0]="wan_04_09"
+  r_berlin[1]="wan_04_14"
+  r_berlin[2]="wan_04_23"
+  r_berlin[3]="wan_04_27"
+  r_berlin[4]="wan_04_34"
+  r_birmingham[0]="wan_05_13"
+  r_birmingham[1]="wan_05_18"
+  r_bordeaux[0]="wan_06_20"
+  r_bordeaux[1]="wan_06_21"
+  r_bordeaux[2]="wan_06_26"
+  r_brussels[0]="wan_00_07"
+  r_brussels[1]="wan_07_11"
+  r_brussels[2]="wan_07_26"
+  r_budapest[0]="wan_03_08"
+  r_budapest[1]="wan_08_16"
+  r_budapest[2]="wan_08_27"
+  r_copenhagen[0]="wan_04_09"
+  r_copenhagen[1]="wan_09_24"
+  r_copenhagen[2]="wan_09_31"
+  r_dublin[0]="wan_10_13"
+  r_dublin[1]="wan_10_18"
+  r_dusseldorf[0]="wan_07_11"
+  r_dusseldorf[1]="wan_11_12"
+  r_frankfurt[0]="wan_11_12"
+  r_frankfurt[1]="wan_12_14"
+  r_frankfurt[2]="wan_12_23"
+  r_frankfurt[3]="wan_12_32"
+  r_glasgow[0]="wan_00_13"
+  r_glasgow[1]="wan_05_13"
+  r_glasgow[2]="wan_10_13"
+  r_hamburg[0]="wan_00_14"
+  r_hamburg[1]="wan_04_14"
+  r_hamburg[2]="wan_12_14"
+  r_helsinki[0]="wan_15_24"
+  r_helsinki[1]="wan_15_31"
+  r_helsinki[2]="wan_15_34"
+  r_krakow[0]="wan_08_16"
+  r_krakow[1]="wan_16_34"
+  r_lisbon[0]="wan_17_18"
+  r_lisbon[1]="wan_17_20"
+  r_lisbon[2]="wan_17_29"
+  r_london[0]="wan_00_18"
+  r_london[1]="wan_05_18"
+  r_london[2]="wan_10_18"
+  r_london[3]="wan_17_18"
+  r_london[4]="wan_18_26"
+  r_lyon[0]="wan_19_21"
+  r_lyon[1]="wan_19_26"
+  r_lyon[2]="wan_19_36"
+  r_madrid[0]="wan_02_20"
+  r_madrid[1]="wan_06_20"
+  r_madrid[2]="wan_17_20"
+  r_marseille[0]="wan_02_21"
+  r_marseille[1]="wan_06_21"
+  r_marseille[2]="wan_19_21"
+  r_marseille[3]="wan_21_28"
+  r_milan[0]="wan_22_23"
+  r_milan[1]="wan_22_28"
+  r_milan[2]="wan_22_36"
+  r_munich[0]="wan_04_23"
+  r_munich[1]="wan_12_23"
+  r_munich[2]="wan_22_23"
+  r_munich[3]="wan_23_33"
+  r_oslo[0]="wan_09_24"
+  r_oslo[1]="wan_15_24"
+  r_palermo[0]="wan_01_25"
+  r_palermo[1]="wan_25_28"
+  r_paris[0]="wan_06_26"
+  r_paris[1]="wan_07_26"
+  r_paris[2]="wan_18_26"
+  r_paris[3]="wan_19_26"
+  r_paris[4]="wan_26_32"
+  r_prague[0]="wan_04_27"
+  r_prague[1]="wan_08_27"
+  r_prague[2]="wan_27_33"
+  r_rome[0]="wan_21_28"
+  r_rome[1]="wan_22_28"
+  r_rome[2]="wan_25_28"
+  r_rome[3]="wan_28_35"
+  r_seville[0]="wan_02_29"
+  r_seville[1]="wan_17_29"
+  r_sofia[0]="wan_01_30"
+  r_sofia[1]="wan_03_30"
+  r_stockholm[0]="wan_09_31"
+  r_stockholm[1]="wan_15_31"
+  r_strasbourg[0]="wan_12_32"
+  r_strasbourg[1]="wan_26_32"
+  r_strasbourg[2]="wan_32_36"
+  r_vienna[0]="wan_23_33"
+  r_vienna[1]="wan_27_33"
+  r_vienna[2]="wan_33_35"
+  r_warsaw[0]="wan_04_34"
+  r_warsaw[1]="wan_15_34"
+  r_warsaw[2]="wan_16_34"
+  r_zagreb[0]="wan_01_35"
+  r_zagreb[1]="wan_03_35"
+  r_zagreb[2]="wan_28_35"
+  r_zagreb[3]="wan_33_35"
+  r_zurich[0]="wan_19_36"
+  r_zurich[1]="wan_22_36"
+  r_zurich[2]="wan_32_36"
+  r_amsterdam[4]="access_00"
+  r_athens[3]="access_01"
+  r_frankfurt[4]="access_12"
+  r_helsinki[3]="access_15"
+  r_lisbon[3]="access_17"
+  r_london[5]="access_18"
+  r_paris[5]="access_26"
+  r_rome[4]="access_28"
+  r_warsaw[3]="access_34"
+  r_zurich[3]="access_36"
+  c266_cities[0]="access_28"
+  c266_client_1[0]="access_01"
+  c266_client_2[0]="access_17"
+  c266_countries[0]="access_12"
+  c266_functional_1[0]="access_18"
+  c266_functional_2[0]="access_15"
+  c266_resolver_1[0]="access_34"
+  c266_resolver_2[0]="access_36"
+  c266_root[0]="access_00"
+  c266_subzones[0]="access_26"
+  c266_tld_europa[0]="access_00"
+  c266_tld_infra[0]="access_12"
+  c266_tld_lab[0]="access_26"
+  c266_tld_research[0]="access_12"
+  c266_tld_services[0]="access_28"
+  c266_tld_test[0]="access_18"
+convergence_time: 60
+default_image: kathara/base
+test:
+  custom_commands:
+    r_amsterdam:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.1/32
+        ip -4 route show | awk -v spec='"'"'2:w4,w7,w8,w9,w20,w21,w22,w23,w24,w31,w33,w34,w40,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w55,l3,l7,l8,l12,l13,l20,l21,l22,l23,l24,l26,l27,l29,l33,l37;6:w29,l14;10:w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w25,w26,w27,w28,w32,w35,w36,w37,w38,w53,w54,w56,l2,l4,l5,l9,l10,l15,l16,l17,l25,l28,l31,l32,l34,l35,l36;14:w18,w19,w30,w39,w41,w42,l6,l11,l18,l19,l30'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    - command: sh -c 'ip -o -4 addr show dev eth4 | grep -Eq '"'"'inet[[:space:]]+10[.]210[.]0[.][0-9]+/24([[:space:]]|$)'"'"' || { echo '"'"'MISSING_ACCESS_SUBNET
+        r_amsterdam eth4 expected=10.210.0.0/24'"'"' >&2; exit 1; }'
+      exit_code: 0
+    r_athens:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.2/32
+        ip -4 route show | awk -v spec='"'"'18:w7,w8,w9,w20,w21,w22,w40,w41,w42,w43,w44,w45,w46,w48,w49,w51,w52,w55,l3,l7,l18,l20,l21,l22,l23,l26,l27,l29,l30,l33,l37;22:w10,w11,w12,w17,w25,w26,w35,w36,w37,w38,l4,l9,l16,l17,l31,l35;26:w0,w1,w2,w3,w13,w14,w15,w16,w18,w19,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w39,w47,w50,w53,w54,w56,l1,l5,l6,l8,l10,l11,l12,l13,l14,l15,l19,l24,l25,l28,l32,l34,l36'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    - command: sh -c 'ip -o -4 addr show dev eth3 | grep -Eq '"'"'inet[[:space:]]+10[.]210[.]1[.][0-9]+/24([[:space:]]|$)'"'"' || { echo '"'"'MISSING_ACCESS_SUBNET
+        r_athens eth3 expected=10.210.1.0/24'"'"' >&2; exit 1; }'
+      exit_code: 0
+    r_barcelona:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.3/32
+        ip -4 route show | awk -v spec='"'"'30:w20,w39,w40,l18,l21;34:w0,w1,w2,w3,w4,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l19,l20,l22,l23,l24,l25,l26,l27,l28,l29,l31,l32,l33,l34,l35,l36,l37;38:w41,l30'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_belgrade:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.4/32
+        ip -4 route show | awk -v spec='"'"'42:w1,w2,w3,w13,w14,w16,w17,w18,w19,w25,w26,w27,w28,w29,w30,w35,w36,w37,w38,w39,l1,l5,l6,l9,l10,l11,l14,l15,l16,l17,l19,l25,l28,l32,l35;46:w4,w5,l2,l31;50:w0,w6,w7,w8,w9,w15,w20,w21,w22,w23,w24,w31,w32,w33,w34,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l3,l7,l8,l12,l13,l18,l20,l21,l22,l23,l24,l26,l27,l29,l30,l33,l34,l36,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_berlin:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.5/32
+        ip -4 route show | awk -v spec='"'"'54:w27,w28,w35,w36,l10,l16,l25,l32;58:w0,w1,w2,w3,w7,w8,w9,w18,w19,w20,w21,w22,w23,w24,w29,w30,w31,w32,w34,w39,w40,w41,w42,w43,w44,w45,w52,w55,l1,l3,l6,l7,l8,l11,l12,l13,l14,l15,l18,l19,l20,l21,l22,l27,l30,l33,l37;62:w33,w47,w48,w49,w50,l23,l24;66:w4,w5,w6,w10,w11,w12,w25,w26,w46,w51,w53,w54,w56,l2,l4,l9,l26,l28,l29,l31,l34,l36;70:w37,w38,l17,l35'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_birmingham:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.6/32
+        ip -4 route show | awk -v spec='"'"'74:w1,w29,l14;78:w0,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w20,w21,w22,w23,w24,w25,w26,w27,w28,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l7,l8,l9,l10,l11,l12,l13,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27,l28,l29,l30,l31,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_bordeaux:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.7/32
+        ip -4 route show | awk -v spec='"'"'82:w7,w40,w41,l18,l21,l30;86:w4,w5,w6,w8,w9,w10,w11,w12,w43,w45,w46,w48,w51,w54,w56,l2,l3,l4,l20,l22,l26,l29,l31,l36;90:w0,w1,w2,w3,w13,w14,w15,w16,w17,w18,w19,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w42,w44,w47,w49,w50,w52,w53,w55,l1,l5,l6,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l19,l23,l24,l25,l27,l28,l32,l33,l34,l35,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_brussels:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.8/32
+        ip -4 route show | awk -v spec='"'"'1:w1,w2,w3,w10,w13,w14,w16,w17,w18,w19,w25,w26,w27,w28,w29,w30,w35,w36,w37,w38,w39,l1,l5,l6,l9,l10,l11,l14,l15,l16,l17,l19,l25,l28,l32,l35;94:w4,w5,w6,w11,w12,w15,w31,w32,w33,w34,w47,w48,w49,w50,w51,w53,w54,w55,w56,l2,l4,l12,l13,l23,l24,l26,l29,l31,l33,l34,l36,l37;98:w7,w8,w9,w20,w21,w22,w40,w41,w42,w43,w44,w45,w46,w52,l3,l7,l18,l20,l21,l22,l27,l30'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_budapest:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.9/32
+        ip -4 route show | awk -v spec='"'"'41:w4,w5,w6,w7,w8,w9,w11,w12,w21,w40,w41,w43,w46,w48,w51,w54,w56,l2,l3,l4,l18,l21,l22,l26,l29,l30,l31,l36;102:w17,w35,w36,w37,w38,l16,l17,l35;106:w0,w1,w2,w3,w13,w14,w15,w16,w18,w19,w20,w22,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w39,w42,w44,w45,w47,w49,w50,w52,w53,w55,l1,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l19,l20,l23,l24,l25,l27,l28,l32,l33,l34,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_copenhagen:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.10/32
+        ip -4 route show | awk -v spec='"'"'53:w0,w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w29,w30,w31,w32,w33,w34,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l6,l7,l8,l9,l11,l12,l13,l14,l15,l17,l18,l19,l20,l21,l22,l23,l24,l26,l27,l28,l29,l30,l31,l33,l34,l35,l36,l37;110:w35,l25;114:w36,l16,l32'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_dublin:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.11/32
+        ip -4 route show | awk -v spec='"'"'118:w1,w18,l14;122:w0,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l12,l13,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27,l28,l29,l30,l31,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_dusseldorf:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.12/32
+        ip -4 route show | awk -v spec='"'"'93:w0,w1,w2,w3,w7,w8,w9,w18,w19,w20,w21,w22,w24,w29,w30,w39,w40,w41,w42,w43,w44,w46,l1,l3,l6,l7,l8,l11,l14,l18,l19,l20,l21,l22,l27,l30;126:w4,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w25,w26,w27,w28,w32,w33,w34,w35,w36,w37,w38,w45,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l2,l4,l5,l9,l10,l13,l15,l16,l17,l23,l24,l25,l26,l28,l29,l31,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    r_frankfurt:
+    - command: |-
+        sh -c 'set -eu
+        test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.13/32
+        ip -4 route show | awk -v spec='"'"'125:w0,w1,w3,w18,w19,w23,w24,w29,w30,w39,l1,l6,l8,l11,l12,l14,l19;130:w2,w13,w14,w16,w17,w27,w28,w35,w36,w37,w38,l5,l10,l15,l16,l17,l25,l32,l35;134:w5,w6,w10,w11,w12,w15,w25,w26,w47,w50,w53,w54,w56,l2,l4,l9,l24,l28,l31,l34,l36;138:w4,w7,w8,w9,w20,w21,w22,w40,w41,w42,w43,w44,w45,w46,w48,w49,w51,w52,w55,l3,l7,l18,l20,l21,l22,l23,l26,l27,l29,l30,l33,l37'"'"' '"'"'BEGIN {
+          n = split(spec, groups, ";")
+          for (i=1; i<=n; i++) {
+            split(groups[i], pair, ":")
+            hop = "10.100.0." pair[1]
+            m = split(pair[2], refs, ",")
+            for (j=1; j<=m; j++) {
+              ref = refs[j]
+              if (ref ~ /^w[0-9]+$/) dest = "10.100.0." (substr(ref,2)*4) "/30"
+              else if (ref ~ /^l[0-9]+$/) dest = "10.200.0." substr(ref,2)
+              else { bad++; continue }
+              if ((dest in want) && want[dest] != hop) bad++
+              want[dest] = hop
+            }
+          }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+          for (dest in want) if (have[dest] != want[dest]) {
+            printf "MISSING_ROUTE %s expected=%s actual=%s\n", dest, want[dest], have[dest] > "/dev/stderr"
+            bad++
+          }
+          if (bad) printf "ROUTING_ERRORS %d\n", bad > "/dev/stderr"
+          exit (bad > 0)
+        }'"'"''
+      exit_code: 0
+    - command: sh -c 'ip -o -4 addr show dev eth4 | grep -Eq '"'"'inet[[:space:]]+10[.]210[.]12[.][0-9]+/24([[:space:]]|$)'"'"' || { echo '"'"'MISSING_ACCESS_SUBNET
+        r_frankfurt eth4 expected=10.210.12.0/24'"'"' >&2; exit 1; }'
+      exit_code: 0

@@ -1,0 +1,18 @@
+experiment:
+  id: cost266_one_shot
+dataset: experiments/cost266_one_shot_data_v1
+protocol: cost266_incremental_continuous_session_v2
+strategies:
+- one_shot
+prompt_types:
+- T1
+skill_modes:
+- auto
+- dns_only
+- creation_only
+- both_forced
+repetitions: 1
+budgets:
+  stage_seconds: 900
+  total_seconds: 9000
+  checker_seconds: 1800

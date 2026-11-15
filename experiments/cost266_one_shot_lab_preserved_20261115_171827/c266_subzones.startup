@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+ip -4 addr replace 10.210.26.10/24 dev eth0
+ip -4 route replace 0.0.0.0/0 via 10.210.26.1 dev eth0
+systemctl stop named
