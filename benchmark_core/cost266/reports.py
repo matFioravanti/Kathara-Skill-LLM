@@ -9,6 +9,7 @@ from ..aggregation import (RUN_COLUMNS, CHECK_COLUMNS, SUMMARY_COLUMNS, _run_rec
 from ..workspace import write_json
 from .protocol import safe_path, execution_mode
 from .comparison import comparison_mismatches
+from .paths import manifest_paths, logical_relative
 from .runner import read_json, verify_run
 
 EXTRA = ['strategy','stage_count','completed_stages','aut_calls','sandbox_count','cumulative_agent_seconds',
@@ -28,7 +29,7 @@ def aggregate_cost266(root: Path, output: Path):
         raise ValueError('Directory report non consentita')
     records, checks, phases = [], [], []
     seen = set()
-    for path in sorted((root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json')):
+    for path in manifest_paths(root):
         metadata = read_json(path)
         if metadata.get('schema') != 'cost266_v1':
             continue
@@ -39,6 +40,11 @@ def aggregate_cost266(root: Path, output: Path):
             raise ValueError(f'Osservazione COST266 duplicata: {identity}')
         seen.add(identity)
         run = path.parent
+        identity_path, physical_mode = logical_relative(root, run)
+        if metadata['conditions'].get('identity') != identity_path.as_posix() or metadata.get('run_id') != '__'.join(identity_path.parts):
+            raise ValueError(f'Identità COST266 incoerente: {path}')
+        if physical_mode is not None and physical_mode != execution_mode(metadata['conditions']['protocol'], metadata['strategy']):
+            raise ValueError(f'Execution mode incoerente: {path}')
         verify_run(run,metadata['conditions'])
         metrics = read_json(run/'evaluation/metrics.json') if (run/'evaluation/metrics.json').exists() else {}
         record = _run_record(metrics, metadata)

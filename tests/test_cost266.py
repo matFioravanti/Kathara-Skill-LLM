@@ -6,6 +6,8 @@ from types import SimpleNamespace
 import csv
 import json
 import subprocess
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 import yaml
@@ -476,9 +478,29 @@ def test_cli_dry_run_filters_failure_exit_and_resume(case,monkeypatch,capsys):
     assert cli.main(['--dry-run','--strategy','incremental'])==0
     assert not (case.root/'runs').exists() and not case.calls
     assert cli.main(['--strategy','incremental'])==1
+    progress_log=(case.root/'logs/cost266/test_cost266.log').read_text()
+    assert progress_log.index('Generazione report XLSX/CSV avviata') < progress_log.index('Report salvati:')
     assert cli.main(['--resume','--strategy','incremental'])==1
     assert len(case.calls)==6
     assert cli.main(['--dry-run','--skill-mode','dns_only'])==1
+
+
+def test_cli_logs_report_error(case,monkeypatch):
+    from scripts import run_cost266 as cli
+    monkeypatch.setattr(cli,'load_config',lambda p:case.config)
+    monkeypatch.setattr(cli,'load_spec',lambda *a:case.spec)
+    monkeypatch.setattr(cli,'load_dataset',lambda p:(case.inventory,case.preparation))
+    monkeypatch.setattr(cli,'preflight',lambda *a,**k:None)
+    monkeypatch.setattr(cli,'validate_mode_sources',lambda *a:None)
+    monkeypatch.setattr(runner,'run_aut',fake_aut(case))
+    monkeypatch.setattr(runner,'run_checker',fake_checker())
+    def fail(*args):
+        raise OSError('disco non disponibile')
+    monkeypatch.setattr(cli,'publish_cost266_report',fail)
+    assert cli.main(['--strategy','incremental'])==1
+    log=(case.root/'logs/cost266/test_cost266.log').read_text()
+    assert 'ERRORE generazione report: OSError: disco non disponibile' in log
+    assert 'Report salvati:' not in log
 
 
 def test_cli_prepare_default_and_explicit_directory(case,monkeypatch):
@@ -498,6 +520,78 @@ def test_experiment_lock_excludes_second_launcher(case):
     with runner.experiment_lock(case.root,'test'):
         with pytest.raises(ValueError,match='già in esecuzione'):
             with runner.experiment_lock(case.root,'test'):pass
+
+
+def test_progress_order_and_persistent_log(case, monkeypatch, capsys):
+    execute(case, monkeypatch, 'one_shot')
+    lines=(case.root/'logs/cost266/test_cost266.log').read_text().splitlines()
+    assert lines == capsys.readouterr().out.splitlines()
+    assert all('[COST266/one_shot/T1/no_skill/r001]' in line for line in lines)
+    assert all(__import__('re').match(r'^\[\d{2}:\d{2}:\d{2}\]', line) for line in lines)
+    expected=['START RUN','Generazione avviata','Generazione agente terminata',
+              'Validazione statica','Fase 1/1 completata','Avvio Kathara',
+              'Checker terminato: COMPLETED','RUN TERMINATA: COMPLETED']
+    positions=[next(i for i,line in enumerate(lines) if item in line) for item in expected]
+    assert positions == sorted(positions)
+
+
+def test_progress_reports_generation_and_checker_errors(case, monkeypatch):
+    execute(case, monkeypatch, 'one_shot', fail_at=1)
+    log=(case.root/'logs/cost266/test_cost266.log').read_text()
+    assert 'ERRORE generazione fase 1/1: TimeoutError: simulated stage failure' in log
+    assert 'Generazione agente terminata' not in log
+    assert 'Avvio Kathara' not in log
+    cell=Cell(case.spec.experiment_id,'T1','one_shot','no_skill',2)
+    monkeypatch.setattr(runner,'run_aut',fake_aut(case))
+    def broken_checker(*args):
+        raise RuntimeError('checker timeout')
+    monkeypatch.setattr(runner,'run_checker',broken_checker)
+    runner.execute(case.config,case.spec,cell,case.inventory,case.preparation)
+    log=(case.root/'logs/cost266/test_cost266.log').read_text()
+    assert 'Checker terminato: CHECKER_FAILED' in log and 'checker timeout' in log
+    assert 'RUN TERMINATA: CHECKER_FAILED' in log
+
+
+def test_progress_parallel_runs_wait_only_for_busy_checker(case, monkeypatch):
+    checker_entered=threading.Event()
+    release_checker=threading.Event()
+    second_generating=threading.Event()
+    base_aut=fake_aut(case)
+    base_checker=fake_checker()
+    def aut(*args,**kwargs):
+        if '__r002__' in kwargs['run_id']:
+            second_generating.set()
+        return base_aut(*args,**kwargs)
+    def checker(*args):
+        if not checker_entered.is_set():
+            checker_entered.set()
+            assert release_checker.wait(10)
+        return base_checker(*args)
+    monkeypatch.setattr(runner,'run_aut',aut)
+    monkeypatch.setattr(runner,'run_checker',checker)
+    lock=threading.Lock()
+    cells=[Cell(case.spec.experiment_id,'T1','one_shot','no_skill',i) for i in (1,2)]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first=pool.submit(runner.execute,case.config,case.spec,cells[0],case.inventory,case.preparation,checker_lock=lock)
+        assert checker_entered.wait(10)
+        second=pool.submit(runner.execute,case.config,case.spec,cells[1],case.inventory,case.preparation,checker_lock=lock)
+        assert second_generating.wait(10)
+        # Synchronize on the actual queue event, rather than guessing a delay.
+        for _ in range(1000):
+            log=(case.root/'logs/cost266/test_cost266.log').read_text()
+            if '[COST266/one_shot/T1/no_skill/r002] In attesa del checker...' in log:
+                break
+            threading.Event().wait(.01)
+        else:
+            release_checker.set()
+            pytest.fail('seconda run non accodata al checker')
+        release_checker.set()
+        first.result(timeout=10); second.result(timeout=10)
+    lines=(case.root/'logs/cost266/test_cost266.log').read_text().splitlines()
+    for number in (1,2):
+        own=[line for line in lines if f'/r{number:03d}]' in line]
+        assert any('RUN TERMINATA: COMPLETED' in line for line in own)
+        assert sum('Avvio Kathara' in line for line in own)==1
 
 
 def test_continuous_protocol_is_explicit_and_legacy_default_is_preserved(case):

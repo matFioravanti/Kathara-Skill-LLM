@@ -1,4 +1,5 @@
 """Selettore host: runner v1/v2 originali, con AUT simulati."""
+from benchmark_core.cost266.paths import manifest_paths
 from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
@@ -93,7 +94,7 @@ def test_one_shot_generations_overlap_and_checkers_are_serial(selection,monkeypa
     monkeypatch.setattr(runner,'run_aut',concurrent_aut)
     monkeypatch.setattr(runner,'run_checker',monitored_checker)
     assert cli.main(['--execution-mode','one_shot','--generation-workers','5'])==0
-    manifests=list((selection.root/'runs/test_one_shot').glob('**/manifest.json'))
+    manifests=list((selection.root/'runs/cost266/test_one_shot').glob('**/manifest.json'))
     top=[json.loads(p.read_text()) for p in manifests if p.parent.name.startswith('r')]
     assert len(top)==5 and all(m['pipeline_state']=='COMPLETED' for m in top)
     assert counters['calls']==5 and counters['peak']==1
@@ -127,7 +128,7 @@ def test_dry_run_displays_policies_and_does_not_call_backends(selection,monkeypa
 @pytest.mark.parametrize('mode',['one_shot','incremental_isolated','incremental_continuous'])
 def test_selector_executes_existing_engines_and_records_mode(selection,mode):
     assert cli.main(arguments(mode))==0
-    manifests=list((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    manifests=manifest_paths(selection.root)
     assert len(manifests)==1
     metadata=json.loads(manifests[0].read_text())
     assert metadata['execution_mode']==mode
@@ -203,7 +204,7 @@ def test_explicit_one_shot_legacy_keeps_protocol_dataset_and_identity(selection,
 def test_default_v1_v2_observations_do_not_collide(selection):
     assert cli.main(arguments('incremental_isolated'))==0
     assert cli.main(arguments('incremental_continuous'))==0
-    paths=list((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    paths=manifest_paths(selection.root)
     assert len(paths)==2
     rows=[json.loads(p.read_text()) for p in paths]
     assert len({r['run_id'] for r in rows})==2
@@ -218,7 +219,7 @@ def test_skill_selection_is_independent_and_gate_is_not_disabled(selection):
     session=ScriptedSession.instances[0]
     assert session.creates==[True,False] and len([p for p in session.received if not p[0]])==6
     assert path.read_bytes()==before
-    metadata=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    metadata=next(iter(manifest_paths(selection.root)))
     gate=json.loads((metadata.parent/'logs/aut/skill_gate.json').read_text())
     assert gate['skill_gate_read_attempts']==1 and gate['skill_gate_verified_skills']==['kathara-dns']
 
@@ -241,7 +242,7 @@ def test_resume_and_rerun_address_exact_observation(selection,mode):
     assert cli.main(args+['--resume'])==0
     assert cli.main(args+['--rerun-correction'])==0
     assert len(selection.calls)==aut_calls and len(ScriptedSession.instances)==sessions
-    metadata=json.loads(next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json')).read_text())
+    metadata=json.loads(next(iter(manifest_paths(selection.root))).read_text())
     assert metadata['execution_mode']==mode and metadata['evaluation_revision']==1
 
 
@@ -282,7 +283,7 @@ def test_incoherent_dataset_remains_fail_closed(selection,monkeypatch):
 
 def test_historical_metadata_is_labelled_without_rewriting(selection):
     assert cli.main(arguments('incremental_isolated'))==0
-    path=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    path=next(iter(manifest_paths(selection.root)))
     data=json.loads(path.read_text());data.pop('execution_mode');path.write_text(json.dumps(data))
     metrics=path.parent/'evaluation/metrics.json';saved=json.loads(metrics.read_text());saved.pop('execution_mode')
     metrics.write_text(json.dumps(saved));before=path.read_bytes()
@@ -294,7 +295,7 @@ def test_historical_metadata_is_labelled_without_rewriting(selection):
 def test_cross_protocol_comparison_checks_all_controls(selection):
     assert cli.main(arguments('one_shot'))==0
     assert cli.main(arguments('incremental_isolated'))==0
-    rows=[json.loads(p.read_text()) for p in (selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json')]
+    rows=[json.loads(p.read_text()) for p in manifest_paths(selection.root)]
     assert comparison_mismatches(*rows)==[]
     for field in ('baseline_sha256','correction_sha256','inventory_sha256','model','reasoning_effort',
                   'skill_mode','skill_protocol','skill_bundles','budgets','config_sha256'):
@@ -320,9 +321,53 @@ def test_pairs_report_marks_mismatched_conditions_non_comparable(selection):
 def test_inconsistent_execution_label_cannot_resume(selection,capsys):
     args=arguments('incremental_isolated')
     assert cli.main(args)==0
-    path=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    path=next(iter(manifest_paths(selection.root)))
     data=json.loads(path.read_text());data['execution_mode']='incremental_continuous'
     path.write_text(json.dumps(data));calls=len(selection.calls)
     assert cli.main(args+['--resume'])==1
     assert 'Execution mode incoerente' in capsys.readouterr().err
     assert len(selection.calls)==calls
+
+
+def test_replicate_override_one_config_and_validation(selection):
+    selected=resolve_selection(selection.root,selection.root,mode='one_shot')
+    selected=replace(selected,spec=replace(selected.spec,repetitions=1,prompt_types=('T1',),skill_modes=('no_skill',)))
+    assert [c.repetition for c in selected.selected_cells()] == [1]
+    cells=selected.selected_cells(prompt_type='T1',skill_mode='no_skill',repetition=2)
+    assert len(cells)==1 and cells[0].repetition==2 and cells[0].strategy=='one_shot'
+    for invalid in (0,-1,True,1.5):
+        with pytest.raises(ValueError,match='positivo'):
+            selected.selected_cells(repetition=invalid)
+    explicit=replace(selected,explicit_experiment=True)
+    assert explicit.selected_cells(prompt_type='T1',skill_mode='no_skill',repetition=2)[0].repetition==2
+
+
+def test_new_replica_and_legacy_report(selection,capsys):
+    import shutil
+    from benchmark_core.cost266.paths import resolve_run_path
+    path=selection.root/'experiments/cost266_one_shot.yaml'
+    data=yaml.safe_load(path.read_text());data['repetitions']=1;path.write_text(yaml.safe_dump(data))
+    assert cli.main(arguments('one_shot'))==0
+    s=resolve_selection(selection.root,selection.root,mode='one_shot')
+    c1=s.selected_cells(prompt_type='T1',skill_mode='no_skill',repetition=1)[0]
+    new=resolve_run_path(selection.root,s.spec,c1)
+    old=selection.root/'runs'/c1.relative
+    old.parent.mkdir(parents=True,exist_ok=True);shutil.move(str(new),str(old))
+    before={str(p.relative_to(old)):hashlib.sha256(p.read_bytes()).hexdigest() for p in old.rglob('*') if p.is_file()}
+    assert cli.main(arguments('one_shot','--resume'))==0
+    assert len(selection.calls)==1
+    assert cli.main(['--execution-mode','one_shot','--prompt-type','T1','--skill-mode','no_skill','--only-replicate','2','--dry-run'])==0
+    assert 'cost266/test_one_shot/multitld_v2/T1/one_shot/no_skill/r002' in capsys.readouterr().out
+    assert len(selection.calls)==1
+    assert cli.main(['--execution-mode','one_shot','--prompt-type','T1','--skill-mode','no_skill','--only-replicate','2'])==0
+    assert before=={str(p.relative_to(old)):hashlib.sha256(p.read_bytes()).hexdigest() for p in old.rglob('*') if p.is_file()}
+    assert len(selection.calls)==2
+    rows=pd.read_csv(selection.root/'results/cost266/experiments/test_one_shot/runs.csv')
+    assert set(rows.replicate)=={1,2} and len(rows)==2
+    assert len(manifest_paths(selection.root))==2
+    new.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copytree(old,new)
+    with pytest.raises(ValueError,match='conflitto'):
+        resolve_run_path(selection.root,s.spec,c1)
+    with pytest.raises(ValueError,match='duplicata'):
+        aggregate_cost266(selection.root,selection.root/'another'/'test_one_shot')

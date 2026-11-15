@@ -34,7 +34,7 @@ class Selection:
                 raise ValueError(f'La configurazione esplicita non abilita la Skill mode {skill_mode}')
             if not self.explicit_experiment:
                 matrix_spec = replace(self.spec, skill_modes=(skill_mode,))
-        return [cell for cell in cells(matrix_spec) if
+        return [cell for cell in cells(matrix_spec, repetition=repetition) if
                 (not self.strategy or cell.strategy==self.strategy) and
                 (not prompt_type or cell.prompt_type==prompt_type) and
                 (not skill_mode or cell.skill_mode==skill_mode) and

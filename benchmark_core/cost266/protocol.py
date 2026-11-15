@@ -131,12 +131,14 @@ def load_spec(path: Path, root: Path) -> Spec:
                 budgets['checker_seconds'], path, data['protocol'])
 
 
-def cells(spec: Spec):
+def cells(spec: Spec, *, repetition: int | None = None):
+    if repetition is not None and (type(repetition) is not int or repetition < 1):
+        raise ValueError("La ripetizione deve essere un intero positivo")
     for prompt in spec.prompt_types:
         for mode in spec.skill_modes:
-            for repetition in range(1, spec.repetitions + 1):
+            for selected_repetition in ([repetition] if repetition is not None else range(1, spec.repetitions + 1)):
                 for strategy in spec.strategies:
-                    yield Cell(spec.experiment_id, prompt, strategy, mode, repetition)
+                    yield Cell(spec.experiment_id, prompt, strategy, mode, selected_repetition)
 
 
 def validate_backend(config, mode: str, *, strategy=None, protocol=VERSION):

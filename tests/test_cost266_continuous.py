@@ -250,7 +250,8 @@ def test_interrupt_closes_sandbox_and_preserves_previous_checkpoints(v2,monkeypa
     ScriptedSession.fault='interrupt'
     monkeypatch.setattr(runner,'run_checker',lambda *a:pytest.fail('checker after interruption'))
     with pytest.raises(KeyboardInterrupt):run(v2)
-    path=v2.root/'runs'/Cell(v2.spec.experiment_id,'T1','incremental','no_skill',1).relative
+    from benchmark_core.cost266.paths import resolve_run_path
+    path=resolve_run_path(v2.root,v2.spec,Cell(v2.spec.experiment_id,'T1','incremental','no_skill',1))
     assert len(ScriptedSession.instances[0].cleanup)==1
     assert len(list(path.glob('steps/*/completed.json')))==2
     assert json.loads((path/'manifest.json').read_text())['pipeline_state']=='INCOMPLETE'

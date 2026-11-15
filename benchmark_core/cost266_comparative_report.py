@@ -1,4 +1,5 @@
 """Offline comparison of verified COST266 observations across experiments."""
+from .cost266.paths import manifest_paths, logical_relative
 from collections import Counter, defaultdict
 from itertools import combinations
 from pathlib import Path
@@ -61,7 +62,7 @@ def _condition_key(meta, agent_runtime_version):
 
 def _observe(path, root):
     run=path.parent
-    relative=run.relative_to(root/'runs');parts=relative.parts
+    relative, physical_mode=logical_relative(root, run);parts=relative.parts
     repetition=int(parts[7][1:]) if re.fullmatch(r'r\d+',parts[7]) else None
     row={'source_path':str(run.relative_to(root)), 'integrity_verified':False,
          'experiment_id':parts[0],'scenario_id':parts[1],'dns_tree_id':parts[2],
@@ -72,7 +73,6 @@ def _observe(path, root):
         meta=read_json(path)
         if meta.get('schema')!='cost266_v1':raise ValueError('Schema COST266 non valido')
         conditions=meta['conditions']
-        relative=run.relative_to(root/'runs')
         if conditions.get('identity')!=relative.as_posix() or meta.get('run_id')!='__'.join(relative.parts):
             raise ValueError('Identità manifest/percorso non coerente')
         if meta.get('experiment_id')!=relative.parts[0]:raise ValueError('Experiment ID incoerente')
@@ -90,6 +90,7 @@ def _observe(path, root):
             if meta.get(field) is not None and meta[field]!=conditions.get(field):
                 raise ValueError('Condizione manifest incoerente: '+field)
         mode=execution_mode(version,meta['strategy'])
+        if physical_mode is not None and physical_mode != mode:raise ValueError('Execution mode nel percorso incoerente')
         row.update({key:meta.get(key) for key in (*KEYS,'experiment_id','run_id','strategy')})
         row['replicate']=repetitions[0]
         row.update(protocol_version=version,execution_mode=mode,legacy_one_shot=(mode=='one_shot' and version!=CONTINUOUS_VERSION),
@@ -227,9 +228,9 @@ def compare(root, output, experiments=None):
         raise ValueError('Output deve essere una nuova directory esterna alle run e agli asset')
     selected=set(experiments or [])
     observations=[]
-    for path in sorted((root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json')):
+    for path in manifest_paths(root):
         if path.is_symlink():raise ValueError('Manifest symlink non consentito')
-        if selected and path.relative_to(root/'runs').parts[0] not in selected:continue
+        if selected and logical_relative(root,path.parent)[0].parts[0] not in selected:continue
         obj=_observe(path,root)
         if obj is not None:observations.append(obj)
     if selected:

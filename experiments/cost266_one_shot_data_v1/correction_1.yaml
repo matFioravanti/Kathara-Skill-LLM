@@ -1,0 +1,387 @@
+# COST266 / T1 — correction_1.yaml (1/9)
+# Controlli: Topologia, startup e indirizzamento IP
+# Eseguibile autonomamente con --config; include la topologia completa.
+# PRECONDIZIONE: laboratorio Kathara con tutti i dispositivi elencati in lab_inline.
+# Non verificato in esecuzione su un laboratorio Kathara completo.
+lab_inline: |
+  r_amsterdam[0]="wan_00_07"
+  r_amsterdam[1]="wan_00_13"
+  r_amsterdam[2]="wan_00_14"
+  r_amsterdam[3]="wan_00_18"
+  r_athens[0]="wan_01_25"
+  r_athens[1]="wan_01_30"
+  r_athens[2]="wan_01_35"
+  r_barcelona[0]="wan_02_20"
+  r_barcelona[1]="wan_02_21"
+  r_barcelona[2]="wan_02_29"
+  r_belgrade[0]="wan_03_08"
+  r_belgrade[1]="wan_03_30"
+  r_belgrade[2]="wan_03_35"
+  r_berlin[0]="wan_04_09"
+  r_berlin[1]="wan_04_14"
+  r_berlin[2]="wan_04_23"
+  r_berlin[3]="wan_04_27"
+  r_berlin[4]="wan_04_34"
+  r_birmingham[0]="wan_05_13"
+  r_birmingham[1]="wan_05_18"
+  r_bordeaux[0]="wan_06_20"
+  r_bordeaux[1]="wan_06_21"
+  r_bordeaux[2]="wan_06_26"
+  r_brussels[0]="wan_00_07"
+  r_brussels[1]="wan_07_11"
+  r_brussels[2]="wan_07_26"
+  r_budapest[0]="wan_03_08"
+  r_budapest[1]="wan_08_16"
+  r_budapest[2]="wan_08_27"
+  r_copenhagen[0]="wan_04_09"
+  r_copenhagen[1]="wan_09_24"
+  r_copenhagen[2]="wan_09_31"
+  r_dublin[0]="wan_10_13"
+  r_dublin[1]="wan_10_18"
+  r_dusseldorf[0]="wan_07_11"
+  r_dusseldorf[1]="wan_11_12"
+  r_frankfurt[0]="wan_11_12"
+  r_frankfurt[1]="wan_12_14"
+  r_frankfurt[2]="wan_12_23"
+  r_frankfurt[3]="wan_12_32"
+  r_glasgow[0]="wan_00_13"
+  r_glasgow[1]="wan_05_13"
+  r_glasgow[2]="wan_10_13"
+  r_hamburg[0]="wan_00_14"
+  r_hamburg[1]="wan_04_14"
+  r_hamburg[2]="wan_12_14"
+  r_helsinki[0]="wan_15_24"
+  r_helsinki[1]="wan_15_31"
+  r_helsinki[2]="wan_15_34"
+  r_krakow[0]="wan_08_16"
+  r_krakow[1]="wan_16_34"
+  r_lisbon[0]="wan_17_18"
+  r_lisbon[1]="wan_17_20"
+  r_lisbon[2]="wan_17_29"
+  r_london[0]="wan_00_18"
+  r_london[1]="wan_05_18"
+  r_london[2]="wan_10_18"
+  r_london[3]="wan_17_18"
+  r_london[4]="wan_18_26"
+  r_lyon[0]="wan_19_21"
+  r_lyon[1]="wan_19_26"
+  r_lyon[2]="wan_19_36"
+  r_madrid[0]="wan_02_20"
+  r_madrid[1]="wan_06_20"
+  r_madrid[2]="wan_17_20"
+  r_marseille[0]="wan_02_21"
+  r_marseille[1]="wan_06_21"
+  r_marseille[2]="wan_19_21"
+  r_marseille[3]="wan_21_28"
+  r_milan[0]="wan_22_23"
+  r_milan[1]="wan_22_28"
+  r_milan[2]="wan_22_36"
+  r_munich[0]="wan_04_23"
+  r_munich[1]="wan_12_23"
+  r_munich[2]="wan_22_23"
+  r_munich[3]="wan_23_33"
+  r_oslo[0]="wan_09_24"
+  r_oslo[1]="wan_15_24"
+  r_palermo[0]="wan_01_25"
+  r_palermo[1]="wan_25_28"
+  r_paris[0]="wan_06_26"
+  r_paris[1]="wan_07_26"
+  r_paris[2]="wan_18_26"
+  r_paris[3]="wan_19_26"
+  r_paris[4]="wan_26_32"
+  r_prague[0]="wan_04_27"
+  r_prague[1]="wan_08_27"
+  r_prague[2]="wan_27_33"
+  r_rome[0]="wan_21_28"
+  r_rome[1]="wan_22_28"
+  r_rome[2]="wan_25_28"
+  r_rome[3]="wan_28_35"
+  r_seville[0]="wan_02_29"
+  r_seville[1]="wan_17_29"
+  r_sofia[0]="wan_01_30"
+  r_sofia[1]="wan_03_30"
+  r_stockholm[0]="wan_09_31"
+  r_stockholm[1]="wan_15_31"
+  r_strasbourg[0]="wan_12_32"
+  r_strasbourg[1]="wan_26_32"
+  r_strasbourg[2]="wan_32_36"
+  r_vienna[0]="wan_23_33"
+  r_vienna[1]="wan_27_33"
+  r_vienna[2]="wan_33_35"
+  r_warsaw[0]="wan_04_34"
+  r_warsaw[1]="wan_15_34"
+  r_warsaw[2]="wan_16_34"
+  r_zagreb[0]="wan_01_35"
+  r_zagreb[1]="wan_03_35"
+  r_zagreb[2]="wan_28_35"
+  r_zagreb[3]="wan_33_35"
+  r_zurich[0]="wan_19_36"
+  r_zurich[1]="wan_22_36"
+  r_zurich[2]="wan_32_36"
+  r_amsterdam[4]="access_00"
+  r_athens[3]="access_01"
+  r_frankfurt[4]="access_12"
+  r_helsinki[3]="access_15"
+  r_lisbon[3]="access_17"
+  r_london[5]="access_18"
+  r_paris[5]="access_26"
+  r_rome[4]="access_28"
+  r_warsaw[3]="access_34"
+  r_zurich[3]="access_36"
+  c266_cities[0]="access_28"
+  c266_client_1[0]="access_01"
+  c266_client_2[0]="access_17"
+  c266_countries[0]="access_12"
+  c266_functional_1[0]="access_18"
+  c266_functional_2[0]="access_15"
+  c266_resolver_1[0]="access_34"
+  c266_resolver_2[0]="access_36"
+  c266_root[0]="access_00"
+  c266_subzones[0]="access_26"
+  c266_tld_europa[0]="access_00"
+  c266_tld_infra[0]="access_12"
+  c266_tld_lab[0]="access_26"
+  c266_tld_research[0]="access_12"
+  c266_tld_services[0]="access_28"
+  c266_tld_test[0]="access_18"
+convergence_time: 60
+default_image: kathara/base
+test:
+  requiring_startup:
+  - c266_cities
+  - c266_client_1
+  - c266_client_2
+  - c266_countries
+  - c266_functional_1
+  - c266_functional_2
+  - c266_resolver_1
+  - c266_resolver_2
+  - c266_root
+  - c266_subzones
+  - c266_tld_europa
+  - c266_tld_infra
+  - c266_tld_lab
+  - c266_tld_research
+  - c266_tld_services
+  - c266_tld_test
+  - r_amsterdam
+  - r_athens
+  - r_barcelona
+  - r_belgrade
+  - r_berlin
+  - r_birmingham
+  - r_bordeaux
+  - r_brussels
+  - r_budapest
+  - r_copenhagen
+  - r_dublin
+  - r_dusseldorf
+  - r_frankfurt
+  - r_glasgow
+  - r_hamburg
+  - r_helsinki
+  - r_krakow
+  - r_lisbon
+  - r_london
+  - r_lyon
+  - r_madrid
+  - r_marseille
+  - r_milan
+  - r_munich
+  - r_oslo
+  - r_palermo
+  - r_paris
+  - r_prague
+  - r_rome
+  - r_seville
+  - r_sofia
+  - r_stockholm
+  - r_strasbourg
+  - r_vienna
+  - r_warsaw
+  - r_zagreb
+  - r_zurich
+  ip_mapping:
+    c266_cities:
+      '0': 10.210.28.10/24
+    c266_client_1:
+      '0': 10.210.1.10/24
+    c266_client_2:
+      '0': 10.210.17.10/24
+    c266_countries:
+      '0': 10.210.12.10/24
+    c266_functional_1:
+      '0': 10.210.18.10/24
+    c266_functional_2:
+      '0': 10.210.15.10/24
+    c266_resolver_1:
+      '0': 10.210.34.10/24
+    c266_resolver_2:
+      '0': 10.210.36.10/24
+    c266_root:
+      '0': 10.210.0.10/24
+    c266_subzones:
+      '0': 10.210.26.10/24
+    c266_tld_europa:
+      '0': 10.210.0.11/24
+    c266_tld_infra:
+      '0': 10.210.12.11/24
+    c266_tld_lab:
+      '0': 10.210.26.11/24
+    c266_tld_research:
+      '0': 10.210.12.12/24
+    c266_tld_services:
+      '0': 10.210.28.11/24
+    c266_tld_test:
+      '0': 10.210.18.11/24
+    r_amsterdam:
+      '0': 10.100.0.1/30
+      '1': 10.100.0.5/30
+      '2': 10.100.0.9/30
+      '3': 10.100.0.13/30
+    r_athens:
+      '0': 10.100.0.17/30
+      '1': 10.100.0.21/30
+      '2': 10.100.0.25/30
+    r_barcelona:
+      '0': 10.100.0.29/30
+      '1': 10.100.0.33/30
+      '2': 10.100.0.37/30
+    r_belgrade:
+      '0': 10.100.0.41/30
+      '1': 10.100.0.45/30
+      '2': 10.100.0.49/30
+    r_berlin:
+      '0': 10.100.0.53/30
+      '1': 10.100.0.57/30
+      '2': 10.100.0.61/30
+      '3': 10.100.0.65/30
+      '4': 10.100.0.69/30
+    r_birmingham:
+      '0': 10.100.0.73/30
+      '1': 10.100.0.77/30
+    r_bordeaux:
+      '0': 10.100.0.81/30
+      '1': 10.100.0.85/30
+      '2': 10.100.0.89/30
+    r_brussels:
+      '0': 10.100.0.2/30
+      '1': 10.100.0.93/30
+      '2': 10.100.0.97/30
+    r_budapest:
+      '0': 10.100.0.42/30
+      '1': 10.100.0.101/30
+      '2': 10.100.0.105/30
+    r_copenhagen:
+      '0': 10.100.0.54/30
+      '1': 10.100.0.109/30
+      '2': 10.100.0.113/30
+    r_dublin:
+      '0': 10.100.0.117/30
+      '1': 10.100.0.121/30
+    r_dusseldorf:
+      '0': 10.100.0.94/30
+      '1': 10.100.0.125/30
+    r_frankfurt:
+      '0': 10.100.0.126/30
+      '1': 10.100.0.129/30
+      '2': 10.100.0.133/30
+      '3': 10.100.0.137/30
+    r_glasgow:
+      '0': 10.100.0.6/30
+      '1': 10.100.0.74/30
+      '2': 10.100.0.118/30
+    r_hamburg:
+      '0': 10.100.0.10/30
+      '1': 10.100.0.58/30
+      '2': 10.100.0.130/30
+    r_helsinki:
+      '0': 10.100.0.141/30
+      '1': 10.100.0.145/30
+      '2': 10.100.0.149/30
+    r_krakow:
+      '0': 10.100.0.102/30
+      '1': 10.100.0.153/30
+    r_lisbon:
+      '0': 10.100.0.157/30
+      '1': 10.100.0.161/30
+      '2': 10.100.0.165/30
+    r_london:
+      '0': 10.100.0.14/30
+      '1': 10.100.0.78/30
+      '2': 10.100.0.122/30
+      '3': 10.100.0.158/30
+      '4': 10.100.0.169/30
+    r_lyon:
+      '0': 10.100.0.173/30
+      '1': 10.100.0.177/30
+      '2': 10.100.0.181/30
+    r_madrid:
+      '0': 10.100.0.30/30
+      '1': 10.100.0.82/30
+      '2': 10.100.0.162/30
+    r_marseille:
+      '0': 10.100.0.34/30
+      '1': 10.100.0.86/30
+      '2': 10.100.0.174/30
+      '3': 10.100.0.185/30
+    r_milan:
+      '0': 10.100.0.189/30
+      '1': 10.100.0.193/30
+      '2': 10.100.0.197/30
+    r_munich:
+      '0': 10.100.0.62/30
+      '1': 10.100.0.134/30
+      '2': 10.100.0.190/30
+      '3': 10.100.0.201/30
+    r_oslo:
+      '0': 10.100.0.110/30
+      '1': 10.100.0.142/30
+    r_palermo:
+      '0': 10.100.0.18/30
+      '1': 10.100.0.205/30
+    r_paris:
+      '0': 10.100.0.90/30
+      '1': 10.100.0.98/30
+      '2': 10.100.0.170/30
+      '3': 10.100.0.178/30
+      '4': 10.100.0.209/30
+    r_prague:
+      '0': 10.100.0.66/30
+      '1': 10.100.0.106/30
+      '2': 10.100.0.213/30
+    r_rome:
+      '0': 10.100.0.186/30
+      '1': 10.100.0.194/30
+      '2': 10.100.0.206/30
+      '3': 10.100.0.217/30
+    r_seville:
+      '0': 10.100.0.38/30
+      '1': 10.100.0.166/30
+    r_sofia:
+      '0': 10.100.0.22/30
+      '1': 10.100.0.46/30
+    r_stockholm:
+      '0': 10.100.0.114/30
+      '1': 10.100.0.146/30
+    r_strasbourg:
+      '0': 10.100.0.138/30
+      '1': 10.100.0.210/30
+      '2': 10.100.0.221/30
+    r_vienna:
+      '0': 10.100.0.202/30
+      '1': 10.100.0.214/30
+      '2': 10.100.0.225/30
+    r_warsaw:
+      '0': 10.100.0.70/30
+      '1': 10.100.0.150/30
+      '2': 10.100.0.154/30
+    r_zagreb:
+      '0': 10.100.0.26/30
+      '1': 10.100.0.50/30
+      '2': 10.100.0.218/30
+      '3': 10.100.0.226/30
+    r_zurich:
+      '0': 10.100.0.182/30
+      '1': 10.100.0.198/30
+      '2': 10.100.0.222/30

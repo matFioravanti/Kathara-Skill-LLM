@@ -8,6 +8,8 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from benchmark_core.config import load_config
 from benchmark_core.cost266.runner import experiment_lock
+from benchmark_core.cost266.paths import manifest_paths
+from benchmark_core.cost266.runner import read_json
 from benchmark_core.report_paths import cost266_experiment, publish_cost266_report
 
 
@@ -22,7 +24,7 @@ def main(argv=None):
         default_output=cost266_experiment(config,args.experiment)
         output=args.output if args.output is not None else default_output
         if output.name!=args.experiment:raise ValueError('Il nome della directory output deve essere l’experiment ID')
-        if not list((config.root/'runs'/args.experiment).glob('*/*/cost266/*/*/*/r*/manifest.json')):
+        if not any(read_json(p).get('experiment_id') == args.experiment for p in manifest_paths(config.root)):
             raise ValueError('Nessuna run COST266 trovata per questo esperimento')
         with experiment_lock(config.root,args.experiment):
             frames=publish_cost266_report(config.root,output)

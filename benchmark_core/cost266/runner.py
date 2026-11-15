@@ -11,7 +11,10 @@ import math
 import shutil
 import subprocess
 import tempfile
+import threading
 import time
+import csv
+from datetime import datetime
 
 from ..config import Config, skill_paths
 from ..checker_runner import run_checker, checker_test_rows
@@ -21,8 +24,31 @@ from ..run_metrics import make_metrics
 from ..skill_modes import mode_details
 from ..workspace import (component_versions, copy_lab, manifest, manifest_changes, manifest_hash,
                          tree_hash, utc_now, write_json)
+from .paths import resolve_run_path
 from .protocol import (Cell, Spec, STAGES, VERSION, clean_lab, digest, fingerprint,
                        prompts, safe_path, validate_backend, CONTINUOUS_VERSION, execution_mode, stage_requirements)
+
+
+_progress_lock = threading.Lock()
+
+
+def progress(root: Path, experiment_id: str, cell: Cell, message: str):
+    """Una riga atomica nel terminale e nel log persistente dell'esperimento."""
+    label = f'COST266/{cell.strategy}/{cell.prompt_type}/{cell.skill_mode}/r{cell.repetition:03d}'
+    with _progress_lock:
+        line = f'[{datetime.now().astimezone():%H:%M:%S}] [{label}] {message}'
+        path = root/'logs'/'cost266'/f'{experiment_id}.log'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open('a', encoding='utf-8') as handle:
+            handle.write(line+'\n')
+            handle.flush()
+        print(line, flush=True)
+
+
+def _duration(seconds: float) -> str:
+    minutes, seconds = divmod(max(0, int(seconds)), 60)
+    hours, minutes = divmod(minutes, 60)
+    return f'{hours}h {minutes}m {seconds}s' if hours else f'{minutes}m {seconds}s'
 
 
 def read_json(path: Path) -> dict:
@@ -61,7 +87,7 @@ def conditions(config, spec: Spec, cell: Cell, inventory: dict, preparation: dic
     # Antigravity usa la Skill DNS anche in no_skill: mantiene la semantica standard.
     if config.data['aut']['agent'] == 'antigravity':
         paths = skill_paths(config, ('kathara-dns',))
-    return {'protocol': spec.protocol, 'identity': cell.relative.as_posix(),
+    return {**({'correction_files': preparation['correction_files']} if preparation.get('correction_files') else {}), 'protocol': spec.protocol, 'identity': cell.relative.as_posix(),
             'component_versions': component_versions(), 'repository_revision': _revision(config.root),
             'implementation_sha256': fingerprint({p.name:digest(p.read_bytes()) for p in sorted(Path(__file__).parent.glob('*.py'))}),
             'baseline_sha256': preparation['baseline_sha256'], 'correction_sha256': preparation['correction_sha256'],
@@ -137,7 +163,10 @@ def verify_run(run: Path, expected: dict) -> tuple[dict, list[dict]]:
         raise ValueError('Execution mode incoerente con protocollo/strategia della run')
     if tree_hash(run/'input/lab') != expected['baseline_sha256']:
         raise ValueError('Baseline input alterata')
-    if digest((run/'evaluation/correction.yaml').read_bytes()) != expected['correction_sha256']:
+    if expected.get('correction_files'):
+        if any(digest((run/'evaluation'/name).read_bytes()) != sha for name, sha in expected['correction_files'].items()):
+            raise ValueError('Snapshot correction alterato')
+    elif digest((run/'evaluation/correction.yaml').read_bytes()) != expected['correction_sha256']:
         raise ValueError('Snapshot correction alterato')
     if expected.get('oracle_coverage_sha256') and digest((run/'evaluation/oracle_coverage.json').read_bytes()) != expected['oracle_coverage_sha256']:
         raise ValueError('Snapshot copertura oracle alterato')
@@ -209,7 +238,7 @@ def verify_run(run: Path, expected: dict) -> tuple[dict, list[dict]]:
 
 def plan(config, spec, cell, inventory, preparation, *, resume=False, rerun=False):
     expected = conditions(config, spec, cell, inventory, preparation)
-    run = safe_path(config.root/'runs'/cell.relative)
+    run = resolve_run_path(config.root, spec, cell)
     if run.exists():
         metadata, completed = verify_run(run, expected)
         if rerun:
@@ -219,7 +248,7 @@ def plan(config, spec, cell, inventory, preparation, *, resume=False, rerun=Fals
                 raise ValueError('Cleanup sessione non verificato: rivalutazione non consentita')
             return 'RECHECK', run
         if not resume:
-            raise ValueError(f'Run già presente: {run}; usare --resume o un nuovo experiment_id')
+            raise ValueError(f'Run già presente: {run}; usare --resume, --rerun-correction o una nuova ripetizione/experiment_id')
         if metadata['pipeline_state'] == 'COMPLETED':
             return 'SKIP', run
         if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental':
@@ -368,6 +397,8 @@ def _replace_lab(source: Path, target: Path):
 
 
 def _evaluate(config, spec, run, metadata, remaining):
+    if metadata['conditions'].get('correction_files'):
+        return _evaluate_sequence(config, spec, run, metadata, remaining)
     oracle = run/'evaluation/correction.yaml'
     if digest(oracle.read_bytes()) != metadata['correction_sha256']:
         raise ValueError('Snapshot correction alterato prima del checker')
@@ -391,7 +422,116 @@ def _evaluate(config, spec, run, metadata, remaining):
         metadata['checker_seconds'] = metadata.get('checker_seconds',0) + time.monotonic()-started
 
 
+def _evaluate_sequence(config, spec, run, metadata, remaining):
+    from ..checker_runner import parse_reports, REPORT_COLUMNS
+    corrections = dict(sorted(metadata['conditions']['correction_files'].items(), key=lambda item: int(Path(item[0]).stem.split('_')[1])))
+    before = tree_hash(run/'lab')
+    metadata.update(pipeline_state='CHECKER_RUNNING', checker_execution_success=None, task_success=None)
+    write_json(run/'manifest.json', metadata)
+    started = time.monotonic()
+    rows, summaries = [], []
+    try:
+        for name, sha in corrections.items():
+            oracle = run/'evaluation'/name
+            if digest(oracle.read_bytes()) != sha:
+                raise ValueError(f'Snapshot correction alterato: {name}')
+            left = min(remaining, spec.checker_timeout) - (time.monotonic()-started)
+            if left < 1:
+                raise TimeoutError('Budget checker esaurito durante le correction')
+            part = run/'evaluation'/'correction_runs'/oracle.stem
+            for directory in ('results', 'logs'):
+                (part/directory).mkdir(parents=True, exist_ok=True)
+            # Il checker legge il lab della run e scrive soltanto nella propria area.
+            class CheckerRun:
+                def __truediv__(self, key):
+                    return run/'lab' if key == 'lab' else part/key
+                name = oracle.stem
+            result = run_checker(timed_config(config, max(1, math.floor(left))), CheckerRun(), oracle)
+            _, details = parse_reports(part/'results')
+            if not details:
+                raise ValueError(f'Report dettagliato assente: {name}')
+            rows.extend(details)
+            summaries.append((name, result, details))
+            if tree_hash(run/'lab') != before or tree_hash(run/'input/lab') != metadata['input_lab_sha256']:
+                raise RuntimeError('Checker ha alterato il laboratorio')
+        if any(digest((run/'evaluation'/name).read_bytes()) != sha for name, sha in corrections.items()):
+            raise ValueError('Snapshot correction alterato durante il checker')
+        total, passed = len(rows), sum(row['Passed'] == 'True' for row in rows)
+        failed = total-passed
+        result_dir = run/'results'
+        (result_dir/'lab').mkdir(parents=True, exist_ok=True)
+        def save_csv(path, columns, values):
+            with path.open('w', newline='', encoding='utf-8') as stream:
+                writer = csv.DictWriter(stream, fieldnames=columns)
+                writer.writeheader(); writer.writerows(values)
+        save_csv(result_dir/'lab/lab_result_all.csv', REPORT_COLUMNS, rows)
+        save_csv(result_dir/'lab/lab_result_failed.csv', REPORT_COLUMNS, [r for r in rows if r['Passed'] == 'False'])
+        save_csv(result_dir/'lab/lab_result_summary.csv', ['Total Tests','Passed Tests','Failed'],
+                 [{'Total Tests':total, 'Passed Tests':passed, 'Failed':failed}])
+        save_csv(result_dir/'results.csv', ['Student Name','Tests Passed','Tests Failed','Tests Total Number','Problems'],
+                 [{'Student Name':'lab','Tests Passed':passed,'Tests Failed':failed,'Tests Total Number':total,'Problems':''}])
+        outcome, _ = parse_reports(result_dir)
+        metadata.update(checker_execution_success=True, task_success=outcome['task_success'], pipeline_state='COMPLETED')
+        return outcome
+    except BaseException:
+        metadata.update(checker_execution_success=False, pipeline_state='CHECKER_FAILED', task_success=None)
+        raise
+    finally:
+        metadata['checker_seconds'] = metadata.get('checker_seconds',0) + time.monotonic()-started
+
+
+def _write_run_workbook(run, metadata, metrics):
+    from ..checker_runner import parse_reports, REPORT_COLUMNS
+    from openpyxl import Workbook
+    book = Workbook(write_only=True)
+    general = book.create_sheet('General')
+    general.append(['Metric', 'Value'])
+    def flatten(prefix, value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                flatten(f'{prefix}.{key}' if prefix else key, item)
+        elif isinstance(value, (str, int, float, bool)) or value is None:
+            general.append([prefix, value])
+        else:
+            general.append([prefix, json.dumps(value, ensure_ascii=False)])
+    flatten('run', {key: metadata.get(key) for key in ('run_id','experiment_id','strategy','skill_mode','prompt_type','replicate','pipeline_state','task_success')})
+    flatten('metrics', metrics)
+    summary = book.create_sheet('Summary')
+    summary.append(['Correction','Passed','Failed','Total','Pass rate'])
+    sheet = book.create_sheet('Checks')
+    sheet.append(['Correction', *REPORT_COLUMNS])
+    names = sorted(metadata['conditions']['correction_files'], key=lambda name: int(Path(name).stem.split('_')[1]))
+    for name in names:
+        outcome, rows = parse_reports(run/'evaluation'/'correction_runs'/Path(name).stem/'results')
+        summary.append([name,outcome['checks_passed'],outcome['checks_failed'],outcome['checks_total'],outcome['check_pass_rate']])
+        for row in rows:
+            sheet.append([name, *(row[column] for column in REPORT_COLUMNS)])
+    outcome, _ = parse_reports(run/'results')
+    summary.append(['Totale',outcome['checks_passed'],outcome['checks_failed'],outcome['checks_total'],outcome['check_pass_rate']])
+    temporary = run/'evaluation'/'benchmark.tmp.xlsx'
+    book.save(temporary)
+    temporary.replace(run/'evaluation'/'benchmark.xlsx')
+
+
 def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None) -> Path:
+    started = time.monotonic()
+    progress(config.root, spec.experiment_id, cell, 'START RUN')
+    try:
+        run = _execute(config, spec, cell, inventory, preparation, resume=resume, rerun=rerun, checker_lock=checker_lock)
+        if (run/'manifest.json').is_file():
+            metadata = read_json(run/'manifest.json')
+            progress(config.root, spec.experiment_id, cell,
+                     f'RUN TERMINATA: {metadata["pipeline_state"]}, task_success={metadata.get("task_success")}; durata invocazione: {_duration(time.monotonic()-started)}')
+        else:
+            progress(config.root, spec.experiment_id, cell, f'RUN NON ESEGUITA; durata: {_duration(time.monotonic()-started)}')
+        return run
+    except BaseException as exc:
+        progress(config.root, spec.experiment_id, cell,
+                 f'ERRORE run/preparazione: {type(exc).__name__}: {exc}; durata: {_duration(time.monotonic()-started)}')
+        raise
+
+
+def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None) -> Path:
     invocation_started = time.monotonic()
     action, run = plan(config,spec,cell,inventory,preparation,resume=resume,rerun=rerun)
     if action in ('SKIP','MISSING'):
@@ -404,10 +544,11 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             (run/name).mkdir(parents=True,exist_ok=True)
         copy_lab(spec.dataset/'lab', run/'input/lab')
         copy_lab(spec.dataset/'lab', run/'lab')
-        content, sha = read_correction(spec.dataset/'correction.yaml')
-        if sha != expected['correction_sha256']:
-            raise ValueError('Oracle modificato durante allocazione')
-        (run/'evaluation/correction.yaml').write_bytes(content)
+        for name, expected_sha in (expected.get('correction_files') or {'correction.yaml': expected['correction_sha256']}).items():
+            content, sha = read_correction(spec.dataset/name)
+            if sha != expected_sha:
+                raise ValueError('Oracle modificato durante allocazione')
+            (run/'evaluation'/name).write_bytes(content)
         if expected.get('oracle_coverage_sha256'):
             shutil.copy2(spec.dataset/'oracle_coverage.json',run/'evaluation/oracle_coverage.json')
         (run/'input/prompt.md').write_text('\n\n'.join(sent))
@@ -452,6 +593,10 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             if (run/file).exists():
                 shutil.copy2(run/file,history/Path(file).name)
         shutil.copytree(run/'results', history/'results')
+        if (run/'evaluation/correction_runs').exists():
+            shutil.move(str(run/'evaluation/correction_runs'), str(history/'correction_runs'))
+        if (run/'evaluation/benchmark.xlsx').exists():
+            shutil.move(str(run/'evaluation/benchmark.xlsx'), str(history/'benchmark.xlsx'))
         shutil.rmtree(run/'results'); (run/'results').mkdir()
         metadata['evaluation_revision'] += 1
         metadata['last_reevaluated_at'] = utc_now()
@@ -459,9 +604,27 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
     previous_active = metadata.get('active_seconds',0)
     outcome = None
     checker_wait_seconds = 0.0
+    phase_name = 'generazione'
+    def emit(message):
+        progress(config.root, spec.experiment_id, cell, message)
+
+    def evaluate():
+        nonlocal phase_name
+        phase_name = 'checker'
+        checker_started = time.monotonic()
+        emit('Avvio Kathara Lab Checker...')
+        try:
+            result = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
+        except BaseException as exc:
+            emit(f'Checker terminato: CHECKER_FAILED; durata: {_duration(time.monotonic()-checker_started)}; causa: {type(exc).__name__}: {exc}')
+            raise
+        emit(f'Checker terminato: COMPLETED; durata: {_duration(time.monotonic()-checker_started)}; task_success={result["task_success"]}')
+        return result
+
     def remaining():
         return spec.total_timeout - previous_active - (time.monotonic()-started-checker_wait_seconds)
     def execute_stages(continuous=None):
+        nonlocal phase_name
         for index in range(len(completed),len(sent)):
             if rerun:
                 raise ValueError('Rivalutazione non può avviare AUT')
@@ -487,6 +650,8 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             metadata.update(pipeline_state='AUT_RUNNING',pipeline_error=None)
             write_json(run/'manifest.json',metadata)
             stage_started = time.monotonic()
+            phase_name = f'generazione fase {index+1}/{len(sent)}'
+            emit(f'Generazione avviata: fase {index+1}/{len(sent)}, tentativo {number:03d}')
             try:
                 timeout = min(spec.stage_timeout,max(1,math.floor(remaining())))
                 if continuous is None:
@@ -494,6 +659,8 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
                             attempt,config.data['aut']['agent'],sent[index],skill_mode=cell.skill_mode,run_id=stage_id)
                 else:
                     continuous.turn(attempt,stage_id,sent[index],index+1,timeout)
+                emit(f'Generazione agente terminata: fase {index+1}/{len(sent)}; durata: {_duration(time.monotonic()-stage_started)}; verifica checkpoint in corso')
+                phase_name = f'validazione fase {index+1}/{len(sent)}'
                 if not (attempt/'logs/aut'/f'{stage_id}.eval').is_file():
                     raise RuntimeError('Log Inspect .eval mancante: fase non promossa a checkpoint')
                 actual_prompt = (attempt/'logs/aut/prompt_sent.md').read_bytes()
@@ -518,11 +685,13 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
                 stage_metadata['static_validation_seconds'] = time.monotonic()-static_started
                 stage_metadata['static_regressions'] = validation['regressions']
                 write_json(attempt/'evaluation/static.json',validation)
+                emit(f'Validazione statica fase {index+1}/{len(sent)}: {validation["passed"]}/{validation["total"]} dichiarazioni presenti; regressioni: {len(validation["regressions"])} (non verifica DNS funzionale)')
                 copy_lab(attempt/'lab',step/'checkpoint')
                 stage_metadata['checkpoint_sha256'] = tree_hash(step/'checkpoint')
                 stage_metadata['checkpoint_bytes'] = sum(p.stat().st_size for p in (step/'checkpoint').rglob('*') if p.is_file())
                 stage_metadata.update(pipeline_state='COMPLETED',aut_execution_success=True,stage_completed=True)
             except BaseException as exc:
+                emit(f'ERRORE {phase_name}: {type(exc).__name__}: {exc}')
                 stage_metadata.update(pipeline_state='AUT_FAILED',aut_execution_success=False,pipeline_error=f'{type(exc).__name__}: {exc}')
                 raise
             finally:
@@ -565,8 +734,11 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
             _replace_lab(step/'checkpoint',run/'lab')
             metadata['completed_stages'] = len(completed)
             write_json(run/'manifest.json',metadata)
+            emit(f'Fase {index+1}/{len(sent)} completata; durata: {_duration(time.monotonic()-stage_started)}')
     continuous = None
     try:
+        initial_completed = len(completed)
+        generation_started = time.monotonic()
         if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental' and not rerun and len(completed)<len(sent):
             from .continuous import ContinuousAutSession
             def turn_timeout():
@@ -579,21 +751,30 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
                 raise RuntimeError('Cleanup della sessione continua non verificato')
         elif len(completed)<len(sent):
             execute_stages()
+        if len(completed) > initial_completed:
+            emit(f'Generazione completata: {len(completed)}/{len(sent)} fasi promosse; durata: {_duration(time.monotonic()-generation_started)}')
         metadata.update(aut_execution_success=True,pipeline_state='AUT_COMPLETED',final_lab_sha256=tree_hash(run/'lab'))
         if remaining() < 1 and not rerun:
             raise TimeoutError('Budget totale esaurito prima del checker finale')
         # Rivalutazione ha un budget checker esplicito e non riapre il budget AUT.
         if checker_lock is None:
-            outcome = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
+            outcome = evaluate()
         else:
             metadata.update(pipeline_state='CHECKER_QUEUED')
             write_json(run/'manifest.json',metadata)
             wait_started = time.monotonic()
-            with checker_lock:
+            acquired = checker_lock.acquire(blocking=False)
+            if not acquired:
+                emit('In attesa del checker...')
+                checker_lock.acquire()
+            try:
                 checker_wait_seconds = time.monotonic()-wait_started
                 metadata['checker_queue_seconds'] = checker_wait_seconds
-                outcome = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
+                outcome = evaluate()
+            finally:
+                checker_lock.release()
     except BaseException as exc:
+        emit(f'ERRORE {phase_name}: {type(exc).__name__}: {exc}')
         if metadata['pipeline_state'] != 'CHECKER_FAILED':
             metadata.update(pipeline_state='INCOMPLETE',aut_execution_success=len(completed)==len(sent))
         metadata['pipeline_error'] = f'{type(exc).__name__}: {exc}'
@@ -620,4 +801,6 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
         metrics['timing']['total_seconds'] = metadata['active_seconds']
         write_json(run/'evaluation/metrics.json',metrics)
         write_json(run/'manifest.json',metadata)
+        if metadata.get('pipeline_state') == 'COMPLETED' and expected.get('correction_files'):
+            _write_run_workbook(run, metadata, metrics)
     return run

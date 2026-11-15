@@ -7,6 +7,7 @@ import argparse
 import json
 import sys
 import threading
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -15,7 +16,7 @@ from benchmark_core.config import load_config
 from benchmark_core.cost266.assets import load_dataset, prepare
 from benchmark_core.cost266.protocol import STRATEGIES, load_spec, EXECUTION_MODES, validate_backend
 from benchmark_core.cost266.selection import resolve_selection, describe_cell
-from benchmark_core.cost266.runner import execute, experiment_lock, plan
+from benchmark_core.cost266.runner import execute, experiment_lock, plan, progress, _duration
 from benchmark_core.report_paths import cost266_experiment, publish_cost266_report, validate_cost266_report_destination
 from benchmark_core.preflight import preflight
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, validate_mode_sources
@@ -33,7 +34,7 @@ def main(argv=None):
                         help='seleziona automaticamente configurazione e protocollo v1/v2')
     parser.add_argument('--skill-mode',choices=SKILL_MODE_CHOICES)
     parser.add_argument('--prompt-type',choices=PROMPT_TYPES)
-    parser.add_argument('--only-replicate',type=int)
+    parser.add_argument('--only-replicate',type=int, help='Seleziona una ripetizione positiva, anche oltre repetitions nello YAML')
     parser.add_argument('--generation-workers',type=int,default=5,
                         help='Generazioni parallele one-shot (predefinito: 5); checker sempre uno alla volta')
     parser.add_argument('--dry-run',action='store_true')
@@ -67,7 +68,7 @@ def main(argv=None):
         if args.dry_run:
             for cell,action,run in planned():
                 print(describe_cell(spec,cell))
-                print(f'{action} {cell.relative} stages={1 if cell.strategy=="one_shot" else 6} baseline={preparation["baseline_sha256"]} oracle={preparation["correction_sha256"]}')
+                print(f'{action} {run} stages={1 if cell.strategy=="one_shot" else 6} baseline={preparation["baseline_sha256"]} oracle={preparation["correction_sha256"]}')
             return 0
         with experiment_lock(config.root,spec.experiment_id):
             decisions = planned()
@@ -80,18 +81,33 @@ def main(argv=None):
                         validate_mode_sources(config,mode)
                     preflight(config,config.data['aut']['agent'],skill_mode=mode,scenario_ids=())
             failed = False
+            def publish_report(report_cells):
+                started = time.monotonic()
+                for cell in report_cells:
+                    progress(config.root,spec.experiment_id,cell,'Generazione report XLSX/CSV avviata...')
+                try:
+                    publish_cost266_report(config.root,report_output)
+                except BaseException as exc:
+                    for cell in report_cells:
+                        progress(config.root,spec.experiment_id,cell,
+                                 f'ERRORE generazione report: {type(exc).__name__}: {exc}; durata: {_duration(time.monotonic()-started)}')
+                    raise
+                for cell in report_cells:
+                    progress(config.root,spec.experiment_id,cell,
+                             f'Report salvati: {report_output}; durata: {_duration(time.monotonic()-started)}')
             if args.execution_mode == 'one_shot':
                 checker_lock = threading.Lock()
                 active = [(cell,action,run) for cell,action,run in decisions if action not in ('SKIP','MISSING')]
                 for cell,action,run in decisions:
                     if action == 'MISSING':
-                        print(f'MISSING {cell.relative}', flush=True)
+                        progress(config.root,spec.experiment_id,cell,f'MISSING {run}')
                     elif action == 'SKIP':
                         metadata = json.loads((run/'manifest.json').read_text())
-                        print(f'SKIP {cell.relative}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}', flush=True)
+                        progress(config.root,spec.experiment_id,cell,f'SKIP {run}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}')
                         failed |= metadata.get('task_success') is not True
                 if active:
-                    print(f'One-shot: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; 1 checker alla volta.', flush=True)
+                    for cell,_,_ in active:
+                        progress(config.root,spec.experiment_id,cell,f'Pianificata: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; 1 checker alla volta')
                     with ThreadPoolExecutor(max_workers=args.generation_workers) as pool:
                         futures = {pool.submit(execute,config,spec,cell,inventory,preparation,
                                                resume=args.resume,rerun=args.rerun_correction,checker_lock=checker_lock): cell
@@ -100,26 +116,33 @@ def main(argv=None):
                             cell = futures[future]
                             run = future.result()
                             metadata = json.loads((run/'manifest.json').read_text())
-                            print(f'{cell.relative}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}', flush=True)
                             failed |= metadata.get('task_success') is not True
-                    publish_cost266_report(config.root,report_output)
+                    publish_report([cell for cell,_,_ in active])
                 return int(failed)
             for cell,action,run in decisions:
                 if action == 'MISSING':
-                    print(f'MISSING {cell.relative}')
+                    progress(config.root,spec.experiment_id,cell,f'MISSING {run}')
                     continue
                 if action != 'SKIP':
                     validate_cost266_report_destination(report_output)
                     run = execute(config,spec,cell,inventory,preparation,resume=args.resume,rerun=args.rerun_correction)
-                    publish_cost266_report(config.root,report_output)
+                    publish_report([cell])
                 metadata = json.loads((run/'manifest.json').read_text())
-                print(f'{cell.relative}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}')
+                if action == 'SKIP':
+                    progress(config.root,spec.experiment_id,cell,f'SKIP {run}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}')
                 failed |= metadata.get('task_success') is not True
                 if metadata['pipeline_state'] != 'COMPLETED' and not config.data['benchmark']['continue_on_error']:
                     break
             return int(failed)
     except (ValueError,RuntimeError,OSError,KeyError,TypeError) as exc:
-        print(f'Errore COST266: {exc}',file=sys.stderr)
+        if not args.dry_run and 'selected' in locals() and selected and 'spec' in locals() and 'config' in locals():
+            for cell in selected:
+                try:
+                    progress(config.root,spec.experiment_id,cell,f'ERRORE CLI/preparazione o report: {type(exc).__name__}: {exc}')
+                except OSError:
+                    print(f'Errore COST266 durante la scrittura del log: {exc}',file=sys.stderr,flush=True)
+        else:
+            print(f'Errore COST266: {exc}',file=sys.stderr,flush=True)
         return 1
 
 

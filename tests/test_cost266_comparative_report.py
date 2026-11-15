@@ -12,6 +12,7 @@ from test_cost266_selection import selection as base_selection, arguments
 from test_cost266_continuous import v2
 from test_cost266 import case
 from scripts import run_cost266 as cli
+from benchmark_core.cost266.paths import manifest_paths
 from benchmark_core.cost266_comparative_report import compare
 from benchmark_core.cost266.comparison import comparison_mismatches
 
@@ -43,7 +44,7 @@ def test_all_modes_cross_experiment_reports_and_determinism(selection):
     runs(selection,['one_shot','incremental_isolated','incremental_continuous'])
     root=selection.root;before=snapshot(root/'runs');before_reports=snapshot(root/'results')
     first=root/'comparison1';second=root/'comparison2'
-    manifest=compare(root,first,['test_isolated','test_continuous'])
+    manifest=compare(root,first,['test_one_shot','test_isolated','test_continuous'])
     assert manifest['observations_read']==3 and manifest['valid_pairs']==3 and manifest['valid_triples']==1
     pairs=pd.read_csv(first/'pairwise_comparisons.csv')
     assert len(pairs)==3 and pairs.comparable.all()
@@ -60,7 +61,7 @@ def test_all_modes_cross_experiment_reports_and_determinism(selection):
     book=load_workbook(first/'benchmark_comparison.xlsx',read_only=True)
     assert book.sheetnames==['Observations','Pairwise','Three Modes','Summary','Diagnostics'];book.close()
     time.sleep(1.1)
-    compare(root,second,['test_isolated','test_continuous'])
+    compare(root,second,['test_one_shot','test_isolated','test_continuous'])
     assert snapshot(first)==snapshot(second)
     assert snapshot(root/'runs')==before
     assert snapshot(root/'results')==before_reports
@@ -92,7 +93,7 @@ def test_different_model_and_integrity_failure_refuse_comparison(selection):
     pairs=pd.read_csv(output/'pairwise_comparisons.csv')
     row=pairs.iloc[0]
     assert not row.comparable and 'model' in row.reason and pd.isna(row.delta_final_pass_rate)
-    manifest=next((selection.root/'runs'/'test_isolated').rglob('manifest.json'))
+    manifest=next((selection.root/'runs'/'cost266'/'test_isolated').rglob('manifest.json'))
     data=json.loads(manifest.read_text());data['conditions']['model']='tampered';manifest.write_text(json.dumps(data))
     output=selection.root/'comparison2';compare(selection.root,output)
     rows=pd.read_csv(output/'observations.csv')
@@ -102,7 +103,7 @@ def test_different_model_and_integrity_failure_refuse_comparison(selection):
 @pytest.mark.parametrize('field',['baseline_sha256','correction_sha256','inventory_sha256','model','reasoning_effort','skill_mode','skill_protocol','skill_bundles','budgets'])
 def test_condition_differences_do_not_match(selection,field):
     runs(selection,['one_shot','incremental_isolated'])
-    paths=list((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    paths=manifest_paths(selection.root)
     a,b=[json.loads(p.read_text()) for p in paths]
     b['conditions'][field]='different'
     assert field in ' '.join(comparison_mismatches(a,b))
@@ -110,7 +111,7 @@ def test_condition_differences_do_not_match(selection,field):
 
 def test_unverifiable_requirements_and_output_safety(selection):
     runs(selection,['one_shot','incremental_isolated'])
-    paths=list((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    paths=manifest_paths(selection.root)
     a,b=[json.loads(p.read_text()) for p in paths]
     a.pop('requirements_sha256');b.pop('requirements_sha256')
     b['conditions']['implementation_sha256']='different'
@@ -174,7 +175,7 @@ def test_verified_token_deltas_use_normalized_metrics(cumulative_v2,monkeypatch)
 def test_missing_controls_on_both_sides_do_not_become_comparable(selection):
     from benchmark_core.cost266_comparative_report import _pair, _condition_key, KEYS
     runs(selection,['one_shot','incremental_isolated'])
-    paths=list((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    paths=manifest_paths(selection.root)
     a,b=[json.loads(p.read_text()) for p in paths]
     a['conditions']['budgets']=None;b['conditions']['budgets']=None
     row={'integrity_verified':True,'status':'complete','usage_verified':False}
@@ -196,7 +197,7 @@ def test_incomplete_run_and_changed_checker_metrics_remain_visible(selection):
     runs(selection,['one_shot'])
     ScriptedSession.fault='failure'
     assert cli.main(arguments('incremental_continuous'))==1
-    metric=next((selection.root/'runs').glob('*/*/*/cost266/*/one_shot/*/r*/evaluation/metrics.json'))
+    metric=next(p.parent/'evaluation/metrics.json' for p in manifest_paths(selection.root) if p.parent.parent.parent.name == 'one_shot')
     data=json.loads(metric.read_text());data['checker']['pass_rate']=0.3;metric.write_text(json.dumps(data))
     output=selection.root/'comparison';compare(selection.root,output)
     observations=pd.read_csv(output/'observations.csv')
@@ -206,16 +207,16 @@ def test_incomplete_run_and_changed_checker_metrics_remain_visible(selection):
 
 def test_corrupt_manifest_is_reported_instead_of_disappearing(selection):
     runs(selection,['one_shot'])
-    manifest=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    manifest=next(iter(manifest_paths(selection.root)))
     data=json.loads(manifest.read_text());data['schema']='corrupt';manifest.write_text(json.dumps(data))
-    output=selection.root/'comparison';result=compare(selection.root,output,['test_continuous'])
+    output=selection.root/'comparison';result=compare(selection.root,output,['test_one_shot'])
     rows=pd.read_csv(output/'observations.csv')
     assert result['observations_read']==1 and rows.status.iloc[0]=='integrity_error'
 
 
 def test_metadata_model_conflict_is_integrity_error(selection):
     runs(selection,['one_shot'])
-    manifest=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    manifest=next(iter(manifest_paths(selection.root)))
     data=json.loads(manifest.read_text());data['model']='different';manifest.write_text(json.dumps(data))
     output=selection.root/'comparison';compare(selection.root,output)
     rows=pd.read_csv(output/'observations.csv')
@@ -224,7 +225,7 @@ def test_metadata_model_conflict_is_integrity_error(selection):
 
 def test_historical_missing_descriptive_protocol_is_inferred(selection):
     runs(selection,['one_shot'])
-    manifest=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    manifest=next(iter(manifest_paths(selection.root)))
     data=json.loads(manifest.read_text());data['protocol_version']=None;manifest.write_text(json.dumps(data))
     output=selection.root/'comparison';compare(selection.root,output)
     row=pd.read_csv(output/'observations.csv').iloc[0]
@@ -233,7 +234,7 @@ def test_historical_missing_descriptive_protocol_is_inferred(selection):
 
 def test_historical_repetition_field_is_accepted(selection):
     runs(selection,['one_shot'])
-    manifest=next((selection.root/'runs').glob('*/*/*/cost266/*/*/*/r*/manifest.json'))
+    manifest=next(iter(manifest_paths(selection.root)))
     data=json.loads(manifest.read_text());data.pop('replicate');manifest.write_text(json.dumps(data))
     output=selection.root/'comparison';compare(selection.root,output)
     row=pd.read_csv(output/'observations.csv').iloc[0]

@@ -404,17 +404,28 @@ def prepare(inputs: Path | None, destination: Path) -> dict:
 
 def load_dataset(path: Path) -> tuple[dict, dict]:
     safe_path(path)
-    for name in ('inventory.json','preparation.json','correction.yaml'):
+    for name in ('inventory.json','preparation.json'):
         safe_path(path/name)
     inventory = json.loads((path/'inventory.json').read_text())
     report = json.loads((path/'preparation.json').read_text())
     clean_lab(path/'lab')
+    numbered = sorted(path.glob('correction_[0-9]*.yaml'), key=lambda p: int(p.stem.split('_')[1]))
+    if numbered:
+        if [p.name for p in numbered] != [f'correction_{i}.yaml' for i in range(1, len(numbered)+1)]:
+            raise ValueError('Le correction numerate devono formare una sequenza contigua da 1')
+        hashes = {p.name: read_correction(p)[1] for p in numbered}
+        report['correction_files'] = hashes
+        report['correction_sha256'] = fingerprint(hashes)
+    else:
+        numbered = [path/'correction.yaml']
+        if read_correction(numbered[0])[1] != report['correction_sha256']:
+            raise ValueError('Hash correction dataset non corrispondente')
     for actual, expected in ((tree_hash(path/'lab'), report['baseline_sha256']),
-                             (digest((path/'inventory.json').read_bytes()), report['inventory_sha256']),
-                             (read_correction(path/'correction.yaml')[1], report['correction_sha256'])):
+                             (digest((path/'inventory.json').read_bytes()), report['inventory_sha256'])):
         if actual != expected:
             raise ValueError('Hash dataset non corrispondente: importare in un nuovo percorso')
-    validate_correction_lab(path/'correction.yaml', path/'lab')
+    for correction in numbered:
+        validate_correction_lab(correction, path/'lab')
     if inventory.get('schema') != 1 or inventory.get('synthetic') is not False:
         raise ValueError('Dataset operativo mancante o sintetico')
     for zone in inventory['zones']:

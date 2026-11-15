@@ -31,9 +31,18 @@ prima del dataset, della pianificazione e di qualunque avvio AUT. `--mode`
 è un alias di `--execution-mode`. I filtri, resume e rivalutazione restano
 disponibili:
 
+Quando il dataset contiene `correction_1.yaml`, `correction_2.yaml`, ecc., il
+runner richiede una sequenza numerica senza interruzioni, ne conserva gli hash
+e gli snapshot, ed esegue le correction una alla volta sul laboratorio finale.
+Il budget `checker_seconds` è complessivo per la sequenza. Ogni run completata
+conserva `evaluation/benchmark.xlsx` nella propria cartella sotto `runs/`, con
+metriche generali, riepilogo per correction e dettagli dei controlli. I report
+CSV e i log individuali rimangono disponibili per verificare la valutazione.
+I dataset con la sola `correction.yaml` mantengono il comportamento precedente.
+
 Il piano one-shot predefinito usa solo T1 e le cinque modalità `no_skill`,
 `auto`, `dns_only`, `creation_only` e `both_forced`, una ripetizione ciascuna.
-Le osservazioni sono separate in `runs/cost266_one_shot/` e i report in
+Le nuove osservazioni sono separate in `runs/cost266/cost266_one_shot/` e i report in
 `results/cost266/experiments/cost266_one_shot/`. Le run degli altri piani
 non vengono spostate. Senza `--execution-mode` resta selezionato il piano
 storico `cost266.yaml`.
@@ -42,6 +51,20 @@ parallelo; i checker finali sono serializzati, uno alla volta. Il numero di
 generazioni si può cambiare con `--generation-workers N`. L'attesa del checker
 è registrata nel manifest come `checker_queue_seconds` ed esclusa dal budget
 attivo della run. Il report è pubblicato dopo il completamento del gruppo.
+
+L'avanzamento è stampato in tempo reale e aggiunto a
+`logs/cost266/<experiment_id>.log`: ogni riga identifica strategia, prompt,
+modalità Skill e ripetizione. Le durate sono misurate con orologio monotono;
+la durata della run stampata è quella dell'invocazione corrente, inclusa
+l'eventuale attesa del checker, mentre il report è generato successivamente e
+ha una durata separata. La validazione statica misura solo la presenza delle
+dichiarazioni di zona, non il funzionamento DNS. Il log non contiene i tempi
+dei singoli controlli interni del checker.
+
+Come per ogni modifica al codice del protocollo, il fingerprint
+`implementation_sha256` cambia: i controlli di integrità possono rifiutare
+resume o rivalutazione di run create con una versione diversa. Non modificare
+i manifest per aggirare tale controllo.
 
 ```bash
 .venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous --prompt-type T1 --skill-mode auto --only-replicate 1 --dry-run
@@ -228,3 +251,29 @@ rimane necessario il collaudo reale già descritto sopra.
 Non è stato eseguito un benchmark a consumo. Verifiche del selettore:
 `COST266_SELECTION_VALIDATION.md`. Dettagli v2 e problema del dataset locale:
 `COST266_CONTINUOUS_VALIDATION.md`.
+
+## Percorsi e ripetizioni
+
+Le nuove run COST266 sono salvate in
+`runs/cost266/<experiment_id>/<dns_tree_id>/<prompt_type>/<execution_mode>/<skill_mode>/rNNN/`.
+Gli identificativi logici e le condizioni rimangono invariati. I percorsi storici
+`runs/<experiment_id>/cost266/<dns_tree_id>/cost266/<prompt_type>/<strategy>/<skill_mode>/rNNN/`
+sono ancora letti per resume, rivalutazione e report; nessuna run è migrata
+automaticamente. Se esistono entrambi i percorsi per la stessa run, il runner
+si ferma e l'aggregatore rifiuta il duplicato, lasciando intatti i dati.
+
+`--only-replicate N` seleziona solo N, anche se supera `repetitions` nello YAML;
+N deve essere un intero positivo. Senza questa opzione vale `repetitions`.
+Questo override vale anche per configurazioni esplicite, che continuano a
+vincolare protocolli, strategie, prompt e modalità Skill abilitate. Una run
+esistente non viene sovrascritta: usare `--resume` per riprendere o verificare,
+`--rerun-correction` per rivalutare, oppure selezionare un'altra ripetizione.
+Le verifiche di integrità e delle condizioni restano obbligatorie: modifiche al
+codice o alla configurazione possono impedire la ripresa di una run storica.
+
+Le due varianti incrementali devono usare ID esperimento differenti quando
+condividono prompt, Skill e ripetizione: l'identificativo logico storico usa
+`incremental` per entrambe. Il runner rifiuta il conflitto per evitare ID
+ambigui e non altera le run esistenti. Non è prevista una migrazione: per
+consultare le run storiche bastano aggregazione e confronto, che leggono
+entrambi i layout.

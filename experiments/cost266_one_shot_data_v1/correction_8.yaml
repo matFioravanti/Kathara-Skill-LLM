@@ -1,0 +1,427 @@
+# COST266 / T1 — correction_8.yaml (8/9)
+# Controlli: DNS — 152 risoluzioni client 1 e NXDOMAIN
+# Eseguibile autonomamente con --config; include la topologia completa.
+# PRECONDIZIONE: laboratorio Kathara con tutti i dispositivi elencati in lab_inline.
+# Non verificato in esecuzione su un laboratorio Kathara completo.
+lab_inline: |
+  r_amsterdam[0]="wan_00_07"
+  r_amsterdam[1]="wan_00_13"
+  r_amsterdam[2]="wan_00_14"
+  r_amsterdam[3]="wan_00_18"
+  r_athens[0]="wan_01_25"
+  r_athens[1]="wan_01_30"
+  r_athens[2]="wan_01_35"
+  r_barcelona[0]="wan_02_20"
+  r_barcelona[1]="wan_02_21"
+  r_barcelona[2]="wan_02_29"
+  r_belgrade[0]="wan_03_08"
+  r_belgrade[1]="wan_03_30"
+  r_belgrade[2]="wan_03_35"
+  r_berlin[0]="wan_04_09"
+  r_berlin[1]="wan_04_14"
+  r_berlin[2]="wan_04_23"
+  r_berlin[3]="wan_04_27"
+  r_berlin[4]="wan_04_34"
+  r_birmingham[0]="wan_05_13"
+  r_birmingham[1]="wan_05_18"
+  r_bordeaux[0]="wan_06_20"
+  r_bordeaux[1]="wan_06_21"
+  r_bordeaux[2]="wan_06_26"
+  r_brussels[0]="wan_00_07"
+  r_brussels[1]="wan_07_11"
+  r_brussels[2]="wan_07_26"
+  r_budapest[0]="wan_03_08"
+  r_budapest[1]="wan_08_16"
+  r_budapest[2]="wan_08_27"
+  r_copenhagen[0]="wan_04_09"
+  r_copenhagen[1]="wan_09_24"
+  r_copenhagen[2]="wan_09_31"
+  r_dublin[0]="wan_10_13"
+  r_dublin[1]="wan_10_18"
+  r_dusseldorf[0]="wan_07_11"
+  r_dusseldorf[1]="wan_11_12"
+  r_frankfurt[0]="wan_11_12"
+  r_frankfurt[1]="wan_12_14"
+  r_frankfurt[2]="wan_12_23"
+  r_frankfurt[3]="wan_12_32"
+  r_glasgow[0]="wan_00_13"
+  r_glasgow[1]="wan_05_13"
+  r_glasgow[2]="wan_10_13"
+  r_hamburg[0]="wan_00_14"
+  r_hamburg[1]="wan_04_14"
+  r_hamburg[2]="wan_12_14"
+  r_helsinki[0]="wan_15_24"
+  r_helsinki[1]="wan_15_31"
+  r_helsinki[2]="wan_15_34"
+  r_krakow[0]="wan_08_16"
+  r_krakow[1]="wan_16_34"
+  r_lisbon[0]="wan_17_18"
+  r_lisbon[1]="wan_17_20"
+  r_lisbon[2]="wan_17_29"
+  r_london[0]="wan_00_18"
+  r_london[1]="wan_05_18"
+  r_london[2]="wan_10_18"
+  r_london[3]="wan_17_18"
+  r_london[4]="wan_18_26"
+  r_lyon[0]="wan_19_21"
+  r_lyon[1]="wan_19_26"
+  r_lyon[2]="wan_19_36"
+  r_madrid[0]="wan_02_20"
+  r_madrid[1]="wan_06_20"
+  r_madrid[2]="wan_17_20"
+  r_marseille[0]="wan_02_21"
+  r_marseille[1]="wan_06_21"
+  r_marseille[2]="wan_19_21"
+  r_marseille[3]="wan_21_28"
+  r_milan[0]="wan_22_23"
+  r_milan[1]="wan_22_28"
+  r_milan[2]="wan_22_36"
+  r_munich[0]="wan_04_23"
+  r_munich[1]="wan_12_23"
+  r_munich[2]="wan_22_23"
+  r_munich[3]="wan_23_33"
+  r_oslo[0]="wan_09_24"
+  r_oslo[1]="wan_15_24"
+  r_palermo[0]="wan_01_25"
+  r_palermo[1]="wan_25_28"
+  r_paris[0]="wan_06_26"
+  r_paris[1]="wan_07_26"
+  r_paris[2]="wan_18_26"
+  r_paris[3]="wan_19_26"
+  r_paris[4]="wan_26_32"
+  r_prague[0]="wan_04_27"
+  r_prague[1]="wan_08_27"
+  r_prague[2]="wan_27_33"
+  r_rome[0]="wan_21_28"
+  r_rome[1]="wan_22_28"
+  r_rome[2]="wan_25_28"
+  r_rome[3]="wan_28_35"
+  r_seville[0]="wan_02_29"
+  r_seville[1]="wan_17_29"
+  r_sofia[0]="wan_01_30"
+  r_sofia[1]="wan_03_30"
+  r_stockholm[0]="wan_09_31"
+  r_stockholm[1]="wan_15_31"
+  r_strasbourg[0]="wan_12_32"
+  r_strasbourg[1]="wan_26_32"
+  r_strasbourg[2]="wan_32_36"
+  r_vienna[0]="wan_23_33"
+  r_vienna[1]="wan_27_33"
+  r_vienna[2]="wan_33_35"
+  r_warsaw[0]="wan_04_34"
+  r_warsaw[1]="wan_15_34"
+  r_warsaw[2]="wan_16_34"
+  r_zagreb[0]="wan_01_35"
+  r_zagreb[1]="wan_03_35"
+  r_zagreb[2]="wan_28_35"
+  r_zagreb[3]="wan_33_35"
+  r_zurich[0]="wan_19_36"
+  r_zurich[1]="wan_22_36"
+  r_zurich[2]="wan_32_36"
+  r_amsterdam[4]="access_00"
+  r_athens[3]="access_01"
+  r_frankfurt[4]="access_12"
+  r_helsinki[3]="access_15"
+  r_lisbon[3]="access_17"
+  r_london[5]="access_18"
+  r_paris[5]="access_26"
+  r_rome[4]="access_28"
+  r_warsaw[3]="access_34"
+  r_zurich[3]="access_36"
+  c266_cities[0]="access_28"
+  c266_client_1[0]="access_01"
+  c266_client_2[0]="access_17"
+  c266_countries[0]="access_12"
+  c266_functional_1[0]="access_18"
+  c266_functional_2[0]="access_15"
+  c266_resolver_1[0]="access_34"
+  c266_resolver_2[0]="access_36"
+  c266_root[0]="access_00"
+  c266_subzones[0]="access_26"
+  c266_tld_europa[0]="access_00"
+  c266_tld_infra[0]="access_12"
+  c266_tld_lab[0]="access_26"
+  c266_tld_research[0]="access_12"
+  c266_tld_services[0]="access_28"
+  c266_tld_test[0]="access_18"
+convergence_time: 60
+default_image: kathara/base
+test:
+  custom_commands:
+    c266_client_1:
+    - command: |-
+        sh -c 'set -eu
+        umask 077
+        command -v dig >/dev/null
+        command -v awk >/dev/null
+        command -v xargs >/dev/null
+        cat > /tmp/c266_t1_check.sh <<'"'"'C266_T1_SCRIPT'"'"'
+        #!/bin/sh
+        # COST266 T1 -- automatically injected by the checker into a running client container.
+        # Do not ship this script with the student lab: the expected data is ground truth.
+        set -u
+        Z=/tmp/c266_t1_zones.tsv
+        R=/tmp/c266_t1_records.tsv
+        PAR=8
+
+        # dig +noall +comments +answer +authority +additional: check actual DNS status,
+        # AA/RA flags and the value in the correct section (not merely text matching).
+        dig_record() {
+            server=$1; q=$2; typ=$3; sec=$4; owner=$5; value=$6; mode=$7
+            if [ "$server" = - ]; then
+                dig "$q" "$typ" +time=2 +tries=1 +noall +comments +answer +authority +additional 2>/dev/null
+            else
+                dig "@$server" "$q" "$typ" +norecurse +time=2 +tries=1 +noall +comments +answer +authority +additional 2>/dev/null
+            fi | awk -v sec="$sec" -v own="$owner" -v typ="$typ" -v expected="$value" -v mode="$mode" '"'"'
+                /status: NOERROR/ {status=1}
+                /^;; flags:/ {
+                    if (mode=="aa" && / aa[; ]/ && !/ ra[; ]/) f=1
+                    if (mode=="ra" && / ra[; ]/) f=1
+                }
+                /^;; ANSWER SECTION:/ {part="answer";next}
+                /^;; AUTHORITY SECTION:/ {part="authority";next}
+                /^;; ADDITIONAL SECTION:/ {part="additional";next}
+                /^;;/ {next}
+                part==sec && $1==own && $4==typ {
+                    if (typ=="MX" && $5 "," $6==expected) ok=1
+                    if (typ!="MX" && $5==expected) ok=1
+                }
+                END {exit !(status && f && ok)}'"'"'
+        }
+
+        # A DNS negative test also checks status and the SOA identifying negative.test.
+        negative() {
+            server=$1; mode=$2; q=$3; owner=$4
+            if [ "$server" = - ]; then
+                dig "$q" A +time=2 +tries=1 +noall +comments +answer +authority 2>/dev/null
+            else
+                dig "@$server" "$q" A +norecurse +time=2 +tries=1 +noall +comments +answer +authority 2>/dev/null
+            fi | awk -v mode="$mode" -v owner="$owner" '"'"'
+                /status: NXDOMAIN/ {bad=1}
+                /^;; flags:/ {if (mode=="aa" && / aa[; ]/ && !/ ra[; ]/) f=1; if (mode=="ra" && / ra[; ]/) f=1}
+                /^;; AUTHORITY SECTION:/ {section="authority";next}
+                /^;;/ {next}
+                section=="authority" && $1==owner && $4=="SOA" {soa=1}
+                END {exit !(bad && f && soa)}'"'"'
+        }
+
+        case "${1:-}" in
+            __zone)
+                z=$2; ip=$3
+                if [ "$z" = . ]; then ns=a.root-servers.; else ns=ns1.$z; fi
+                dig_record "$ip" "$z" SOA answer "$z" "$ns" aa &&
+                dig_record "$ip" "$z" NS answer "$z" "$ns" aa &&
+                dig_record "$ip" "$ns" A answer "$ns" "$ip" aa || {
+                    echo "FAIL_ZONE $z @$ip" >&2; exit 1;
+                }
+                echo ok
+                ;;
+            __deleg)
+                z=$2; ip=$3; ns=ns1.$z
+                parent=${z#*.}; [ -n "$parent" ] || parent=.
+                p_ip=$(awk -v p="$parent" '"'"'$1==p {print $2;exit}'"'"' "$Z")
+                [ -n "$p_ip" ] || { echo "NO_PARENT $z" >&2; exit 1; }
+                dig "@$p_ip" "__delegation_probe.$z" A +norecurse +time=2 +tries=1 +noall +comments +answer +authority +additional 2>/dev/null | awk -v z="$z" -v ns="$ns" -v ip="$ip" '"'"'
+                    /status: NOERROR/ {good=1}
+                    /^;; AUTHORITY SECTION:/ {part="authority";next}
+                    /^;; ADDITIONAL SECTION:/ {part="additional";next}
+                    /^;;/ {next}
+                    part=="authority" && $1==z && $4=="NS" && $5==ns {ref=1}
+                    part=="additional" && $1==ns && $4=="A" && $5==ip {glue=1}
+                    END {exit !(good && ref && glue)}'"'"' || {
+                        echo "FAIL_DELEGATION $z parent=$parent parent_ip=$p_ip" >&2; exit 1;
+                    }
+                echo ok
+                ;;
+            __record)
+                ip=$2; q=$3; typ=$4; expected=$5
+                dig_record "$ip" "$q" "$typ" answer "$q" "$expected" aa || {
+                    echo "FAIL_AUTH_RECORD $q $typ @$ip" >&2; exit 1;
+                }
+                echo ok
+                ;;
+            __client)
+                ip=$2; q=$3; typ=$4; expected=$5
+                dig_record - "$q" "$typ" answer "$q" "$expected" ra || {
+                    echo "FAIL_CLIENT_RECORD $q $typ" >&2; exit 1;
+                }
+                echo ok
+                ;;
+            zone|deleg|record|client)
+                kind=$1; first=$2; last=$3; shift 3
+                case "$kind" in zone|deleg) src=$Z; nargs=2;; *) src=$R; nargs=4;; esac
+                if [ "$kind" = deleg ]; then first=$((first+1)); last=$((last+1)); fi
+                count=$((last-first+1))
+                tmp=$(mktemp -d /tmp/c266_t1.XXXXXXXX) || exit 1
+                trap '"'"'rm -rf "$tmp"'"'"' EXIT HUP INT TERM
+                # Complete jobs are run in parallel; count one "ok" line for every passed job.
+                sed -n "${first},${last}p" "$src" |
+                    xargs -P "$PAR" -n "$nargs" sh "$0" "__$kind" > "$tmp/ok" 2> "$tmp/err"
+                got=$(wc -l < "$tmp/ok" | tr -d '"'"' '"'"')
+                printf '"'"'%s: %s/%s\n'"'"' "$kind" "$got" "$count"
+                if [ "$got" -ne "$count" ]; then cat "$tmp/err" >&2; fi
+                [ "$got" -eq "$count" ]
+                ;;
+            negative_auth)
+                negative 10.210.18.10 aa missing.negative.test. negative.test. || {
+                    echo '"'"'FAIL_NXDOMAIN_AUTHORITATIVE'"'"' >&2; exit 1;
+                }
+                echo '"'"'NXDOMAIN_AUTH_OK'"'"'
+                ;;
+            negative_client)
+                negative - ra missing.negative.test. negative.test. || {
+                    echo '"'"'FAIL_NXDOMAIN_CLIENT'"'"' >&2; exit 1;
+                }
+                echo '"'"'NXDOMAIN_CLIENT_OK'"'"'
+                ;;
+            unused_tlds)
+                for zone in research. services. lab.; do
+                    dig @10.210.0.10 "$zone" NS +norecurse +time=2 +tries=1 +noall +comments +answer +authority 2>/dev/null |
+                        awk -v zone="$zone" '"'"'
+                          /status: NOERROR|status: NXDOMAIN/ {status=1}
+                          /^;; flags:/ {if (/ aa[; ]/ && !/ ra[; ]/) aa=1}
+                          $1==zone && $4=="NS" {obsolete=1}
+                          END {exit !(status && aa && !obsolete)}'"'"' || {
+                            echo "FAIL_OBSOLETE_TLD $zone" >&2; exit 1;
+                        }
+                done
+                echo '"'"'UNUSED_TLDS_OK'"'"'
+                ;;
+            *) echo "BAD_MODE $1" >&2; exit 2;;
+        esac
+        C266_T1_SCRIPT
+        cat > /tmp/c266_t1_zones.tsv <<'"'"'C266_T1_ZONES'"'"'
+        . 10.210.0.10
+        europa. 10.210.0.11
+        infra. 10.210.12.11
+        test. 10.210.18.11
+        at.europa. 10.210.12.10
+        be.europa. 10.210.12.10
+        bg.europa. 10.210.12.10
+        ch.europa. 10.210.12.10
+        cz.europa. 10.210.12.10
+        de.europa. 10.210.12.10
+        dk.europa. 10.210.12.10
+        es.europa. 10.210.12.10
+        fi.europa. 10.210.12.10
+        fr.europa. 10.210.12.10
+        gr.europa. 10.210.12.10
+        hr.europa. 10.210.12.10
+        hu.europa. 10.210.12.10
+        ie.europa. 10.210.12.10
+        it.europa. 10.210.12.10
+        nl.europa. 10.210.12.10
+        no.europa. 10.210.12.10
+        pl.europa. 10.210.12.10
+        pt.europa. 10.210.12.10
+        rs.europa. 10.210.12.10
+        se.europa. 10.210.12.10
+        uk.europa. 10.210.12.10
+        vienna.at.europa. 10.210.28.10
+        brussels.be.europa. 10.210.28.10
+        sofia.bg.europa. 10.210.28.10
+        zurich.ch.europa. 10.210.28.10
+        prague.cz.europa. 10.210.28.10
+        berlin.de.europa. 10.210.28.10
+        dusseldorf.de.europa. 10.210.28.10
+        frankfurt.de.europa. 10.210.28.10
+        hamburg.de.europa. 10.210.28.10
+        munich.de.europa. 10.210.28.10
+        copenhagen.dk.europa. 10.210.28.10
+        barcelona.es.europa. 10.210.28.10
+        madrid.es.europa. 10.210.28.10
+        seville.es.europa. 10.210.28.10
+        helsinki.fi.europa. 10.210.28.10
+        bordeaux.fr.europa. 10.210.28.10
+        lyon.fr.europa. 10.210.28.10
+        marseille.fr.europa. 10.210.28.10
+        paris.fr.europa. 10.210.28.10
+        strasbourg.fr.europa. 10.210.28.10
+        athens.gr.europa. 10.210.28.10
+        zagreb.hr.europa. 10.210.28.10
+        budapest.hu.europa. 10.210.28.10
+        dublin.ie.europa. 10.210.28.10
+        milan.it.europa. 10.210.28.10
+        palermo.it.europa. 10.210.28.10
+        rome.it.europa. 10.210.28.10
+        amsterdam.nl.europa. 10.210.28.10
+        oslo.no.europa. 10.210.28.10
+        krakow.pl.europa. 10.210.28.10
+        warsaw.pl.europa. 10.210.28.10
+        lisbon.pt.europa. 10.210.28.10
+        belgrade.rs.europa. 10.210.28.10
+        stockholm.se.europa. 10.210.28.10
+        birmingham.uk.europa. 10.210.28.10
+        glasgow.uk.europa. 10.210.28.10
+        london.uk.europa. 10.210.28.10
+        dns.infra. 10.210.18.10
+        routing.infra. 10.210.18.10
+        positive.test. 10.210.18.10
+        negative.test. 10.210.18.10
+        C266_T1_ZONES
+        cat > /tmp/c266_t1_cities.tsv <<'"'"'C266_T1_CITIES'"'"'
+        vienna.at.europa. 10.200.0.34
+        brussels.be.europa. 10.200.0.8
+        sofia.bg.europa. 10.200.0.31
+        zurich.ch.europa. 10.200.0.37
+        prague.cz.europa. 10.200.0.28
+        berlin.de.europa. 10.200.0.5
+        dusseldorf.de.europa. 10.200.0.12
+        frankfurt.de.europa. 10.200.0.13
+        hamburg.de.europa. 10.200.0.15
+        munich.de.europa. 10.200.0.24
+        copenhagen.dk.europa. 10.200.0.10
+        barcelona.es.europa. 10.200.0.3
+        madrid.es.europa. 10.200.0.21
+        seville.es.europa. 10.200.0.30
+        helsinki.fi.europa. 10.200.0.16
+        bordeaux.fr.europa. 10.200.0.7
+        lyon.fr.europa. 10.200.0.20
+        marseille.fr.europa. 10.200.0.22
+        paris.fr.europa. 10.200.0.27
+        strasbourg.fr.europa. 10.200.0.33
+        athens.gr.europa. 10.200.0.2
+        zagreb.hr.europa. 10.200.0.36
+        budapest.hu.europa. 10.200.0.9
+        dublin.ie.europa. 10.200.0.11
+        milan.it.europa. 10.200.0.23
+        palermo.it.europa. 10.200.0.26
+        rome.it.europa. 10.200.0.29
+        amsterdam.nl.europa. 10.200.0.1
+        oslo.no.europa. 10.200.0.25
+        krakow.pl.europa. 10.200.0.17
+        warsaw.pl.europa. 10.200.0.35
+        lisbon.pt.europa. 10.200.0.18
+        belgrade.rs.europa. 10.200.0.4
+        stockholm.se.europa. 10.200.0.32
+        birmingham.uk.europa. 10.200.0.6
+        glasgow.uk.europa. 10.200.0.14
+        london.uk.europa. 10.200.0.19
+        C266_T1_CITIES
+        awk '"'"'{ z=$1; ip=$2; server="10.210.28.10";
+               print server,z,"A",ip;
+               print server,"www." z,"A",ip;
+               print server,"mail." z,"A",ip;
+               print server,z,"MX","10,mail." z }'"'"' /tmp/c266_t1_cities.tsv > /tmp/c266_t1_records.tsv
+        cat >> /tmp/c266_t1_records.tsv <<'"'"'C266_T1_FUNCTIONAL'"'"'
+        10.210.18.10 root.dns.infra. A 10.210.0.10
+        10.210.18.10 resolvers.dns.infra. A 10.210.34.10
+        10.210.18.10 backbone.routing.infra. A 10.200.0.13
+        10.210.18.10 www.positive.test. A 10.210.18.10
+        C266_T1_FUNCTIONAL
+        chmod 700 /tmp/c266_t1_check.sh
+        sh -n /tmp/c266_t1_check.sh
+        test "$(wc -l < /tmp/c266_t1_zones.tsv)" -eq 67
+        test "$(wc -l < /tmp/c266_t1_cities.tsv)" -eq 37
+        test "$(wc -l < /tmp/c266_t1_records.tsv)" -eq 152'
+      exit_code: 0
+    - command: sh /tmp/c266_t1_check.sh client 1 38
+      exit_code: 0
+    - command: sh /tmp/c266_t1_check.sh client 39 76
+      exit_code: 0
+    - command: sh /tmp/c266_t1_check.sh client 77 114
+      exit_code: 0
+    - command: sh /tmp/c266_t1_check.sh client 115 152
+      exit_code: 0
+    - command: sh /tmp/c266_t1_check.sh negative_client
+      exit_code: 0
