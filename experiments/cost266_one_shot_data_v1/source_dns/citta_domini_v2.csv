@@ -1,0 +1,38 @@
+cost266_id,citta,paese,router_originale,loopback_router_originale,zona_citta,zona_services,zona_research,zona_admin
+0,Amsterdam,Paesi Bassi,r_amsterdam,10.200.0.1,amsterdam.nl.europa.,services.amsterdam.nl.europa.,research.amsterdam.nl.europa.,admin.amsterdam.nl.europa.
+1,Athens,Grecia,r_athens,10.200.0.2,athens.gr.europa.,services.athens.gr.europa.,research.athens.gr.europa.,admin.athens.gr.europa.
+2,Barcelona,Spagna,r_barcelona,10.200.0.3,barcelona.es.europa.,services.barcelona.es.europa.,research.barcelona.es.europa.,admin.barcelona.es.europa.
+3,Belgrade,Serbia,r_belgrade,10.200.0.4,belgrade.rs.europa.,services.belgrade.rs.europa.,research.belgrade.rs.europa.,admin.belgrade.rs.europa.
+4,Berlin,Germania,r_berlin,10.200.0.5,berlin.de.europa.,services.berlin.de.europa.,research.berlin.de.europa.,admin.berlin.de.europa.
+5,Birmingham,Regno Unito,r_birmingham,10.200.0.6,birmingham.uk.europa.,services.birmingham.uk.europa.,research.birmingham.uk.europa.,admin.birmingham.uk.europa.
+6,Bordeaux,Francia,r_bordeaux,10.200.0.7,bordeaux.fr.europa.,services.bordeaux.fr.europa.,research.bordeaux.fr.europa.,admin.bordeaux.fr.europa.
+7,Brussels,Belgio,r_brussels,10.200.0.8,brussels.be.europa.,services.brussels.be.europa.,research.brussels.be.europa.,admin.brussels.be.europa.
+8,Budapest,Ungheria,r_budapest,10.200.0.9,budapest.hu.europa.,services.budapest.hu.europa.,research.budapest.hu.europa.,admin.budapest.hu.europa.
+9,Copenhagen,Danimarca,r_copenhagen,10.200.0.10,copenhagen.dk.europa.,services.copenhagen.dk.europa.,research.copenhagen.dk.europa.,admin.copenhagen.dk.europa.
+10,Dublin,Irlanda,r_dublin,10.200.0.11,dublin.ie.europa.,services.dublin.ie.europa.,research.dublin.ie.europa.,admin.dublin.ie.europa.
+11,Dusseldorf,Germania,r_dusseldorf,10.200.0.12,dusseldorf.de.europa.,services.dusseldorf.de.europa.,research.dusseldorf.de.europa.,admin.dusseldorf.de.europa.
+12,Frankfurt,Germania,r_frankfurt,10.200.0.13,frankfurt.de.europa.,services.frankfurt.de.europa.,research.frankfurt.de.europa.,admin.frankfurt.de.europa.
+13,Glasgow,Regno Unito,r_glasgow,10.200.0.14,glasgow.uk.europa.,services.glasgow.uk.europa.,research.glasgow.uk.europa.,admin.glasgow.uk.europa.
+14,Hamburg,Germania,r_hamburg,10.200.0.15,hamburg.de.europa.,services.hamburg.de.europa.,research.hamburg.de.europa.,admin.hamburg.de.europa.
+15,Helsinki,Finlandia,r_helsinki,10.200.0.16,helsinki.fi.europa.,services.helsinki.fi.europa.,research.helsinki.fi.europa.,admin.helsinki.fi.europa.
+16,Krakow,Polonia,r_krakow,10.200.0.17,krakow.pl.europa.,services.krakow.pl.europa.,research.krakow.pl.europa.,admin.krakow.pl.europa.
+17,Lisbon,Portogallo,r_lisbon,10.200.0.18,lisbon.pt.europa.,services.lisbon.pt.europa.,research.lisbon.pt.europa.,admin.lisbon.pt.europa.
+18,London,Regno Unito,r_london,10.200.0.19,london.uk.europa.,services.london.uk.europa.,research.london.uk.europa.,admin.london.uk.europa.
+19,Lyon,Francia,r_lyon,10.200.0.20,lyon.fr.europa.,services.lyon.fr.europa.,research.lyon.fr.europa.,admin.lyon.fr.europa.
+20,Madrid,Spagna,r_madrid,10.200.0.21,madrid.es.europa.,services.madrid.es.europa.,research.madrid.es.europa.,admin.madrid.es.europa.
+21,Marseille,Francia,r_marseille,10.200.0.22,marseille.fr.europa.,services.marseille.fr.europa.,research.marseille.fr.europa.,admin.marseille.fr.europa.
+22,Milan,Italia,r_milan,10.200.0.23,milan.it.europa.,services.milan.it.europa.,research.milan.it.europa.,admin.milan.it.europa.
+23,Munich,Germania,r_munich,10.200.0.24,munich.de.europa.,services.munich.de.europa.,research.munich.de.europa.,admin.munich.de.europa.
+24,Oslo,Norvegia,r_oslo,10.200.0.25,oslo.no.europa.,services.oslo.no.europa.,research.oslo.no.europa.,admin.oslo.no.europa.
+25,Palermo,Italia,r_palermo,10.200.0.26,palermo.it.europa.,services.palermo.it.europa.,research.palermo.it.europa.,admin.palermo.it.europa.
+26,Paris,Francia,r_paris,10.200.0.27,paris.fr.europa.,services.paris.fr.europa.,research.paris.fr.europa.,admin.paris.fr.europa.
+27,Prague,Repubblica Ceca,r_prague,10.200.0.28,prague.cz.europa.,services.prague.cz.europa.,research.prague.cz.europa.,admin.prague.cz.europa.
+28,Rome,Italia,r_rome,10.200.0.29,rome.it.europa.,services.rome.it.europa.,research.rome.it.europa.,admin.rome.it.europa.
+29,Seville,Spagna,r_seville,10.200.0.30,seville.es.europa.,services.seville.es.europa.,research.seville.es.europa.,admin.seville.es.europa.
+30,Sofia,Bulgaria,r_sofia,10.200.0.31,sofia.bg.europa.,services.sofia.bg.europa.,research.sofia.bg.europa.,admin.sofia.bg.europa.
+31,Stockholm,Svezia,r_stockholm,10.200.0.32,stockholm.se.europa.,services.stockholm.se.europa.,research.stockholm.se.europa.,admin.stockholm.se.europa.
+32,Strasbourg,Francia,r_strasbourg,10.200.0.33,strasbourg.fr.europa.,services.strasbourg.fr.europa.,research.strasbourg.fr.europa.,admin.strasbourg.fr.europa.
+33,Vienna,Austria,r_vienna,10.200.0.34,vienna.at.europa.,services.vienna.at.europa.,research.vienna.at.europa.,admin.vienna.at.europa.
+34,Warsaw,Polonia,r_warsaw,10.200.0.35,warsaw.pl.europa.,services.warsaw.pl.europa.,research.warsaw.pl.europa.,admin.warsaw.pl.europa.
+35,Zagreb,Croazia,r_zagreb,10.200.0.36,zagreb.hr.europa.,services.zagreb.hr.europa.,research.zagreb.hr.europa.,admin.zagreb.hr.europa.
+36,Zurich,Svizzera,r_zurich,10.200.0.37,zurich.ch.europa.,services.zurich.ch.europa.,research.zurich.ch.europa.,admin.zurich.ch.europa.

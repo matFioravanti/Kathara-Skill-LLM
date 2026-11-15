@@ -1,0 +1,1370 @@
+source,destination,destination_loopback,distance,hops,path
+r_amsterdam,r_amsterdam,10.200.0.1,0.0,0,r_amsterdam
+r_amsterdam,r_athens,10.200.0.2,2498.25,6,r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_amsterdam,r_barcelona,10.200.0.3,1444.4,5,r_amsterdam > r_brussels > r_paris > r_lyon > r_marseille > r_barcelona
+r_amsterdam,r_belgrade,10.200.0.4,1663.93,5,r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade
+r_amsterdam,r_berlin,10.200.0.5,621.46,2,r_amsterdam > r_hamburg > r_berlin
+r_amsterdam,r_birmingham,10.200.0.6,519.54,2,r_amsterdam > r_london > r_birmingham
+r_amsterdam,r_bordeaux,10.200.0.7,933.49,3,r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_amsterdam,r_brussels,10.200.0.8,173.28,1,r_amsterdam > r_brussels
+r_amsterdam,r_budapest,10.200.0.9,1347.47,4,r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_amsterdam,r_copenhagen,10.200.0.10,981.47,3,r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_amsterdam,r_dublin,10.200.0.11,820.06,2,r_amsterdam > r_london > r_dublin
+r_amsterdam,r_dusseldorf,10.200.0.12,348.98,2,r_amsterdam > r_brussels > r_dusseldorf
+r_amsterdam,r_frankfurt,10.200.0.13,532.14,3,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt
+r_amsterdam,r_glasgow,10.200.0.14,711.64,1,r_amsterdam > r_glasgow
+r_amsterdam,r_hamburg,10.200.0.15,368.06,1,r_amsterdam > r_hamburg
+r_amsterdam,r_helsinki,10.200.0.16,1897.77,5,r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_amsterdam,r_krakow,10.200.0.17,1393.46,4,r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_amsterdam,r_lisbon,10.200.0.18,1942.47,2,r_amsterdam > r_london > r_lisbon
+r_amsterdam,r_london,10.200.0.19,360.3,1,r_amsterdam > r_london
+r_amsterdam,r_lyon,10.200.0.20,831.86,3,r_amsterdam > r_brussels > r_paris > r_lyon
+r_amsterdam,r_madrid,10.200.0.21,1489.46,4,r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_amsterdam,r_marseille,10.200.0.22,1105.51,4,r_amsterdam > r_brussels > r_paris > r_lyon > r_marseille
+r_amsterdam,r_milan,10.200.0.23,1076.6,6,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan
+r_amsterdam,r_munich,10.200.0.24,836.38,4,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_munich
+r_amsterdam,r_oslo,10.200.0.25,1461.93,4,r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_amsterdam,r_palermo,10.200.0.26,1981.77,8,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_amsterdam,r_paris,10.200.0.27,435.01,2,r_amsterdam > r_brussels > r_paris
+r_amsterdam,r_prague,10.200.0.28,902.14,3,r_amsterdam > r_hamburg > r_berlin > r_prague
+r_amsterdam,r_rome,10.200.0.29,1557.34,7,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome
+r_amsterdam,r_seville,10.200.0.30,2256.54,3,r_amsterdam > r_london > r_lisbon > r_seville
+r_amsterdam,r_sofia,10.200.0.31,1988.17,6,r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_amsterdam,r_stockholm,10.200.0.32,1499.13,4,r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_amsterdam,r_strasbourg,10.200.0.33,713.35,4,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg
+r_amsterdam,r_vienna,10.200.0.34,1152.56,4,r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna
+r_amsterdam,r_warsaw,10.200.0.35,1138.04,3,r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_amsterdam,r_zagreb,10.200.0.36,1419.71,5,r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb
+r_amsterdam,r_zurich,10.200.0.37,858.91,5,r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich
+r_athens,r_amsterdam,10.200.0.1,2498.25,6,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam
+r_athens,r_athens,10.200.0.2,0.0,0,r_athens
+r_athens,r_barcelona,10.200.0.3,2276.6,4,r_athens > r_palermo > r_rome > r_marseille > r_barcelona
+r_athens,r_belgrade,10.200.0.4,853.65,2,r_athens > r_sofia > r_belgrade
+r_athens,r_berlin,10.200.0.5,1876.79,4,r_athens > r_zagreb > r_vienna > r_prague > r_berlin
+r_athens,r_birmingham,10.200.0.6,3017.79,8,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_athens,r_bordeaux,10.200.0.7,2442.56,4,r_athens > r_palermo > r_rome > r_marseille > r_bordeaux
+r_athens,r_brussels,10.200.0.8,2364.9,6,r_athens > r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf > r_brussels
+r_athens,r_budapest,10.200.0.9,1170.11,3,r_athens > r_sofia > r_belgrade > r_budapest
+r_athens,r_copenhagen,10.200.0.10,2236.8,5,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen
+r_athens,r_dublin,10.200.0.11,3318.31,8,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_athens,r_dusseldorf,10.200.0.12,2189.2,5,r_athens > r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_athens,r_frankfurt,10.200.0.13,2006.04,4,r_athens > r_zagreb > r_vienna > r_munich > r_frankfurt
+r_athens,r_glasgow,10.200.0.14,3209.89,7,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_athens,r_hamburg,10.200.0.15,2130.19,5,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg
+r_athens,r_helsinki,10.200.0.16,2630.32,6,r_athens > r_sofia > r_belgrade > r_budapest > r_krakow > r_warsaw > r_helsinki
+r_athens,r_krakow,10.200.0.17,1460.81,4,r_athens > r_sofia > r_belgrade > r_budapest > r_krakow
+r_athens,r_lisbon,10.200.0.18,3284.01,6,r_athens > r_palermo > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_athens,r_london,10.200.0.19,2858.55,7,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_athens,r_lyon,10.200.0.20,2211.36,4,r_athens > r_palermo > r_rome > r_marseille > r_lyon
+r_athens,r_madrid,10.200.0.21,2783.67,5,r_athens > r_palermo > r_rome > r_marseille > r_barcelona > r_madrid
+r_athens,r_marseille,10.200.0.22,1937.71,3,r_athens > r_palermo > r_rome > r_marseille
+r_athens,r_milan,10.200.0.23,1813.83,3,r_athens > r_palermo > r_rome > r_milan
+r_athens,r_munich,10.200.0.24,1701.8,3,r_athens > r_zagreb > r_vienna > r_munich
+r_athens,r_oslo,10.200.0.25,2717.26,6,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_oslo
+r_athens,r_palermo,10.200.0.26,908.66,1,r_athens > r_palermo
+r_athens,r_paris,10.200.0.27,2577.44,6,r_athens > r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_paris
+r_athens,r_prague,10.200.0.28,1596.11,3,r_athens > r_zagreb > r_vienna > r_prague
+r_athens,r_rome,10.200.0.29,1333.09,2,r_athens > r_palermo > r_rome
+r_athens,r_seville,10.200.0.30,3106.2,5,r_athens > r_palermo > r_rome > r_marseille > r_barcelona > r_seville
+r_athens,r_sofia,10.200.0.31,529.41,1,r_athens > r_sofia
+r_athens,r_stockholm,10.200.0.32,2754.46,6,r_athens > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_athens,r_strasbourg,10.200.0.33,2177.08,5,r_athens > r_palermo > r_rome > r_milan > r_zurich > r_strasbourg
+r_athens,r_vienna,10.200.0.34,1345.69,2,r_athens > r_zagreb > r_vienna
+r_athens,r_warsaw,10.200.0.35,1716.23,5,r_athens > r_sofia > r_belgrade > r_budapest > r_krakow > r_warsaw
+r_athens,r_zagreb,10.200.0.36,1078.54,1,r_athens > r_zagreb
+r_athens,r_zurich,10.200.0.37,2031.52,4,r_athens > r_palermo > r_rome > r_milan > r_zurich
+r_barcelona,r_amsterdam,10.200.0.1,1444.4,5,r_barcelona > r_marseille > r_lyon > r_paris > r_brussels > r_amsterdam
+r_barcelona,r_athens,10.200.0.2,2276.6,4,r_barcelona > r_marseille > r_rome > r_palermo > r_athens
+r_barcelona,r_barcelona,10.200.0.3,0.0,0,r_barcelona
+r_barcelona,r_belgrade,10.200.0.4,1833.11,4,r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade
+r_barcelona,r_berlin,10.200.0.5,1926.0,7,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin
+r_barcelona,r_birmingham,10.200.0.6,1511.03,5,r_barcelona > r_marseille > r_lyon > r_paris > r_london > r_birmingham
+r_barcelona,r_bordeaux,10.200.0.7,843.74,2,r_barcelona > r_marseille > r_bordeaux
+r_barcelona,r_brussels,10.200.0.8,1271.12,4,r_barcelona > r_marseille > r_lyon > r_paris > r_brussels
+r_barcelona,r_budapest,10.200.0.9,2149.57,5,r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest
+r_barcelona,r_copenhagen,10.200.0.10,2286.01,8,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_barcelona,r_dublin,10.200.0.11,1811.55,5,r_barcelona > r_marseille > r_lyon > r_paris > r_london > r_dublin
+r_barcelona,r_dusseldorf,10.200.0.12,1446.82,5,r_barcelona > r_marseille > r_lyon > r_paris > r_brussels > r_dusseldorf
+r_barcelona,r_frankfurt,10.200.0.13,1277.83,5,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt
+r_barcelona,r_glasgow,10.200.0.14,1917.37,6,r_barcelona > r_marseille > r_lyon > r_paris > r_london > r_birmingham > r_glasgow
+r_barcelona,r_hamburg,10.200.0.15,1672.6,6,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_barcelona,r_helsinki,10.200.0.16,3202.31,10,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_barcelona,r_krakow,10.200.0.17,2440.27,6,r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow
+r_barcelona,r_lisbon,10.200.0.18,1007.41,2,r_barcelona > r_madrid > r_lisbon
+r_barcelona,r_london,10.200.0.19,1351.79,4,r_barcelona > r_marseille > r_lyon > r_paris > r_london
+r_barcelona,r_lyon,10.200.0.20,612.54,2,r_barcelona > r_marseille > r_lyon
+r_barcelona,r_madrid,10.200.0.21,507.07,1,r_barcelona > r_madrid
+r_barcelona,r_marseille,10.200.0.22,338.89,1,r_barcelona > r_marseille
+r_barcelona,r_milan,10.200.0.23,1168.75,4,r_barcelona > r_marseille > r_lyon > r_zurich > r_milan
+r_barcelona,r_munich,10.200.0.24,1516.45,5,r_barcelona > r_marseille > r_lyon > r_zurich > r_milan > r_munich
+r_barcelona,r_oslo,10.200.0.25,2766.47,9,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_barcelona,r_palermo,10.200.0.26,1367.94,3,r_barcelona > r_marseille > r_rome > r_palermo
+r_barcelona,r_paris,10.200.0.27,1009.39,3,r_barcelona > r_marseille > r_lyon > r_paris
+r_barcelona,r_prague,10.200.0.28,1983.19,5,r_barcelona > r_marseille > r_rome > r_zagreb > r_vienna > r_prague
+r_barcelona,r_rome,10.200.0.29,943.51,2,r_barcelona > r_marseille > r_rome
+r_barcelona,r_seville,10.200.0.30,829.6,1,r_barcelona > r_seville
+r_barcelona,r_sofia,10.200.0.31,2157.35,5,r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_barcelona,r_stockholm,10.200.0.32,2803.67,9,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_barcelona,r_strasbourg,10.200.0.33,1096.62,4,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg
+r_barcelona,r_vienna,10.200.0.34,1732.77,4,r_barcelona > r_marseille > r_rome > r_zagreb > r_vienna
+r_barcelona,r_warsaw,10.200.0.35,2442.58,8,r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_barcelona,r_zagreb,10.200.0.36,1465.62,3,r_barcelona > r_marseille > r_rome > r_zagreb
+r_barcelona,r_zurich,10.200.0.37,951.06,3,r_barcelona > r_marseille > r_lyon > r_zurich
+r_belgrade,r_amsterdam,10.200.0.1,1663.93,5,r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam
+r_belgrade,r_athens,10.200.0.2,853.65,2,r_belgrade > r_sofia > r_athens
+r_belgrade,r_barcelona,10.200.0.3,1833.11,4,r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona
+r_belgrade,r_belgrade,10.200.0.4,0.0,0,r_belgrade
+r_belgrade,r_berlin,10.200.0.5,1042.47,3,r_belgrade > r_budapest > r_prague > r_berlin
+r_belgrade,r_birmingham,10.200.0.6,2183.47,7,r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_belgrade,r_bordeaux,10.200.0.7,1999.07,4,r_belgrade > r_zagreb > r_rome > r_marseille > r_bordeaux
+r_belgrade,r_brussels,10.200.0.8,1653.85,6,r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf > r_brussels
+r_belgrade,r_budapest,10.200.0.9,316.46,1,r_belgrade > r_budapest
+r_belgrade,r_copenhagen,10.200.0.10,1402.48,4,r_belgrade > r_budapest > r_prague > r_berlin > r_copenhagen
+r_belgrade,r_dublin,10.200.0.11,2483.99,7,r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_belgrade,r_dusseldorf,10.200.0.12,1478.15,5,r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_belgrade,r_frankfurt,10.200.0.13,1294.99,4,r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt
+r_belgrade,r_glasgow,10.200.0.14,2375.57,6,r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_belgrade,r_hamburg,10.200.0.15,1295.87,4,r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg
+r_belgrade,r_helsinki,10.200.0.16,1776.67,4,r_belgrade > r_budapest > r_krakow > r_warsaw > r_helsinki
+r_belgrade,r_krakow,10.200.0.17,607.16,2,r_belgrade > r_budapest > r_krakow
+r_belgrade,r_lisbon,10.200.0.18,2840.52,6,r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_belgrade,r_london,10.200.0.19,2024.23,6,r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_belgrade,r_lyon,10.200.0.20,1767.87,4,r_belgrade > r_zagreb > r_rome > r_marseille > r_lyon
+r_belgrade,r_madrid,10.200.0.21,2340.18,5,r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid
+r_belgrade,r_marseille,10.200.0.22,1494.22,3,r_belgrade > r_zagreb > r_rome > r_marseille
+r_belgrade,r_milan,10.200.0.23,1338.45,4,r_belgrade > r_zagreb > r_vienna > r_munich > r_milan
+r_belgrade,r_munich,10.200.0.24,990.75,3,r_belgrade > r_zagreb > r_vienna > r_munich
+r_belgrade,r_oslo,10.200.0.25,1882.94,5,r_belgrade > r_budapest > r_prague > r_berlin > r_copenhagen > r_oslo
+r_belgrade,r_palermo,10.200.0.26,1314.03,3,r_belgrade > r_zagreb > r_rome > r_palermo
+r_belgrade,r_paris,10.200.0.27,1876.56,6,r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_strasbourg > r_paris
+r_belgrade,r_prague,10.200.0.28,761.79,2,r_belgrade > r_budapest > r_prague
+r_belgrade,r_rome,10.200.0.29,889.6,2,r_belgrade > r_zagreb > r_rome
+r_belgrade,r_seville,10.200.0.30,2662.71,5,r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_belgrade,r_sofia,10.200.0.31,324.24,1,r_belgrade > r_sofia
+r_belgrade,r_stockholm,10.200.0.32,1920.14,5,r_belgrade > r_budapest > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_belgrade,r_strasbourg,10.200.0.33,1476.2,5,r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_strasbourg
+r_belgrade,r_vienna,10.200.0.34,634.64,2,r_belgrade > r_zagreb > r_vienna
+r_belgrade,r_warsaw,10.200.0.35,862.58,3,r_belgrade > r_budapest > r_krakow > r_warsaw
+r_belgrade,r_zagreb,10.200.0.36,367.49,1,r_belgrade > r_zagreb
+r_belgrade,r_zurich,10.200.0.37,1556.14,5,r_belgrade > r_zagreb > r_vienna > r_munich > r_milan > r_zurich
+r_berlin,r_amsterdam,10.200.0.1,621.46,2,r_berlin > r_hamburg > r_amsterdam
+r_berlin,r_athens,10.200.0.2,1876.79,4,r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_berlin,r_barcelona,10.200.0.3,1926.0,7,r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_berlin,r_belgrade,10.200.0.4,1042.47,3,r_berlin > r_prague > r_budapest > r_belgrade
+r_berlin,r_berlin,10.200.0.5,0.0,0,r_berlin
+r_berlin,r_birmingham,10.200.0.6,1141.0,4,r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_berlin,r_bordeaux,10.200.0.7,1554.95,5,r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_berlin,r_brussels,10.200.0.8,794.74,3,r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_berlin,r_budapest,10.200.0.9,726.01,2,r_berlin > r_prague > r_budapest
+r_berlin,r_copenhagen,10.200.0.10,360.01,1,r_berlin > r_copenhagen
+r_berlin,r_dublin,10.200.0.11,1441.52,4,r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_berlin,r_dusseldorf,10.200.0.12,831.33,3,r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_berlin,r_frankfurt,10.200.0.13,648.17,2,r_berlin > r_hamburg > r_frankfurt
+r_berlin,r_glasgow,10.200.0.14,1333.1,3,r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_berlin,r_hamburg,10.200.0.15,253.4,1,r_berlin > r_hamburg
+r_berlin,r_helsinki,10.200.0.16,1276.31,3,r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_berlin,r_krakow,10.200.0.17,772.0,2,r_berlin > r_warsaw > r_krakow
+r_berlin,r_lisbon,10.200.0.18,2563.93,4,r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_berlin,r_london,10.200.0.19,981.76,3,r_berlin > r_hamburg > r_amsterdam > r_london
+r_berlin,r_lyon,10.200.0.20,1313.46,5,r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_berlin,r_madrid,10.200.0.21,2110.92,6,r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_berlin,r_marseille,10.200.0.22,1587.11,6,r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_berlin,r_milan,10.200.0.23,852.94,2,r_berlin > r_munich > r_milan
+r_berlin,r_munich,10.200.0.24,505.24,1,r_berlin > r_munich
+r_berlin,r_oslo,10.200.0.25,840.47,2,r_berlin > r_copenhagen > r_oslo
+r_berlin,r_palermo,10.200.0.26,1744.79,5,r_berlin > r_prague > r_vienna > r_zagreb > r_rome > r_palermo
+r_berlin,r_paris,10.200.0.27,1056.47,4,r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_berlin,r_prague,10.200.0.28,280.68,1,r_berlin > r_prague
+r_berlin,r_rome,10.200.0.29,1320.36,4,r_berlin > r_prague > r_vienna > r_zagreb > r_rome
+r_berlin,r_seville,10.200.0.30,2755.6,8,r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_berlin,r_sofia,10.200.0.31,1366.71,4,r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_berlin,r_stockholm,10.200.0.32,877.67,2,r_berlin > r_copenhagen > r_stockholm
+r_berlin,r_strasbourg,10.200.0.33,829.38,3,r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_berlin,r_vienna,10.200.0.34,531.1,2,r_berlin > r_prague > r_vienna
+r_berlin,r_warsaw,10.200.0.35,516.58,1,r_berlin > r_warsaw
+r_berlin,r_zagreb,10.200.0.36,798.25,3,r_berlin > r_prague > r_vienna > r_zagreb
+r_berlin,r_zurich,10.200.0.37,974.94,4,r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_birmingham,r_amsterdam,10.200.0.1,519.54,2,r_birmingham > r_london > r_amsterdam
+r_birmingham,r_athens,10.200.0.2,3017.79,8,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_birmingham,r_barcelona,10.200.0.3,1511.03,5,r_birmingham > r_london > r_paris > r_lyon > r_marseille > r_barcelona
+r_birmingham,r_belgrade,10.200.0.4,2183.47,7,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade
+r_birmingham,r_berlin,10.200.0.5,1141.0,4,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin
+r_birmingham,r_birmingham,10.200.0.6,0.0,0,r_birmingham
+r_birmingham,r_bordeaux,10.200.0.7,1000.12,3,r_birmingham > r_london > r_paris > r_bordeaux
+r_birmingham,r_brussels,10.200.0.8,692.82,3,r_birmingham > r_london > r_amsterdam > r_brussels
+r_birmingham,r_budapest,10.200.0.9,1867.01,6,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_birmingham,r_copenhagen,10.200.0.10,1501.01,5,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_birmingham,r_dublin,10.200.0.11,619.0,2,r_birmingham > r_london > r_dublin
+r_birmingham,r_dusseldorf,10.200.0.12,868.52,4,r_birmingham > r_london > r_amsterdam > r_brussels > r_dusseldorf
+r_birmingham,r_frankfurt,10.200.0.13,1051.68,5,r_birmingham > r_london > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt
+r_birmingham,r_glasgow,10.200.0.14,406.34,1,r_birmingham > r_glasgow
+r_birmingham,r_hamburg,10.200.0.15,887.6,3,r_birmingham > r_london > r_amsterdam > r_hamburg
+r_birmingham,r_helsinki,10.200.0.16,2417.31,7,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_birmingham,r_krakow,10.200.0.17,1913.0,6,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_birmingham,r_lisbon,10.200.0.18,1741.41,2,r_birmingham > r_london > r_lisbon
+r_birmingham,r_london,10.200.0.19,159.24,1,r_birmingham > r_london
+r_birmingham,r_lyon,10.200.0.20,898.49,3,r_birmingham > r_london > r_paris > r_lyon
+r_birmingham,r_madrid,10.200.0.21,1556.09,4,r_birmingham > r_london > r_paris > r_bordeaux > r_madrid
+r_birmingham,r_marseille,10.200.0.22,1172.14,4,r_birmingham > r_london > r_paris > r_lyon > r_marseille
+r_birmingham,r_milan,10.200.0.23,1265.25,5,r_birmingham > r_london > r_paris > r_strasbourg > r_zurich > r_milan
+r_birmingham,r_munich,10.200.0.24,1355.92,6,r_birmingham > r_london > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_munich
+r_birmingham,r_oslo,10.200.0.25,1981.47,6,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_birmingham,r_palermo,10.200.0.26,2170.42,7,r_birmingham > r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_birmingham,r_paris,10.200.0.27,501.64,2,r_birmingham > r_london > r_paris
+r_birmingham,r_prague,10.200.0.28,1421.68,5,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_birmingham,r_rome,10.200.0.29,1745.99,6,r_birmingham > r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome
+r_birmingham,r_seville,10.200.0.30,2055.48,3,r_birmingham > r_london > r_lisbon > r_seville
+r_birmingham,r_sofia,10.200.0.31,2507.71,8,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_birmingham,r_stockholm,10.200.0.32,2018.67,6,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_birmingham,r_strasbourg,10.200.0.33,902.0,3,r_birmingham > r_london > r_paris > r_strasbourg
+r_birmingham,r_vienna,10.200.0.34,1672.1,6,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna
+r_birmingham,r_warsaw,10.200.0.35,1657.58,5,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_birmingham,r_zagreb,10.200.0.36,1939.25,7,r_birmingham > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb
+r_birmingham,r_zurich,10.200.0.37,1047.56,4,r_birmingham > r_london > r_paris > r_strasbourg > r_zurich
+r_bordeaux,r_amsterdam,10.200.0.1,933.49,3,r_bordeaux > r_paris > r_brussels > r_amsterdam
+r_bordeaux,r_athens,10.200.0.2,2442.56,4,r_bordeaux > r_marseille > r_rome > r_palermo > r_athens
+r_bordeaux,r_barcelona,10.200.0.3,843.74,2,r_bordeaux > r_marseille > r_barcelona
+r_bordeaux,r_belgrade,10.200.0.4,1999.07,4,r_bordeaux > r_marseille > r_rome > r_zagreb > r_belgrade
+r_bordeaux,r_berlin,10.200.0.5,1554.95,5,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin
+r_bordeaux,r_birmingham,10.200.0.6,1000.12,3,r_bordeaux > r_paris > r_london > r_birmingham
+r_bordeaux,r_bordeaux,10.200.0.7,0.0,0,r_bordeaux
+r_bordeaux,r_brussels,10.200.0.8,760.21,2,r_bordeaux > r_paris > r_brussels
+r_bordeaux,r_budapest,10.200.0.9,2280.96,7,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_bordeaux,r_copenhagen,10.200.0.10,1914.96,6,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_bordeaux,r_dublin,10.200.0.11,1300.64,3,r_bordeaux > r_paris > r_london > r_dublin
+r_bordeaux,r_dusseldorf,10.200.0.12,935.91,3,r_bordeaux > r_paris > r_brussels > r_dusseldorf
+r_bordeaux,r_frankfurt,10.200.0.13,1080.05,3,r_bordeaux > r_paris > r_strasbourg > r_frankfurt
+r_bordeaux,r_glasgow,10.200.0.14,1406.46,4,r_bordeaux > r_paris > r_london > r_birmingham > r_glasgow
+r_bordeaux,r_hamburg,10.200.0.15,1301.55,4,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg
+r_bordeaux,r_helsinki,10.200.0.16,2831.26,8,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_bordeaux,r_krakow,10.200.0.17,2326.95,7,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_bordeaux,r_lisbon,10.200.0.18,1056.31,2,r_bordeaux > r_madrid > r_lisbon
+r_bordeaux,r_london,10.200.0.19,840.88,2,r_bordeaux > r_paris > r_london
+r_bordeaux,r_lyon,10.200.0.20,778.5,2,r_bordeaux > r_marseille > r_lyon
+r_bordeaux,r_madrid,10.200.0.21,555.97,1,r_bordeaux > r_madrid
+r_bordeaux,r_marseille,10.200.0.22,504.85,1,r_bordeaux > r_marseille
+r_bordeaux,r_milan,10.200.0.23,1262.09,4,r_bordeaux > r_paris > r_strasbourg > r_zurich > r_milan
+r_bordeaux,r_munich,10.200.0.24,1384.29,4,r_bordeaux > r_paris > r_strasbourg > r_frankfurt > r_munich
+r_bordeaux,r_oslo,10.200.0.25,2395.42,7,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_bordeaux,r_palermo,10.200.0.26,1533.9,3,r_bordeaux > r_marseille > r_rome > r_palermo
+r_bordeaux,r_paris,10.200.0.27,498.48,1,r_bordeaux > r_paris
+r_bordeaux,r_prague,10.200.0.28,1835.63,6,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_bordeaux,r_rome,10.200.0.29,1109.47,2,r_bordeaux > r_marseille > r_rome
+r_bordeaux,r_seville,10.200.0.30,1370.38,3,r_bordeaux > r_madrid > r_lisbon > r_seville
+r_bordeaux,r_sofia,10.200.0.31,2323.31,5,r_bordeaux > r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_bordeaux,r_stockholm,10.200.0.32,2432.62,7,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_bordeaux,r_strasbourg,10.200.0.33,898.84,2,r_bordeaux > r_paris > r_strasbourg
+r_bordeaux,r_vienna,10.200.0.34,1740.4,5,r_bordeaux > r_paris > r_strasbourg > r_frankfurt > r_munich > r_vienna
+r_bordeaux,r_warsaw,10.200.0.35,2071.53,6,r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_bordeaux,r_zagreb,10.200.0.36,1631.58,3,r_bordeaux > r_marseille > r_rome > r_zagreb
+r_bordeaux,r_zurich,10.200.0.37,1044.4,3,r_bordeaux > r_paris > r_strasbourg > r_zurich
+r_brussels,r_amsterdam,10.200.0.1,173.28,1,r_brussels > r_amsterdam
+r_brussels,r_athens,10.200.0.2,2364.9,6,r_brussels > r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb > r_athens
+r_brussels,r_barcelona,10.200.0.3,1271.12,4,r_brussels > r_paris > r_lyon > r_marseille > r_barcelona
+r_brussels,r_belgrade,10.200.0.4,1653.85,6,r_brussels > r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade
+r_brussels,r_berlin,10.200.0.5,794.74,3,r_brussels > r_amsterdam > r_hamburg > r_berlin
+r_brussels,r_birmingham,10.200.0.6,692.82,3,r_brussels > r_amsterdam > r_london > r_birmingham
+r_brussels,r_bordeaux,10.200.0.7,760.21,2,r_brussels > r_paris > r_bordeaux
+r_brussels,r_brussels,10.200.0.8,0.0,0,r_brussels
+r_brussels,r_budapest,10.200.0.9,1520.75,5,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_brussels,r_copenhagen,10.200.0.10,1154.75,4,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_brussels,r_dublin,10.200.0.11,993.34,3,r_brussels > r_amsterdam > r_london > r_dublin
+r_brussels,r_dusseldorf,10.200.0.12,175.7,1,r_brussels > r_dusseldorf
+r_brussels,r_frankfurt,10.200.0.13,358.86,2,r_brussels > r_dusseldorf > r_frankfurt
+r_brussels,r_glasgow,10.200.0.14,884.92,2,r_brussels > r_amsterdam > r_glasgow
+r_brussels,r_hamburg,10.200.0.15,541.34,2,r_brussels > r_amsterdam > r_hamburg
+r_brussels,r_helsinki,10.200.0.16,2071.05,6,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_brussels,r_krakow,10.200.0.17,1566.74,5,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_brussels,r_lisbon,10.200.0.18,1816.52,4,r_brussels > r_paris > r_bordeaux > r_madrid > r_lisbon
+r_brussels,r_london,10.200.0.19,533.58,2,r_brussels > r_amsterdam > r_london
+r_brussels,r_lyon,10.200.0.20,658.58,2,r_brussels > r_paris > r_lyon
+r_brussels,r_madrid,10.200.0.21,1316.18,3,r_brussels > r_paris > r_bordeaux > r_madrid
+r_brussels,r_marseille,10.200.0.22,932.23,3,r_brussels > r_paris > r_lyon > r_marseille
+r_brussels,r_milan,10.200.0.23,903.32,5,r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan
+r_brussels,r_munich,10.200.0.24,663.1,3,r_brussels > r_dusseldorf > r_frankfurt > r_munich
+r_brussels,r_oslo,10.200.0.25,1635.21,5,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_brussels,r_palermo,10.200.0.26,1808.49,7,r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_brussels,r_paris,10.200.0.27,261.73,1,r_brussels > r_paris
+r_brussels,r_prague,10.200.0.28,1075.42,4,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_brussels,r_rome,10.200.0.29,1384.06,6,r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome
+r_brussels,r_seville,10.200.0.30,2100.72,5,r_brussels > r_paris > r_lyon > r_marseille > r_barcelona > r_seville
+r_brussels,r_sofia,10.200.0.31,1978.09,7,r_brussels > r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_brussels,r_stockholm,10.200.0.32,1672.41,5,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_brussels,r_strasbourg,10.200.0.33,540.07,3,r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg
+r_brussels,r_vienna,10.200.0.34,1019.21,4,r_brussels > r_dusseldorf > r_frankfurt > r_munich > r_vienna
+r_brussels,r_warsaw,10.200.0.35,1311.32,4,r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_brussels,r_zagreb,10.200.0.36,1286.36,5,r_brussels > r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb
+r_brussels,r_zurich,10.200.0.37,685.63,4,r_brussels > r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich
+r_budapest,r_amsterdam,10.200.0.1,1347.47,4,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam
+r_budapest,r_athens,10.200.0.2,1170.11,3,r_budapest > r_belgrade > r_sofia > r_athens
+r_budapest,r_barcelona,10.200.0.3,2149.57,5,r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona
+r_budapest,r_belgrade,10.200.0.4,316.46,1,r_budapest > r_belgrade
+r_budapest,r_berlin,10.200.0.5,726.01,2,r_budapest > r_prague > r_berlin
+r_budapest,r_birmingham,10.200.0.6,1867.01,6,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_budapest,r_bordeaux,10.200.0.7,2280.96,7,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_budapest,r_brussels,10.200.0.8,1520.75,5,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_budapest,r_budapest,10.200.0.9,0.0,0,r_budapest
+r_budapest,r_copenhagen,10.200.0.10,1086.02,3,r_budapest > r_prague > r_berlin > r_copenhagen
+r_budapest,r_dublin,10.200.0.11,2167.53,6,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_budapest,r_dusseldorf,10.200.0.12,1539.26,5,r_budapest > r_prague > r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_budapest,r_frankfurt,10.200.0.13,1356.1,4,r_budapest > r_prague > r_vienna > r_munich > r_frankfurt
+r_budapest,r_glasgow,10.200.0.14,2059.11,5,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_budapest,r_hamburg,10.200.0.15,979.41,3,r_budapest > r_prague > r_berlin > r_hamburg
+r_budapest,r_helsinki,10.200.0.16,1460.21,3,r_budapest > r_krakow > r_warsaw > r_helsinki
+r_budapest,r_krakow,10.200.0.17,290.7,1,r_budapest > r_krakow
+r_budapest,r_lisbon,10.200.0.18,3156.98,7,r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_budapest,r_london,10.200.0.19,1707.77,5,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_budapest,r_lyon,10.200.0.20,1955.77,6,r_budapest > r_prague > r_vienna > r_munich > r_milan > r_zurich > r_lyon
+r_budapest,r_madrid,10.200.0.21,2656.64,6,r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid
+r_budapest,r_marseille,10.200.0.22,1810.68,4,r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille
+r_budapest,r_milan,10.200.0.23,1399.56,4,r_budapest > r_prague > r_vienna > r_munich > r_milan
+r_budapest,r_munich,10.200.0.24,1051.86,3,r_budapest > r_prague > r_vienna > r_munich
+r_budapest,r_oslo,10.200.0.25,1566.48,4,r_budapest > r_prague > r_berlin > r_copenhagen > r_oslo
+r_budapest,r_palermo,10.200.0.26,1630.49,4,r_budapest > r_belgrade > r_zagreb > r_rome > r_palermo
+r_budapest,r_paris,10.200.0.27,1782.48,6,r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_budapest,r_prague,10.200.0.28,445.33,1,r_budapest > r_prague
+r_budapest,r_rome,10.200.0.29,1206.06,3,r_budapest > r_belgrade > r_zagreb > r_rome
+r_budapest,r_seville,10.200.0.30,2979.17,6,r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_budapest,r_sofia,10.200.0.31,640.7,2,r_budapest > r_belgrade > r_sofia
+r_budapest,r_stockholm,10.200.0.32,1603.68,4,r_budapest > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_budapest,r_strasbourg,10.200.0.33,1537.31,5,r_budapest > r_prague > r_vienna > r_munich > r_frankfurt > r_strasbourg
+r_budapest,r_vienna,10.200.0.34,695.75,2,r_budapest > r_prague > r_vienna
+r_budapest,r_warsaw,10.200.0.35,546.12,2,r_budapest > r_krakow > r_warsaw
+r_budapest,r_zagreb,10.200.0.36,683.95,2,r_budapest > r_belgrade > r_zagreb
+r_budapest,r_zurich,10.200.0.37,1617.25,5,r_budapest > r_prague > r_vienna > r_munich > r_milan > r_zurich
+r_copenhagen,r_amsterdam,10.200.0.1,981.47,3,r_copenhagen > r_berlin > r_hamburg > r_amsterdam
+r_copenhagen,r_athens,10.200.0.2,2236.8,5,r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_copenhagen,r_barcelona,10.200.0.3,2286.01,8,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_copenhagen,r_belgrade,10.200.0.4,1402.48,4,r_copenhagen > r_berlin > r_prague > r_budapest > r_belgrade
+r_copenhagen,r_berlin,10.200.0.5,360.01,1,r_copenhagen > r_berlin
+r_copenhagen,r_birmingham,10.200.0.6,1501.01,5,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_copenhagen,r_bordeaux,10.200.0.7,1914.96,6,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_copenhagen,r_brussels,10.200.0.8,1154.75,4,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_copenhagen,r_budapest,10.200.0.9,1086.02,3,r_copenhagen > r_berlin > r_prague > r_budapest
+r_copenhagen,r_copenhagen,10.200.0.10,0.0,0,r_copenhagen
+r_copenhagen,r_dublin,10.200.0.11,1801.53,5,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_copenhagen,r_dusseldorf,10.200.0.12,1191.34,4,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_copenhagen,r_frankfurt,10.200.0.13,1008.18,3,r_copenhagen > r_berlin > r_hamburg > r_frankfurt
+r_copenhagen,r_glasgow,10.200.0.14,1693.11,4,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_copenhagen,r_hamburg,10.200.0.15,613.41,2,r_copenhagen > r_berlin > r_hamburg
+r_copenhagen,r_helsinki,10.200.0.16,916.3,2,r_copenhagen > r_stockholm > r_helsinki
+r_copenhagen,r_krakow,10.200.0.17,1132.01,3,r_copenhagen > r_berlin > r_warsaw > r_krakow
+r_copenhagen,r_lisbon,10.200.0.18,2923.94,5,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_copenhagen,r_london,10.200.0.19,1341.77,4,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london
+r_copenhagen,r_lyon,10.200.0.20,1673.47,6,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_copenhagen,r_madrid,10.200.0.21,2470.93,7,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_copenhagen,r_marseille,10.200.0.22,1947.12,7,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_copenhagen,r_milan,10.200.0.23,1212.95,3,r_copenhagen > r_berlin > r_munich > r_milan
+r_copenhagen,r_munich,10.200.0.24,865.25,2,r_copenhagen > r_berlin > r_munich
+r_copenhagen,r_oslo,10.200.0.25,480.46,1,r_copenhagen > r_oslo
+r_copenhagen,r_palermo,10.200.0.26,2104.8,6,r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome > r_palermo
+r_copenhagen,r_paris,10.200.0.27,1416.48,5,r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_copenhagen,r_prague,10.200.0.28,640.69,2,r_copenhagen > r_berlin > r_prague
+r_copenhagen,r_rome,10.200.0.29,1680.37,5,r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome
+r_copenhagen,r_seville,10.200.0.30,3115.61,9,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_copenhagen,r_sofia,10.200.0.31,1726.72,5,r_copenhagen > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_copenhagen,r_stockholm,10.200.0.32,517.66,1,r_copenhagen > r_stockholm
+r_copenhagen,r_strasbourg,10.200.0.33,1189.39,4,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_copenhagen,r_vienna,10.200.0.34,891.11,3,r_copenhagen > r_berlin > r_prague > r_vienna
+r_copenhagen,r_warsaw,10.200.0.35,876.59,2,r_copenhagen > r_berlin > r_warsaw
+r_copenhagen,r_zagreb,10.200.0.36,1158.26,4,r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb
+r_copenhagen,r_zurich,10.200.0.37,1334.95,5,r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_dublin,r_amsterdam,10.200.0.1,820.06,2,r_dublin > r_london > r_amsterdam
+r_dublin,r_athens,10.200.0.2,3318.31,8,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_dublin,r_barcelona,10.200.0.3,1811.55,5,r_dublin > r_london > r_paris > r_lyon > r_marseille > r_barcelona
+r_dublin,r_belgrade,10.200.0.4,2483.99,7,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade
+r_dublin,r_berlin,10.200.0.5,1441.52,4,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin
+r_dublin,r_birmingham,10.200.0.6,619.0,2,r_dublin > r_london > r_birmingham
+r_dublin,r_bordeaux,10.200.0.7,1300.64,3,r_dublin > r_london > r_paris > r_bordeaux
+r_dublin,r_brussels,10.200.0.8,993.34,3,r_dublin > r_london > r_amsterdam > r_brussels
+r_dublin,r_budapest,10.200.0.9,2167.53,6,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_dublin,r_copenhagen,10.200.0.10,1801.53,5,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_dublin,r_dublin,10.200.0.11,0.0,0,r_dublin
+r_dublin,r_dusseldorf,10.200.0.12,1169.04,4,r_dublin > r_london > r_amsterdam > r_brussels > r_dusseldorf
+r_dublin,r_frankfurt,10.200.0.13,1352.2,5,r_dublin > r_london > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt
+r_dublin,r_glasgow,10.200.0.14,308.47,1,r_dublin > r_glasgow
+r_dublin,r_hamburg,10.200.0.15,1188.12,3,r_dublin > r_london > r_amsterdam > r_hamburg
+r_dublin,r_helsinki,10.200.0.16,2717.83,7,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_dublin,r_krakow,10.200.0.17,2213.52,6,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_dublin,r_lisbon,10.200.0.18,2041.93,2,r_dublin > r_london > r_lisbon
+r_dublin,r_london,10.200.0.19,459.76,1,r_dublin > r_london
+r_dublin,r_lyon,10.200.0.20,1199.01,3,r_dublin > r_london > r_paris > r_lyon
+r_dublin,r_madrid,10.200.0.21,1856.61,4,r_dublin > r_london > r_paris > r_bordeaux > r_madrid
+r_dublin,r_marseille,10.200.0.22,1472.66,4,r_dublin > r_london > r_paris > r_lyon > r_marseille
+r_dublin,r_milan,10.200.0.23,1565.77,5,r_dublin > r_london > r_paris > r_strasbourg > r_zurich > r_milan
+r_dublin,r_munich,10.200.0.24,1656.44,6,r_dublin > r_london > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_munich
+r_dublin,r_oslo,10.200.0.25,2281.99,6,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_dublin,r_palermo,10.200.0.26,2470.94,7,r_dublin > r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_dublin,r_paris,10.200.0.27,802.16,2,r_dublin > r_london > r_paris
+r_dublin,r_prague,10.200.0.28,1722.2,5,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_dublin,r_rome,10.200.0.29,2046.51,6,r_dublin > r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome
+r_dublin,r_seville,10.200.0.30,2356.0,3,r_dublin > r_london > r_lisbon > r_seville
+r_dublin,r_sofia,10.200.0.31,2808.23,8,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_dublin,r_stockholm,10.200.0.32,2319.19,6,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_dublin,r_strasbourg,10.200.0.33,1202.52,3,r_dublin > r_london > r_paris > r_strasbourg
+r_dublin,r_vienna,10.200.0.34,1972.62,6,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna
+r_dublin,r_warsaw,10.200.0.35,1958.1,5,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_dublin,r_zagreb,10.200.0.36,2239.77,7,r_dublin > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb
+r_dublin,r_zurich,10.200.0.37,1348.08,4,r_dublin > r_london > r_paris > r_strasbourg > r_zurich
+r_dusseldorf,r_amsterdam,10.200.0.1,348.98,2,r_dusseldorf > r_brussels > r_amsterdam
+r_dusseldorf,r_athens,10.200.0.2,2189.2,5,r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb > r_athens
+r_dusseldorf,r_barcelona,10.200.0.3,1446.82,5,r_dusseldorf > r_brussels > r_paris > r_lyon > r_marseille > r_barcelona
+r_dusseldorf,r_belgrade,10.200.0.4,1478.15,5,r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade
+r_dusseldorf,r_berlin,10.200.0.5,831.33,3,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin
+r_dusseldorf,r_birmingham,10.200.0.6,868.52,4,r_dusseldorf > r_brussels > r_amsterdam > r_london > r_birmingham
+r_dusseldorf,r_bordeaux,10.200.0.7,935.91,3,r_dusseldorf > r_brussels > r_paris > r_bordeaux
+r_dusseldorf,r_brussels,10.200.0.8,175.7,1,r_dusseldorf > r_brussels
+r_dusseldorf,r_budapest,10.200.0.9,1539.26,5,r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_prague > r_budapest
+r_dusseldorf,r_copenhagen,10.200.0.10,1191.34,4,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_dusseldorf,r_dublin,10.200.0.11,1169.04,4,r_dusseldorf > r_brussels > r_amsterdam > r_london > r_dublin
+r_dusseldorf,r_dusseldorf,10.200.0.12,0.0,0,r_dusseldorf
+r_dusseldorf,r_frankfurt,10.200.0.13,183.16,1,r_dusseldorf > r_frankfurt
+r_dusseldorf,r_glasgow,10.200.0.14,1060.62,3,r_dusseldorf > r_brussels > r_amsterdam > r_glasgow
+r_dusseldorf,r_hamburg,10.200.0.15,577.93,2,r_dusseldorf > r_frankfurt > r_hamburg
+r_dusseldorf,r_helsinki,10.200.0.16,2107.64,6,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_dusseldorf,r_krakow,10.200.0.17,1603.33,5,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_dusseldorf,r_lisbon,10.200.0.18,1992.22,5,r_dusseldorf > r_brussels > r_paris > r_bordeaux > r_madrid > r_lisbon
+r_dusseldorf,r_london,10.200.0.19,709.28,3,r_dusseldorf > r_brussels > r_amsterdam > r_london
+r_dusseldorf,r_lyon,10.200.0.20,834.28,3,r_dusseldorf > r_brussels > r_paris > r_lyon
+r_dusseldorf,r_madrid,10.200.0.21,1491.88,4,r_dusseldorf > r_brussels > r_paris > r_bordeaux > r_madrid
+r_dusseldorf,r_marseille,10.200.0.22,1107.93,4,r_dusseldorf > r_brussels > r_paris > r_lyon > r_marseille
+r_dusseldorf,r_milan,10.200.0.23,727.62,4,r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan
+r_dusseldorf,r_munich,10.200.0.24,487.4,2,r_dusseldorf > r_frankfurt > r_munich
+r_dusseldorf,r_oslo,10.200.0.25,1671.8,5,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_dusseldorf,r_palermo,10.200.0.26,1632.79,6,r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_dusseldorf,r_paris,10.200.0.27,437.43,2,r_dusseldorf > r_brussels > r_paris
+r_dusseldorf,r_prague,10.200.0.28,1093.93,4,r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_prague
+r_dusseldorf,r_rome,10.200.0.29,1208.36,5,r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome
+r_dusseldorf,r_seville,10.200.0.30,2276.42,6,r_dusseldorf > r_brussels > r_paris > r_lyon > r_marseille > r_barcelona > r_seville
+r_dusseldorf,r_sofia,10.200.0.31,1802.39,6,r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_dusseldorf,r_stockholm,10.200.0.32,1709.0,5,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_dusseldorf,r_strasbourg,10.200.0.33,364.37,2,r_dusseldorf > r_frankfurt > r_strasbourg
+r_dusseldorf,r_vienna,10.200.0.34,843.51,3,r_dusseldorf > r_frankfurt > r_munich > r_vienna
+r_dusseldorf,r_warsaw,10.200.0.35,1347.91,4,r_dusseldorf > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_dusseldorf,r_zagreb,10.200.0.36,1110.66,4,r_dusseldorf > r_frankfurt > r_munich > r_vienna > r_zagreb
+r_dusseldorf,r_zurich,10.200.0.37,509.93,3,r_dusseldorf > r_frankfurt > r_strasbourg > r_zurich
+r_frankfurt,r_amsterdam,10.200.0.1,532.14,3,r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_frankfurt,r_athens,10.200.0.2,2006.04,4,r_frankfurt > r_munich > r_vienna > r_zagreb > r_athens
+r_frankfurt,r_barcelona,10.200.0.3,1277.83,5,r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_frankfurt,r_belgrade,10.200.0.4,1294.99,4,r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade
+r_frankfurt,r_berlin,10.200.0.5,648.17,2,r_frankfurt > r_hamburg > r_berlin
+r_frankfurt,r_birmingham,10.200.0.6,1051.68,5,r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_london > r_birmingham
+r_frankfurt,r_bordeaux,10.200.0.7,1080.05,3,r_frankfurt > r_strasbourg > r_paris > r_bordeaux
+r_frankfurt,r_brussels,10.200.0.8,358.86,2,r_frankfurt > r_dusseldorf > r_brussels
+r_frankfurt,r_budapest,10.200.0.9,1356.1,4,r_frankfurt > r_munich > r_vienna > r_prague > r_budapest
+r_frankfurt,r_copenhagen,10.200.0.10,1008.18,3,r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_frankfurt,r_dublin,10.200.0.11,1352.2,5,r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_london > r_dublin
+r_frankfurt,r_dusseldorf,10.200.0.12,183.16,1,r_frankfurt > r_dusseldorf
+r_frankfurt,r_frankfurt,10.200.0.13,0.0,0,r_frankfurt
+r_frankfurt,r_glasgow,10.200.0.14,1243.78,4,r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_glasgow
+r_frankfurt,r_hamburg,10.200.0.15,394.77,1,r_frankfurt > r_hamburg
+r_frankfurt,r_helsinki,10.200.0.16,1924.48,5,r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_frankfurt,r_krakow,10.200.0.17,1420.17,4,r_frankfurt > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_frankfurt,r_lisbon,10.200.0.18,2136.36,5,r_frankfurt > r_strasbourg > r_paris > r_bordeaux > r_madrid > r_lisbon
+r_frankfurt,r_london,10.200.0.19,892.44,4,r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_london
+r_frankfurt,r_lyon,10.200.0.20,665.29,3,r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_frankfurt,r_madrid,10.200.0.21,1636.02,4,r_frankfurt > r_strasbourg > r_paris > r_bordeaux > r_madrid
+r_frankfurt,r_marseille,10.200.0.22,938.94,4,r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_frankfurt,r_milan,10.200.0.23,544.46,3,r_frankfurt > r_strasbourg > r_zurich > r_milan
+r_frankfurt,r_munich,10.200.0.24,304.24,1,r_frankfurt > r_munich
+r_frankfurt,r_oslo,10.200.0.25,1488.64,4,r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_frankfurt,r_palermo,10.200.0.26,1449.63,5,r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_frankfurt,r_paris,10.200.0.27,581.57,2,r_frankfurt > r_strasbourg > r_paris
+r_frankfurt,r_prague,10.200.0.28,910.77,3,r_frankfurt > r_munich > r_vienna > r_prague
+r_frankfurt,r_rome,10.200.0.29,1025.2,4,r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome
+r_frankfurt,r_seville,10.200.0.30,2107.43,6,r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_frankfurt,r_sofia,10.200.0.31,1619.23,5,r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_frankfurt,r_stockholm,10.200.0.32,1525.84,4,r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_frankfurt,r_strasbourg,10.200.0.33,181.21,1,r_frankfurt > r_strasbourg
+r_frankfurt,r_vienna,10.200.0.34,660.35,2,r_frankfurt > r_munich > r_vienna
+r_frankfurt,r_warsaw,10.200.0.35,1164.75,3,r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_frankfurt,r_zagreb,10.200.0.36,927.5,3,r_frankfurt > r_munich > r_vienna > r_zagreb
+r_frankfurt,r_zurich,10.200.0.37,326.77,2,r_frankfurt > r_strasbourg > r_zurich
+r_glasgow,r_amsterdam,10.200.0.1,711.64,1,r_glasgow > r_amsterdam
+r_glasgow,r_athens,10.200.0.2,3209.89,7,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_glasgow,r_barcelona,10.200.0.3,1917.37,6,r_glasgow > r_birmingham > r_london > r_paris > r_lyon > r_marseille > r_barcelona
+r_glasgow,r_belgrade,10.200.0.4,2375.57,6,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade
+r_glasgow,r_berlin,10.200.0.5,1333.1,3,r_glasgow > r_amsterdam > r_hamburg > r_berlin
+r_glasgow,r_birmingham,10.200.0.6,406.34,1,r_glasgow > r_birmingham
+r_glasgow,r_bordeaux,10.200.0.7,1406.46,4,r_glasgow > r_birmingham > r_london > r_paris > r_bordeaux
+r_glasgow,r_brussels,10.200.0.8,884.92,2,r_glasgow > r_amsterdam > r_brussels
+r_glasgow,r_budapest,10.200.0.9,2059.11,5,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_glasgow,r_copenhagen,10.200.0.10,1693.11,4,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_glasgow,r_dublin,10.200.0.11,308.47,1,r_glasgow > r_dublin
+r_glasgow,r_dusseldorf,10.200.0.12,1060.62,3,r_glasgow > r_amsterdam > r_brussels > r_dusseldorf
+r_glasgow,r_frankfurt,10.200.0.13,1243.78,4,r_glasgow > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt
+r_glasgow,r_glasgow,10.200.0.14,0.0,0,r_glasgow
+r_glasgow,r_hamburg,10.200.0.15,1079.7,2,r_glasgow > r_amsterdam > r_hamburg
+r_glasgow,r_helsinki,10.200.0.16,2609.41,6,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_glasgow,r_krakow,10.200.0.17,2105.1,5,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_glasgow,r_lisbon,10.200.0.18,2147.75,3,r_glasgow > r_birmingham > r_london > r_lisbon
+r_glasgow,r_london,10.200.0.19,565.58,2,r_glasgow > r_birmingham > r_london
+r_glasgow,r_lyon,10.200.0.20,1304.83,4,r_glasgow > r_birmingham > r_london > r_paris > r_lyon
+r_glasgow,r_madrid,10.200.0.21,1962.43,5,r_glasgow > r_birmingham > r_london > r_paris > r_bordeaux > r_madrid
+r_glasgow,r_marseille,10.200.0.22,1578.48,5,r_glasgow > r_birmingham > r_london > r_paris > r_lyon > r_marseille
+r_glasgow,r_milan,10.200.0.23,1671.59,6,r_glasgow > r_birmingham > r_london > r_paris > r_strasbourg > r_zurich > r_milan
+r_glasgow,r_munich,10.200.0.24,1548.02,5,r_glasgow > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_munich
+r_glasgow,r_oslo,10.200.0.25,2173.57,5,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_glasgow,r_palermo,10.200.0.26,2576.76,8,r_glasgow > r_birmingham > r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_glasgow,r_paris,10.200.0.27,907.98,3,r_glasgow > r_birmingham > r_london > r_paris
+r_glasgow,r_prague,10.200.0.28,1613.78,4,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_glasgow,r_rome,10.200.0.29,2152.33,7,r_glasgow > r_birmingham > r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome
+r_glasgow,r_seville,10.200.0.30,2461.82,4,r_glasgow > r_birmingham > r_london > r_lisbon > r_seville
+r_glasgow,r_sofia,10.200.0.31,2699.81,7,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_glasgow,r_stockholm,10.200.0.32,2210.77,5,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_glasgow,r_strasbourg,10.200.0.33,1308.34,4,r_glasgow > r_birmingham > r_london > r_paris > r_strasbourg
+r_glasgow,r_vienna,10.200.0.34,1864.2,5,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna
+r_glasgow,r_warsaw,10.200.0.35,1849.68,4,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_glasgow,r_zagreb,10.200.0.36,2131.35,6,r_glasgow > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb
+r_glasgow,r_zurich,10.200.0.37,1453.9,5,r_glasgow > r_birmingham > r_london > r_paris > r_strasbourg > r_zurich
+r_hamburg,r_amsterdam,10.200.0.1,368.06,1,r_hamburg > r_amsterdam
+r_hamburg,r_athens,10.200.0.2,2130.19,5,r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_hamburg,r_barcelona,10.200.0.3,1672.6,6,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_hamburg,r_belgrade,10.200.0.4,1295.87,4,r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade
+r_hamburg,r_berlin,10.200.0.5,253.4,1,r_hamburg > r_berlin
+r_hamburg,r_birmingham,10.200.0.6,887.6,3,r_hamburg > r_amsterdam > r_london > r_birmingham
+r_hamburg,r_bordeaux,10.200.0.7,1301.55,4,r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_hamburg,r_brussels,10.200.0.8,541.34,2,r_hamburg > r_amsterdam > r_brussels
+r_hamburg,r_budapest,10.200.0.9,979.41,3,r_hamburg > r_berlin > r_prague > r_budapest
+r_hamburg,r_copenhagen,10.200.0.10,613.41,2,r_hamburg > r_berlin > r_copenhagen
+r_hamburg,r_dublin,10.200.0.11,1188.12,3,r_hamburg > r_amsterdam > r_london > r_dublin
+r_hamburg,r_dusseldorf,10.200.0.12,577.93,2,r_hamburg > r_frankfurt > r_dusseldorf
+r_hamburg,r_frankfurt,10.200.0.13,394.77,1,r_hamburg > r_frankfurt
+r_hamburg,r_glasgow,10.200.0.14,1079.7,2,r_hamburg > r_amsterdam > r_glasgow
+r_hamburg,r_hamburg,10.200.0.15,0.0,0,r_hamburg
+r_hamburg,r_helsinki,10.200.0.16,1529.71,4,r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_hamburg,r_krakow,10.200.0.17,1025.4,3,r_hamburg > r_berlin > r_warsaw > r_krakow
+r_hamburg,r_lisbon,10.200.0.18,2310.53,3,r_hamburg > r_amsterdam > r_london > r_lisbon
+r_hamburg,r_london,10.200.0.19,728.36,2,r_hamburg > r_amsterdam > r_london
+r_hamburg,r_lyon,10.200.0.20,1060.06,4,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_hamburg,r_madrid,10.200.0.21,1857.52,5,r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_hamburg,r_marseille,10.200.0.22,1333.71,5,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_hamburg,r_milan,10.200.0.23,939.23,4,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_milan
+r_hamburg,r_munich,10.200.0.24,699.01,2,r_hamburg > r_frankfurt > r_munich
+r_hamburg,r_oslo,10.200.0.25,1093.87,3,r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_hamburg,r_palermo,10.200.0.26,1844.4,6,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_hamburg,r_paris,10.200.0.27,803.07,3,r_hamburg > r_amsterdam > r_brussels > r_paris
+r_hamburg,r_prague,10.200.0.28,534.08,2,r_hamburg > r_berlin > r_prague
+r_hamburg,r_rome,10.200.0.29,1419.97,5,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_milan > r_rome
+r_hamburg,r_seville,10.200.0.30,2502.2,7,r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_hamburg,r_sofia,10.200.0.31,1620.11,5,r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_hamburg,r_stockholm,10.200.0.32,1131.07,3,r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_hamburg,r_strasbourg,10.200.0.33,575.98,2,r_hamburg > r_frankfurt > r_strasbourg
+r_hamburg,r_vienna,10.200.0.34,784.5,3,r_hamburg > r_berlin > r_prague > r_vienna
+r_hamburg,r_warsaw,10.200.0.35,769.98,2,r_hamburg > r_berlin > r_warsaw
+r_hamburg,r_zagreb,10.200.0.36,1051.65,4,r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb
+r_hamburg,r_zurich,10.200.0.37,721.54,3,r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_helsinki,r_amsterdam,10.200.0.1,1897.77,5,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam
+r_helsinki,r_athens,10.200.0.2,2630.32,6,r_helsinki > r_warsaw > r_krakow > r_budapest > r_belgrade > r_sofia > r_athens
+r_helsinki,r_barcelona,10.200.0.3,3202.31,10,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_helsinki,r_belgrade,10.200.0.4,1776.67,4,r_helsinki > r_warsaw > r_krakow > r_budapest > r_belgrade
+r_helsinki,r_berlin,10.200.0.5,1276.31,3,r_helsinki > r_stockholm > r_copenhagen > r_berlin
+r_helsinki,r_birmingham,10.200.0.6,2417.31,7,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_helsinki,r_bordeaux,10.200.0.7,2831.26,8,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_helsinki,r_brussels,10.200.0.8,2071.05,6,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_helsinki,r_budapest,10.200.0.9,1460.21,3,r_helsinki > r_warsaw > r_krakow > r_budapest
+r_helsinki,r_copenhagen,10.200.0.10,916.3,2,r_helsinki > r_stockholm > r_copenhagen
+r_helsinki,r_dublin,10.200.0.11,2717.83,7,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_helsinki,r_dusseldorf,10.200.0.12,2107.64,6,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_helsinki,r_frankfurt,10.200.0.13,1924.48,5,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt
+r_helsinki,r_glasgow,10.200.0.14,2609.41,6,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_helsinki,r_hamburg,10.200.0.15,1529.71,4,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg
+r_helsinki,r_helsinki,10.200.0.16,0.0,0,r_helsinki
+r_helsinki,r_krakow,10.200.0.17,1169.51,2,r_helsinki > r_warsaw > r_krakow
+r_helsinki,r_lisbon,10.200.0.18,3840.24,7,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_helsinki,r_london,10.200.0.19,2258.07,6,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london
+r_helsinki,r_lyon,10.200.0.20,2589.77,8,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_helsinki,r_madrid,10.200.0.21,3387.23,9,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_helsinki,r_marseille,10.200.0.22,2863.42,9,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_helsinki,r_milan,10.200.0.23,2129.25,5,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_munich > r_milan
+r_helsinki,r_munich,10.200.0.24,1781.55,4,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_munich
+r_helsinki,r_oslo,10.200.0.25,788.55,1,r_helsinki > r_oslo
+r_helsinki,r_palermo,10.200.0.26,3021.1,8,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome > r_palermo
+r_helsinki,r_paris,10.200.0.27,2332.78,7,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_helsinki,r_prague,10.200.0.28,1556.99,4,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_prague
+r_helsinki,r_rome,10.200.0.29,2596.67,7,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome
+r_helsinki,r_seville,10.200.0.30,4031.91,11,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_helsinki,r_sofia,10.200.0.31,2100.91,5,r_helsinki > r_warsaw > r_krakow > r_budapest > r_belgrade > r_sofia
+r_helsinki,r_stockholm,10.200.0.32,398.64,1,r_helsinki > r_stockholm
+r_helsinki,r_strasbourg,10.200.0.33,2105.69,6,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_helsinki,r_vienna,10.200.0.34,1807.41,5,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna
+r_helsinki,r_warsaw,10.200.0.35,914.09,1,r_helsinki > r_warsaw
+r_helsinki,r_zagreb,10.200.0.36,2074.56,6,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb
+r_helsinki,r_zurich,10.200.0.37,2251.25,7,r_helsinki > r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_krakow,r_amsterdam,10.200.0.1,1393.46,4,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam
+r_krakow,r_athens,10.200.0.2,1460.81,4,r_krakow > r_budapest > r_belgrade > r_sofia > r_athens
+r_krakow,r_barcelona,10.200.0.3,2440.27,6,r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona
+r_krakow,r_belgrade,10.200.0.4,607.16,2,r_krakow > r_budapest > r_belgrade
+r_krakow,r_berlin,10.200.0.5,772.0,2,r_krakow > r_warsaw > r_berlin
+r_krakow,r_birmingham,10.200.0.6,1913.0,6,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_krakow,r_bordeaux,10.200.0.7,2326.95,7,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_krakow,r_brussels,10.200.0.8,1566.74,5,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_krakow,r_budapest,10.200.0.9,290.7,1,r_krakow > r_budapest
+r_krakow,r_copenhagen,10.200.0.10,1132.01,3,r_krakow > r_warsaw > r_berlin > r_copenhagen
+r_krakow,r_dublin,10.200.0.11,2213.52,6,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_krakow,r_dusseldorf,10.200.0.12,1603.33,5,r_krakow > r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_krakow,r_frankfurt,10.200.0.13,1420.17,4,r_krakow > r_warsaw > r_berlin > r_hamburg > r_frankfurt
+r_krakow,r_glasgow,10.200.0.14,2105.1,5,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_krakow,r_hamburg,10.200.0.15,1025.4,3,r_krakow > r_warsaw > r_berlin > r_hamburg
+r_krakow,r_helsinki,10.200.0.16,1169.51,2,r_krakow > r_warsaw > r_helsinki
+r_krakow,r_krakow,10.200.0.17,0.0,0,r_krakow
+r_krakow,r_lisbon,10.200.0.18,3335.93,6,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_krakow,r_london,10.200.0.19,1753.76,5,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london
+r_krakow,r_lyon,10.200.0.20,2085.46,7,r_krakow > r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_krakow,r_madrid,10.200.0.21,2882.92,8,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_krakow,r_marseille,10.200.0.22,2101.38,5,r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille
+r_krakow,r_milan,10.200.0.23,1624.94,4,r_krakow > r_warsaw > r_berlin > r_munich > r_milan
+r_krakow,r_munich,10.200.0.24,1277.24,3,r_krakow > r_warsaw > r_berlin > r_munich
+r_krakow,r_oslo,10.200.0.25,1612.47,4,r_krakow > r_warsaw > r_berlin > r_copenhagen > r_oslo
+r_krakow,r_palermo,10.200.0.26,1921.19,5,r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome > r_palermo
+r_krakow,r_paris,10.200.0.27,1828.47,6,r_krakow > r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_krakow,r_prague,10.200.0.28,736.03,2,r_krakow > r_budapest > r_prague
+r_krakow,r_rome,10.200.0.29,1496.76,4,r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome
+r_krakow,r_seville,10.200.0.30,3269.87,7,r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_krakow,r_sofia,10.200.0.31,931.4,3,r_krakow > r_budapest > r_belgrade > r_sofia
+r_krakow,r_stockholm,10.200.0.32,1568.15,3,r_krakow > r_warsaw > r_helsinki > r_stockholm
+r_krakow,r_strasbourg,10.200.0.33,1601.38,5,r_krakow > r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_krakow,r_vienna,10.200.0.34,986.45,3,r_krakow > r_budapest > r_prague > r_vienna
+r_krakow,r_warsaw,10.200.0.35,255.42,1,r_krakow > r_warsaw
+r_krakow,r_zagreb,10.200.0.36,974.65,3,r_krakow > r_budapest > r_belgrade > r_zagreb
+r_krakow,r_zurich,10.200.0.37,1746.94,6,r_krakow > r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_lisbon,r_amsterdam,10.200.0.1,1942.47,2,r_lisbon > r_london > r_amsterdam
+r_lisbon,r_athens,10.200.0.2,3284.01,6,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_palermo > r_athens
+r_lisbon,r_barcelona,10.200.0.3,1007.41,2,r_lisbon > r_madrid > r_barcelona
+r_lisbon,r_belgrade,10.200.0.4,2840.52,6,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade
+r_lisbon,r_berlin,10.200.0.5,2563.93,4,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin
+r_lisbon,r_birmingham,10.200.0.6,1741.41,2,r_lisbon > r_london > r_birmingham
+r_lisbon,r_bordeaux,10.200.0.7,1056.31,2,r_lisbon > r_madrid > r_bordeaux
+r_lisbon,r_brussels,10.200.0.8,1816.52,4,r_lisbon > r_madrid > r_bordeaux > r_paris > r_brussels
+r_lisbon,r_budapest,10.200.0.9,3156.98,7,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest
+r_lisbon,r_copenhagen,10.200.0.10,2923.94,5,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_lisbon,r_dublin,10.200.0.11,2041.93,2,r_lisbon > r_london > r_dublin
+r_lisbon,r_dusseldorf,10.200.0.12,1992.22,5,r_lisbon > r_madrid > r_bordeaux > r_paris > r_brussels > r_dusseldorf
+r_lisbon,r_frankfurt,10.200.0.13,2136.36,5,r_lisbon > r_madrid > r_bordeaux > r_paris > r_strasbourg > r_frankfurt
+r_lisbon,r_glasgow,10.200.0.14,2147.75,3,r_lisbon > r_london > r_birmingham > r_glasgow
+r_lisbon,r_hamburg,10.200.0.15,2310.53,3,r_lisbon > r_london > r_amsterdam > r_hamburg
+r_lisbon,r_helsinki,10.200.0.16,3840.24,7,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_lisbon,r_krakow,10.200.0.17,3335.93,6,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_lisbon,r_lisbon,10.200.0.18,0.0,0,r_lisbon
+r_lisbon,r_london,10.200.0.19,1582.17,1,r_lisbon > r_london
+r_lisbon,r_lyon,10.200.0.20,1619.95,4,r_lisbon > r_madrid > r_barcelona > r_marseille > r_lyon
+r_lisbon,r_madrid,10.200.0.21,500.34,1,r_lisbon > r_madrid
+r_lisbon,r_marseille,10.200.0.22,1346.3,3,r_lisbon > r_madrid > r_barcelona > r_marseille
+r_lisbon,r_milan,10.200.0.23,2176.16,6,r_lisbon > r_madrid > r_barcelona > r_marseille > r_lyon > r_zurich > r_milan
+r_lisbon,r_munich,10.200.0.24,2440.6,6,r_lisbon > r_madrid > r_bordeaux > r_paris > r_strasbourg > r_frankfurt > r_munich
+r_lisbon,r_oslo,10.200.0.25,3404.4,6,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_lisbon,r_palermo,10.200.0.26,2375.35,5,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_palermo
+r_lisbon,r_paris,10.200.0.27,1554.79,3,r_lisbon > r_madrid > r_bordeaux > r_paris
+r_lisbon,r_prague,10.200.0.28,2844.61,5,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_lisbon,r_rome,10.200.0.29,1950.92,4,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome
+r_lisbon,r_seville,10.200.0.30,314.07,1,r_lisbon > r_seville
+r_lisbon,r_sofia,10.200.0.31,3164.76,7,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_lisbon,r_stockholm,10.200.0.32,3441.6,6,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_lisbon,r_strasbourg,10.200.0.33,1955.15,4,r_lisbon > r_madrid > r_bordeaux > r_paris > r_strasbourg
+r_lisbon,r_vienna,10.200.0.34,2740.18,6,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_vienna
+r_lisbon,r_warsaw,10.200.0.35,3080.51,5,r_lisbon > r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_lisbon,r_zagreb,10.200.0.36,2473.03,5,r_lisbon > r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb
+r_lisbon,r_zurich,10.200.0.37,1958.47,5,r_lisbon > r_madrid > r_barcelona > r_marseille > r_lyon > r_zurich
+r_london,r_amsterdam,10.200.0.1,360.3,1,r_london > r_amsterdam
+r_london,r_athens,10.200.0.2,2858.55,7,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_london,r_barcelona,10.200.0.3,1351.79,4,r_london > r_paris > r_lyon > r_marseille > r_barcelona
+r_london,r_belgrade,10.200.0.4,2024.23,6,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade
+r_london,r_berlin,10.200.0.5,981.76,3,r_london > r_amsterdam > r_hamburg > r_berlin
+r_london,r_birmingham,10.200.0.6,159.24,1,r_london > r_birmingham
+r_london,r_bordeaux,10.200.0.7,840.88,2,r_london > r_paris > r_bordeaux
+r_london,r_brussels,10.200.0.8,533.58,2,r_london > r_amsterdam > r_brussels
+r_london,r_budapest,10.200.0.9,1707.77,5,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_london,r_copenhagen,10.200.0.10,1341.77,4,r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_london,r_dublin,10.200.0.11,459.76,1,r_london > r_dublin
+r_london,r_dusseldorf,10.200.0.12,709.28,3,r_london > r_amsterdam > r_brussels > r_dusseldorf
+r_london,r_frankfurt,10.200.0.13,892.44,4,r_london > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt
+r_london,r_glasgow,10.200.0.14,565.58,2,r_london > r_birmingham > r_glasgow
+r_london,r_hamburg,10.200.0.15,728.36,2,r_london > r_amsterdam > r_hamburg
+r_london,r_helsinki,10.200.0.16,2258.07,6,r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_london,r_krakow,10.200.0.17,1753.76,5,r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_london,r_lisbon,10.200.0.18,1582.17,1,r_london > r_lisbon
+r_london,r_london,10.200.0.19,0.0,0,r_london
+r_london,r_lyon,10.200.0.20,739.25,2,r_london > r_paris > r_lyon
+r_london,r_madrid,10.200.0.21,1396.85,3,r_london > r_paris > r_bordeaux > r_madrid
+r_london,r_marseille,10.200.0.22,1012.9,3,r_london > r_paris > r_lyon > r_marseille
+r_london,r_milan,10.200.0.23,1106.01,4,r_london > r_paris > r_strasbourg > r_zurich > r_milan
+r_london,r_munich,10.200.0.24,1196.68,5,r_london > r_amsterdam > r_brussels > r_dusseldorf > r_frankfurt > r_munich
+r_london,r_oslo,10.200.0.25,1822.23,5,r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_london,r_palermo,10.200.0.26,2011.18,6,r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_london,r_paris,10.200.0.27,342.4,1,r_london > r_paris
+r_london,r_prague,10.200.0.28,1262.44,4,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_london,r_rome,10.200.0.29,1586.75,5,r_london > r_paris > r_strasbourg > r_zurich > r_milan > r_rome
+r_london,r_seville,10.200.0.30,1896.24,2,r_london > r_lisbon > r_seville
+r_london,r_sofia,10.200.0.31,2348.47,7,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_london,r_stockholm,10.200.0.32,1859.43,5,r_london > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_london,r_strasbourg,10.200.0.33,742.76,2,r_london > r_paris > r_strasbourg
+r_london,r_vienna,10.200.0.34,1512.86,5,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna
+r_london,r_warsaw,10.200.0.35,1498.34,4,r_london > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_london,r_zagreb,10.200.0.36,1780.01,6,r_london > r_amsterdam > r_hamburg > r_berlin > r_prague > r_vienna > r_zagreb
+r_london,r_zurich,10.200.0.37,888.32,3,r_london > r_paris > r_strasbourg > r_zurich
+r_lyon,r_amsterdam,10.200.0.1,831.86,3,r_lyon > r_paris > r_brussels > r_amsterdam
+r_lyon,r_athens,10.200.0.2,2211.36,4,r_lyon > r_marseille > r_rome > r_palermo > r_athens
+r_lyon,r_barcelona,10.200.0.3,612.54,2,r_lyon > r_marseille > r_barcelona
+r_lyon,r_belgrade,10.200.0.4,1767.87,4,r_lyon > r_marseille > r_rome > r_zagreb > r_belgrade
+r_lyon,r_berlin,10.200.0.5,1313.46,5,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin
+r_lyon,r_birmingham,10.200.0.6,898.49,3,r_lyon > r_paris > r_london > r_birmingham
+r_lyon,r_bordeaux,10.200.0.7,778.5,2,r_lyon > r_marseille > r_bordeaux
+r_lyon,r_brussels,10.200.0.8,658.58,2,r_lyon > r_paris > r_brussels
+r_lyon,r_budapest,10.200.0.9,1955.77,6,r_lyon > r_zurich > r_milan > r_munich > r_vienna > r_prague > r_budapest
+r_lyon,r_copenhagen,10.200.0.10,1673.47,6,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_lyon,r_dublin,10.200.0.11,1199.01,3,r_lyon > r_paris > r_london > r_dublin
+r_lyon,r_dusseldorf,10.200.0.12,834.28,3,r_lyon > r_paris > r_brussels > r_dusseldorf
+r_lyon,r_frankfurt,10.200.0.13,665.29,3,r_lyon > r_zurich > r_strasbourg > r_frankfurt
+r_lyon,r_glasgow,10.200.0.14,1304.83,4,r_lyon > r_paris > r_london > r_birmingham > r_glasgow
+r_lyon,r_hamburg,10.200.0.15,1060.06,4,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_lyon,r_helsinki,10.200.0.16,2589.77,8,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_lyon,r_krakow,10.200.0.17,2085.46,7,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_lyon,r_lisbon,10.200.0.18,1619.95,4,r_lyon > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_lyon,r_london,10.200.0.19,739.25,2,r_lyon > r_paris > r_london
+r_lyon,r_lyon,10.200.0.20,0.0,0,r_lyon
+r_lyon,r_madrid,10.200.0.21,1119.61,3,r_lyon > r_marseille > r_barcelona > r_madrid
+r_lyon,r_marseille,10.200.0.22,273.65,1,r_lyon > r_marseille
+r_lyon,r_milan,10.200.0.23,556.21,2,r_lyon > r_zurich > r_milan
+r_lyon,r_munich,10.200.0.24,903.91,3,r_lyon > r_zurich > r_milan > r_munich
+r_lyon,r_oslo,10.200.0.25,2153.93,7,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_lyon,r_palermo,10.200.0.26,1302.7,3,r_lyon > r_marseille > r_rome > r_palermo
+r_lyon,r_paris,10.200.0.27,396.85,1,r_lyon > r_paris
+r_lyon,r_prague,10.200.0.28,1510.44,5,r_lyon > r_zurich > r_milan > r_munich > r_vienna > r_prague
+r_lyon,r_rome,10.200.0.29,878.27,2,r_lyon > r_marseille > r_rome
+r_lyon,r_seville,10.200.0.30,1442.14,3,r_lyon > r_marseille > r_barcelona > r_seville
+r_lyon,r_sofia,10.200.0.31,2092.11,5,r_lyon > r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_lyon,r_stockholm,10.200.0.32,2191.13,7,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_lyon,r_strasbourg,10.200.0.33,484.08,2,r_lyon > r_zurich > r_strasbourg
+r_lyon,r_vienna,10.200.0.34,1260.02,4,r_lyon > r_zurich > r_milan > r_munich > r_vienna
+r_lyon,r_warsaw,10.200.0.35,1830.04,6,r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_lyon,r_zagreb,10.200.0.36,1400.38,3,r_lyon > r_marseille > r_rome > r_zagreb
+r_lyon,r_zurich,10.200.0.37,338.52,1,r_lyon > r_zurich
+r_madrid,r_amsterdam,10.200.0.1,1489.46,4,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam
+r_madrid,r_athens,10.200.0.2,2783.67,5,r_madrid > r_barcelona > r_marseille > r_rome > r_palermo > r_athens
+r_madrid,r_barcelona,10.200.0.3,507.07,1,r_madrid > r_barcelona
+r_madrid,r_belgrade,10.200.0.4,2340.18,5,r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade
+r_madrid,r_berlin,10.200.0.5,2110.92,6,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin
+r_madrid,r_birmingham,10.200.0.6,1556.09,4,r_madrid > r_bordeaux > r_paris > r_london > r_birmingham
+r_madrid,r_bordeaux,10.200.0.7,555.97,1,r_madrid > r_bordeaux
+r_madrid,r_brussels,10.200.0.8,1316.18,3,r_madrid > r_bordeaux > r_paris > r_brussels
+r_madrid,r_budapest,10.200.0.9,2656.64,6,r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest
+r_madrid,r_copenhagen,10.200.0.10,2470.93,7,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_madrid,r_dublin,10.200.0.11,1856.61,4,r_madrid > r_bordeaux > r_paris > r_london > r_dublin
+r_madrid,r_dusseldorf,10.200.0.12,1491.88,4,r_madrid > r_bordeaux > r_paris > r_brussels > r_dusseldorf
+r_madrid,r_frankfurt,10.200.0.13,1636.02,4,r_madrid > r_bordeaux > r_paris > r_strasbourg > r_frankfurt
+r_madrid,r_glasgow,10.200.0.14,1962.43,5,r_madrid > r_bordeaux > r_paris > r_london > r_birmingham > r_glasgow
+r_madrid,r_hamburg,10.200.0.15,1857.52,5,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg
+r_madrid,r_helsinki,10.200.0.16,3387.23,9,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_madrid,r_krakow,10.200.0.17,2882.92,8,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_madrid,r_lisbon,10.200.0.18,500.34,1,r_madrid > r_lisbon
+r_madrid,r_london,10.200.0.19,1396.85,3,r_madrid > r_bordeaux > r_paris > r_london
+r_madrid,r_lyon,10.200.0.20,1119.61,3,r_madrid > r_barcelona > r_marseille > r_lyon
+r_madrid,r_madrid,10.200.0.21,0.0,0,r_madrid
+r_madrid,r_marseille,10.200.0.22,845.96,2,r_madrid > r_barcelona > r_marseille
+r_madrid,r_milan,10.200.0.23,1675.82,5,r_madrid > r_barcelona > r_marseille > r_lyon > r_zurich > r_milan
+r_madrid,r_munich,10.200.0.24,1940.26,5,r_madrid > r_bordeaux > r_paris > r_strasbourg > r_frankfurt > r_munich
+r_madrid,r_oslo,10.200.0.25,2951.39,8,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_madrid,r_palermo,10.200.0.26,1875.01,4,r_madrid > r_barcelona > r_marseille > r_rome > r_palermo
+r_madrid,r_paris,10.200.0.27,1054.45,2,r_madrid > r_bordeaux > r_paris
+r_madrid,r_prague,10.200.0.28,2391.6,7,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_madrid,r_rome,10.200.0.29,1450.58,3,r_madrid > r_barcelona > r_marseille > r_rome
+r_madrid,r_seville,10.200.0.30,814.41,2,r_madrid > r_lisbon > r_seville
+r_madrid,r_sofia,10.200.0.31,2664.42,6,r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_madrid,r_stockholm,10.200.0.32,2988.59,8,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_madrid,r_strasbourg,10.200.0.33,1454.81,3,r_madrid > r_bordeaux > r_paris > r_strasbourg
+r_madrid,r_vienna,10.200.0.34,2239.84,5,r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb > r_vienna
+r_madrid,r_warsaw,10.200.0.35,2627.5,7,r_madrid > r_bordeaux > r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_madrid,r_zagreb,10.200.0.36,1972.69,4,r_madrid > r_barcelona > r_marseille > r_rome > r_zagreb
+r_madrid,r_zurich,10.200.0.37,1458.13,4,r_madrid > r_barcelona > r_marseille > r_lyon > r_zurich
+r_marseille,r_amsterdam,10.200.0.1,1105.51,4,r_marseille > r_lyon > r_paris > r_brussels > r_amsterdam
+r_marseille,r_athens,10.200.0.2,1937.71,3,r_marseille > r_rome > r_palermo > r_athens
+r_marseille,r_barcelona,10.200.0.3,338.89,1,r_marseille > r_barcelona
+r_marseille,r_belgrade,10.200.0.4,1494.22,3,r_marseille > r_rome > r_zagreb > r_belgrade
+r_marseille,r_berlin,10.200.0.5,1587.11,6,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin
+r_marseille,r_birmingham,10.200.0.6,1172.14,4,r_marseille > r_lyon > r_paris > r_london > r_birmingham
+r_marseille,r_bordeaux,10.200.0.7,504.85,1,r_marseille > r_bordeaux
+r_marseille,r_brussels,10.200.0.8,932.23,3,r_marseille > r_lyon > r_paris > r_brussels
+r_marseille,r_budapest,10.200.0.9,1810.68,4,r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest
+r_marseille,r_copenhagen,10.200.0.10,1947.12,7,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_marseille,r_dublin,10.200.0.11,1472.66,4,r_marseille > r_lyon > r_paris > r_london > r_dublin
+r_marseille,r_dusseldorf,10.200.0.12,1107.93,4,r_marseille > r_lyon > r_paris > r_brussels > r_dusseldorf
+r_marseille,r_frankfurt,10.200.0.13,938.94,4,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt
+r_marseille,r_glasgow,10.200.0.14,1578.48,5,r_marseille > r_lyon > r_paris > r_london > r_birmingham > r_glasgow
+r_marseille,r_hamburg,10.200.0.15,1333.71,5,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_marseille,r_helsinki,10.200.0.16,2863.42,9,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_marseille,r_krakow,10.200.0.17,2101.38,5,r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow
+r_marseille,r_lisbon,10.200.0.18,1346.3,3,r_marseille > r_barcelona > r_madrid > r_lisbon
+r_marseille,r_london,10.200.0.19,1012.9,3,r_marseille > r_lyon > r_paris > r_london
+r_marseille,r_lyon,10.200.0.20,273.65,1,r_marseille > r_lyon
+r_marseille,r_madrid,10.200.0.21,845.96,2,r_marseille > r_barcelona > r_madrid
+r_marseille,r_marseille,10.200.0.22,0.0,0,r_marseille
+r_marseille,r_milan,10.200.0.23,829.86,3,r_marseille > r_lyon > r_zurich > r_milan
+r_marseille,r_munich,10.200.0.24,1177.56,4,r_marseille > r_lyon > r_zurich > r_milan > r_munich
+r_marseille,r_oslo,10.200.0.25,2427.58,8,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_marseille,r_palermo,10.200.0.26,1029.05,2,r_marseille > r_rome > r_palermo
+r_marseille,r_paris,10.200.0.27,670.5,2,r_marseille > r_lyon > r_paris
+r_marseille,r_prague,10.200.0.28,1644.3,4,r_marseille > r_rome > r_zagreb > r_vienna > r_prague
+r_marseille,r_rome,10.200.0.29,604.62,1,r_marseille > r_rome
+r_marseille,r_seville,10.200.0.30,1168.49,2,r_marseille > r_barcelona > r_seville
+r_marseille,r_sofia,10.200.0.31,1818.46,4,r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_marseille,r_stockholm,10.200.0.32,2464.78,8,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_marseille,r_strasbourg,10.200.0.33,757.73,3,r_marseille > r_lyon > r_zurich > r_strasbourg
+r_marseille,r_vienna,10.200.0.34,1393.88,3,r_marseille > r_rome > r_zagreb > r_vienna
+r_marseille,r_warsaw,10.200.0.35,2103.69,7,r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_marseille,r_zagreb,10.200.0.36,1126.73,2,r_marseille > r_rome > r_zagreb
+r_marseille,r_zurich,10.200.0.37,612.17,2,r_marseille > r_lyon > r_zurich
+r_milan,r_amsterdam,10.200.0.1,1076.6,6,r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_milan,r_athens,10.200.0.2,1813.83,3,r_milan > r_rome > r_palermo > r_athens
+r_milan,r_barcelona,10.200.0.3,1168.75,4,r_milan > r_zurich > r_lyon > r_marseille > r_barcelona
+r_milan,r_belgrade,10.200.0.4,1338.45,4,r_milan > r_munich > r_vienna > r_zagreb > r_belgrade
+r_milan,r_berlin,10.200.0.5,852.94,2,r_milan > r_munich > r_berlin
+r_milan,r_birmingham,10.200.0.6,1265.25,5,r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_birmingham
+r_milan,r_bordeaux,10.200.0.7,1262.09,4,r_milan > r_zurich > r_strasbourg > r_paris > r_bordeaux
+r_milan,r_brussels,10.200.0.8,903.32,5,r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels
+r_milan,r_budapest,10.200.0.9,1399.56,4,r_milan > r_munich > r_vienna > r_prague > r_budapest
+r_milan,r_copenhagen,10.200.0.10,1212.95,3,r_milan > r_munich > r_berlin > r_copenhagen
+r_milan,r_dublin,10.200.0.11,1565.77,5,r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_dublin
+r_milan,r_dusseldorf,10.200.0.12,727.62,4,r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf
+r_milan,r_frankfurt,10.200.0.13,544.46,3,r_milan > r_zurich > r_strasbourg > r_frankfurt
+r_milan,r_glasgow,10.200.0.14,1671.59,6,r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_birmingham > r_glasgow
+r_milan,r_hamburg,10.200.0.15,939.23,4,r_milan > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_milan,r_helsinki,10.200.0.16,2129.25,5,r_milan > r_munich > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_milan,r_krakow,10.200.0.17,1624.94,4,r_milan > r_munich > r_berlin > r_warsaw > r_krakow
+r_milan,r_lisbon,10.200.0.18,2176.16,6,r_milan > r_zurich > r_lyon > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_milan,r_london,10.200.0.19,1106.01,4,r_milan > r_zurich > r_strasbourg > r_paris > r_london
+r_milan,r_lyon,10.200.0.20,556.21,2,r_milan > r_zurich > r_lyon
+r_milan,r_madrid,10.200.0.21,1675.82,5,r_milan > r_zurich > r_lyon > r_marseille > r_barcelona > r_madrid
+r_milan,r_marseille,10.200.0.22,829.86,3,r_milan > r_zurich > r_lyon > r_marseille
+r_milan,r_milan,10.200.0.23,0.0,0,r_milan
+r_milan,r_munich,10.200.0.24,347.7,1,r_milan > r_munich
+r_milan,r_oslo,10.200.0.25,1693.41,4,r_milan > r_munich > r_berlin > r_copenhagen > r_oslo
+r_milan,r_palermo,10.200.0.26,905.17,2,r_milan > r_rome > r_palermo
+r_milan,r_paris,10.200.0.27,763.61,3,r_milan > r_zurich > r_strasbourg > r_paris
+r_milan,r_prague,10.200.0.28,954.23,3,r_milan > r_munich > r_vienna > r_prague
+r_milan,r_rome,10.200.0.29,480.74,1,r_milan > r_rome
+r_milan,r_seville,10.200.0.30,1998.35,5,r_milan > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_milan,r_sofia,10.200.0.31,1662.69,5,r_milan > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_milan,r_stockholm,10.200.0.32,1730.61,4,r_milan > r_munich > r_berlin > r_copenhagen > r_stockholm
+r_milan,r_strasbourg,10.200.0.33,363.25,2,r_milan > r_zurich > r_strasbourg
+r_milan,r_vienna,10.200.0.34,703.81,2,r_milan > r_munich > r_vienna
+r_milan,r_warsaw,10.200.0.35,1369.52,3,r_milan > r_munich > r_berlin > r_warsaw
+r_milan,r_zagreb,10.200.0.36,970.96,3,r_milan > r_munich > r_vienna > r_zagreb
+r_milan,r_zurich,10.200.0.37,217.69,1,r_milan > r_zurich
+r_munich,r_amsterdam,10.200.0.1,836.38,4,r_munich > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_munich,r_athens,10.200.0.2,1701.8,3,r_munich > r_vienna > r_zagreb > r_athens
+r_munich,r_barcelona,10.200.0.3,1516.45,5,r_munich > r_milan > r_zurich > r_lyon > r_marseille > r_barcelona
+r_munich,r_belgrade,10.200.0.4,990.75,3,r_munich > r_vienna > r_zagreb > r_belgrade
+r_munich,r_berlin,10.200.0.5,505.24,1,r_munich > r_berlin
+r_munich,r_birmingham,10.200.0.6,1355.92,6,r_munich > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_london > r_birmingham
+r_munich,r_bordeaux,10.200.0.7,1384.29,4,r_munich > r_frankfurt > r_strasbourg > r_paris > r_bordeaux
+r_munich,r_brussels,10.200.0.8,663.1,3,r_munich > r_frankfurt > r_dusseldorf > r_brussels
+r_munich,r_budapest,10.200.0.9,1051.86,3,r_munich > r_vienna > r_prague > r_budapest
+r_munich,r_copenhagen,10.200.0.10,865.25,2,r_munich > r_berlin > r_copenhagen
+r_munich,r_dublin,10.200.0.11,1656.44,6,r_munich > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_london > r_dublin
+r_munich,r_dusseldorf,10.200.0.12,487.4,2,r_munich > r_frankfurt > r_dusseldorf
+r_munich,r_frankfurt,10.200.0.13,304.24,1,r_munich > r_frankfurt
+r_munich,r_glasgow,10.200.0.14,1548.02,5,r_munich > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_glasgow
+r_munich,r_hamburg,10.200.0.15,699.01,2,r_munich > r_frankfurt > r_hamburg
+r_munich,r_helsinki,10.200.0.16,1781.55,4,r_munich > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_munich,r_krakow,10.200.0.17,1277.24,3,r_munich > r_berlin > r_warsaw > r_krakow
+r_munich,r_lisbon,10.200.0.18,2440.6,6,r_munich > r_frankfurt > r_strasbourg > r_paris > r_bordeaux > r_madrid > r_lisbon
+r_munich,r_london,10.200.0.19,1196.68,5,r_munich > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam > r_london
+r_munich,r_lyon,10.200.0.20,903.91,3,r_munich > r_milan > r_zurich > r_lyon
+r_munich,r_madrid,10.200.0.21,1940.26,5,r_munich > r_frankfurt > r_strasbourg > r_paris > r_bordeaux > r_madrid
+r_munich,r_marseille,10.200.0.22,1177.56,4,r_munich > r_milan > r_zurich > r_lyon > r_marseille
+r_munich,r_milan,10.200.0.23,347.7,1,r_munich > r_milan
+r_munich,r_munich,10.200.0.24,0.0,0,r_munich
+r_munich,r_oslo,10.200.0.25,1345.71,3,r_munich > r_berlin > r_copenhagen > r_oslo
+r_munich,r_palermo,10.200.0.26,1252.87,3,r_munich > r_milan > r_rome > r_palermo
+r_munich,r_paris,10.200.0.27,885.81,3,r_munich > r_frankfurt > r_strasbourg > r_paris
+r_munich,r_prague,10.200.0.28,606.53,2,r_munich > r_vienna > r_prague
+r_munich,r_rome,10.200.0.29,828.44,2,r_munich > r_milan > r_rome
+r_munich,r_seville,10.200.0.30,2346.05,6,r_munich > r_milan > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_munich,r_sofia,10.200.0.31,1314.99,4,r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_munich,r_stockholm,10.200.0.32,1382.91,3,r_munich > r_berlin > r_copenhagen > r_stockholm
+r_munich,r_strasbourg,10.200.0.33,485.45,2,r_munich > r_frankfurt > r_strasbourg
+r_munich,r_vienna,10.200.0.34,356.11,1,r_munich > r_vienna
+r_munich,r_warsaw,10.200.0.35,1021.82,2,r_munich > r_berlin > r_warsaw
+r_munich,r_zagreb,10.200.0.36,623.26,2,r_munich > r_vienna > r_zagreb
+r_munich,r_zurich,10.200.0.37,565.39,2,r_munich > r_milan > r_zurich
+r_oslo,r_amsterdam,10.200.0.1,1461.93,4,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam
+r_oslo,r_athens,10.200.0.2,2717.26,6,r_oslo > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_oslo,r_barcelona,10.200.0.3,2766.47,9,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_oslo,r_belgrade,10.200.0.4,1882.94,5,r_oslo > r_copenhagen > r_berlin > r_prague > r_budapest > r_belgrade
+r_oslo,r_berlin,10.200.0.5,840.47,2,r_oslo > r_copenhagen > r_berlin
+r_oslo,r_birmingham,10.200.0.6,1981.47,6,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_oslo,r_bordeaux,10.200.0.7,2395.42,7,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_oslo,r_brussels,10.200.0.8,1635.21,5,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_oslo,r_budapest,10.200.0.9,1566.48,4,r_oslo > r_copenhagen > r_berlin > r_prague > r_budapest
+r_oslo,r_copenhagen,10.200.0.10,480.46,1,r_oslo > r_copenhagen
+r_oslo,r_dublin,10.200.0.11,2281.99,6,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_oslo,r_dusseldorf,10.200.0.12,1671.8,5,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_oslo,r_frankfurt,10.200.0.13,1488.64,4,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt
+r_oslo,r_glasgow,10.200.0.14,2173.57,5,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_oslo,r_hamburg,10.200.0.15,1093.87,3,r_oslo > r_copenhagen > r_berlin > r_hamburg
+r_oslo,r_helsinki,10.200.0.16,788.55,1,r_oslo > r_helsinki
+r_oslo,r_krakow,10.200.0.17,1612.47,4,r_oslo > r_copenhagen > r_berlin > r_warsaw > r_krakow
+r_oslo,r_lisbon,10.200.0.18,3404.4,6,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_oslo,r_london,10.200.0.19,1822.23,5,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london
+r_oslo,r_lyon,10.200.0.20,2153.93,7,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_oslo,r_madrid,10.200.0.21,2951.39,8,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_oslo,r_marseille,10.200.0.22,2427.58,8,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_oslo,r_milan,10.200.0.23,1693.41,4,r_oslo > r_copenhagen > r_berlin > r_munich > r_milan
+r_oslo,r_munich,10.200.0.24,1345.71,3,r_oslo > r_copenhagen > r_berlin > r_munich
+r_oslo,r_oslo,10.200.0.25,0.0,0,r_oslo
+r_oslo,r_palermo,10.200.0.26,2585.26,7,r_oslo > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome > r_palermo
+r_oslo,r_paris,10.200.0.27,1896.94,6,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_oslo,r_prague,10.200.0.28,1121.15,3,r_oslo > r_copenhagen > r_berlin > r_prague
+r_oslo,r_rome,10.200.0.29,2160.83,6,r_oslo > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome
+r_oslo,r_seville,10.200.0.30,3596.07,10,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_oslo,r_sofia,10.200.0.31,2207.18,6,r_oslo > r_copenhagen > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_oslo,r_stockholm,10.200.0.32,998.12,2,r_oslo > r_copenhagen > r_stockholm
+r_oslo,r_strasbourg,10.200.0.33,1669.85,5,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_oslo,r_vienna,10.200.0.34,1371.57,4,r_oslo > r_copenhagen > r_berlin > r_prague > r_vienna
+r_oslo,r_warsaw,10.200.0.35,1357.05,3,r_oslo > r_copenhagen > r_berlin > r_warsaw
+r_oslo,r_zagreb,10.200.0.36,1638.72,5,r_oslo > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb
+r_oslo,r_zurich,10.200.0.37,1815.41,6,r_oslo > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_palermo,r_amsterdam,10.200.0.1,1981.77,8,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_palermo,r_athens,10.200.0.2,908.66,1,r_palermo > r_athens
+r_palermo,r_barcelona,10.200.0.3,1367.94,3,r_palermo > r_rome > r_marseille > r_barcelona
+r_palermo,r_belgrade,10.200.0.4,1314.03,3,r_palermo > r_rome > r_zagreb > r_belgrade
+r_palermo,r_berlin,10.200.0.5,1744.79,5,r_palermo > r_rome > r_zagreb > r_vienna > r_prague > r_berlin
+r_palermo,r_birmingham,10.200.0.6,2170.42,7,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_birmingham
+r_palermo,r_bordeaux,10.200.0.7,1533.9,3,r_palermo > r_rome > r_marseille > r_bordeaux
+r_palermo,r_brussels,10.200.0.8,1808.49,7,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels
+r_palermo,r_budapest,10.200.0.9,1630.49,4,r_palermo > r_rome > r_zagreb > r_belgrade > r_budapest
+r_palermo,r_copenhagen,10.200.0.10,2104.8,6,r_palermo > r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen
+r_palermo,r_dublin,10.200.0.11,2470.94,7,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_dublin
+r_palermo,r_dusseldorf,10.200.0.12,1632.79,6,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf
+r_palermo,r_frankfurt,10.200.0.13,1449.63,5,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt
+r_palermo,r_glasgow,10.200.0.14,2576.76,8,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_birmingham > r_glasgow
+r_palermo,r_hamburg,10.200.0.15,1844.4,6,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_palermo,r_helsinki,10.200.0.16,3021.1,8,r_palermo > r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_palermo,r_krakow,10.200.0.17,1921.19,5,r_palermo > r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow
+r_palermo,r_lisbon,10.200.0.18,2375.35,5,r_palermo > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_palermo,r_london,10.200.0.19,2011.18,6,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london
+r_palermo,r_lyon,10.200.0.20,1302.7,3,r_palermo > r_rome > r_marseille > r_lyon
+r_palermo,r_madrid,10.200.0.21,1875.01,4,r_palermo > r_rome > r_marseille > r_barcelona > r_madrid
+r_palermo,r_marseille,10.200.0.22,1029.05,2,r_palermo > r_rome > r_marseille
+r_palermo,r_milan,10.200.0.23,905.17,2,r_palermo > r_rome > r_milan
+r_palermo,r_munich,10.200.0.24,1252.87,3,r_palermo > r_rome > r_milan > r_munich
+r_palermo,r_oslo,10.200.0.25,2585.26,7,r_palermo > r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_oslo
+r_palermo,r_palermo,10.200.0.26,0.0,0,r_palermo
+r_palermo,r_paris,10.200.0.27,1668.78,5,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg > r_paris
+r_palermo,r_prague,10.200.0.28,1464.11,4,r_palermo > r_rome > r_zagreb > r_vienna > r_prague
+r_palermo,r_rome,10.200.0.29,424.43,1,r_palermo > r_rome
+r_palermo,r_seville,10.200.0.30,2197.54,4,r_palermo > r_rome > r_marseille > r_barcelona > r_seville
+r_palermo,r_sofia,10.200.0.31,1438.07,2,r_palermo > r_athens > r_sofia
+r_palermo,r_stockholm,10.200.0.32,2622.46,7,r_palermo > r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_palermo,r_strasbourg,10.200.0.33,1268.42,4,r_palermo > r_rome > r_milan > r_zurich > r_strasbourg
+r_palermo,r_vienna,10.200.0.34,1213.69,3,r_palermo > r_rome > r_zagreb > r_vienna
+r_palermo,r_warsaw,10.200.0.35,2176.61,6,r_palermo > r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow > r_warsaw
+r_palermo,r_zagreb,10.200.0.36,946.54,2,r_palermo > r_rome > r_zagreb
+r_palermo,r_zurich,10.200.0.37,1122.86,3,r_palermo > r_rome > r_milan > r_zurich
+r_paris,r_amsterdam,10.200.0.1,435.01,2,r_paris > r_brussels > r_amsterdam
+r_paris,r_athens,10.200.0.2,2577.44,6,r_paris > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo > r_athens
+r_paris,r_barcelona,10.200.0.3,1009.39,3,r_paris > r_lyon > r_marseille > r_barcelona
+r_paris,r_belgrade,10.200.0.4,1876.56,6,r_paris > r_strasbourg > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade
+r_paris,r_berlin,10.200.0.5,1056.47,4,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin
+r_paris,r_birmingham,10.200.0.6,501.64,2,r_paris > r_london > r_birmingham
+r_paris,r_bordeaux,10.200.0.7,498.48,1,r_paris > r_bordeaux
+r_paris,r_brussels,10.200.0.8,261.73,1,r_paris > r_brussels
+r_paris,r_budapest,10.200.0.9,1782.48,6,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague > r_budapest
+r_paris,r_copenhagen,10.200.0.10,1416.48,5,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen
+r_paris,r_dublin,10.200.0.11,802.16,2,r_paris > r_london > r_dublin
+r_paris,r_dusseldorf,10.200.0.12,437.43,2,r_paris > r_brussels > r_dusseldorf
+r_paris,r_frankfurt,10.200.0.13,581.57,2,r_paris > r_strasbourg > r_frankfurt
+r_paris,r_glasgow,10.200.0.14,907.98,3,r_paris > r_london > r_birmingham > r_glasgow
+r_paris,r_hamburg,10.200.0.15,803.07,3,r_paris > r_brussels > r_amsterdam > r_hamburg
+r_paris,r_helsinki,10.200.0.16,2332.78,7,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_paris,r_krakow,10.200.0.17,1828.47,6,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_paris,r_lisbon,10.200.0.18,1554.79,3,r_paris > r_bordeaux > r_madrid > r_lisbon
+r_paris,r_london,10.200.0.19,342.4,1,r_paris > r_london
+r_paris,r_lyon,10.200.0.20,396.85,1,r_paris > r_lyon
+r_paris,r_madrid,10.200.0.21,1054.45,2,r_paris > r_bordeaux > r_madrid
+r_paris,r_marseille,10.200.0.22,670.5,2,r_paris > r_lyon > r_marseille
+r_paris,r_milan,10.200.0.23,763.61,3,r_paris > r_strasbourg > r_zurich > r_milan
+r_paris,r_munich,10.200.0.24,885.81,3,r_paris > r_strasbourg > r_frankfurt > r_munich
+r_paris,r_oslo,10.200.0.25,1896.94,6,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_paris,r_palermo,10.200.0.26,1668.78,5,r_paris > r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_paris,r_paris,10.200.0.27,0.0,0,r_paris
+r_paris,r_prague,10.200.0.28,1337.15,5,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_prague
+r_paris,r_rome,10.200.0.29,1244.35,4,r_paris > r_strasbourg > r_zurich > r_milan > r_rome
+r_paris,r_seville,10.200.0.30,1838.99,4,r_paris > r_lyon > r_marseille > r_barcelona > r_seville
+r_paris,r_sofia,10.200.0.31,2200.8,7,r_paris > r_strasbourg > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_paris,r_stockholm,10.200.0.32,1934.14,6,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_paris,r_strasbourg,10.200.0.33,400.36,1,r_paris > r_strasbourg
+r_paris,r_vienna,10.200.0.34,1241.92,4,r_paris > r_strasbourg > r_frankfurt > r_munich > r_vienna
+r_paris,r_warsaw,10.200.0.35,1573.05,5,r_paris > r_brussels > r_amsterdam > r_hamburg > r_berlin > r_warsaw
+r_paris,r_zagreb,10.200.0.36,1509.07,5,r_paris > r_strasbourg > r_frankfurt > r_munich > r_vienna > r_zagreb
+r_paris,r_zurich,10.200.0.37,545.92,2,r_paris > r_strasbourg > r_zurich
+r_prague,r_amsterdam,10.200.0.1,902.14,3,r_prague > r_berlin > r_hamburg > r_amsterdam
+r_prague,r_athens,10.200.0.2,1596.11,3,r_prague > r_vienna > r_zagreb > r_athens
+r_prague,r_barcelona,10.200.0.3,1983.19,5,r_prague > r_vienna > r_zagreb > r_rome > r_marseille > r_barcelona
+r_prague,r_belgrade,10.200.0.4,761.79,2,r_prague > r_budapest > r_belgrade
+r_prague,r_berlin,10.200.0.5,280.68,1,r_prague > r_berlin
+r_prague,r_birmingham,10.200.0.6,1421.68,5,r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_prague,r_bordeaux,10.200.0.7,1835.63,6,r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_prague,r_brussels,10.200.0.8,1075.42,4,r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_prague,r_budapest,10.200.0.9,445.33,1,r_prague > r_budapest
+r_prague,r_copenhagen,10.200.0.10,640.69,2,r_prague > r_berlin > r_copenhagen
+r_prague,r_dublin,10.200.0.11,1722.2,5,r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_prague,r_dusseldorf,10.200.0.12,1093.93,4,r_prague > r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_prague,r_frankfurt,10.200.0.13,910.77,3,r_prague > r_vienna > r_munich > r_frankfurt
+r_prague,r_glasgow,10.200.0.14,1613.78,4,r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_prague,r_hamburg,10.200.0.15,534.08,2,r_prague > r_berlin > r_hamburg
+r_prague,r_helsinki,10.200.0.16,1556.99,4,r_prague > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_prague,r_krakow,10.200.0.17,736.03,2,r_prague > r_budapest > r_krakow
+r_prague,r_lisbon,10.200.0.18,2844.61,5,r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_prague,r_london,10.200.0.19,1262.44,4,r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_prague,r_lyon,10.200.0.20,1510.44,5,r_prague > r_vienna > r_munich > r_milan > r_zurich > r_lyon
+r_prague,r_madrid,10.200.0.21,2391.6,7,r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_prague,r_marseille,10.200.0.22,1644.3,4,r_prague > r_vienna > r_zagreb > r_rome > r_marseille
+r_prague,r_milan,10.200.0.23,954.23,3,r_prague > r_vienna > r_munich > r_milan
+r_prague,r_munich,10.200.0.24,606.53,2,r_prague > r_vienna > r_munich
+r_prague,r_oslo,10.200.0.25,1121.15,3,r_prague > r_berlin > r_copenhagen > r_oslo
+r_prague,r_palermo,10.200.0.26,1464.11,4,r_prague > r_vienna > r_zagreb > r_rome > r_palermo
+r_prague,r_paris,10.200.0.27,1337.15,5,r_prague > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_prague,r_prague,10.200.0.28,0.0,0,r_prague
+r_prague,r_rome,10.200.0.29,1039.68,3,r_prague > r_vienna > r_zagreb > r_rome
+r_prague,r_seville,10.200.0.30,2812.79,6,r_prague > r_vienna > r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_prague,r_sofia,10.200.0.31,1086.03,3,r_prague > r_budapest > r_belgrade > r_sofia
+r_prague,r_stockholm,10.200.0.32,1158.35,3,r_prague > r_berlin > r_copenhagen > r_stockholm
+r_prague,r_strasbourg,10.200.0.33,1091.98,4,r_prague > r_vienna > r_munich > r_frankfurt > r_strasbourg
+r_prague,r_vienna,10.200.0.34,250.42,1,r_prague > r_vienna
+r_prague,r_warsaw,10.200.0.35,797.26,2,r_prague > r_berlin > r_warsaw
+r_prague,r_zagreb,10.200.0.36,517.57,2,r_prague > r_vienna > r_zagreb
+r_prague,r_zurich,10.200.0.37,1171.92,4,r_prague > r_vienna > r_munich > r_milan > r_zurich
+r_rome,r_amsterdam,10.200.0.1,1557.34,7,r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_rome,r_athens,10.200.0.2,1333.09,2,r_rome > r_palermo > r_athens
+r_rome,r_barcelona,10.200.0.3,943.51,2,r_rome > r_marseille > r_barcelona
+r_rome,r_belgrade,10.200.0.4,889.6,2,r_rome > r_zagreb > r_belgrade
+r_rome,r_berlin,10.200.0.5,1320.36,4,r_rome > r_zagreb > r_vienna > r_prague > r_berlin
+r_rome,r_birmingham,10.200.0.6,1745.99,6,r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_birmingham
+r_rome,r_bordeaux,10.200.0.7,1109.47,2,r_rome > r_marseille > r_bordeaux
+r_rome,r_brussels,10.200.0.8,1384.06,6,r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels
+r_rome,r_budapest,10.200.0.9,1206.06,3,r_rome > r_zagreb > r_belgrade > r_budapest
+r_rome,r_copenhagen,10.200.0.10,1680.37,5,r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen
+r_rome,r_dublin,10.200.0.11,2046.51,6,r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_dublin
+r_rome,r_dusseldorf,10.200.0.12,1208.36,5,r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf
+r_rome,r_frankfurt,10.200.0.13,1025.2,4,r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt
+r_rome,r_glasgow,10.200.0.14,2152.33,7,r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london > r_birmingham > r_glasgow
+r_rome,r_hamburg,10.200.0.15,1419.97,5,r_rome > r_milan > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_rome,r_helsinki,10.200.0.16,2596.67,7,r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_rome,r_krakow,10.200.0.17,1496.76,4,r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow
+r_rome,r_lisbon,10.200.0.18,1950.92,4,r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_rome,r_london,10.200.0.19,1586.75,5,r_rome > r_milan > r_zurich > r_strasbourg > r_paris > r_london
+r_rome,r_lyon,10.200.0.20,878.27,2,r_rome > r_marseille > r_lyon
+r_rome,r_madrid,10.200.0.21,1450.58,3,r_rome > r_marseille > r_barcelona > r_madrid
+r_rome,r_marseille,10.200.0.22,604.62,1,r_rome > r_marseille
+r_rome,r_milan,10.200.0.23,480.74,1,r_rome > r_milan
+r_rome,r_munich,10.200.0.24,828.44,2,r_rome > r_milan > r_munich
+r_rome,r_oslo,10.200.0.25,2160.83,6,r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_oslo
+r_rome,r_palermo,10.200.0.26,424.43,1,r_rome > r_palermo
+r_rome,r_paris,10.200.0.27,1244.35,4,r_rome > r_milan > r_zurich > r_strasbourg > r_paris
+r_rome,r_prague,10.200.0.28,1039.68,3,r_rome > r_zagreb > r_vienna > r_prague
+r_rome,r_rome,10.200.0.29,0.0,0,r_rome
+r_rome,r_seville,10.200.0.30,1773.11,3,r_rome > r_marseille > r_barcelona > r_seville
+r_rome,r_sofia,10.200.0.31,1213.84,3,r_rome > r_zagreb > r_belgrade > r_sofia
+r_rome,r_stockholm,10.200.0.32,2198.03,6,r_rome > r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_rome,r_strasbourg,10.200.0.33,843.99,3,r_rome > r_milan > r_zurich > r_strasbourg
+r_rome,r_vienna,10.200.0.34,789.26,2,r_rome > r_zagreb > r_vienna
+r_rome,r_warsaw,10.200.0.35,1752.18,5,r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow > r_warsaw
+r_rome,r_zagreb,10.200.0.36,522.11,1,r_rome > r_zagreb
+r_rome,r_zurich,10.200.0.37,698.43,2,r_rome > r_milan > r_zurich
+r_seville,r_amsterdam,10.200.0.1,2256.54,3,r_seville > r_lisbon > r_london > r_amsterdam
+r_seville,r_athens,10.200.0.2,3106.2,5,r_seville > r_barcelona > r_marseille > r_rome > r_palermo > r_athens
+r_seville,r_barcelona,10.200.0.3,829.6,1,r_seville > r_barcelona
+r_seville,r_belgrade,10.200.0.4,2662.71,5,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade
+r_seville,r_berlin,10.200.0.5,2755.6,8,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin
+r_seville,r_birmingham,10.200.0.6,2055.48,3,r_seville > r_lisbon > r_london > r_birmingham
+r_seville,r_bordeaux,10.200.0.7,1370.38,3,r_seville > r_lisbon > r_madrid > r_bordeaux
+r_seville,r_brussels,10.200.0.8,2100.72,5,r_seville > r_barcelona > r_marseille > r_lyon > r_paris > r_brussels
+r_seville,r_budapest,10.200.0.9,2979.17,6,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest
+r_seville,r_copenhagen,10.200.0.10,3115.61,9,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_seville,r_dublin,10.200.0.11,2356.0,3,r_seville > r_lisbon > r_london > r_dublin
+r_seville,r_dusseldorf,10.200.0.12,2276.42,6,r_seville > r_barcelona > r_marseille > r_lyon > r_paris > r_brussels > r_dusseldorf
+r_seville,r_frankfurt,10.200.0.13,2107.43,6,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt
+r_seville,r_glasgow,10.200.0.14,2461.82,4,r_seville > r_lisbon > r_london > r_birmingham > r_glasgow
+r_seville,r_hamburg,10.200.0.15,2502.2,7,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_seville,r_helsinki,10.200.0.16,4031.91,11,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_seville,r_krakow,10.200.0.17,3269.87,7,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_budapest > r_krakow
+r_seville,r_lisbon,10.200.0.18,314.07,1,r_seville > r_lisbon
+r_seville,r_london,10.200.0.19,1896.24,2,r_seville > r_lisbon > r_london
+r_seville,r_lyon,10.200.0.20,1442.14,3,r_seville > r_barcelona > r_marseille > r_lyon
+r_seville,r_madrid,10.200.0.21,814.41,2,r_seville > r_lisbon > r_madrid
+r_seville,r_marseille,10.200.0.22,1168.49,2,r_seville > r_barcelona > r_marseille
+r_seville,r_milan,10.200.0.23,1998.35,5,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_milan
+r_seville,r_munich,10.200.0.24,2346.05,6,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_milan > r_munich
+r_seville,r_oslo,10.200.0.25,3596.07,10,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_seville,r_palermo,10.200.0.26,2197.54,4,r_seville > r_barcelona > r_marseille > r_rome > r_palermo
+r_seville,r_paris,10.200.0.27,1838.99,4,r_seville > r_barcelona > r_marseille > r_lyon > r_paris
+r_seville,r_prague,10.200.0.28,2812.79,6,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb > r_vienna > r_prague
+r_seville,r_rome,10.200.0.29,1773.11,3,r_seville > r_barcelona > r_marseille > r_rome
+r_seville,r_seville,10.200.0.30,0.0,0,r_seville
+r_seville,r_sofia,10.200.0.31,2986.95,6,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb > r_belgrade > r_sofia
+r_seville,r_stockholm,10.200.0.32,3633.27,10,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_seville,r_strasbourg,10.200.0.33,1926.22,5,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg
+r_seville,r_vienna,10.200.0.34,2562.37,5,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb > r_vienna
+r_seville,r_warsaw,10.200.0.35,3272.18,9,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_seville,r_zagreb,10.200.0.36,2295.22,4,r_seville > r_barcelona > r_marseille > r_rome > r_zagreb
+r_seville,r_zurich,10.200.0.37,1780.66,4,r_seville > r_barcelona > r_marseille > r_lyon > r_zurich
+r_sofia,r_amsterdam,10.200.0.1,1988.17,6,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam
+r_sofia,r_athens,10.200.0.2,529.41,1,r_sofia > r_athens
+r_sofia,r_barcelona,10.200.0.3,2157.35,5,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona
+r_sofia,r_belgrade,10.200.0.4,324.24,1,r_sofia > r_belgrade
+r_sofia,r_berlin,10.200.0.5,1366.71,4,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin
+r_sofia,r_birmingham,10.200.0.6,2507.71,8,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_sofia,r_bordeaux,10.200.0.7,2323.31,5,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille > r_bordeaux
+r_sofia,r_brussels,10.200.0.8,1978.09,7,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf > r_brussels
+r_sofia,r_budapest,10.200.0.9,640.7,2,r_sofia > r_belgrade > r_budapest
+r_sofia,r_copenhagen,10.200.0.10,1726.72,5,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_copenhagen
+r_sofia,r_dublin,10.200.0.11,2808.23,8,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_sofia,r_dusseldorf,10.200.0.12,1802.39,6,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_sofia,r_frankfurt,10.200.0.13,1619.23,5,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt
+r_sofia,r_glasgow,10.200.0.14,2699.81,7,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_sofia,r_hamburg,10.200.0.15,1620.11,5,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg
+r_sofia,r_helsinki,10.200.0.16,2100.91,5,r_sofia > r_belgrade > r_budapest > r_krakow > r_warsaw > r_helsinki
+r_sofia,r_krakow,10.200.0.17,931.4,3,r_sofia > r_belgrade > r_budapest > r_krakow
+r_sofia,r_lisbon,10.200.0.18,3164.76,7,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_sofia,r_london,10.200.0.19,2348.47,7,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_sofia,r_lyon,10.200.0.20,2092.11,5,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille > r_lyon
+r_sofia,r_madrid,10.200.0.21,2664.42,6,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid
+r_sofia,r_marseille,10.200.0.22,1818.46,4,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille
+r_sofia,r_milan,10.200.0.23,1662.69,5,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_milan
+r_sofia,r_munich,10.200.0.24,1314.99,4,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich
+r_sofia,r_oslo,10.200.0.25,2207.18,6,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_copenhagen > r_oslo
+r_sofia,r_palermo,10.200.0.26,1438.07,2,r_sofia > r_athens > r_palermo
+r_sofia,r_paris,10.200.0.27,2200.8,7,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_strasbourg > r_paris
+r_sofia,r_prague,10.200.0.28,1086.03,3,r_sofia > r_belgrade > r_budapest > r_prague
+r_sofia,r_rome,10.200.0.29,1213.84,3,r_sofia > r_belgrade > r_zagreb > r_rome
+r_sofia,r_seville,10.200.0.30,2986.95,6,r_sofia > r_belgrade > r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_sofia,r_sofia,10.200.0.31,0.0,0,r_sofia
+r_sofia,r_stockholm,10.200.0.32,2244.38,6,r_sofia > r_belgrade > r_budapest > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_sofia,r_strasbourg,10.200.0.33,1800.44,6,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_frankfurt > r_strasbourg
+r_sofia,r_vienna,10.200.0.34,958.88,3,r_sofia > r_belgrade > r_zagreb > r_vienna
+r_sofia,r_warsaw,10.200.0.35,1186.82,4,r_sofia > r_belgrade > r_budapest > r_krakow > r_warsaw
+r_sofia,r_zagreb,10.200.0.36,691.73,2,r_sofia > r_belgrade > r_zagreb
+r_sofia,r_zurich,10.200.0.37,1880.38,6,r_sofia > r_belgrade > r_zagreb > r_vienna > r_munich > r_milan > r_zurich
+r_stockholm,r_amsterdam,10.200.0.1,1499.13,4,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam
+r_stockholm,r_athens,10.200.0.2,2754.46,6,r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_athens
+r_stockholm,r_barcelona,10.200.0.3,2803.67,9,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_stockholm,r_belgrade,10.200.0.4,1920.14,5,r_stockholm > r_copenhagen > r_berlin > r_prague > r_budapest > r_belgrade
+r_stockholm,r_berlin,10.200.0.5,877.67,2,r_stockholm > r_copenhagen > r_berlin
+r_stockholm,r_birmingham,10.200.0.6,2018.67,6,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_stockholm,r_bordeaux,10.200.0.7,2432.62,7,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_stockholm,r_brussels,10.200.0.8,1672.41,5,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_stockholm,r_budapest,10.200.0.9,1603.68,4,r_stockholm > r_copenhagen > r_berlin > r_prague > r_budapest
+r_stockholm,r_copenhagen,10.200.0.10,517.66,1,r_stockholm > r_copenhagen
+r_stockholm,r_dublin,10.200.0.11,2319.19,6,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_stockholm,r_dusseldorf,10.200.0.12,1709.0,5,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_stockholm,r_frankfurt,10.200.0.13,1525.84,4,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt
+r_stockholm,r_glasgow,10.200.0.14,2210.77,5,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_stockholm,r_hamburg,10.200.0.15,1131.07,3,r_stockholm > r_copenhagen > r_berlin > r_hamburg
+r_stockholm,r_helsinki,10.200.0.16,398.64,1,r_stockholm > r_helsinki
+r_stockholm,r_krakow,10.200.0.17,1568.15,3,r_stockholm > r_helsinki > r_warsaw > r_krakow
+r_stockholm,r_lisbon,10.200.0.18,3441.6,6,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_stockholm,r_london,10.200.0.19,1859.43,5,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_london
+r_stockholm,r_lyon,10.200.0.20,2191.13,7,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_stockholm,r_madrid,10.200.0.21,2988.59,8,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_stockholm,r_marseille,10.200.0.22,2464.78,8,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_stockholm,r_milan,10.200.0.23,1730.61,4,r_stockholm > r_copenhagen > r_berlin > r_munich > r_milan
+r_stockholm,r_munich,10.200.0.24,1382.91,3,r_stockholm > r_copenhagen > r_berlin > r_munich
+r_stockholm,r_oslo,10.200.0.25,998.12,2,r_stockholm > r_copenhagen > r_oslo
+r_stockholm,r_palermo,10.200.0.26,2622.46,7,r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome > r_palermo
+r_stockholm,r_paris,10.200.0.27,1934.14,6,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_stockholm,r_prague,10.200.0.28,1158.35,3,r_stockholm > r_copenhagen > r_berlin > r_prague
+r_stockholm,r_rome,10.200.0.29,2198.03,6,r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb > r_rome
+r_stockholm,r_seville,10.200.0.30,3633.27,10,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_stockholm,r_sofia,10.200.0.31,2244.38,6,r_stockholm > r_copenhagen > r_berlin > r_prague > r_budapest > r_belgrade > r_sofia
+r_stockholm,r_stockholm,10.200.0.32,0.0,0,r_stockholm
+r_stockholm,r_strasbourg,10.200.0.33,1707.05,5,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_stockholm,r_vienna,10.200.0.34,1408.77,4,r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna
+r_stockholm,r_warsaw,10.200.0.35,1312.73,2,r_stockholm > r_helsinki > r_warsaw
+r_stockholm,r_zagreb,10.200.0.36,1675.92,5,r_stockholm > r_copenhagen > r_berlin > r_prague > r_vienna > r_zagreb
+r_stockholm,r_zurich,10.200.0.37,1852.61,6,r_stockholm > r_copenhagen > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_strasbourg,r_amsterdam,10.200.0.1,713.35,4,r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_strasbourg,r_athens,10.200.0.2,2177.08,5,r_strasbourg > r_zurich > r_milan > r_rome > r_palermo > r_athens
+r_strasbourg,r_barcelona,10.200.0.3,1096.62,4,r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_strasbourg,r_belgrade,10.200.0.4,1476.2,5,r_strasbourg > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade
+r_strasbourg,r_berlin,10.200.0.5,829.38,3,r_strasbourg > r_frankfurt > r_hamburg > r_berlin
+r_strasbourg,r_birmingham,10.200.0.6,902.0,3,r_strasbourg > r_paris > r_london > r_birmingham
+r_strasbourg,r_bordeaux,10.200.0.7,898.84,2,r_strasbourg > r_paris > r_bordeaux
+r_strasbourg,r_brussels,10.200.0.8,540.07,3,r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels
+r_strasbourg,r_budapest,10.200.0.9,1537.31,5,r_strasbourg > r_frankfurt > r_munich > r_vienna > r_prague > r_budapest
+r_strasbourg,r_copenhagen,10.200.0.10,1189.39,4,r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_strasbourg,r_dublin,10.200.0.11,1202.52,3,r_strasbourg > r_paris > r_london > r_dublin
+r_strasbourg,r_dusseldorf,10.200.0.12,364.37,2,r_strasbourg > r_frankfurt > r_dusseldorf
+r_strasbourg,r_frankfurt,10.200.0.13,181.21,1,r_strasbourg > r_frankfurt
+r_strasbourg,r_glasgow,10.200.0.14,1308.34,4,r_strasbourg > r_paris > r_london > r_birmingham > r_glasgow
+r_strasbourg,r_hamburg,10.200.0.15,575.98,2,r_strasbourg > r_frankfurt > r_hamburg
+r_strasbourg,r_helsinki,10.200.0.16,2105.69,6,r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_strasbourg,r_krakow,10.200.0.17,1601.38,5,r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_strasbourg,r_lisbon,10.200.0.18,1955.15,4,r_strasbourg > r_paris > r_bordeaux > r_madrid > r_lisbon
+r_strasbourg,r_london,10.200.0.19,742.76,2,r_strasbourg > r_paris > r_london
+r_strasbourg,r_lyon,10.200.0.20,484.08,2,r_strasbourg > r_zurich > r_lyon
+r_strasbourg,r_madrid,10.200.0.21,1454.81,3,r_strasbourg > r_paris > r_bordeaux > r_madrid
+r_strasbourg,r_marseille,10.200.0.22,757.73,3,r_strasbourg > r_zurich > r_lyon > r_marseille
+r_strasbourg,r_milan,10.200.0.23,363.25,2,r_strasbourg > r_zurich > r_milan
+r_strasbourg,r_munich,10.200.0.24,485.45,2,r_strasbourg > r_frankfurt > r_munich
+r_strasbourg,r_oslo,10.200.0.25,1669.85,5,r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_strasbourg,r_palermo,10.200.0.26,1268.42,4,r_strasbourg > r_zurich > r_milan > r_rome > r_palermo
+r_strasbourg,r_paris,10.200.0.27,400.36,1,r_strasbourg > r_paris
+r_strasbourg,r_prague,10.200.0.28,1091.98,4,r_strasbourg > r_frankfurt > r_munich > r_vienna > r_prague
+r_strasbourg,r_rome,10.200.0.29,843.99,3,r_strasbourg > r_zurich > r_milan > r_rome
+r_strasbourg,r_seville,10.200.0.30,1926.22,5,r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_strasbourg,r_sofia,10.200.0.31,1800.44,6,r_strasbourg > r_frankfurt > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_strasbourg,r_stockholm,10.200.0.32,1707.05,5,r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_strasbourg,r_strasbourg,10.200.0.33,0.0,0,r_strasbourg
+r_strasbourg,r_vienna,10.200.0.34,841.56,3,r_strasbourg > r_frankfurt > r_munich > r_vienna
+r_strasbourg,r_warsaw,10.200.0.35,1345.96,4,r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_strasbourg,r_zagreb,10.200.0.36,1108.71,4,r_strasbourg > r_frankfurt > r_munich > r_vienna > r_zagreb
+r_strasbourg,r_zurich,10.200.0.37,145.56,1,r_strasbourg > r_zurich
+r_vienna,r_amsterdam,10.200.0.1,1152.56,4,r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam
+r_vienna,r_athens,10.200.0.2,1345.69,2,r_vienna > r_zagreb > r_athens
+r_vienna,r_barcelona,10.200.0.3,1732.77,4,r_vienna > r_zagreb > r_rome > r_marseille > r_barcelona
+r_vienna,r_belgrade,10.200.0.4,634.64,2,r_vienna > r_zagreb > r_belgrade
+r_vienna,r_berlin,10.200.0.5,531.1,2,r_vienna > r_prague > r_berlin
+r_vienna,r_birmingham,10.200.0.6,1672.1,6,r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_vienna,r_bordeaux,10.200.0.7,1740.4,5,r_vienna > r_munich > r_frankfurt > r_strasbourg > r_paris > r_bordeaux
+r_vienna,r_brussels,10.200.0.8,1019.21,4,r_vienna > r_munich > r_frankfurt > r_dusseldorf > r_brussels
+r_vienna,r_budapest,10.200.0.9,695.75,2,r_vienna > r_prague > r_budapest
+r_vienna,r_copenhagen,10.200.0.10,891.11,3,r_vienna > r_prague > r_berlin > r_copenhagen
+r_vienna,r_dublin,10.200.0.11,1972.62,6,r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_vienna,r_dusseldorf,10.200.0.12,843.51,3,r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_vienna,r_frankfurt,10.200.0.13,660.35,2,r_vienna > r_munich > r_frankfurt
+r_vienna,r_glasgow,10.200.0.14,1864.2,5,r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_vienna,r_hamburg,10.200.0.15,784.5,3,r_vienna > r_prague > r_berlin > r_hamburg
+r_vienna,r_helsinki,10.200.0.16,1807.41,5,r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_vienna,r_krakow,10.200.0.17,986.45,3,r_vienna > r_prague > r_budapest > r_krakow
+r_vienna,r_lisbon,10.200.0.18,2740.18,6,r_vienna > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_vienna,r_london,10.200.0.19,1512.86,5,r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_vienna,r_lyon,10.200.0.20,1260.02,4,r_vienna > r_munich > r_milan > r_zurich > r_lyon
+r_vienna,r_madrid,10.200.0.21,2239.84,5,r_vienna > r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid
+r_vienna,r_marseille,10.200.0.22,1393.88,3,r_vienna > r_zagreb > r_rome > r_marseille
+r_vienna,r_milan,10.200.0.23,703.81,2,r_vienna > r_munich > r_milan
+r_vienna,r_munich,10.200.0.24,356.11,1,r_vienna > r_munich
+r_vienna,r_oslo,10.200.0.25,1371.57,4,r_vienna > r_prague > r_berlin > r_copenhagen > r_oslo
+r_vienna,r_palermo,10.200.0.26,1213.69,3,r_vienna > r_zagreb > r_rome > r_palermo
+r_vienna,r_paris,10.200.0.27,1241.92,4,r_vienna > r_munich > r_frankfurt > r_strasbourg > r_paris
+r_vienna,r_prague,10.200.0.28,250.42,1,r_vienna > r_prague
+r_vienna,r_rome,10.200.0.29,789.26,2,r_vienna > r_zagreb > r_rome
+r_vienna,r_seville,10.200.0.30,2562.37,5,r_vienna > r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_vienna,r_sofia,10.200.0.31,958.88,3,r_vienna > r_zagreb > r_belgrade > r_sofia
+r_vienna,r_stockholm,10.200.0.32,1408.77,4,r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_vienna,r_strasbourg,10.200.0.33,841.56,3,r_vienna > r_munich > r_frankfurt > r_strasbourg
+r_vienna,r_vienna,10.200.0.34,0.0,0,r_vienna
+r_vienna,r_warsaw,10.200.0.35,1047.68,3,r_vienna > r_prague > r_berlin > r_warsaw
+r_vienna,r_zagreb,10.200.0.36,267.15,1,r_vienna > r_zagreb
+r_vienna,r_zurich,10.200.0.37,921.5,3,r_vienna > r_munich > r_milan > r_zurich
+r_warsaw,r_amsterdam,10.200.0.1,1138.04,3,r_warsaw > r_berlin > r_hamburg > r_amsterdam
+r_warsaw,r_athens,10.200.0.2,1716.23,5,r_warsaw > r_krakow > r_budapest > r_belgrade > r_sofia > r_athens
+r_warsaw,r_barcelona,10.200.0.3,2442.58,8,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona
+r_warsaw,r_belgrade,10.200.0.4,862.58,3,r_warsaw > r_krakow > r_budapest > r_belgrade
+r_warsaw,r_berlin,10.200.0.5,516.58,1,r_warsaw > r_berlin
+r_warsaw,r_birmingham,10.200.0.6,1657.58,5,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_warsaw,r_bordeaux,10.200.0.7,2071.53,6,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux
+r_warsaw,r_brussels,10.200.0.8,1311.32,4,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels
+r_warsaw,r_budapest,10.200.0.9,546.12,2,r_warsaw > r_krakow > r_budapest
+r_warsaw,r_copenhagen,10.200.0.10,876.59,2,r_warsaw > r_berlin > r_copenhagen
+r_warsaw,r_dublin,10.200.0.11,1958.1,5,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_warsaw,r_dusseldorf,10.200.0.12,1347.91,4,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_dusseldorf
+r_warsaw,r_frankfurt,10.200.0.13,1164.75,3,r_warsaw > r_berlin > r_hamburg > r_frankfurt
+r_warsaw,r_glasgow,10.200.0.14,1849.68,4,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_warsaw,r_hamburg,10.200.0.15,769.98,2,r_warsaw > r_berlin > r_hamburg
+r_warsaw,r_helsinki,10.200.0.16,914.09,1,r_warsaw > r_helsinki
+r_warsaw,r_krakow,10.200.0.17,255.42,1,r_warsaw > r_krakow
+r_warsaw,r_lisbon,10.200.0.18,3080.51,5,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london > r_lisbon
+r_warsaw,r_london,10.200.0.19,1498.34,4,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_london
+r_warsaw,r_lyon,10.200.0.20,1830.04,6,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon
+r_warsaw,r_madrid,10.200.0.21,2627.5,7,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris > r_bordeaux > r_madrid
+r_warsaw,r_marseille,10.200.0.22,2103.69,7,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille
+r_warsaw,r_milan,10.200.0.23,1369.52,3,r_warsaw > r_berlin > r_munich > r_milan
+r_warsaw,r_munich,10.200.0.24,1021.82,2,r_warsaw > r_berlin > r_munich
+r_warsaw,r_oslo,10.200.0.25,1357.05,3,r_warsaw > r_berlin > r_copenhagen > r_oslo
+r_warsaw,r_palermo,10.200.0.26,2176.61,6,r_warsaw > r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome > r_palermo
+r_warsaw,r_paris,10.200.0.27,1573.05,5,r_warsaw > r_berlin > r_hamburg > r_amsterdam > r_brussels > r_paris
+r_warsaw,r_prague,10.200.0.28,797.26,2,r_warsaw > r_berlin > r_prague
+r_warsaw,r_rome,10.200.0.29,1752.18,5,r_warsaw > r_krakow > r_budapest > r_belgrade > r_zagreb > r_rome
+r_warsaw,r_seville,10.200.0.30,3272.18,9,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_warsaw,r_sofia,10.200.0.31,1186.82,4,r_warsaw > r_krakow > r_budapest > r_belgrade > r_sofia
+r_warsaw,r_stockholm,10.200.0.32,1312.73,2,r_warsaw > r_helsinki > r_stockholm
+r_warsaw,r_strasbourg,10.200.0.33,1345.96,4,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg
+r_warsaw,r_vienna,10.200.0.34,1047.68,3,r_warsaw > r_berlin > r_prague > r_vienna
+r_warsaw,r_warsaw,10.200.0.35,0.0,0,r_warsaw
+r_warsaw,r_zagreb,10.200.0.36,1230.07,4,r_warsaw > r_krakow > r_budapest > r_belgrade > r_zagreb
+r_warsaw,r_zurich,10.200.0.37,1491.52,5,r_warsaw > r_berlin > r_hamburg > r_frankfurt > r_strasbourg > r_zurich
+r_zagreb,r_amsterdam,10.200.0.1,1419.71,5,r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam
+r_zagreb,r_athens,10.200.0.2,1078.54,1,r_zagreb > r_athens
+r_zagreb,r_barcelona,10.200.0.3,1465.62,3,r_zagreb > r_rome > r_marseille > r_barcelona
+r_zagreb,r_belgrade,10.200.0.4,367.49,1,r_zagreb > r_belgrade
+r_zagreb,r_berlin,10.200.0.5,798.25,3,r_zagreb > r_vienna > r_prague > r_berlin
+r_zagreb,r_birmingham,10.200.0.6,1939.25,7,r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_birmingham
+r_zagreb,r_bordeaux,10.200.0.7,1631.58,3,r_zagreb > r_rome > r_marseille > r_bordeaux
+r_zagreb,r_brussels,10.200.0.8,1286.36,5,r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf > r_brussels
+r_zagreb,r_budapest,10.200.0.9,683.95,2,r_zagreb > r_belgrade > r_budapest
+r_zagreb,r_copenhagen,10.200.0.10,1158.26,4,r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen
+r_zagreb,r_dublin,10.200.0.11,2239.77,7,r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london > r_dublin
+r_zagreb,r_dusseldorf,10.200.0.12,1110.66,4,r_zagreb > r_vienna > r_munich > r_frankfurt > r_dusseldorf
+r_zagreb,r_frankfurt,10.200.0.13,927.5,3,r_zagreb > r_vienna > r_munich > r_frankfurt
+r_zagreb,r_glasgow,10.200.0.14,2131.35,6,r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_glasgow
+r_zagreb,r_hamburg,10.200.0.15,1051.65,4,r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg
+r_zagreb,r_helsinki,10.200.0.16,2074.56,6,r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_zagreb,r_krakow,10.200.0.17,974.65,3,r_zagreb > r_belgrade > r_budapest > r_krakow
+r_zagreb,r_lisbon,10.200.0.18,2473.03,5,r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_zagreb,r_london,10.200.0.19,1780.01,6,r_zagreb > r_vienna > r_prague > r_berlin > r_hamburg > r_amsterdam > r_london
+r_zagreb,r_lyon,10.200.0.20,1400.38,3,r_zagreb > r_rome > r_marseille > r_lyon
+r_zagreb,r_madrid,10.200.0.21,1972.69,4,r_zagreb > r_rome > r_marseille > r_barcelona > r_madrid
+r_zagreb,r_marseille,10.200.0.22,1126.73,2,r_zagreb > r_rome > r_marseille
+r_zagreb,r_milan,10.200.0.23,970.96,3,r_zagreb > r_vienna > r_munich > r_milan
+r_zagreb,r_munich,10.200.0.24,623.26,2,r_zagreb > r_vienna > r_munich
+r_zagreb,r_oslo,10.200.0.25,1638.72,5,r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_oslo
+r_zagreb,r_palermo,10.200.0.26,946.54,2,r_zagreb > r_rome > r_palermo
+r_zagreb,r_paris,10.200.0.27,1509.07,5,r_zagreb > r_vienna > r_munich > r_frankfurt > r_strasbourg > r_paris
+r_zagreb,r_prague,10.200.0.28,517.57,2,r_zagreb > r_vienna > r_prague
+r_zagreb,r_rome,10.200.0.29,522.11,1,r_zagreb > r_rome
+r_zagreb,r_seville,10.200.0.30,2295.22,4,r_zagreb > r_rome > r_marseille > r_barcelona > r_seville
+r_zagreb,r_sofia,10.200.0.31,691.73,2,r_zagreb > r_belgrade > r_sofia
+r_zagreb,r_stockholm,10.200.0.32,1675.92,5,r_zagreb > r_vienna > r_prague > r_berlin > r_copenhagen > r_stockholm
+r_zagreb,r_strasbourg,10.200.0.33,1108.71,4,r_zagreb > r_vienna > r_munich > r_frankfurt > r_strasbourg
+r_zagreb,r_vienna,10.200.0.34,267.15,1,r_zagreb > r_vienna
+r_zagreb,r_warsaw,10.200.0.35,1230.07,4,r_zagreb > r_belgrade > r_budapest > r_krakow > r_warsaw
+r_zagreb,r_zagreb,10.200.0.36,0.0,0,r_zagreb
+r_zagreb,r_zurich,10.200.0.37,1188.65,4,r_zagreb > r_vienna > r_munich > r_milan > r_zurich
+r_zurich,r_amsterdam,10.200.0.1,858.91,5,r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels > r_amsterdam
+r_zurich,r_athens,10.200.0.2,2031.52,4,r_zurich > r_milan > r_rome > r_palermo > r_athens
+r_zurich,r_barcelona,10.200.0.3,951.06,3,r_zurich > r_lyon > r_marseille > r_barcelona
+r_zurich,r_belgrade,10.200.0.4,1556.14,5,r_zurich > r_milan > r_munich > r_vienna > r_zagreb > r_belgrade
+r_zurich,r_berlin,10.200.0.5,974.94,4,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin
+r_zurich,r_birmingham,10.200.0.6,1047.56,4,r_zurich > r_strasbourg > r_paris > r_london > r_birmingham
+r_zurich,r_bordeaux,10.200.0.7,1044.4,3,r_zurich > r_strasbourg > r_paris > r_bordeaux
+r_zurich,r_brussels,10.200.0.8,685.63,4,r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf > r_brussels
+r_zurich,r_budapest,10.200.0.9,1617.25,5,r_zurich > r_milan > r_munich > r_vienna > r_prague > r_budapest
+r_zurich,r_copenhagen,10.200.0.10,1334.95,5,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen
+r_zurich,r_dublin,10.200.0.11,1348.08,4,r_zurich > r_strasbourg > r_paris > r_london > r_dublin
+r_zurich,r_dusseldorf,10.200.0.12,509.93,3,r_zurich > r_strasbourg > r_frankfurt > r_dusseldorf
+r_zurich,r_frankfurt,10.200.0.13,326.77,2,r_zurich > r_strasbourg > r_frankfurt
+r_zurich,r_glasgow,10.200.0.14,1453.9,5,r_zurich > r_strasbourg > r_paris > r_london > r_birmingham > r_glasgow
+r_zurich,r_hamburg,10.200.0.15,721.54,3,r_zurich > r_strasbourg > r_frankfurt > r_hamburg
+r_zurich,r_helsinki,10.200.0.16,2251.25,7,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm > r_helsinki
+r_zurich,r_krakow,10.200.0.17,1746.94,6,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw > r_krakow
+r_zurich,r_lisbon,10.200.0.18,1958.47,5,r_zurich > r_lyon > r_marseille > r_barcelona > r_madrid > r_lisbon
+r_zurich,r_london,10.200.0.19,888.32,3,r_zurich > r_strasbourg > r_paris > r_london
+r_zurich,r_lyon,10.200.0.20,338.52,1,r_zurich > r_lyon
+r_zurich,r_madrid,10.200.0.21,1458.13,4,r_zurich > r_lyon > r_marseille > r_barcelona > r_madrid
+r_zurich,r_marseille,10.200.0.22,612.17,2,r_zurich > r_lyon > r_marseille
+r_zurich,r_milan,10.200.0.23,217.69,1,r_zurich > r_milan
+r_zurich,r_munich,10.200.0.24,565.39,2,r_zurich > r_milan > r_munich
+r_zurich,r_oslo,10.200.0.25,1815.41,6,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_oslo
+r_zurich,r_palermo,10.200.0.26,1122.86,3,r_zurich > r_milan > r_rome > r_palermo
+r_zurich,r_paris,10.200.0.27,545.92,2,r_zurich > r_strasbourg > r_paris
+r_zurich,r_prague,10.200.0.28,1171.92,4,r_zurich > r_milan > r_munich > r_vienna > r_prague
+r_zurich,r_rome,10.200.0.29,698.43,2,r_zurich > r_milan > r_rome
+r_zurich,r_seville,10.200.0.30,1780.66,4,r_zurich > r_lyon > r_marseille > r_barcelona > r_seville
+r_zurich,r_sofia,10.200.0.31,1880.38,6,r_zurich > r_milan > r_munich > r_vienna > r_zagreb > r_belgrade > r_sofia
+r_zurich,r_stockholm,10.200.0.32,1852.61,6,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_copenhagen > r_stockholm
+r_zurich,r_strasbourg,10.200.0.33,145.56,1,r_zurich > r_strasbourg
+r_zurich,r_vienna,10.200.0.34,921.5,3,r_zurich > r_milan > r_munich > r_vienna
+r_zurich,r_warsaw,10.200.0.35,1491.52,5,r_zurich > r_strasbourg > r_frankfurt > r_hamburg > r_berlin > r_warsaw
+r_zurich,r_zagreb,10.200.0.36,1188.65,4,r_zurich > r_milan > r_munich > r_vienna > r_zagreb
+r_zurich,r_zurich,10.200.0.37,0.0,0,r_zurich

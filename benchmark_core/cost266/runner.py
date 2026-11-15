@@ -391,7 +391,7 @@ def _evaluate(config, spec, run, metadata, remaining):
         metadata['checker_seconds'] = metadata.get('checker_seconds',0) + time.monotonic()-started
 
 
-def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False) -> Path:
+def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, *, resume=False, rerun=False, checker_lock=None) -> Path:
     invocation_started = time.monotonic()
     action, run = plan(config,spec,cell,inventory,preparation,resume=resume,rerun=rerun)
     if action in ('SKIP','MISSING'):
@@ -458,8 +458,9 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
     started = invocation_started
     previous_active = metadata.get('active_seconds',0)
     outcome = None
+    checker_wait_seconds = 0.0
     def remaining():
-        return spec.total_timeout - previous_active - (time.monotonic()-started)
+        return spec.total_timeout - previous_active - (time.monotonic()-started-checker_wait_seconds)
     def execute_stages(continuous=None):
         for index in range(len(completed),len(sent)):
             if rerun:
@@ -582,7 +583,16 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
         if remaining() < 1 and not rerun:
             raise TimeoutError('Budget totale esaurito prima del checker finale')
         # Rivalutazione ha un budget checker esplicito e non riapre il budget AUT.
-        outcome = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
+        if checker_lock is None:
+            outcome = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
+        else:
+            metadata.update(pipeline_state='CHECKER_QUEUED')
+            write_json(run/'manifest.json',metadata)
+            wait_started = time.monotonic()
+            with checker_lock:
+                checker_wait_seconds = time.monotonic()-wait_started
+                metadata['checker_queue_seconds'] = checker_wait_seconds
+                outcome = _evaluate(config,spec,run,metadata,spec.checker_timeout if rerun else remaining())
     except BaseException as exc:
         if metadata['pipeline_state'] != 'CHECKER_FAILED':
             metadata.update(pipeline_state='INCOMPLETE',aut_execution_success=len(completed)==len(sent))
@@ -597,7 +607,7 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
                 'sandbox_name','sandbox_id','thread_id','session_count','sandbox_count',
                 'writable_sandbox_count','protected_sandbox_count','context_continuity_verified')})
             metadata['session_cleanup_ok'] = session_record.get('cleanup_ok')
-        metadata['active_seconds'] = previous_active + time.monotonic()-started
+        metadata['active_seconds'] = previous_active + time.monotonic()-started-checker_wait_seconds
         metadata['completed_at'] = utc_now()
         if tree_hash(spec.dataset/'lab') != expected['baseline_sha256']:
             metadata.update(pipeline_state='INCOMPLETE',task_success=None,pipeline_error='Baseline sorgente alterata')
@@ -606,7 +616,7 @@ def execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict, 
         write_json(run/'logs/diff.json',changes)
         metrics = collect_metrics(run,metadata,checker_outcome=outcome)
         metrics['file_changes'] = changes
-        metadata['active_seconds'] = previous_active + time.monotonic()-started
+        metadata['active_seconds'] = previous_active + time.monotonic()-started-checker_wait_seconds
         metrics['timing']['total_seconds'] = metadata['active_seconds']
         write_json(run/'evaluation/metrics.json',metrics)
         write_json(run/'manifest.json',metadata)

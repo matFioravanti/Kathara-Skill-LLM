@@ -22,7 +22,7 @@ Dalla checkout, dopo aver verificato asset e prerequisiti:
 
 | Modalità | Configurazione predefinita | Protocollo / strategia | Richieste funzionali |
 |---|---|---|---|
-| `one_shot` | `experiments/cost266.yaml` | v2 / `one_shot` | Un prompt completo, percorso originale |
+| `one_shot` | `experiments/cost266_one_shot.yaml` | v2 / `one_shot` | Un prompt completo, percorso originale |
 | `incremental_isolated` | `experiments/cost266_v1.yaml` | v1 / `incremental` | Sei sessioni indipendenti, file dal checkpoint precedente |
 | `incremental_continuous` | `experiments/cost266.yaml` | v2 / `incremental` | Sei turni, un thread e una sandbox scrivibile |
 
@@ -30,6 +30,18 @@ Tutte terminano con il checker finale. La modalità viene risolta sull'host
 prima del dataset, della pianificazione e di qualunque avvio AUT. `--mode`
 è un alias di `--execution-mode`. I filtri, resume e rivalutazione restano
 disponibili:
+
+Il piano one-shot predefinito usa solo T1 e le cinque modalità `no_skill`,
+`auto`, `dns_only`, `creation_only` e `both_forced`, una ripetizione ciascuna.
+Le osservazioni sono separate in `runs/cost266_one_shot/` e i report in
+`results/cost266/experiments/cost266_one_shot/`. Le run degli altri piani
+non vengono spostate. Senza `--execution-mode` resta selezionato il piano
+storico `cost266.yaml`.
+Con `--execution-mode one_shot` si avviano fino a cinque generazioni in
+parallelo; i checker finali sono serializzati, uno alla volta. Il numero di
+generazioni si può cambiare con `--generation-workers N`. L'attesa del checker
+è registrata nel manifest come `checker_queue_seconds` ed esclusa dal budget
+attivo della run. Il report è pubblicato dopo il completamento del gruppo.
 
 ```bash
 .venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous --prompt-type T1 --skill-mode auto --only-replicate 1 --dry-run
@@ -59,7 +71,7 @@ e richiedono l'ambiente Docker/Kathara funzionante.
 
 `benchmark.yaml` conserva agente, modello, effort, Skill e backend attivi.
 Non vengono modificati autenticazione, policy di rete o memorie. Il piano
-mantiene `no_skill` e `auto`. Con `--execution-mode`, senza file sperimentale
+incrementale predefinito mantiene `no_skill` e `auto`. Con `--execution-mode`, senza file sperimentale
 esplicito, `--skill-mode` seleziona il trattamento richiesto anche per una Skill
 forzata. Non viene riscritto lo YAML. Con un file esplicito, la Skill richiesta
 deve essere inclusa in `skill_modes`; senza `--execution-mode` il parametro
@@ -79,9 +91,10 @@ delle Skill in `benchmark.yaml` non vengono modificati.
 Il dry-run stampa modalità, protocollo, experiment_id, prompt type, Skill,
 ripetizione, numero di turni, policy di sessione/sandbox e checker finale.
 Non avvia Codex, Docker o Kathara e non crea osservazioni. Continua però a
-verificare gli hash del dataset: la discrepanza locale già documentata blocca
-anche il dry-run. Test e verifica del selettore usano dataset temporanei
-coerenti; baseline e `preparation.json` della checkout restano invariati.
+verificare gli hash del dataset. Il piano one-shot usa la copia rigenerata
+`experiments/cost266_one_shot_data_v1`, verificata rispetto ai sorgenti canonici;
+la discrepanza documentata continua a riguardare il dataset storico
+`experiments/cost266_data`, che rimane invariato.
 
 ## Ciclo di vita
 

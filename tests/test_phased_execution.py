@@ -1,6 +1,9 @@
 """Offline smoke tests for phased orchestration (no Docker or LLM)."""
 from concurrent.futures import Future
 from pathlib import Path
+import json
+import subprocess
+import sys
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -109,15 +112,15 @@ def test_invalid_worker_count_fails_closed(tmp_path):
     config = SimpleNamespace(root=tmp_path,
                              data={"docker_sandbox": {"execution_backend": "docker_sandbox"}})
     with pytest.raises(ValueError, match="generation_workers"):
-        execute_phased(config, None, {}, "codex", [], {}, generation_workers=6,
+        execute_phased(config, None, {}, "codex", [], {}, generation_workers=11,
                        checker_workers={"small": 2, "medium": 2, "large": 1},
                        update_reports=lambda: None)
 
 
 @pytest.mark.parametrize("level, count", [
     ("small", 0),
-    ("small", 5),
-    ("medium", 5),
+    ("small", 7),
+    ("medium", 7),
     ("large", 3),
 ])
 def test_invalid_checker_count_fails_closed(tmp_path, level, count):
@@ -151,9 +154,12 @@ def test_five_generators_and_four_checkers_keep_phase_boundaries(tmp_path):
     )
     stages = []
     updates = []
+    worker_limits = []
 
     def generated(cfg, scenario, agent, cell):
         stages.append(("generate", cell.task_level))
+        worker_limits.append(cfg.data["parallel_execution"]["generation"]["workers"])
+        assert cfg.data["parallel_execution"]["checker"]["small_workers"] == 4
         run = tmp_path / f"{cell.task_level}_{cell.prompt_type}"
         run.mkdir()
         (run / "manifest.json").write_text('{"pipeline_state":"AUT_COMPLETED"}')
@@ -182,3 +188,23 @@ def test_five_generators_and_four_checkers_keep_phase_boundaries(tmp_path):
     assert stages[10:] == [("check", "small")] * 5 + [("check", "medium")] * 5
     assert InlinePool.starts == [5, 4, 4, 4, 4]
     assert len(updates) == 5  # generation + four checker waves
+    assert worker_limits == [5] * 10
+    assert "parallel_execution" not in config.data
+
+
+@pytest.mark.parametrize("generators,checkers", [(5, 4), (10, 6)])
+def test_real_spawn_pool_reaches_requested_limits_without_containers(tmp_path, generators, checkers):
+    """Unlike InlinePool, this proves overlap in separate OS processes."""
+    root = Path(__file__).resolve().parents[1]
+    output = tmp_path / "probe"
+    result = subprocess.run(
+        [sys.executable, "-B", str(root / "scripts/verify_parallel_workers.py"),
+         "--sandbox-workers", str(generators), "--checker-workers", str(checkers), "--output", str(output)],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    report = json.loads((output / "report.json").read_text())
+    assert report["generation_peak"] == generators and len(report["generation_pids"]) == generators
+    assert report["checker_peak"] == checkers and report["phases_separated"]
+    assert report["sandbox_peak"] == report["actual_checker_process_peak"] == 0
+    assert not report["failed"]

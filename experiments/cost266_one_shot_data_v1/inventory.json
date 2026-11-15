@@ -1,0 +1,6201 @@
+{
+  "schema": 1,
+  "synthetic": false,
+  "roles": [
+    {
+      "device": "c266_cities",
+      "role": "cities",
+      "router": "r_rome",
+      "address": "10.210.28.10"
+    },
+    {
+      "device": "c266_client_1",
+      "role": "client_1",
+      "router": "r_athens",
+      "address": "10.210.1.10"
+    },
+    {
+      "device": "c266_client_2",
+      "role": "client_2",
+      "router": "r_lisbon",
+      "address": "10.210.17.10"
+    },
+    {
+      "device": "c266_countries",
+      "role": "countries",
+      "router": "r_frankfurt",
+      "address": "10.210.12.10"
+    },
+    {
+      "device": "c266_functional_1",
+      "role": "functional_1",
+      "router": "r_london",
+      "address": "10.210.18.10"
+    },
+    {
+      "device": "c266_functional_2",
+      "role": "functional_2",
+      "router": "r_helsinki",
+      "address": "10.210.15.10"
+    },
+    {
+      "device": "c266_resolver_1",
+      "role": "resolver_1",
+      "router": "r_warsaw",
+      "address": "10.210.34.10"
+    },
+    {
+      "device": "c266_resolver_2",
+      "role": "resolver_2",
+      "router": "r_zurich",
+      "address": "10.210.36.10"
+    },
+    {
+      "device": "c266_root",
+      "role": "root",
+      "router": "r_amsterdam",
+      "address": "10.210.0.10"
+    },
+    {
+      "device": "c266_subzones",
+      "role": "subzones",
+      "router": "r_paris",
+      "address": "10.210.26.10"
+    },
+    {
+      "device": "c266_tld_europa",
+      "role": "tld_europa",
+      "router": "r_amsterdam",
+      "address": "10.210.0.11"
+    },
+    {
+      "device": "c266_tld_infra",
+      "role": "tld_infra",
+      "router": "r_frankfurt",
+      "address": "10.210.12.11"
+    },
+    {
+      "device": "c266_tld_lab",
+      "role": "tld_lab",
+      "router": "r_paris",
+      "address": "10.210.26.11"
+    },
+    {
+      "device": "c266_tld_research",
+      "role": "tld_research",
+      "router": "r_frankfurt",
+      "address": "10.210.12.12"
+    },
+    {
+      "device": "c266_tld_services",
+      "role": "tld_services",
+      "router": "r_rome",
+      "address": "10.210.28.11"
+    },
+    {
+      "device": "c266_tld_test",
+      "role": "tld_test",
+      "router": "r_london",
+      "address": "10.210.18.11"
+    }
+  ],
+  "zones": [
+    {
+      "name": ".",
+      "parent": null,
+      "kind": "root",
+      "stage": 1,
+      "device": "c266_root",
+      "address": "10.210.0.10",
+      "ns": "a.root-servers.",
+      "soa_contact": "hostmaster.root-servers.",
+      "records": []
+    },
+    {
+      "name": "europa.",
+      "parent": ".",
+      "kind": "tld",
+      "stage": 2,
+      "device": "c266_tld_europa",
+      "address": "10.210.0.11",
+      "ns": "ns1.europa.",
+      "soa_contact": "hostmaster.europa.",
+      "records": []
+    },
+    {
+      "name": "infra.",
+      "parent": ".",
+      "kind": "tld",
+      "stage": 2,
+      "device": "c266_tld_infra",
+      "address": "10.210.12.11",
+      "ns": "ns1.infra.",
+      "soa_contact": "hostmaster.infra.",
+      "records": []
+    },
+    {
+      "name": "lab.",
+      "parent": ".",
+      "kind": "tld",
+      "stage": 2,
+      "device": "c266_tld_lab",
+      "address": "10.210.26.11",
+      "ns": "ns1.lab.",
+      "soa_contact": "hostmaster.lab.",
+      "records": []
+    },
+    {
+      "name": "research.",
+      "parent": ".",
+      "kind": "tld",
+      "stage": 2,
+      "device": "c266_tld_research",
+      "address": "10.210.12.12",
+      "ns": "ns1.research.",
+      "soa_contact": "hostmaster.research.",
+      "records": []
+    },
+    {
+      "name": "services.",
+      "parent": ".",
+      "kind": "tld",
+      "stage": 2,
+      "device": "c266_tld_services",
+      "address": "10.210.28.11",
+      "ns": "ns1.services.",
+      "soa_contact": "hostmaster.services.",
+      "records": []
+    },
+    {
+      "name": "test.",
+      "parent": ".",
+      "kind": "tld",
+      "stage": 2,
+      "device": "c266_tld_test",
+      "address": "10.210.18.11",
+      "ns": "ns1.test.",
+      "soa_contact": "hostmaster.test.",
+      "records": []
+    },
+    {
+      "name": "api.services.",
+      "parent": "services.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.api.services.",
+      "soa_contact": "hostmaster.api.services.",
+      "records": []
+    },
+    {
+      "name": "at.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.at.europa.",
+      "soa_contact": "hostmaster.at.europa.",
+      "records": []
+    },
+    {
+      "name": "be.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.be.europa.",
+      "soa_contact": "hostmaster.be.europa.",
+      "records": []
+    },
+    {
+      "name": "benchmark.lab.",
+      "parent": "lab.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.benchmark.lab.",
+      "soa_contact": "hostmaster.benchmark.lab.",
+      "records": []
+    },
+    {
+      "name": "bg.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.bg.europa.",
+      "soa_contact": "hostmaster.bg.europa.",
+      "records": []
+    },
+    {
+      "name": "ch.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.ch.europa.",
+      "soa_contact": "hostmaster.ch.europa.",
+      "records": []
+    },
+    {
+      "name": "checker.lab.",
+      "parent": "lab.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.checker.lab.",
+      "soa_contact": "hostmaster.checker.lab.",
+      "records": []
+    },
+    {
+      "name": "clients.lab.",
+      "parent": "lab.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.clients.lab.",
+      "soa_contact": "hostmaster.clients.lab.",
+      "records": []
+    },
+    {
+      "name": "cz.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.cz.europa.",
+      "soa_contact": "hostmaster.cz.europa.",
+      "records": []
+    },
+    {
+      "name": "datasets.research.",
+      "parent": "research.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.datasets.research.",
+      "soa_contact": "hostmaster.datasets.research.",
+      "records": []
+    },
+    {
+      "name": "de.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.de.europa.",
+      "soa_contact": "hostmaster.de.europa.",
+      "records": []
+    },
+    {
+      "name": "dk.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.dk.europa.",
+      "soa_contact": "hostmaster.dk.europa.",
+      "records": []
+    },
+    {
+      "name": "dns.infra.",
+      "parent": "infra.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.dns.infra.",
+      "soa_contact": "hostmaster.dns.infra.",
+      "records": []
+    },
+    {
+      "name": "dnssec.test.",
+      "parent": "test.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.dnssec.test.",
+      "soa_contact": "hostmaster.dnssec.test.",
+      "records": []
+    },
+    {
+      "name": "es.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.es.europa.",
+      "soa_contact": "hostmaster.es.europa.",
+      "records": []
+    },
+    {
+      "name": "experiments.research.",
+      "parent": "research.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.experiments.research.",
+      "soa_contact": "hostmaster.experiments.research.",
+      "records": []
+    },
+    {
+      "name": "fi.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.fi.europa.",
+      "soa_contact": "hostmaster.fi.europa.",
+      "records": []
+    },
+    {
+      "name": "fr.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.fr.europa.",
+      "soa_contact": "hostmaster.fr.europa.",
+      "records": []
+    },
+    {
+      "name": "gr.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.gr.europa.",
+      "soa_contact": "hostmaster.gr.europa.",
+      "records": []
+    },
+    {
+      "name": "hr.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.hr.europa.",
+      "soa_contact": "hostmaster.hr.europa.",
+      "records": []
+    },
+    {
+      "name": "hu.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.hu.europa.",
+      "soa_contact": "hostmaster.hu.europa.",
+      "records": []
+    },
+    {
+      "name": "ie.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.ie.europa.",
+      "soa_contact": "hostmaster.ie.europa.",
+      "records": []
+    },
+    {
+      "name": "it.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.it.europa.",
+      "soa_contact": "hostmaster.it.europa.",
+      "records": []
+    },
+    {
+      "name": "mail.services.",
+      "parent": "services.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.mail.services.",
+      "soa_contact": "hostmaster.mail.services.",
+      "records": []
+    },
+    {
+      "name": "monitoring.infra.",
+      "parent": "infra.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.monitoring.infra.",
+      "soa_contact": "hostmaster.monitoring.infra.",
+      "records": []
+    },
+    {
+      "name": "negative.test.",
+      "parent": "test.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.negative.test.",
+      "soa_contact": "hostmaster.negative.test.",
+      "records": []
+    },
+    {
+      "name": "nl.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.nl.europa.",
+      "soa_contact": "hostmaster.nl.europa.",
+      "records": []
+    },
+    {
+      "name": "no.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.no.europa.",
+      "soa_contact": "hostmaster.no.europa.",
+      "records": []
+    },
+    {
+      "name": "pl.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.pl.europa.",
+      "soa_contact": "hostmaster.pl.europa.",
+      "records": []
+    },
+    {
+      "name": "positive.test.",
+      "parent": "test.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.positive.test.",
+      "soa_contact": "hostmaster.positive.test.",
+      "records": []
+    },
+    {
+      "name": "pt.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.pt.europa.",
+      "soa_contact": "hostmaster.pt.europa.",
+      "records": []
+    },
+    {
+      "name": "routing.infra.",
+      "parent": "infra.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.routing.infra.",
+      "soa_contact": "hostmaster.routing.infra.",
+      "records": []
+    },
+    {
+      "name": "rs.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.rs.europa.",
+      "soa_contact": "hostmaster.rs.europa.",
+      "records": []
+    },
+    {
+      "name": "se.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.se.europa.",
+      "soa_contact": "hostmaster.se.europa.",
+      "records": []
+    },
+    {
+      "name": "uk.europa.",
+      "parent": "europa.",
+      "kind": "paese",
+      "stage": 3,
+      "device": "c266_countries",
+      "address": "10.210.12.10",
+      "ns": "ns1.uk.europa.",
+      "soa_contact": "hostmaster.uk.europa.",
+      "records": []
+    },
+    {
+      "name": "universities.research.",
+      "parent": "research.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.universities.research.",
+      "soa_contact": "hostmaster.universities.research.",
+      "records": []
+    },
+    {
+      "name": "web.services.",
+      "parent": "services.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_1",
+      "address": "10.210.18.10",
+      "ns": "ns1.web.services.",
+      "soa_contact": "hostmaster.web.services.",
+      "records": []
+    },
+    {
+      "name": "amsterdam.nl.europa.",
+      "parent": "nl.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.amsterdam.nl.europa.",
+      "soa_contact": "hostmaster.amsterdam.nl.europa.",
+      "records": [
+        {
+          "name": "amsterdam.nl.europa.",
+          "type": "MX",
+          "value": "10 mail.amsterdam.nl.europa."
+        },
+        {
+          "name": "www.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "athens.gr.europa.",
+      "parent": "gr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.athens.gr.europa.",
+      "soa_contact": "hostmaster.athens.gr.europa.",
+      "records": [
+        {
+          "name": "athens.gr.europa.",
+          "type": "MX",
+          "value": "10 mail.athens.gr.europa."
+        },
+        {
+          "name": "www.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "barcelona.es.europa.",
+      "parent": "es.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.barcelona.es.europa.",
+      "soa_contact": "hostmaster.barcelona.es.europa.",
+      "records": [
+        {
+          "name": "barcelona.es.europa.",
+          "type": "MX",
+          "value": "10 mail.barcelona.es.europa."
+        },
+        {
+          "name": "www.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "belgrade.rs.europa.",
+      "parent": "rs.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.belgrade.rs.europa.",
+      "soa_contact": "hostmaster.belgrade.rs.europa.",
+      "records": [
+        {
+          "name": "belgrade.rs.europa.",
+          "type": "MX",
+          "value": "10 mail.belgrade.rs.europa."
+        },
+        {
+          "name": "www.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "berlin.de.europa.",
+      "parent": "de.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.berlin.de.europa.",
+      "soa_contact": "hostmaster.berlin.de.europa.",
+      "records": [
+        {
+          "name": "berlin.de.europa.",
+          "type": "MX",
+          "value": "10 mail.berlin.de.europa."
+        },
+        {
+          "name": "www.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "birmingham.uk.europa.",
+      "parent": "uk.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.birmingham.uk.europa.",
+      "soa_contact": "hostmaster.birmingham.uk.europa.",
+      "records": [
+        {
+          "name": "birmingham.uk.europa.",
+          "type": "MX",
+          "value": "10 mail.birmingham.uk.europa."
+        },
+        {
+          "name": "www.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "bordeaux.fr.europa.",
+      "parent": "fr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.bordeaux.fr.europa.",
+      "soa_contact": "hostmaster.bordeaux.fr.europa.",
+      "records": [
+        {
+          "name": "bordeaux.fr.europa.",
+          "type": "MX",
+          "value": "10 mail.bordeaux.fr.europa."
+        },
+        {
+          "name": "www.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "brussels.be.europa.",
+      "parent": "be.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.brussels.be.europa.",
+      "soa_contact": "hostmaster.brussels.be.europa.",
+      "records": [
+        {
+          "name": "brussels.be.europa.",
+          "type": "MX",
+          "value": "10 mail.brussels.be.europa."
+        },
+        {
+          "name": "www.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "budapest.hu.europa.",
+      "parent": "hu.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.budapest.hu.europa.",
+      "soa_contact": "hostmaster.budapest.hu.europa.",
+      "records": [
+        {
+          "name": "budapest.hu.europa.",
+          "type": "MX",
+          "value": "10 mail.budapest.hu.europa."
+        },
+        {
+          "name": "www.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "copenhagen.dk.europa.",
+      "parent": "dk.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.copenhagen.dk.europa.",
+      "soa_contact": "hostmaster.copenhagen.dk.europa.",
+      "records": [
+        {
+          "name": "copenhagen.dk.europa.",
+          "type": "MX",
+          "value": "10 mail.copenhagen.dk.europa."
+        },
+        {
+          "name": "www.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "delegation.negative.test.",
+      "parent": "negative.test.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.delegation.negative.test.",
+      "soa_contact": "hostmaster.delegation.negative.test.",
+      "records": []
+    },
+    {
+      "name": "dublin.ie.europa.",
+      "parent": "ie.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.dublin.ie.europa.",
+      "soa_contact": "hostmaster.dublin.ie.europa.",
+      "records": [
+        {
+          "name": "dublin.ie.europa.",
+          "type": "MX",
+          "value": "10 mail.dublin.ie.europa."
+        },
+        {
+          "name": "www.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "dusseldorf.de.europa.",
+      "parent": "de.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.dusseldorf.de.europa.",
+      "soa_contact": "hostmaster.dusseldorf.de.europa.",
+      "records": [
+        {
+          "name": "dusseldorf.de.europa.",
+          "type": "MX",
+          "value": "10 mail.dusseldorf.de.europa."
+        },
+        {
+          "name": "www.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "failures.experiments.research.",
+      "parent": "experiments.research.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.failures.experiments.research.",
+      "soa_contact": "hostmaster.failures.experiments.research.",
+      "records": []
+    },
+    {
+      "name": "frankfurt.de.europa.",
+      "parent": "de.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.frankfurt.de.europa.",
+      "soa_contact": "hostmaster.frankfurt.de.europa.",
+      "records": [
+        {
+          "name": "frankfurt.de.europa.",
+          "type": "MX",
+          "value": "10 mail.frankfurt.de.europa."
+        },
+        {
+          "name": "www.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "glasgow.uk.europa.",
+      "parent": "uk.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.glasgow.uk.europa.",
+      "soa_contact": "hostmaster.glasgow.uk.europa.",
+      "records": [
+        {
+          "name": "glasgow.uk.europa.",
+          "type": "MX",
+          "value": "10 mail.glasgow.uk.europa."
+        },
+        {
+          "name": "www.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "hamburg.de.europa.",
+      "parent": "de.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.hamburg.de.europa.",
+      "soa_contact": "hostmaster.hamburg.de.europa.",
+      "records": [
+        {
+          "name": "hamburg.de.europa.",
+          "type": "MX",
+          "value": "10 mail.hamburg.de.europa."
+        },
+        {
+          "name": "www.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "helsinki.fi.europa.",
+      "parent": "fi.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.helsinki.fi.europa.",
+      "soa_contact": "hostmaster.helsinki.fi.europa.",
+      "records": [
+        {
+          "name": "helsinki.fi.europa.",
+          "type": "MX",
+          "value": "10 mail.helsinki.fi.europa."
+        },
+        {
+          "name": "www.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "krakow.pl.europa.",
+      "parent": "pl.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.krakow.pl.europa.",
+      "soa_contact": "hostmaster.krakow.pl.europa.",
+      "records": [
+        {
+          "name": "krakow.pl.europa.",
+          "type": "MX",
+          "value": "10 mail.krakow.pl.europa."
+        },
+        {
+          "name": "www.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "latency.experiments.research.",
+      "parent": "experiments.research.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.latency.experiments.research.",
+      "soa_contact": "hostmaster.latency.experiments.research.",
+      "records": []
+    },
+    {
+      "name": "lisbon.pt.europa.",
+      "parent": "pt.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.lisbon.pt.europa.",
+      "soa_contact": "hostmaster.lisbon.pt.europa.",
+      "records": [
+        {
+          "name": "lisbon.pt.europa.",
+          "type": "MX",
+          "value": "10 mail.lisbon.pt.europa."
+        },
+        {
+          "name": "www.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "london.uk.europa.",
+      "parent": "uk.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.london.uk.europa.",
+      "soa_contact": "hostmaster.london.uk.europa.",
+      "records": [
+        {
+          "name": "london.uk.europa.",
+          "type": "MX",
+          "value": "10 mail.london.uk.europa."
+        },
+        {
+          "name": "www.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "lyon.fr.europa.",
+      "parent": "fr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.lyon.fr.europa.",
+      "soa_contact": "hostmaster.lyon.fr.europa.",
+      "records": [
+        {
+          "name": "lyon.fr.europa.",
+          "type": "MX",
+          "value": "10 mail.lyon.fr.europa."
+        },
+        {
+          "name": "www.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "madrid.es.europa.",
+      "parent": "es.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.madrid.es.europa.",
+      "soa_contact": "hostmaster.madrid.es.europa.",
+      "records": [
+        {
+          "name": "madrid.es.europa.",
+          "type": "MX",
+          "value": "10 mail.madrid.es.europa."
+        },
+        {
+          "name": "www.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "marseille.fr.europa.",
+      "parent": "fr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.marseille.fr.europa.",
+      "soa_contact": "hostmaster.marseille.fr.europa.",
+      "records": [
+        {
+          "name": "marseille.fr.europa.",
+          "type": "MX",
+          "value": "10 mail.marseille.fr.europa."
+        },
+        {
+          "name": "www.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "milan.it.europa.",
+      "parent": "it.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.milan.it.europa.",
+      "soa_contact": "hostmaster.milan.it.europa.",
+      "records": [
+        {
+          "name": "milan.it.europa.",
+          "type": "MX",
+          "value": "10 mail.milan.it.europa."
+        },
+        {
+          "name": "www.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "munich.de.europa.",
+      "parent": "de.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.munich.de.europa.",
+      "soa_contact": "hostmaster.munich.de.europa.",
+      "records": [
+        {
+          "name": "munich.de.europa.",
+          "type": "MX",
+          "value": "10 mail.munich.de.europa."
+        },
+        {
+          "name": "www.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "nxdomain.negative.test.",
+      "parent": "negative.test.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.nxdomain.negative.test.",
+      "soa_contact": "hostmaster.nxdomain.negative.test.",
+      "records": []
+    },
+    {
+      "name": "oslo.no.europa.",
+      "parent": "no.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.oslo.no.europa.",
+      "soa_contact": "hostmaster.oslo.no.europa.",
+      "records": [
+        {
+          "name": "oslo.no.europa.",
+          "type": "MX",
+          "value": "10 mail.oslo.no.europa."
+        },
+        {
+          "name": "www.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "palermo.it.europa.",
+      "parent": "it.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.palermo.it.europa.",
+      "soa_contact": "hostmaster.palermo.it.europa.",
+      "records": [
+        {
+          "name": "palermo.it.europa.",
+          "type": "MX",
+          "value": "10 mail.palermo.it.europa."
+        },
+        {
+          "name": "www.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "paris.fr.europa.",
+      "parent": "fr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.paris.fr.europa.",
+      "soa_contact": "hostmaster.paris.fr.europa.",
+      "records": [
+        {
+          "name": "paris.fr.europa.",
+          "type": "MX",
+          "value": "10 mail.paris.fr.europa."
+        },
+        {
+          "name": "www.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "portals.web.services.",
+      "parent": "web.services.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.portals.web.services.",
+      "soa_contact": "hostmaster.portals.web.services.",
+      "records": []
+    },
+    {
+      "name": "prague.cz.europa.",
+      "parent": "cz.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.prague.cz.europa.",
+      "soa_contact": "hostmaster.prague.cz.europa.",
+      "records": [
+        {
+          "name": "prague.cz.europa.",
+          "type": "MX",
+          "value": "10 mail.prague.cz.europa."
+        },
+        {
+          "name": "www.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "resolvers.dns.infra.",
+      "parent": "dns.infra.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.resolvers.dns.infra.",
+      "soa_contact": "hostmaster.resolvers.dns.infra.",
+      "records": []
+    },
+    {
+      "name": "rome.it.europa.",
+      "parent": "it.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.rome.it.europa.",
+      "soa_contact": "hostmaster.rome.it.europa.",
+      "records": [
+        {
+          "name": "rome.it.europa.",
+          "type": "MX",
+          "value": "10 mail.rome.it.europa."
+        },
+        {
+          "name": "www.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "root.dns.infra.",
+      "parent": "dns.infra.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.root.dns.infra.",
+      "soa_contact": "hostmaster.root.dns.infra.",
+      "records": []
+    },
+    {
+      "name": "scenarios.benchmark.lab.",
+      "parent": "benchmark.lab.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.scenarios.benchmark.lab.",
+      "soa_contact": "hostmaster.scenarios.benchmark.lab.",
+      "records": []
+    },
+    {
+      "name": "seville.es.europa.",
+      "parent": "es.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.seville.es.europa.",
+      "soa_contact": "hostmaster.seville.es.europa.",
+      "records": [
+        {
+          "name": "seville.es.europa.",
+          "type": "MX",
+          "value": "10 mail.seville.es.europa."
+        },
+        {
+          "name": "www.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "sofia.bg.europa.",
+      "parent": "bg.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.sofia.bg.europa.",
+      "soa_contact": "hostmaster.sofia.bg.europa.",
+      "records": [
+        {
+          "name": "sofia.bg.europa.",
+          "type": "MX",
+          "value": "10 mail.sofia.bg.europa."
+        },
+        {
+          "name": "www.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "stockholm.se.europa.",
+      "parent": "se.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.stockholm.se.europa.",
+      "soa_contact": "hostmaster.stockholm.se.europa.",
+      "records": [
+        {
+          "name": "stockholm.se.europa.",
+          "type": "MX",
+          "value": "10 mail.stockholm.se.europa."
+        },
+        {
+          "name": "www.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "strasbourg.fr.europa.",
+      "parent": "fr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.strasbourg.fr.europa.",
+      "soa_contact": "hostmaster.strasbourg.fr.europa.",
+      "records": [
+        {
+          "name": "strasbourg.fr.europa.",
+          "type": "MX",
+          "value": "10 mail.strasbourg.fr.europa."
+        },
+        {
+          "name": "www.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "tld.dns.infra.",
+      "parent": "dns.infra.",
+      "kind": "zona_funzionale",
+      "stage": 5,
+      "device": "c266_functional_2",
+      "address": "10.210.15.10",
+      "ns": "ns1.tld.dns.infra.",
+      "soa_contact": "hostmaster.tld.dns.infra.",
+      "records": []
+    },
+    {
+      "name": "vienna.at.europa.",
+      "parent": "at.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.vienna.at.europa.",
+      "soa_contact": "hostmaster.vienna.at.europa.",
+      "records": [
+        {
+          "name": "vienna.at.europa.",
+          "type": "MX",
+          "value": "10 mail.vienna.at.europa."
+        },
+        {
+          "name": "www.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "warsaw.pl.europa.",
+      "parent": "pl.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.warsaw.pl.europa.",
+      "soa_contact": "hostmaster.warsaw.pl.europa.",
+      "records": [
+        {
+          "name": "warsaw.pl.europa.",
+          "type": "MX",
+          "value": "10 mail.warsaw.pl.europa."
+        },
+        {
+          "name": "www.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "zagreb.hr.europa.",
+      "parent": "hr.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.zagreb.hr.europa.",
+      "soa_contact": "hostmaster.zagreb.hr.europa.",
+      "records": [
+        {
+          "name": "zagreb.hr.europa.",
+          "type": "MX",
+          "value": "10 mail.zagreb.hr.europa."
+        },
+        {
+          "name": "www.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "zurich.ch.europa.",
+      "parent": "ch.europa.",
+      "kind": "citta",
+      "stage": 4,
+      "device": "c266_cities",
+      "address": "10.210.28.10",
+      "ns": "ns1.zurich.ch.europa.",
+      "soa_contact": "hostmaster.zurich.ch.europa.",
+      "records": [
+        {
+          "name": "zurich.ch.europa.",
+          "type": "MX",
+          "value": "10 mail.zurich.ch.europa."
+        },
+        {
+          "name": "www.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "api.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        },
+        {
+          "name": "mail.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.28.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.amsterdam.nl.europa.",
+      "parent": "amsterdam.nl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.amsterdam.nl.europa.",
+      "soa_contact": "hostmaster.admin.amsterdam.nl.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.athens.gr.europa.",
+      "parent": "athens.gr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.athens.gr.europa.",
+      "soa_contact": "hostmaster.admin.athens.gr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.barcelona.es.europa.",
+      "parent": "barcelona.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.barcelona.es.europa.",
+      "soa_contact": "hostmaster.admin.barcelona.es.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.belgrade.rs.europa.",
+      "parent": "belgrade.rs.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.belgrade.rs.europa.",
+      "soa_contact": "hostmaster.admin.belgrade.rs.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.berlin.de.europa.",
+      "parent": "berlin.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.berlin.de.europa.",
+      "soa_contact": "hostmaster.admin.berlin.de.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.birmingham.uk.europa.",
+      "parent": "birmingham.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.birmingham.uk.europa.",
+      "soa_contact": "hostmaster.admin.birmingham.uk.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.bordeaux.fr.europa.",
+      "parent": "bordeaux.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.bordeaux.fr.europa.",
+      "soa_contact": "hostmaster.admin.bordeaux.fr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.brussels.be.europa.",
+      "parent": "brussels.be.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.brussels.be.europa.",
+      "soa_contact": "hostmaster.admin.brussels.be.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.budapest.hu.europa.",
+      "parent": "budapest.hu.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.budapest.hu.europa.",
+      "soa_contact": "hostmaster.admin.budapest.hu.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.copenhagen.dk.europa.",
+      "parent": "copenhagen.dk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.copenhagen.dk.europa.",
+      "soa_contact": "hostmaster.admin.copenhagen.dk.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.dublin.ie.europa.",
+      "parent": "dublin.ie.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.dublin.ie.europa.",
+      "soa_contact": "hostmaster.admin.dublin.ie.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.dusseldorf.de.europa.",
+      "parent": "dusseldorf.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.dusseldorf.de.europa.",
+      "soa_contact": "hostmaster.admin.dusseldorf.de.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.frankfurt.de.europa.",
+      "parent": "frankfurt.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.frankfurt.de.europa.",
+      "soa_contact": "hostmaster.admin.frankfurt.de.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.glasgow.uk.europa.",
+      "parent": "glasgow.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.glasgow.uk.europa.",
+      "soa_contact": "hostmaster.admin.glasgow.uk.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.hamburg.de.europa.",
+      "parent": "hamburg.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.hamburg.de.europa.",
+      "soa_contact": "hostmaster.admin.hamburg.de.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.helsinki.fi.europa.",
+      "parent": "helsinki.fi.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.helsinki.fi.europa.",
+      "soa_contact": "hostmaster.admin.helsinki.fi.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.krakow.pl.europa.",
+      "parent": "krakow.pl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.krakow.pl.europa.",
+      "soa_contact": "hostmaster.admin.krakow.pl.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.lisbon.pt.europa.",
+      "parent": "lisbon.pt.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.lisbon.pt.europa.",
+      "soa_contact": "hostmaster.admin.lisbon.pt.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.london.uk.europa.",
+      "parent": "london.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.london.uk.europa.",
+      "soa_contact": "hostmaster.admin.london.uk.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.lyon.fr.europa.",
+      "parent": "lyon.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.lyon.fr.europa.",
+      "soa_contact": "hostmaster.admin.lyon.fr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.madrid.es.europa.",
+      "parent": "madrid.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.madrid.es.europa.",
+      "soa_contact": "hostmaster.admin.madrid.es.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.marseille.fr.europa.",
+      "parent": "marseille.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.marseille.fr.europa.",
+      "soa_contact": "hostmaster.admin.marseille.fr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.milan.it.europa.",
+      "parent": "milan.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.milan.it.europa.",
+      "soa_contact": "hostmaster.admin.milan.it.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.munich.de.europa.",
+      "parent": "munich.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.munich.de.europa.",
+      "soa_contact": "hostmaster.admin.munich.de.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.oslo.no.europa.",
+      "parent": "oslo.no.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.oslo.no.europa.",
+      "soa_contact": "hostmaster.admin.oslo.no.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.palermo.it.europa.",
+      "parent": "palermo.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.palermo.it.europa.",
+      "soa_contact": "hostmaster.admin.palermo.it.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.paris.fr.europa.",
+      "parent": "paris.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.paris.fr.europa.",
+      "soa_contact": "hostmaster.admin.paris.fr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.prague.cz.europa.",
+      "parent": "prague.cz.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.prague.cz.europa.",
+      "soa_contact": "hostmaster.admin.prague.cz.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.rome.it.europa.",
+      "parent": "rome.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.rome.it.europa.",
+      "soa_contact": "hostmaster.admin.rome.it.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.seville.es.europa.",
+      "parent": "seville.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.seville.es.europa.",
+      "soa_contact": "hostmaster.admin.seville.es.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.sofia.bg.europa.",
+      "parent": "sofia.bg.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.sofia.bg.europa.",
+      "soa_contact": "hostmaster.admin.sofia.bg.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.stockholm.se.europa.",
+      "parent": "stockholm.se.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.stockholm.se.europa.",
+      "soa_contact": "hostmaster.admin.stockholm.se.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.strasbourg.fr.europa.",
+      "parent": "strasbourg.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.strasbourg.fr.europa.",
+      "soa_contact": "hostmaster.admin.strasbourg.fr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.vienna.at.europa.",
+      "parent": "vienna.at.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.vienna.at.europa.",
+      "soa_contact": "hostmaster.admin.vienna.at.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.warsaw.pl.europa.",
+      "parent": "warsaw.pl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.warsaw.pl.europa.",
+      "soa_contact": "hostmaster.admin.warsaw.pl.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.zagreb.hr.europa.",
+      "parent": "zagreb.hr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.zagreb.hr.europa.",
+      "soa_contact": "hostmaster.admin.zagreb.hr.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "admin.zurich.ch.europa.",
+      "parent": "zurich.ch.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.admin.zurich.ch.europa.",
+      "soa_contact": "hostmaster.admin.zurich.ch.europa.",
+      "records": [
+        {
+          "name": "monitor.admin.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "logs.admin.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.amsterdam.nl.europa.",
+      "parent": "amsterdam.nl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.amsterdam.nl.europa.",
+      "soa_contact": "hostmaster.research.amsterdam.nl.europa.",
+      "records": [
+        {
+          "name": "git.research.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.athens.gr.europa.",
+      "parent": "athens.gr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.athens.gr.europa.",
+      "soa_contact": "hostmaster.research.athens.gr.europa.",
+      "records": [
+        {
+          "name": "git.research.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.barcelona.es.europa.",
+      "parent": "barcelona.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.barcelona.es.europa.",
+      "soa_contact": "hostmaster.research.barcelona.es.europa.",
+      "records": [
+        {
+          "name": "git.research.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.belgrade.rs.europa.",
+      "parent": "belgrade.rs.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.belgrade.rs.europa.",
+      "soa_contact": "hostmaster.research.belgrade.rs.europa.",
+      "records": [
+        {
+          "name": "git.research.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.berlin.de.europa.",
+      "parent": "berlin.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.berlin.de.europa.",
+      "soa_contact": "hostmaster.research.berlin.de.europa.",
+      "records": [
+        {
+          "name": "git.research.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.birmingham.uk.europa.",
+      "parent": "birmingham.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.birmingham.uk.europa.",
+      "soa_contact": "hostmaster.research.birmingham.uk.europa.",
+      "records": [
+        {
+          "name": "git.research.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.bordeaux.fr.europa.",
+      "parent": "bordeaux.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.bordeaux.fr.europa.",
+      "soa_contact": "hostmaster.research.bordeaux.fr.europa.",
+      "records": [
+        {
+          "name": "git.research.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.brussels.be.europa.",
+      "parent": "brussels.be.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.brussels.be.europa.",
+      "soa_contact": "hostmaster.research.brussels.be.europa.",
+      "records": [
+        {
+          "name": "git.research.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.budapest.hu.europa.",
+      "parent": "budapest.hu.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.budapest.hu.europa.",
+      "soa_contact": "hostmaster.research.budapest.hu.europa.",
+      "records": [
+        {
+          "name": "git.research.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.copenhagen.dk.europa.",
+      "parent": "copenhagen.dk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.copenhagen.dk.europa.",
+      "soa_contact": "hostmaster.research.copenhagen.dk.europa.",
+      "records": [
+        {
+          "name": "git.research.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.dublin.ie.europa.",
+      "parent": "dublin.ie.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.dublin.ie.europa.",
+      "soa_contact": "hostmaster.research.dublin.ie.europa.",
+      "records": [
+        {
+          "name": "git.research.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.dusseldorf.de.europa.",
+      "parent": "dusseldorf.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.dusseldorf.de.europa.",
+      "soa_contact": "hostmaster.research.dusseldorf.de.europa.",
+      "records": [
+        {
+          "name": "git.research.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.frankfurt.de.europa.",
+      "parent": "frankfurt.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.frankfurt.de.europa.",
+      "soa_contact": "hostmaster.research.frankfurt.de.europa.",
+      "records": [
+        {
+          "name": "git.research.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.glasgow.uk.europa.",
+      "parent": "glasgow.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.glasgow.uk.europa.",
+      "soa_contact": "hostmaster.research.glasgow.uk.europa.",
+      "records": [
+        {
+          "name": "git.research.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.hamburg.de.europa.",
+      "parent": "hamburg.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.hamburg.de.europa.",
+      "soa_contact": "hostmaster.research.hamburg.de.europa.",
+      "records": [
+        {
+          "name": "git.research.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.helsinki.fi.europa.",
+      "parent": "helsinki.fi.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.helsinki.fi.europa.",
+      "soa_contact": "hostmaster.research.helsinki.fi.europa.",
+      "records": [
+        {
+          "name": "git.research.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.krakow.pl.europa.",
+      "parent": "krakow.pl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.krakow.pl.europa.",
+      "soa_contact": "hostmaster.research.krakow.pl.europa.",
+      "records": [
+        {
+          "name": "git.research.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.lisbon.pt.europa.",
+      "parent": "lisbon.pt.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.lisbon.pt.europa.",
+      "soa_contact": "hostmaster.research.lisbon.pt.europa.",
+      "records": [
+        {
+          "name": "git.research.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.london.uk.europa.",
+      "parent": "london.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.london.uk.europa.",
+      "soa_contact": "hostmaster.research.london.uk.europa.",
+      "records": [
+        {
+          "name": "git.research.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.lyon.fr.europa.",
+      "parent": "lyon.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.lyon.fr.europa.",
+      "soa_contact": "hostmaster.research.lyon.fr.europa.",
+      "records": [
+        {
+          "name": "git.research.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.madrid.es.europa.",
+      "parent": "madrid.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.madrid.es.europa.",
+      "soa_contact": "hostmaster.research.madrid.es.europa.",
+      "records": [
+        {
+          "name": "git.research.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.marseille.fr.europa.",
+      "parent": "marseille.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.marseille.fr.europa.",
+      "soa_contact": "hostmaster.research.marseille.fr.europa.",
+      "records": [
+        {
+          "name": "git.research.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.milan.it.europa.",
+      "parent": "milan.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.milan.it.europa.",
+      "soa_contact": "hostmaster.research.milan.it.europa.",
+      "records": [
+        {
+          "name": "git.research.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.munich.de.europa.",
+      "parent": "munich.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.munich.de.europa.",
+      "soa_contact": "hostmaster.research.munich.de.europa.",
+      "records": [
+        {
+          "name": "git.research.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.oslo.no.europa.",
+      "parent": "oslo.no.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.oslo.no.europa.",
+      "soa_contact": "hostmaster.research.oslo.no.europa.",
+      "records": [
+        {
+          "name": "git.research.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.palermo.it.europa.",
+      "parent": "palermo.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.palermo.it.europa.",
+      "soa_contact": "hostmaster.research.palermo.it.europa.",
+      "records": [
+        {
+          "name": "git.research.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.paris.fr.europa.",
+      "parent": "paris.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.paris.fr.europa.",
+      "soa_contact": "hostmaster.research.paris.fr.europa.",
+      "records": [
+        {
+          "name": "git.research.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.prague.cz.europa.",
+      "parent": "prague.cz.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.prague.cz.europa.",
+      "soa_contact": "hostmaster.research.prague.cz.europa.",
+      "records": [
+        {
+          "name": "git.research.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.rome.it.europa.",
+      "parent": "rome.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.rome.it.europa.",
+      "soa_contact": "hostmaster.research.rome.it.europa.",
+      "records": [
+        {
+          "name": "git.research.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.seville.es.europa.",
+      "parent": "seville.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.seville.es.europa.",
+      "soa_contact": "hostmaster.research.seville.es.europa.",
+      "records": [
+        {
+          "name": "git.research.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.sofia.bg.europa.",
+      "parent": "sofia.bg.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.sofia.bg.europa.",
+      "soa_contact": "hostmaster.research.sofia.bg.europa.",
+      "records": [
+        {
+          "name": "git.research.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.stockholm.se.europa.",
+      "parent": "stockholm.se.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.stockholm.se.europa.",
+      "soa_contact": "hostmaster.research.stockholm.se.europa.",
+      "records": [
+        {
+          "name": "git.research.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.strasbourg.fr.europa.",
+      "parent": "strasbourg.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.strasbourg.fr.europa.",
+      "soa_contact": "hostmaster.research.strasbourg.fr.europa.",
+      "records": [
+        {
+          "name": "git.research.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.vienna.at.europa.",
+      "parent": "vienna.at.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.vienna.at.europa.",
+      "soa_contact": "hostmaster.research.vienna.at.europa.",
+      "records": [
+        {
+          "name": "git.research.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.warsaw.pl.europa.",
+      "parent": "warsaw.pl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.warsaw.pl.europa.",
+      "soa_contact": "hostmaster.research.warsaw.pl.europa.",
+      "records": [
+        {
+          "name": "git.research.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.zagreb.hr.europa.",
+      "parent": "zagreb.hr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.zagreb.hr.europa.",
+      "soa_contact": "hostmaster.research.zagreb.hr.europa.",
+      "records": [
+        {
+          "name": "git.research.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "research.zurich.ch.europa.",
+      "parent": "zurich.ch.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.research.zurich.ch.europa.",
+      "soa_contact": "hostmaster.research.zurich.ch.europa.",
+      "records": [
+        {
+          "name": "git.research.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "data.research.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.amsterdam.nl.europa.",
+      "parent": "amsterdam.nl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.amsterdam.nl.europa.",
+      "soa_contact": "hostmaster.services.amsterdam.nl.europa.",
+      "records": [
+        {
+          "name": "portal.services.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.amsterdam.nl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.athens.gr.europa.",
+      "parent": "athens.gr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.athens.gr.europa.",
+      "soa_contact": "hostmaster.services.athens.gr.europa.",
+      "records": [
+        {
+          "name": "portal.services.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.athens.gr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.barcelona.es.europa.",
+      "parent": "barcelona.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.barcelona.es.europa.",
+      "soa_contact": "hostmaster.services.barcelona.es.europa.",
+      "records": [
+        {
+          "name": "portal.services.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.barcelona.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.belgrade.rs.europa.",
+      "parent": "belgrade.rs.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.belgrade.rs.europa.",
+      "soa_contact": "hostmaster.services.belgrade.rs.europa.",
+      "records": [
+        {
+          "name": "portal.services.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.belgrade.rs.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.berlin.de.europa.",
+      "parent": "berlin.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.berlin.de.europa.",
+      "soa_contact": "hostmaster.services.berlin.de.europa.",
+      "records": [
+        {
+          "name": "portal.services.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.berlin.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.birmingham.uk.europa.",
+      "parent": "birmingham.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.birmingham.uk.europa.",
+      "soa_contact": "hostmaster.services.birmingham.uk.europa.",
+      "records": [
+        {
+          "name": "portal.services.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.birmingham.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.bordeaux.fr.europa.",
+      "parent": "bordeaux.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.bordeaux.fr.europa.",
+      "soa_contact": "hostmaster.services.bordeaux.fr.europa.",
+      "records": [
+        {
+          "name": "portal.services.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.bordeaux.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.brussels.be.europa.",
+      "parent": "brussels.be.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.brussels.be.europa.",
+      "soa_contact": "hostmaster.services.brussels.be.europa.",
+      "records": [
+        {
+          "name": "portal.services.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.brussels.be.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.budapest.hu.europa.",
+      "parent": "budapest.hu.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.budapest.hu.europa.",
+      "soa_contact": "hostmaster.services.budapest.hu.europa.",
+      "records": [
+        {
+          "name": "portal.services.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.budapest.hu.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.copenhagen.dk.europa.",
+      "parent": "copenhagen.dk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.copenhagen.dk.europa.",
+      "soa_contact": "hostmaster.services.copenhagen.dk.europa.",
+      "records": [
+        {
+          "name": "portal.services.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.copenhagen.dk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.dublin.ie.europa.",
+      "parent": "dublin.ie.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.dublin.ie.europa.",
+      "soa_contact": "hostmaster.services.dublin.ie.europa.",
+      "records": [
+        {
+          "name": "portal.services.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.dublin.ie.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.dusseldorf.de.europa.",
+      "parent": "dusseldorf.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.dusseldorf.de.europa.",
+      "soa_contact": "hostmaster.services.dusseldorf.de.europa.",
+      "records": [
+        {
+          "name": "portal.services.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.dusseldorf.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.frankfurt.de.europa.",
+      "parent": "frankfurt.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.frankfurt.de.europa.",
+      "soa_contact": "hostmaster.services.frankfurt.de.europa.",
+      "records": [
+        {
+          "name": "portal.services.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.frankfurt.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.glasgow.uk.europa.",
+      "parent": "glasgow.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.glasgow.uk.europa.",
+      "soa_contact": "hostmaster.services.glasgow.uk.europa.",
+      "records": [
+        {
+          "name": "portal.services.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.glasgow.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.hamburg.de.europa.",
+      "parent": "hamburg.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.hamburg.de.europa.",
+      "soa_contact": "hostmaster.services.hamburg.de.europa.",
+      "records": [
+        {
+          "name": "portal.services.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.hamburg.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.helsinki.fi.europa.",
+      "parent": "helsinki.fi.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.helsinki.fi.europa.",
+      "soa_contact": "hostmaster.services.helsinki.fi.europa.",
+      "records": [
+        {
+          "name": "portal.services.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.helsinki.fi.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.krakow.pl.europa.",
+      "parent": "krakow.pl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.krakow.pl.europa.",
+      "soa_contact": "hostmaster.services.krakow.pl.europa.",
+      "records": [
+        {
+          "name": "portal.services.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.krakow.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.lisbon.pt.europa.",
+      "parent": "lisbon.pt.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.lisbon.pt.europa.",
+      "soa_contact": "hostmaster.services.lisbon.pt.europa.",
+      "records": [
+        {
+          "name": "portal.services.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.lisbon.pt.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.london.uk.europa.",
+      "parent": "london.uk.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.london.uk.europa.",
+      "soa_contact": "hostmaster.services.london.uk.europa.",
+      "records": [
+        {
+          "name": "portal.services.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.london.uk.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.lyon.fr.europa.",
+      "parent": "lyon.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.lyon.fr.europa.",
+      "soa_contact": "hostmaster.services.lyon.fr.europa.",
+      "records": [
+        {
+          "name": "portal.services.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.lyon.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.madrid.es.europa.",
+      "parent": "madrid.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.madrid.es.europa.",
+      "soa_contact": "hostmaster.services.madrid.es.europa.",
+      "records": [
+        {
+          "name": "portal.services.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.madrid.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.marseille.fr.europa.",
+      "parent": "marseille.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.marseille.fr.europa.",
+      "soa_contact": "hostmaster.services.marseille.fr.europa.",
+      "records": [
+        {
+          "name": "portal.services.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.marseille.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.milan.it.europa.",
+      "parent": "milan.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.milan.it.europa.",
+      "soa_contact": "hostmaster.services.milan.it.europa.",
+      "records": [
+        {
+          "name": "portal.services.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.milan.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.munich.de.europa.",
+      "parent": "munich.de.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.munich.de.europa.",
+      "soa_contact": "hostmaster.services.munich.de.europa.",
+      "records": [
+        {
+          "name": "portal.services.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.munich.de.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.oslo.no.europa.",
+      "parent": "oslo.no.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.oslo.no.europa.",
+      "soa_contact": "hostmaster.services.oslo.no.europa.",
+      "records": [
+        {
+          "name": "portal.services.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.oslo.no.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.palermo.it.europa.",
+      "parent": "palermo.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.palermo.it.europa.",
+      "soa_contact": "hostmaster.services.palermo.it.europa.",
+      "records": [
+        {
+          "name": "portal.services.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.palermo.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.paris.fr.europa.",
+      "parent": "paris.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.paris.fr.europa.",
+      "soa_contact": "hostmaster.services.paris.fr.europa.",
+      "records": [
+        {
+          "name": "portal.services.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.paris.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.prague.cz.europa.",
+      "parent": "prague.cz.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.prague.cz.europa.",
+      "soa_contact": "hostmaster.services.prague.cz.europa.",
+      "records": [
+        {
+          "name": "portal.services.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.prague.cz.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.rome.it.europa.",
+      "parent": "rome.it.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.rome.it.europa.",
+      "soa_contact": "hostmaster.services.rome.it.europa.",
+      "records": [
+        {
+          "name": "portal.services.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.rome.it.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.seville.es.europa.",
+      "parent": "seville.es.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.seville.es.europa.",
+      "soa_contact": "hostmaster.services.seville.es.europa.",
+      "records": [
+        {
+          "name": "portal.services.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.seville.es.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.sofia.bg.europa.",
+      "parent": "sofia.bg.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.sofia.bg.europa.",
+      "soa_contact": "hostmaster.services.sofia.bg.europa.",
+      "records": [
+        {
+          "name": "portal.services.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.sofia.bg.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.stockholm.se.europa.",
+      "parent": "stockholm.se.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.stockholm.se.europa.",
+      "soa_contact": "hostmaster.services.stockholm.se.europa.",
+      "records": [
+        {
+          "name": "portal.services.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.stockholm.se.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.strasbourg.fr.europa.",
+      "parent": "strasbourg.fr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.strasbourg.fr.europa.",
+      "soa_contact": "hostmaster.services.strasbourg.fr.europa.",
+      "records": [
+        {
+          "name": "portal.services.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.strasbourg.fr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.vienna.at.europa.",
+      "parent": "vienna.at.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.vienna.at.europa.",
+      "soa_contact": "hostmaster.services.vienna.at.europa.",
+      "records": [
+        {
+          "name": "portal.services.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.vienna.at.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.warsaw.pl.europa.",
+      "parent": "warsaw.pl.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.warsaw.pl.europa.",
+      "soa_contact": "hostmaster.services.warsaw.pl.europa.",
+      "records": [
+        {
+          "name": "portal.services.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.warsaw.pl.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.zagreb.hr.europa.",
+      "parent": "zagreb.hr.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.zagreb.hr.europa.",
+      "soa_contact": "hostmaster.services.zagreb.hr.europa.",
+      "records": [
+        {
+          "name": "portal.services.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.zagreb.hr.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    },
+    {
+      "name": "services.zurich.ch.europa.",
+      "parent": "zurich.ch.europa.",
+      "kind": "sottozona_citta",
+      "stage": 5,
+      "device": "c266_subzones",
+      "address": "10.210.26.10",
+      "ns": "ns1.services.zurich.ch.europa.",
+      "soa_contact": "hostmaster.services.zurich.ch.europa.",
+      "records": [
+        {
+          "name": "portal.services.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        },
+        {
+          "name": "api.services.zurich.ch.europa.",
+          "type": "A",
+          "value": "10.210.26.10"
+        }
+      ]
+    }
+  ],
+  "resolvers": [
+    {
+      "device": "c266_resolver_1",
+      "role": "resolver_1",
+      "router": "r_warsaw",
+      "address": "10.210.34.10"
+    },
+    {
+      "device": "c266_resolver_2",
+      "role": "resolver_2",
+      "router": "r_zurich",
+      "address": "10.210.36.10"
+    }
+  ],
+  "clients": [
+    {
+      "device": "c266_client_1",
+      "role": "client_1",
+      "router": "r_athens",
+      "address": "10.210.1.10",
+      "resolver": "10.210.34.10"
+    },
+    {
+      "device": "c266_client_2",
+      "role": "client_2",
+      "router": "r_lisbon",
+      "address": "10.210.17.10",
+      "resolver": "10.210.36.10"
+    }
+  ],
+  "queries": [
+    {
+      "name": "amsterdam.nl.europa.",
+      "type": "MX",
+      "value": "10 mail.amsterdam.nl.europa."
+    },
+    {
+      "name": "www.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "athens.gr.europa.",
+      "type": "MX",
+      "value": "10 mail.athens.gr.europa."
+    },
+    {
+      "name": "www.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "barcelona.es.europa.",
+      "type": "MX",
+      "value": "10 mail.barcelona.es.europa."
+    },
+    {
+      "name": "www.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "belgrade.rs.europa.",
+      "type": "MX",
+      "value": "10 mail.belgrade.rs.europa."
+    },
+    {
+      "name": "www.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "berlin.de.europa.",
+      "type": "MX",
+      "value": "10 mail.berlin.de.europa."
+    },
+    {
+      "name": "www.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "birmingham.uk.europa.",
+      "type": "MX",
+      "value": "10 mail.birmingham.uk.europa."
+    },
+    {
+      "name": "www.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "bordeaux.fr.europa.",
+      "type": "MX",
+      "value": "10 mail.bordeaux.fr.europa."
+    },
+    {
+      "name": "www.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "brussels.be.europa.",
+      "type": "MX",
+      "value": "10 mail.brussels.be.europa."
+    },
+    {
+      "name": "www.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "budapest.hu.europa.",
+      "type": "MX",
+      "value": "10 mail.budapest.hu.europa."
+    },
+    {
+      "name": "www.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "copenhagen.dk.europa.",
+      "type": "MX",
+      "value": "10 mail.copenhagen.dk.europa."
+    },
+    {
+      "name": "www.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "dublin.ie.europa.",
+      "type": "MX",
+      "value": "10 mail.dublin.ie.europa."
+    },
+    {
+      "name": "www.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "dusseldorf.de.europa.",
+      "type": "MX",
+      "value": "10 mail.dusseldorf.de.europa."
+    },
+    {
+      "name": "www.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "frankfurt.de.europa.",
+      "type": "MX",
+      "value": "10 mail.frankfurt.de.europa."
+    },
+    {
+      "name": "www.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "glasgow.uk.europa.",
+      "type": "MX",
+      "value": "10 mail.glasgow.uk.europa."
+    },
+    {
+      "name": "www.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "hamburg.de.europa.",
+      "type": "MX",
+      "value": "10 mail.hamburg.de.europa."
+    },
+    {
+      "name": "www.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "helsinki.fi.europa.",
+      "type": "MX",
+      "value": "10 mail.helsinki.fi.europa."
+    },
+    {
+      "name": "www.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "krakow.pl.europa.",
+      "type": "MX",
+      "value": "10 mail.krakow.pl.europa."
+    },
+    {
+      "name": "www.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "lisbon.pt.europa.",
+      "type": "MX",
+      "value": "10 mail.lisbon.pt.europa."
+    },
+    {
+      "name": "www.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "london.uk.europa.",
+      "type": "MX",
+      "value": "10 mail.london.uk.europa."
+    },
+    {
+      "name": "www.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "lyon.fr.europa.",
+      "type": "MX",
+      "value": "10 mail.lyon.fr.europa."
+    },
+    {
+      "name": "www.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "madrid.es.europa.",
+      "type": "MX",
+      "value": "10 mail.madrid.es.europa."
+    },
+    {
+      "name": "www.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "marseille.fr.europa.",
+      "type": "MX",
+      "value": "10 mail.marseille.fr.europa."
+    },
+    {
+      "name": "www.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "milan.it.europa.",
+      "type": "MX",
+      "value": "10 mail.milan.it.europa."
+    },
+    {
+      "name": "www.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "munich.de.europa.",
+      "type": "MX",
+      "value": "10 mail.munich.de.europa."
+    },
+    {
+      "name": "www.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "oslo.no.europa.",
+      "type": "MX",
+      "value": "10 mail.oslo.no.europa."
+    },
+    {
+      "name": "www.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "palermo.it.europa.",
+      "type": "MX",
+      "value": "10 mail.palermo.it.europa."
+    },
+    {
+      "name": "www.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "paris.fr.europa.",
+      "type": "MX",
+      "value": "10 mail.paris.fr.europa."
+    },
+    {
+      "name": "www.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "prague.cz.europa.",
+      "type": "MX",
+      "value": "10 mail.prague.cz.europa."
+    },
+    {
+      "name": "www.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "rome.it.europa.",
+      "type": "MX",
+      "value": "10 mail.rome.it.europa."
+    },
+    {
+      "name": "www.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "seville.es.europa.",
+      "type": "MX",
+      "value": "10 mail.seville.es.europa."
+    },
+    {
+      "name": "www.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "sofia.bg.europa.",
+      "type": "MX",
+      "value": "10 mail.sofia.bg.europa."
+    },
+    {
+      "name": "www.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "stockholm.se.europa.",
+      "type": "MX",
+      "value": "10 mail.stockholm.se.europa."
+    },
+    {
+      "name": "www.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "strasbourg.fr.europa.",
+      "type": "MX",
+      "value": "10 mail.strasbourg.fr.europa."
+    },
+    {
+      "name": "www.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "vienna.at.europa.",
+      "type": "MX",
+      "value": "10 mail.vienna.at.europa."
+    },
+    {
+      "name": "www.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "warsaw.pl.europa.",
+      "type": "MX",
+      "value": "10 mail.warsaw.pl.europa."
+    },
+    {
+      "name": "www.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "zagreb.hr.europa.",
+      "type": "MX",
+      "value": "10 mail.zagreb.hr.europa."
+    },
+    {
+      "name": "www.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "zurich.ch.europa.",
+      "type": "MX",
+      "value": "10 mail.zurich.ch.europa."
+    },
+    {
+      "name": "www.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "api.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "mail.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.28.10"
+    },
+    {
+      "name": "monitor.admin.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "monitor.admin.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "logs.admin.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "git.research.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "data.research.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.amsterdam.nl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.athens.gr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.barcelona.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.belgrade.rs.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.berlin.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.birmingham.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.bordeaux.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.brussels.be.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.budapest.hu.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.copenhagen.dk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.dublin.ie.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.dusseldorf.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.frankfurt.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.glasgow.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.hamburg.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.helsinki.fi.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.krakow.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.lisbon.pt.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.london.uk.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.lyon.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.madrid.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.marseille.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.milan.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.munich.de.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.oslo.no.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.palermo.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.paris.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.prague.cz.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.rome.it.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.seville.es.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.sofia.bg.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.stockholm.se.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.strasbourg.fr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.vienna.at.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.warsaw.pl.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.zagreb.hr.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "portal.services.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    },
+    {
+      "name": "api.services.zurich.ch.europa.",
+      "type": "A",
+      "value": "10.210.26.10"
+    }
+  ],
+  "deployment": "compact_v1: 16 host, più zone per ruolo, nessun genitore/figlio sullo stesso host; alias di servizio su host DNS",
+  "routing": {
+    "simulated_paths": 848,
+    "max_hops": 12,
+    "dynamic_validation": "NOT_RUN"
+  }
+}

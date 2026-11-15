@@ -49,7 +49,8 @@ def resolve_selection(root: Path, config_root: Path, experiment: Path | None = N
     if mode and strategy and strategy!=MODE_STRATEGIES[mode]:
         raise ValueError(f'Argomenti contraddittori: --execution-mode {mode} e --strategy {strategy}')
     explicit = experiment is not None
-    name = 'cost266_v1.yaml' if mode=='incremental_isolated' else 'cost266.yaml'
+    name = {'one_shot':'cost266_one_shot.yaml',
+            'incremental_isolated':'cost266_v1.yaml'}.get(mode, 'cost266.yaml')
     path = experiment if explicit else root/'experiments'/name
     spec = (loader or load_spec)(path,config_root)
     if mode:

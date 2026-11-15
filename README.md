@@ -561,7 +561,48 @@ when selecting existing observations. `--only-replicate` selects the statistical
 replicate, not the `rNNN` directory. Use `--dry-run --resume` to preview what
 will be generated, checked, or skipped before starting an experiment.
 
+The preferred CLI selects one statistical repetition directly, without a range:
+
+```bash
+# Preview/resume replicate 4 for Small and Medium, with 5 generators and 4 checkers.
+.venv/bin/python scripts/run_experiment.py experiments/thesis_final.yaml \
+  --task-level small medium --replicate 4 --pipeline-mode phased \
+  --sandbox-workers 5 --checker-workers 4 --dry-run
+
+# Preview a NEW replicate: one greater than the maximum found in selected cells.
+.venv/bin/python scripts/run_experiment.py experiments/thesis_final.yaml \
+  --task-level small medium --next-replicate --pipeline-mode phased \
+  --sandbox-workers 5 --checker-workers 4 --dry-run
+```
+
+Remove `--dry-run` to execute. `--replicate N` resumes that logical repetition;
+`--next-replicate` chooses a new repetition on each invocation, including after
+an interrupted run. Resume an interrupted batch with the explicit `--replicate N`
+printed at startup. Small and Medium share one generation phase and are checked
+in successive phases, each with up to six checkers. Large supports up to two.
+The maximum generation pool is ten workers (`--sandbox-workers 10`), paired
+with `--checker-workers 6` for Small/Medium. These caps are configured centrally;
+the defaults remain two workers. Actual parallelism is limited by pending work,
+and the live 5/4 probe does not establish host capacity at 10/6.
+Existing `--only-replicate`, `--repetitions`, and per-level worker flags remain
+available.
+
+The terminal plan lists skipped observations, new generations, and AUT checkpoints
+that require only checking. It reports worker limits and how many jobs can use
+them. Every execution has a readable full identity, for example
+`thesis_final:lab_01:base:small:T4:creation_only:rep004:r003`.
+`observation_id` identifies the statistical cell; `execution_id` also identifies
+the physical `rNNN` attempt. New manifests, metrics, and generated run reports
+include these fields. Historical identities are derived for display without
+renaming folders or rewriting existing results. Original `run_id` values remain
+compatible with native AUT logs.
+
 ### Experiment YAML Specification
+
+For independent checker-only capacity measurements on existing AUTs, see
+[Kathara stress test](docs/KATHARA_STRESS_TEST.md). The dedicated command defaults
+to a dry-run, supports up to 15 concurrent Small labs, and writes only isolated
+stress results; it never generates new Codex observations.
 
 Create an experiment file under `experiments/` (e.g., `experiments/thesis_final.yaml`):
 

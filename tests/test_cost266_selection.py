@@ -4,6 +4,8 @@ from dataclasses import replace
 from pathlib import Path
 import hashlib
 import json
+import threading
+import time
 
 import pandas as pd
 import pytest
@@ -24,6 +26,7 @@ from scripts import run_cost266 as cli
 def selection(v2,monkeypatch):
     root=v2.root
     for name,protocol,identity in [('cost266',CONTINUOUS_VERSION,'test_continuous'),
+                                   ('cost266_one_shot',CONTINUOUS_VERSION,'test_one_shot'),
                                    ('cost266_v1',VERSION,'test_isolated')]:
         data={'experiment':{'id':identity},'dataset':'experiments/data','protocol':protocol,
               'strategies':['one_shot','incremental'],'prompt_types':['T1','T2'],
@@ -49,8 +52,56 @@ def arguments(mode,*extra):
     return ['--execution-mode',mode,'--prompt-type','T1','--skill-mode','no_skill','--only-replicate','1',*extra]
 
 
+def test_project_one_shot_plan_has_own_identity_and_all_skill_modes():
+    root=Path(__file__).resolve().parents[1]
+    one=resolve_selection(root,root,mode='one_shot')
+    incremental=resolve_selection(root,root,mode='incremental_continuous')
+    selected=one.selected_cells()
+    assert one.spec.experiment_id=='cost266_one_shot'
+    assert one.spec.experiment_id!=incremental.spec.experiment_id
+    assert len(selected)==5
+    assert {c.prompt_type for c in selected}=={'T1'}
+    assert {c.skill_mode for c in selected}=={'no_skill','auto','dns_only','creation_only','both_forced'}
+    assert all(c.strategy=='one_shot' and c.repetition==1 for c in selected)
+    assert all(c.relative.parts[0]=='cost266_one_shot' for c in selected)
+    assert not one.selected_cells(prompt_type='T2')
+
+
+def test_one_shot_generations_overlap_and_checkers_are_serial(selection,monkeypatch):
+    path=selection.root/'experiments/cost266_one_shot.yaml'
+    data=yaml.safe_load(path.read_text())
+    data.update(prompt_types=['T1'],skill_modes=['no_skill'],repetitions=5)
+    path.write_text(yaml.safe_dump(data))
+    barrier=threading.Barrier(5)
+    original_aut=runner.run_aut
+    original_checker=runner.run_checker
+    counters={'active':0,'peak':0,'calls':0}
+    guard=threading.Lock()
+    def concurrent_aut(*args,**kwargs):
+        barrier.wait(timeout=10)
+        return original_aut(*args,**kwargs)
+    def monitored_checker(*args,**kwargs):
+        with guard:
+            counters['active']+=1
+            counters['peak']=max(counters['peak'],counters['active'])
+            counters['calls']+=1
+        try:
+            time.sleep(.15)
+            return original_checker(*args,**kwargs)
+        finally:
+            with guard: counters['active']-=1
+    monkeypatch.setattr(runner,'run_aut',concurrent_aut)
+    monkeypatch.setattr(runner,'run_checker',monitored_checker)
+    assert cli.main(['--execution-mode','one_shot','--generation-workers','5'])==0
+    manifests=list((selection.root/'runs/test_one_shot').glob('**/manifest.json'))
+    top=[json.loads(p.read_text()) for p in manifests if p.parent.name.startswith('r')]
+    assert len(top)==5 and all(m['pipeline_state']=='COMPLETED' for m in top)
+    assert counters['calls']==5 and counters['peak']==1
+    assert max(m['checker_queue_seconds'] for m in top)>.05
+
+
 @pytest.mark.parametrize('mode,protocol,strategy,identity',[
-    ('one_shot',CONTINUOUS_VERSION,'one_shot','test_continuous'),
+    ('one_shot',CONTINUOUS_VERSION,'one_shot','test_one_shot'),
     ('incremental_isolated',VERSION,'incremental','test_isolated'),
     ('incremental_continuous',CONTINUOUS_VERSION,'incremental','test_continuous')])
 def test_default_configuration_mapping_is_loaded_before_cells(selection,mode,protocol,strategy,identity):
@@ -254,7 +305,10 @@ def test_cross_protocol_comparison_checks_all_controls(selection):
 
 
 def test_pairs_report_marks_mismatched_conditions_non_comparable(selection):
-    assert cli.main(arguments('one_shot'))==0
+    # Il report per esperimento confronta coppie nello stesso esperimento;
+    # il piano one-shot predefinito ora ha intenzionalmente un'identità propria.
+    shared=selection.root/'experiments/cost266.yaml'
+    assert cli.main([str(shared),*arguments('one_shot')])==0
     selection.config.data['aut']['model']='other-model'
     assert cli.main(arguments('incremental_continuous'))==0
     pairs=pd.read_csv(selection.root/'results/cost266/experiments/test_continuous/pairs.csv')

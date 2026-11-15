@@ -4,6 +4,8 @@ from pathlib import Path
 
 import yaml
 
+from .parallel_limits import GENERATION_MAX_WORKERS, CHECKER_MAX_WORKERS
+
 
 @dataclass(frozen=True)
 class Config:
@@ -83,8 +85,8 @@ def load_config(path: Path) -> Config:
         raise ValueError("parallel_execution.enabled deve essere booleano")
     # Keep YAML validation aligned with the CLI and phased executor.
     worker_limits = (
-        ("generation", {"workers": 5}),
-        ("checker", {"small_workers": 4, "medium_workers": 4, "large_workers": 2}),
+        ("generation", {"workers": GENERATION_MAX_WORKERS}),
+        ("checker", {f"{level}_workers": count for level, count in CHECKER_MAX_WORKERS.items()}),
     )
     for group, fields in worker_limits:
         section = parallel.get(group, {})

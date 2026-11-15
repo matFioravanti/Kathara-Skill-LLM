@@ -1,344 +1,226 @@
-# 03 — Technical structured — COST266 European multi-TLD (from pre-DNS backbone)
+# T1 — COST266: Configurazione DNS europea semplificata
 
-## Task and initial state
+Genera la configurazione DNS per il laboratorio Kathara esistente basato sulla topologia europea COST266, composta da 37 router e 57 collegamenti punto-punto, mantenendo invariati la topologia backbone, gli indirizzi IP e le rotte statiche già configurate.
 
-Starting from the **supplied existing Kathara laboratory** (`lab.conf` and its 37 router `.startup` files), **extend and configure the laboratory** to provide a self-contained IPv4 DNS hierarchy using BIND9. The initial laboratory includes **37 COST266 routers and 57 point-to-point WAN collision domains**, already addressed and connected through static routing; it **does not yet contain** DNS hosts or access LANs. Build the required access layer first, then configure DNS. The logical hierarchy must follow the European multi-TLD tree specified below.
+Il laboratorio deve essere predisposto con gli host DNS e le LAN di accesso indicati nelle specifiche. Non introdurre nuovi router, collegamenti WAN o modifiche al piano di indirizzamento esistente.
 
-**Mandatory network invariants:** preserve all 37 original routers, their original WAN interfaces/links/collision-domain names, IPv4 addresses, loopbacks, IPv4 forwarding, and all **3,327 existing backbone static-route entries**. Do not remove or replace existing router configuration or switch to dynamic routing. Add only the access interfaces, hosts, access networks, and static routes needed by this task; do not introduce additional backbone routers or WAN links. Persist everything in Kathara files, not only through interactive commands. The target is the **same pre-DNS laboratory**, not a separately generated network.
+- **Gerarchia:** Configura una gerarchia DNS artificiale composta complessivamente da **67 zone autorevoli e 66 deleghe DNS**, organizzate nel seguente modo:
+  - 1 dominio radice `.`
+  - 3 TLD artificiali: `europa.`, `infra.`, `test.`
+  - 22 domini-paese appartenenti a `europa.`
+  - 37 domini-città appartenenti ai rispettivi paesi
+  - 4 sottozone funzionali appartenenti a `infra.` e `test.`
 
-## 1. Required final size and roles
+## 1. Gerarchia DNS europea
 
-- **37** existing routers, **57** existing WAN links, unchanged.
-- **16** new hosts, exactly: **12 authoritative DNS hosts**, **2 recursive resolver hosts**, and **2 clients**; final total **53 devices**.
-- **10** new IPv4 access collision domains, attached to 10 existing routers; no other access networks.
-- Artificial root zone `.` and exactly six artificial TLDs `europa.`, `infra.`, `research.`, `services.`, `lab.`, and `test.`.
-- Authoritative inventory: **1 root + 6 TLD + 22 country zones + 37 city zones + 111 delegated city subzones + 24 additional functional zones = 201 zones**.
-- For every non-root zone, implement its delegation from the direct parent: **200 parent–child delegations**.
-- Application/service DNS records: **37 MX + 333 A = 370 records**, in addition to the mandatory SOA/NS/nameserver-address records for each authoritative zone.
+- **Dominio radice:** Configura il dominio `.` come radice artificiale dell'intera gerarchia DNS. La radice deve delegare i tre TLD `europa.`, `infra.` e `test.` ai rispettivi name server autorevoli.
 
-### 1.1 Access networks and interface expansion
+- **TLD europa:** Configura `europa.` come dominio principale della gerarchia geografica. Deve delegare i seguenti 22 domini-paese ai rispettivi name server autorevoli:
 
-Each access network is `10.210.<index>.0/24` with router gateway `10.210.<index>.1/24`. Add the new interface at the **next free eth index** of the specified existing router. The network names and host addresses are fixed and must not be changed.
+  - `at.europa.` — Austria
+  - `be.europa.` — Belgio
+  - `bg.europa.` — Bulgaria
+  - `ch.europa.` — Svizzera
+  - `cz.europa.` — Repubblica Ceca
+  - `de.europa.` — Germania
+  - `dk.europa.` — Danimarca
+  - `es.europa.` — Spagna
+  - `fi.europa.` — Finlandia
+  - `fr.europa.` — Francia
+  - `gr.europa.` — Grecia
+  - `hr.europa.` — Croazia
+  - `hu.europa.` — Ungheria
+  - `ie.europa.` — Irlanda
+  - `it.europa.` — Italia
+  - `nl.europa.` — Paesi Bassi
+  - `no.europa.` — Norvegia
+  - `pl.europa.` — Polonia
+  - `pt.europa.` — Portogallo
+  - `rs.europa.` — Serbia
+  - `se.europa.` — Svezia
+  - `uk.europa.` — Regno Unito
 
-| Existing router | New interface | Collision domain | Access subnet | Router IPv4 gateway |
-|---|---|---|---|---|
-| `r_amsterdam` | `eth4` | `access_00` | `10.210.0.0/24` | `10.210.0.1/24` |
-| `r_athens` | `eth3` | `access_01` | `10.210.1.0/24` | `10.210.1.1/24` |
-| `r_frankfurt` | `eth4` | `access_12` | `10.210.12.0/24` | `10.210.12.1/24` |
-| `r_helsinki` | `eth3` | `access_15` | `10.210.15.0/24` | `10.210.15.1/24` |
-| `r_lisbon` | `eth3` | `access_17` | `10.210.17.0/24` | `10.210.17.1/24` |
-| `r_london` | `eth5` | `access_18` | `10.210.18.0/24` | `10.210.18.1/24` |
-| `r_paris` | `eth5` | `access_26` | `10.210.26.0/24` | `10.210.26.1/24` |
-| `r_rome` | `eth4` | `access_28` | `10.210.28.0/24` | `10.210.28.1/24` |
-| `r_warsaw` | `eth3` | `access_34` | `10.210.34.0/24` | `10.210.34.1/24` |
-| `r_zurich` | `eth3` | `access_36` | `10.210.36.0/24` | `10.210.36.1/24` |
+- **Domini-città:** Ciascun dominio-paese deve delegare le città corrispondenti ai router geografici COST266, secondo le seguenti associazioni:
 
-Ensure that every new host `eth0` is attached to the correct access domain, that every new host has its assigned `/24` address and the correct default gateway, and that all the new access subnets are reachable throughout the original 37-router backbone. Extend the *static* router configuration with routes to all remote access `/24` networks; a router directly attached to an access subnet uses its connected route. Use the pre-existing routing next hops and do not modify the original 3,327 entries. An expected minimal extension is **360 additional static access-subnet routes** (one for every remotely located access subnet at each router).
+  - `at.europa.` → `vienna.at.europa.`
+  - `be.europa.` → `brussels.be.europa.`
+  - `bg.europa.` → `sofia.bg.europa.`
+  - `ch.europa.` → `zurich.ch.europa.`
+  - `cz.europa.` → `prague.cz.europa.`
+  - `de.europa.` → `berlin.de.europa.`, `dusseldorf.de.europa.`, `frankfurt.de.europa.`, `hamburg.de.europa.`, `munich.de.europa.`
+  - `dk.europa.` → `copenhagen.dk.europa.`
+  - `es.europa.` → `barcelona.es.europa.`, `madrid.es.europa.`, `seville.es.europa.`
+  - `fi.europa.` → `helsinki.fi.europa.`
+  - `fr.europa.` → `bordeaux.fr.europa.`, `lyon.fr.europa.`, `marseille.fr.europa.`, `paris.fr.europa.`, `strasbourg.fr.europa.`
+  - `gr.europa.` → `athens.gr.europa.`
+  - `hr.europa.` → `zagreb.hr.europa.`
+  - `hu.europa.` → `budapest.hu.europa.`
+  - `ie.europa.` → `dublin.ie.europa.`
+  - `it.europa.` → `milan.it.europa.`, `palermo.it.europa.`, `rome.it.europa.`
+  - `nl.europa.` → `amsterdam.nl.europa.`
+  - `no.europa.` → `oslo.no.europa.`
+  - `pl.europa.` → `krakow.pl.europa.`, `warsaw.pl.europa.`
+  - `pt.europa.` → `lisbon.pt.europa.`
+  - `rs.europa.` → `belgrade.rs.europa.`
+  - `se.europa.` → `stockholm.se.europa.`
+  - `uk.europa.` → `birmingham.uk.europa.`, `glasgow.uk.europa.`, `london.uk.europa.`
 
-### 1.2 Fixed host roles, addresses and attachments
+Ogni città deve costituire una zona DNS autorevole distinta, direttamente delegata dal relativo dominio-paese. Non creare ulteriori sottozone delegate al di sotto delle città.
 
-One physical DNS host may host many distinct **authoritative** zones as assigned below. This multiplexing is intentional and mandatory; **do not create 201 separate devices**. Use a BIND9-capable image (e.g. `kathara/base`) on the DNS hosts and make `dig` available to the clients.
+## 2. Gerarchia DNS funzionale
 
-| Role | Kathara host (create) | IPv4 on `eth0` | Attached router | Host default gateway |
-|---|---|---|---|---|
-| `root` | `c266_root` | `10.210.0.10/24` | `r_amsterdam` | `10.210.0.1` |
-| `tld_europa` | `c266_tld_europa` | `10.210.0.11/24` | `r_amsterdam` | `10.210.0.1` |
-| `tld_infra` | `c266_tld_infra` | `10.210.12.11/24` | `r_frankfurt` | `10.210.12.1` |
-| `tld_research` | `c266_tld_research` | `10.210.12.12/24` | `r_frankfurt` | `10.210.12.1` |
-| `tld_services` | `c266_tld_services` | `10.210.28.11/24` | `r_rome` | `10.210.28.1` |
-| `tld_lab` | `c266_tld_lab` | `10.210.26.11/24` | `r_paris` | `10.210.26.1` |
-| `tld_test` | `c266_tld_test` | `10.210.18.11/24` | `r_london` | `10.210.18.1` |
-| `countries` | `c266_countries` | `10.210.12.10/24` | `r_frankfurt` | `10.210.12.1` |
-| `cities` | `c266_cities` | `10.210.28.10/24` | `r_rome` | `10.210.28.1` |
-| `subzones` | `c266_subzones` | `10.210.26.10/24` | `r_paris` | `10.210.26.1` |
-| `functional_1` | `c266_functional_1` | `10.210.18.10/24` | `r_london` | `10.210.18.1` |
-| `functional_2` | `c266_functional_2` | `10.210.15.10/24` | `r_helsinki` | `10.210.15.1` |
-| `resolver_1` | `c266_resolver_1` | `10.210.34.10/24` | `r_warsaw` | `10.210.34.1` |
-| `resolver_2` | `c266_resolver_2` | `10.210.36.10/24` | `r_zurich` | `10.210.36.1` |
-| `client_1` | `c266_client_1` | `10.210.1.10/24` | `r_athens` | `10.210.1.1` |
-| `client_2` | `c266_client_2` | `10.210.17.10/24` | `r_lisbon` | `10.210.17.1` |
+- **TLD infra:** Configura `infra.` con le seguenti due sottozone delegate:
+  - `dns.infra.` — Informazioni sui server DNS della rete
+  - `routing.infra.` — Informazioni relative ai router del backbone
 
-Authoritative hosts: `c266_root`, the six `c266_tld_*` hosts, `c266_countries`, `c266_cities`, `c266_subzones`, `c266_functional_1` and `c266_functional_2` (12 total). Resolvers: `c266_resolver_1`, `c266_resolver_2`. Clients: `c266_client_1`, `c266_client_2`.
+- **TLD test:** Configura `test.` con le seguenti due sottozone delegate:
+  - `positive.test.` — Verifica della corretta risoluzione DNS
+  - `negative.test.` — Verifica delle risposte negative DNS
 
-## 2. Authoritative DNS hierarchy — complete tree
+Le quattro sottozone devono essere autorevoli e indipendenti, con record SOA, NS e glue record ove necessari.
 
-**Every named line in this tree is a separate authoritative DNS zone**, not a mere directory or a resource record. The bracketed item is the exact host serving that zone; the host IPv4 address is fixed in §1.2. Parent–child edges are mandatory DNS `NS` delegations (with glue where necessary). A country in this tree is a logical zone below `europa.`, not a public Internet country-code TLD. All names below are absolute FQDNs.
+## 3. Corrispondenza tra zone DNS e macchine
 
-```text
-.   [ROOT: c266_root, 10.210.0.10]
-├── europa.   [c266_tld_europa]
-│   ├── at.europa.   [c266_countries]
-│   │   └── vienna.at.europa.   [c266_cities]
-│   │       ├── services.vienna.at.europa.   [c266_subzones]
-│   │       ├── research.vienna.at.europa.   [c266_subzones]
-│   │       └── admin.vienna.at.europa.   [c266_subzones]
-│   ├── be.europa.   [c266_countries]
-│   │   └── brussels.be.europa.   [c266_cities]
-│   │       ├── services.brussels.be.europa.   [c266_subzones]
-│   │       ├── research.brussels.be.europa.   [c266_subzones]
-│   │       └── admin.brussels.be.europa.   [c266_subzones]
-│   ├── bg.europa.   [c266_countries]
-│   │   └── sofia.bg.europa.   [c266_cities]
-│   │       ├── services.sofia.bg.europa.   [c266_subzones]
-│   │       ├── research.sofia.bg.europa.   [c266_subzones]
-│   │       └── admin.sofia.bg.europa.   [c266_subzones]
-│   ├── ch.europa.   [c266_countries]
-│   │   └── zurich.ch.europa.   [c266_cities]
-│   │       ├── services.zurich.ch.europa.   [c266_subzones]
-│   │       ├── research.zurich.ch.europa.   [c266_subzones]
-│   │       └── admin.zurich.ch.europa.   [c266_subzones]
-│   ├── cz.europa.   [c266_countries]
-│   │   └── prague.cz.europa.   [c266_cities]
-│   │       ├── services.prague.cz.europa.   [c266_subzones]
-│   │       ├── research.prague.cz.europa.   [c266_subzones]
-│   │       └── admin.prague.cz.europa.   [c266_subzones]
-│   ├── de.europa.   [c266_countries]
-│   │   ├── berlin.de.europa.   [c266_cities]
-│   │   │   ├── services.berlin.de.europa.   [c266_subzones]
-│   │   │   ├── research.berlin.de.europa.   [c266_subzones]
-│   │   │   └── admin.berlin.de.europa.   [c266_subzones]
-│   │   ├── dusseldorf.de.europa.   [c266_cities]
-│   │   │   ├── services.dusseldorf.de.europa.   [c266_subzones]
-│   │   │   ├── research.dusseldorf.de.europa.   [c266_subzones]
-│   │   │   └── admin.dusseldorf.de.europa.   [c266_subzones]
-│   │   ├── frankfurt.de.europa.   [c266_cities]
-│   │   │   ├── services.frankfurt.de.europa.   [c266_subzones]
-│   │   │   ├── research.frankfurt.de.europa.   [c266_subzones]
-│   │   │   └── admin.frankfurt.de.europa.   [c266_subzones]
-│   │   ├── hamburg.de.europa.   [c266_cities]
-│   │   │   ├── services.hamburg.de.europa.   [c266_subzones]
-│   │   │   ├── research.hamburg.de.europa.   [c266_subzones]
-│   │   │   └── admin.hamburg.de.europa.   [c266_subzones]
-│   │   └── munich.de.europa.   [c266_cities]
-│   │       ├── services.munich.de.europa.   [c266_subzones]
-│   │       ├── research.munich.de.europa.   [c266_subzones]
-│   │       └── admin.munich.de.europa.   [c266_subzones]
-│   ├── dk.europa.   [c266_countries]
-│   │   └── copenhagen.dk.europa.   [c266_cities]
-│   │       ├── services.copenhagen.dk.europa.   [c266_subzones]
-│   │       ├── research.copenhagen.dk.europa.   [c266_subzones]
-│   │       └── admin.copenhagen.dk.europa.   [c266_subzones]
-│   ├── es.europa.   [c266_countries]
-│   │   ├── barcelona.es.europa.   [c266_cities]
-│   │   │   ├── services.barcelona.es.europa.   [c266_subzones]
-│   │   │   ├── research.barcelona.es.europa.   [c266_subzones]
-│   │   │   └── admin.barcelona.es.europa.   [c266_subzones]
-│   │   ├── madrid.es.europa.   [c266_cities]
-│   │   │   ├── services.madrid.es.europa.   [c266_subzones]
-│   │   │   ├── research.madrid.es.europa.   [c266_subzones]
-│   │   │   └── admin.madrid.es.europa.   [c266_subzones]
-│   │   └── seville.es.europa.   [c266_cities]
-│   │       ├── services.seville.es.europa.   [c266_subzones]
-│   │       ├── research.seville.es.europa.   [c266_subzones]
-│   │       └── admin.seville.es.europa.   [c266_subzones]
-│   ├── fi.europa.   [c266_countries]
-│   │   └── helsinki.fi.europa.   [c266_cities]
-│   │       ├── services.helsinki.fi.europa.   [c266_subzones]
-│   │       ├── research.helsinki.fi.europa.   [c266_subzones]
-│   │       └── admin.helsinki.fi.europa.   [c266_subzones]
-│   ├── fr.europa.   [c266_countries]
-│   │   ├── bordeaux.fr.europa.   [c266_cities]
-│   │   │   ├── services.bordeaux.fr.europa.   [c266_subzones]
-│   │   │   ├── research.bordeaux.fr.europa.   [c266_subzones]
-│   │   │   └── admin.bordeaux.fr.europa.   [c266_subzones]
-│   │   ├── lyon.fr.europa.   [c266_cities]
-│   │   │   ├── services.lyon.fr.europa.   [c266_subzones]
-│   │   │   ├── research.lyon.fr.europa.   [c266_subzones]
-│   │   │   └── admin.lyon.fr.europa.   [c266_subzones]
-│   │   ├── marseille.fr.europa.   [c266_cities]
-│   │   │   ├── services.marseille.fr.europa.   [c266_subzones]
-│   │   │   ├── research.marseille.fr.europa.   [c266_subzones]
-│   │   │   └── admin.marseille.fr.europa.   [c266_subzones]
-│   │   ├── paris.fr.europa.   [c266_cities]
-│   │   │   ├── services.paris.fr.europa.   [c266_subzones]
-│   │   │   ├── research.paris.fr.europa.   [c266_subzones]
-│   │   │   └── admin.paris.fr.europa.   [c266_subzones]
-│   │   └── strasbourg.fr.europa.   [c266_cities]
-│   │       ├── services.strasbourg.fr.europa.   [c266_subzones]
-│   │       ├── research.strasbourg.fr.europa.   [c266_subzones]
-│   │       └── admin.strasbourg.fr.europa.   [c266_subzones]
-│   ├── gr.europa.   [c266_countries]
-│   │   └── athens.gr.europa.   [c266_cities]
-│   │       ├── services.athens.gr.europa.   [c266_subzones]
-│   │       ├── research.athens.gr.europa.   [c266_subzones]
-│   │       └── admin.athens.gr.europa.   [c266_subzones]
-│   ├── hr.europa.   [c266_countries]
-│   │   └── zagreb.hr.europa.   [c266_cities]
-│   │       ├── services.zagreb.hr.europa.   [c266_subzones]
-│   │       ├── research.zagreb.hr.europa.   [c266_subzones]
-│   │       └── admin.zagreb.hr.europa.   [c266_subzones]
-│   ├── hu.europa.   [c266_countries]
-│   │   └── budapest.hu.europa.   [c266_cities]
-│   │       ├── services.budapest.hu.europa.   [c266_subzones]
-│   │       ├── research.budapest.hu.europa.   [c266_subzones]
-│   │       └── admin.budapest.hu.europa.   [c266_subzones]
-│   ├── ie.europa.   [c266_countries]
-│   │   └── dublin.ie.europa.   [c266_cities]
-│   │       ├── services.dublin.ie.europa.   [c266_subzones]
-│   │       ├── research.dublin.ie.europa.   [c266_subzones]
-│   │       └── admin.dublin.ie.europa.   [c266_subzones]
-│   ├── it.europa.   [c266_countries]
-│   │   ├── milan.it.europa.   [c266_cities]
-│   │   │   ├── services.milan.it.europa.   [c266_subzones]
-│   │   │   ├── research.milan.it.europa.   [c266_subzones]
-│   │   │   └── admin.milan.it.europa.   [c266_subzones]
-│   │   ├── palermo.it.europa.   [c266_cities]
-│   │   │   ├── services.palermo.it.europa.   [c266_subzones]
-│   │   │   ├── research.palermo.it.europa.   [c266_subzones]
-│   │   │   └── admin.palermo.it.europa.   [c266_subzones]
-│   │   └── rome.it.europa.   [c266_cities]
-│   │       ├── services.rome.it.europa.   [c266_subzones]
-│   │       ├── research.rome.it.europa.   [c266_subzones]
-│   │       └── admin.rome.it.europa.   [c266_subzones]
-│   ├── nl.europa.   [c266_countries]
-│   │   └── amsterdam.nl.europa.   [c266_cities]
-│   │       ├── services.amsterdam.nl.europa.   [c266_subzones]
-│   │       ├── research.amsterdam.nl.europa.   [c266_subzones]
-│   │       └── admin.amsterdam.nl.europa.   [c266_subzones]
-│   ├── no.europa.   [c266_countries]
-│   │   └── oslo.no.europa.   [c266_cities]
-│   │       ├── services.oslo.no.europa.   [c266_subzones]
-│   │       ├── research.oslo.no.europa.   [c266_subzones]
-│   │       └── admin.oslo.no.europa.   [c266_subzones]
-│   ├── pl.europa.   [c266_countries]
-│   │   ├── krakow.pl.europa.   [c266_cities]
-│   │   │   ├── services.krakow.pl.europa.   [c266_subzones]
-│   │   │   ├── research.krakow.pl.europa.   [c266_subzones]
-│   │   │   └── admin.krakow.pl.europa.   [c266_subzones]
-│   │   └── warsaw.pl.europa.   [c266_cities]
-│   │       ├── services.warsaw.pl.europa.   [c266_subzones]
-│   │       ├── research.warsaw.pl.europa.   [c266_subzones]
-│   │       └── admin.warsaw.pl.europa.   [c266_subzones]
-│   ├── pt.europa.   [c266_countries]
-│   │   └── lisbon.pt.europa.   [c266_cities]
-│   │       ├── services.lisbon.pt.europa.   [c266_subzones]
-│   │       ├── research.lisbon.pt.europa.   [c266_subzones]
-│   │       └── admin.lisbon.pt.europa.   [c266_subzones]
-│   ├── rs.europa.   [c266_countries]
-│   │   └── belgrade.rs.europa.   [c266_cities]
-│   │       ├── services.belgrade.rs.europa.   [c266_subzones]
-│   │       ├── research.belgrade.rs.europa.   [c266_subzones]
-│   │       └── admin.belgrade.rs.europa.   [c266_subzones]
-│   ├── se.europa.   [c266_countries]
-│   │   └── stockholm.se.europa.   [c266_cities]
-│   │       ├── services.stockholm.se.europa.   [c266_subzones]
-│   │       ├── research.stockholm.se.europa.   [c266_subzones]
-│   │       └── admin.stockholm.se.europa.   [c266_subzones]
-│   └── uk.europa.   [c266_countries]
-│       ├── birmingham.uk.europa.   [c266_cities]
-│       │   ├── services.birmingham.uk.europa.   [c266_subzones]
-│       │   ├── research.birmingham.uk.europa.   [c266_subzones]
-│       │   └── admin.birmingham.uk.europa.   [c266_subzones]
-│       ├── glasgow.uk.europa.   [c266_cities]
-│       │   ├── services.glasgow.uk.europa.   [c266_subzones]
-│       │   ├── research.glasgow.uk.europa.   [c266_subzones]
-│       │   └── admin.glasgow.uk.europa.   [c266_subzones]
-│       └── london.uk.europa.   [c266_cities]
-│           ├── services.london.uk.europa.   [c266_subzones]
-│           ├── research.london.uk.europa.   [c266_subzones]
-│           └── admin.london.uk.europa.   [c266_subzones]
-├── infra.   [c266_tld_infra]
-│   ├── dns.infra.   [c266_functional_1]
-│   │   ├── root.dns.infra.   [c266_functional_2]
-│   │   ├── tld.dns.infra.   [c266_functional_2]
-│   │   └── resolvers.dns.infra.   [c266_functional_2]
-│   ├── routing.infra.   [c266_functional_1]
-│   └── monitoring.infra.   [c266_functional_1]
-├── research.   [c266_tld_research]
-│   ├── universities.research.   [c266_functional_1]
-│   ├── experiments.research.   [c266_functional_1]
-│   │   ├── latency.experiments.research.   [c266_functional_2]
-│   │   └── failures.experiments.research.   [c266_functional_2]
-│   └── datasets.research.   [c266_functional_1]
-├── services.   [c266_tld_services]
-│   ├── web.services.   [c266_functional_1]
-│   │   └── portals.web.services.   [c266_functional_2]
-│   ├── api.services.   [c266_functional_1]
-│   └── mail.services.   [c266_functional_1]
-├── lab.   [c266_tld_lab]
-│   ├── benchmark.lab.   [c266_functional_1]
-│   │   └── scenarios.benchmark.lab.   [c266_functional_2]
-│   ├── checker.lab.   [c266_functional_1]
-│   └── clients.lab.   [c266_functional_1]
-└── test.   [c266_tld_test]
-    ├── positive.test.   [c266_functional_1]
-    ├── negative.test.   [c266_functional_1]
-    │   ├── nxdomain.negative.test.   [c266_functional_2]
-    │   └── delegation.negative.test.   [c266_functional_2]
-    └── dnssec.test.   [c266_functional_1]
-```
+Utilizza le seguenti associazioni tra zone e host del laboratorio predisposto:
 
-### 2.1 Delegation and NS/SOA requirements
+- **Dominio radice:** `.` → `c266_root`, IP `10.210.0.10`
+- **TLD europa:** `europa.` → `c266_tld_europa`, IP `10.210.0.11`
+- **TLD infra:** `infra.` → `c266_tld_infra`, IP `10.210.12.11`
+- **TLD test:** `test.` → `c266_tld_test`, IP `10.210.18.11`
+- **Domini-paese:** tutte le 22 zone sotto `europa.` → `c266_countries`, IP `10.210.12.10`
+- **Domini-città:** tutte le 37 zone cittadine → `c266_cities`, IP `10.210.28.10`
+- **Sottozone funzionali:** `dns.infra.`, `routing.infra.`, `positive.test.` e `negative.test.` → `c266_functional_1`, IP `10.210.18.10`
 
-1. The root `.` is authoritative on **`c266_root` (10.210.0.10)**. Its authoritative NS and SOA primary name is `a.root-servers.`, with A `a.root-servers. → 10.210.0.10`.
-2. For **every other zone `Z`**, use its nameserver **`ns1.Z`** (absolute FQDN) and set the NS host address to the IPv4 address of the assigned authoritative device shown in §1.2. Every zone has a valid authoritative SOA, apex NS, and A record for its own nameserver.
-3. Every parent zone must delegate **all** of its immediately subordinated child zones using `NS` records pointing to the exact child nameserver. Since `ns1.Z` is in-bailiwick of child `Z`, publish the required parent-side glue A with the **same address** as that child's nameserver A. All **200** delegations must be consistent and traversable from `.`.
-4. The root delegates the six TLDs directly. `europa.` delegates 22 country zones. Each country zone delegates its listed city zones; each city delegates **exactly three** child zones `services`, `research`, and `admin`. The other five TLDs delegate their functional zones according to the tree; these branches must be real zones, including their nested descendants.
-5. Do not confuse **zone names** with **A-record names** such as `www`, `mail`, `git`, `portal`, or `ns1`. These hostnames are records *inside* the corresponding zone and must **not** be added as separately delegated zones.
+Ogni server autorevole deve gestire tutte le zone assegnate tramite BIND9. Le zone condivise devono restare logicamente distinte e avere ciascuna il proprio SOA e i propri record NS.
 
-## 3. Required application/service records (370 records)
+Non assegnare ruoli DNS ai 37 router e non creare una macchina distinta per ogni zona o città.
 
-### 3.1 All 37 city zones
+## 4. Deleghe e record autorevoli
 
-For **each** of the 37 zones `C = <city>.<country>.europa.` represented above, add the following four records in the **city zone served by `c266_cities` at 10.210.28.10**:
+- **Deleghe DNS:** Configura le 66 deleghe richieste, con record NS coerenti tra zona padre e zona figlia.
+- **Glue record:** Inserisci i record A di glue necessari per tutti i name server interni alle rispettive zone delegate. Utilizza gli indirizzi IP reali degli host autorevoli.
+- **SOA:** Configura un record SOA valido per ciascuna delle 67 zone.
+- **NS:** Utilizza `ns1.<zona>.` come nome del name server autorevole per ciascuna zona non radice, con un record A associato all'indirizzo IP dell'host che la gestisce.
+- **Root:** Utilizza `a.root-servers.` come name server della radice artificiale, associato a `10.210.0.10`.
+- **Autorevolezza:** Disabilita la ricorsione su tutti i server DNS autorevoli (`recursion no`) e abilita le risposte alle query provenienti dalla rete del laboratorio.
 
-| Owner FQDN | Type | Exact value |
-|---|---|---|
-| `C` (zone apex) | `MX` | `10 mail.C` |
-| `www.C` | `A` | `10.210.28.10` |
-| `api.C` | `A` | `10.210.28.10` |
-| `mail.C` | `A` | `10.210.28.10` |
+## 5. Record DNS delle città
 
-Here `mail.C` means the absolute owner `mail.<city>.<country>.europa.` and **MX target names must end with a trailing dot**. The `mail` name is for DNS testing; it **does not require an SMTP daemon**. The `www`/`api` labels are similarly DNS aliases, not a requirement to deploy HTTP or API services. All 37 city zones use the **same actual existing DNS host** at `10.210.28.10`, even when the city name corresponds to a different original router.
+Configura all'interno di ciascuna delle 37 zone cittadine i record necessari per identificare il relativo router COST266 e simulare i riferimenti DNS dei servizi web e di posta elettronica.
 
-### 3.2 All 111 delegated city subzones
+- **Record A:** Per ogni zona cittadina configura:
+  - Un record A all'apice della zona, associato all'indirizzo IPv4 di loopback del router corrispondente.
+  - Un record `www.<città>.<paese>.europa.` associato allo stesso indirizzo.
+  - Un record `mail.<città>.<paese>.europa.` associato allo stesso indirizzo.
 
-For each of the 37 city zones `C`, add **three actual delegated authoritative zones**, all served by `c266_subzones` at `10.210.26.10`, with exactly the following two application A records in each:
+- **Record MX:** Per ogni zona cittadina configura un record MX con priorità 10, diretto a `mail.<città>.<paese>.europa.`.
 
-| Delegated zone | Owner FQDNs | Type | Exact IPv4 for both |
-|---|---|---|---|
-| `services.C` | `portal.services.C`, `api.services.C` | `A` | `10.210.26.10` |
-| `research.C` | `git.research.C`, `data.research.C` | `A` | `10.210.26.10` |
-| `admin.C` | `monitor.admin.C`, `logs.admin.C` | `A` | `10.210.26.10` |
+- **Indirizzamento:** Utilizza esclusivamente gli indirizzi IPv4 di loopback già configurati sui router COST266, con le seguenti associazioni:
 
-This yields `37 × 3 × 2 = 222` A records in these subzones, in addition to the 111 required NS nameserver A records. The city-level requirement yields `37 × (3 A + 1 MX) = 148` records. Together they comprise **370 requested A/MX records**, plus SOA/NS/nameserver-address infrastructure records.
+  - Amsterdam → `10.200.0.1`
+  - Athens → `10.200.0.2`
+  - Barcelona → `10.200.0.3`
+  - Belgrade → `10.200.0.4`
+  - Berlin → `10.200.0.5`
+  - Birmingham → `10.200.0.6`
+  - Bordeaux → `10.200.0.7`
+  - Brussels → `10.200.0.8`
+  - Budapest → `10.200.0.9`
+  - Copenhagen → `10.200.0.10`
+  - Dublin → `10.200.0.11`
+  - Dusseldorf → `10.200.0.12`
+  - Frankfurt → `10.200.0.13`
+  - Glasgow → `10.200.0.14`
+  - Hamburg → `10.200.0.15`
+  - Helsinki → `10.200.0.16`
+  - Krakow → `10.200.0.17`
+  - Lisbon → `10.200.0.18`
+  - London → `10.200.0.19`
+  - Lyon → `10.200.0.20`
+  - Madrid → `10.200.0.21`
+  - Marseille → `10.200.0.22`
+  - Milan → `10.200.0.23`
+  - Munich → `10.200.0.24`
+  - Oslo → `10.200.0.25`
+  - Palermo → `10.200.0.26`
+  - Paris → `10.200.0.27`
+  - Prague → `10.200.0.28`
+  - Rome → `10.200.0.29`
+  - Seville → `10.200.0.30`
+  - Sofia → `10.200.0.31`
+  - Stockholm → `10.200.0.32`
+  - Strasbourg → `10.200.0.33`
+  - Vienna → `10.200.0.34`
+  - Warsaw → `10.200.0.35`
+  - Zagreb → `10.200.0.36`
+  - Zurich → `10.200.0.37`
 
-### 3.3 Functional zones under the five other TLDs
+Ad esempio, per la zona `rome.it.europa.` devono essere presenti:
 
-Create **all 24 functional zones** shown in the tree under `infra.`, `research.`, `services.`, `lab.` and `test.`. Zones directly under a TLD (depth two) are served by `c266_functional_1` at `10.210.18.10`; further delegated child zones (depth three) are served by `c266_functional_2` at `10.210.15.10`. Each needs its own SOA, apex NS, nameserver A and parent-side NS/glue. These are zones, not necessarily application endpoints. The zone named `dnssec.test.` is a thematic name: **DNSSEC signing is not required**.
+- `rome.it.europa. IN A 10.200.0.29`
+- `www.rome.it.europa. IN A 10.200.0.29`
+- `mail.rome.it.europa. IN A 10.200.0.29`
+- `rome.it.europa. IN MX 10 mail.rome.it.europa.`
 
-## 4. BIND9 server behavior
+I record `www` e `mail` rappresentano riferimenti DNS da verificare. Non è richiesta l'installazione di server HTTP o SMTP sui router.
 
-- **Authoritative servers:** listen on their assigned IPv4 interfaces; set `recursion no`; permit queries from the laboratory; serve *only* their assigned authoritative zones. Do not enable recursion on an authoritative server.
-- **Recursive servers:** `c266_resolver_1` (10.210.34.10) and `c266_resolver_2` (10.210.36.10); configure `recursion yes` and allow client queries. They must hold **no master/slave authoritative zones**. Instead, configure root hints for the private root `a.root-servers.` at `10.210.0.10`.
-- **Isolated DNS hierarchy:** IPv4 only; `dnssec-validation no` while unsigned; **no external root hints, Internet DNS forwarders, or public-DNS dependency**. Avoid including default Internet root zones that conflict with the private root.
-- **Persistence:** store the BIND configuration and zone files under each assigned host's persistent Kathara filesystem (e.g. `<host>/etc/bind/`) and launch/restart `named` via the host's `.startup` after its network configuration. Preserve original network files and commands.
+## 6. Record DNS funzionali
 
-## 5. Client name resolution
+Configura i seguenti record A nelle rispettive zone autorevoli:
 
-- `c266_client_1` (10.210.1.10) must use **only** `c266_resolver_1` (`10.210.34.10`) through persistent `/etc/resolv.conf` configuration.
-- `c266_client_2` (10.210.17.10) must use **only** `c266_resolver_2` (`10.210.36.10`) through persistent `/etc/resolv.conf` configuration.
-- Both clients must resolve all **370** application A/MX records to their exact requested results by following the artificial DNS hierarchy; equivalently the two clients together must produce **740 successful record responses**. Querying a deeper child zone must follow its authoritative delegation chain instead of being answered incorrectly by the parent zone.
+- `root.dns.infra.` → `10.210.0.10`
+- `resolvers.dns.infra.` → `10.210.34.10`
+- `backbone.routing.infra.` → `10.200.0.13`
+- `www.positive.test.` → `10.210.18.10`
 
-## 6. Acceptance requirements and restrictions
+Configura la zona `negative.test.` in modo che sia autorevole e permetta di verificare correttamente la risposta `NXDOMAIN` alla query `missing.negative.test.`. Non inserire un record corrispondente a tale nome.
 
-- **Physical correctness:** all original 37 routers and 57 WAN domains remain unchanged, with all original WAN/loopback IPv4 addresses, forwarding and 3,327 static backbone routes intact; the 16 required hosts and 10 access domains are present and routed without collisions.
-- **Authoritative correctness:** all 201 zones have valid, loadable SOA and NS data and an A record for the assigned authoritative nameserver; all 200 NS/glue delegations use the correct target and IPv4 address. Child zones must return authoritative answers with the `aa` flag when queried directly.
-- **Record correctness:** all 370 application DNS entries defined in §3 return the exact A or MX responses. The MX exchange FQDNs also resolve through their corresponding `mail` A records.
-- **Recursive correctness:** both clients use their respective recursive resolvers and obtain correct results for all 370 application queries, including deeply nested city subzones; recursive responses advertise recursive availability.
-- **No unwanted additions:** do not add 201 machines, do not change original WAN routing or router images, and do not install web/mail application daemons merely to satisfy the names of DNS A/MX records. All configuration must be persistent in the laboratory.
-- **Output:** modify the supplied lab in place, producing a complete `lab.conf`, `.startup` scripts for the new hosts, appropriate append-only router updates, and valid persistent BIND9 configuration/zone files. Provide a short list of the created devices/files and any unmet constraints; do not create or alter the evaluation correction file. Runtime execution can be performed externally.
+## 7. Risoluzione locale
 
-### Example authoritative and recursive queries
+- **Resolver ricorsivi:** Configura due local name server distinti:
+  - `c266_resolver_1` → `10.210.34.10`
+  - `c266_resolver_2` → `10.210.36.10`
 
-```shell
-dig @10.210.0.10 . SOA +norecurse
-dig @10.210.0.10 europa. NS +norecurse
-dig @10.210.28.10 rome.it.europa. MX +norecurse
-dig @10.210.28.10 www.amsterdam.nl.europa. A +norecurse
-dig @10.210.26.10 portal.services.rome.it.europa. A +norecurse
-dig @10.210.34.10 git.research.paris.fr.europa. A
-dig @10.210.36.10 mail.milan.it.europa. A
-```
+- **Client DNS:** Configura i seguenti client:
+  - `c266_client_1` → utilizza `10.210.34.10` come resolver.
+  - `c266_client_2` → utilizza `10.210.36.10` come resolver.
 
-The hierarchy must conform to the **zone-to-device assignment in the tree**, even where the visual layout suggests geographic locations. Logical country and city names do **not** entail extra city-specific physical DNS hosts.
+- **Risoluzione ricorsiva:** Entrambi i resolver devono effettuare la risoluzione a partire dalla root artificiale `10.210.0.10`, seguendo le deleghe verso i TLD, i domini-paese e le zone cittadine oppure le sottozone funzionali.
+
+- **Root hints:** Configura i file root hints affinché puntino esclusivamente alla root artificiale del laboratorio.
+
+- **Separazione dei ruoli:** I resolver devono avere `recursion yes`, `allow-recursion { any; }` e non devono ospitare zone autorevoli, eccetto la zona di tipo `hint` per la radice.
+
+- **Isolamento:** Disabilita la validazione DNSSEC per la gerarchia artificiale non firmata. Non utilizzare DNS pubblici, root server di Internet o forwarder esterni.
+
+## 8. Vincoli di configurazione
+
+- Mantieni invariati tutti i 37 router e i 57 collegamenti del backbone COST266.
+- Non modificare gli indirizzi IPv4, le loopback o le rotte statiche già configurate.
+- Non modificare i file di startup dei router.
+- Utilizza BIND9 sulle macchine assegnate ai ruoli DNS.
+- Conserva la separazione tra server autorevoli, resolver ricorsivi e client.
+- Non aggiungere dispositivi, LAN o interfacce durante questa fase di configurazione DNS.
+- Preserva il contenuto esistente dei file del laboratorio e aggiungi esclusivamente le configurazioni DNS necessarie.
+- Inserisci le configurazioni BIND9 persistenti nelle directory dei relativi dispositivi.
+- Avvia il servizio DNS tramite `systemctl restart named`.
+- Non configurare deleghe per i TLD `research.`, `services.` e `lab.`, né le sottozone cittadine `services`, `research` e `admin` appartenenti alla precedente gerarchia.
+- Se gli host DNS, le LAN di accesso o gli indirizzi richiesti non risultano già predisposti nel laboratorio, segnala esplicitamente le mancanze senza alterare autonomamente la topologia.
+
+## 9. Verifiche richieste
+
+La configurazione prodotta deve permettere di verificare:
+
+- La presenza di tutte le **67 zone autorevoli** e delle **66 deleghe**.
+- La correttezza dei record SOA, NS e degli eventuali glue record.
+- La coerenza tra deleghe dei domini-paese e zone cittadine.
+- La presenza e la correttezza dei 37 record MX delle città e dei rispettivi record A.
+- La corretta risoluzione dei record A e MX da entrambi i client attraverso i due resolver.
+- La risoluzione dei domini funzionali `infra.` e `test.`.
+- Il corretto comportamento delle risposte autoritative e ricorsive.
+- La restituzione di `NXDOMAIN` per `missing.negative.test.`.
+- La conservazione delle configurazioni di rete originali.
+
+Verifica staticamente la sintassi delle configurazioni mediante `named-checkconf` e `named-checkzone`, quando disponibili. La validazione dinamica tramite Kathara e `dig` sarà eseguita separatamente dal sistema di benchmark.
+
+**Obiettivo del benchmark:** Verificare la capacità del modello di configurare una gerarchia DNS distribuita sulla rete europea COST266, rispettando le 67 zone e le 66 deleghe previste, garantendo la coerenza dei record SOA, NS, A e MX, il corretto funzionamento dei resolver ricorsivi e la conservazione del backbone originale.

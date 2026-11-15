@@ -8,7 +8,7 @@ Nessun commit, push o benchmark a consumo eseguito.
 
 | `--execution-mode` / `--mode` | File predefinito | Protocollo | Strategia interna |
 |---|---|---|---|
-| `one_shot` | `experiments/cost266.yaml` | `cost266_incremental_continuous_session_v2` | `one_shot` |
+| `one_shot` | `experiments/cost266_one_shot.yaml` | `cost266_incremental_continuous_session_v2` | `one_shot` |
 | `incremental_isolated` | `experiments/cost266_v1.yaml` | `cost266_incremental_no_feedback_v1` | `incremental` |
 | `incremental_continuous` | `experiments/cost266.yaml` | `cost266_incremental_continuous_session_v2` | `incremental` |
 

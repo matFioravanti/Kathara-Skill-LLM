@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """CLI separata per preparazione, dry-run, esecuzione e resume COST266."""
 from dataclasses import replace
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import argparse
 import json
 import sys
+import threading
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -32,6 +34,8 @@ def main(argv=None):
     parser.add_argument('--skill-mode',choices=SKILL_MODE_CHOICES)
     parser.add_argument('--prompt-type',choices=PROMPT_TYPES)
     parser.add_argument('--only-replicate',type=int)
+    parser.add_argument('--generation-workers',type=int,default=5,
+                        help='Generazioni parallele one-shot (predefinito: 5); checker sempre uno alla volta')
     parser.add_argument('--dry-run',action='store_true')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--resume',action='store_true')
@@ -41,6 +45,8 @@ def main(argv=None):
         config = load_config(args.config)
         selection = resolve_selection(ROOT,config.root,args.experiment,args.execution_mode,args.strategy,loader=load_spec)
         spec = selection.spec
+        if args.generation_workers < 1:
+            raise ValueError('--generation-workers deve essere positivo')
         if hasattr(args,'prepare'):
             if args.dry_run or args.resume or args.rerun_correction:
                 raise ValueError('--prepare è separato da dry-run/resume/rerun-correction')
@@ -74,6 +80,30 @@ def main(argv=None):
                         validate_mode_sources(config,mode)
                     preflight(config,config.data['aut']['agent'],skill_mode=mode,scenario_ids=())
             failed = False
+            if args.execution_mode == 'one_shot':
+                checker_lock = threading.Lock()
+                active = [(cell,action,run) for cell,action,run in decisions if action not in ('SKIP','MISSING')]
+                for cell,action,run in decisions:
+                    if action == 'MISSING':
+                        print(f'MISSING {cell.relative}', flush=True)
+                    elif action == 'SKIP':
+                        metadata = json.loads((run/'manifest.json').read_text())
+                        print(f'SKIP {cell.relative}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}', flush=True)
+                        failed |= metadata.get('task_success') is not True
+                if active:
+                    print(f'One-shot: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; 1 checker alla volta.', flush=True)
+                    with ThreadPoolExecutor(max_workers=args.generation_workers) as pool:
+                        futures = {pool.submit(execute,config,spec,cell,inventory,preparation,
+                                               resume=args.resume,rerun=args.rerun_correction,checker_lock=checker_lock): cell
+                                   for cell,_,_ in active}
+                        for future in as_completed(futures):
+                            cell = futures[future]
+                            run = future.result()
+                            metadata = json.loads((run/'manifest.json').read_text())
+                            print(f'{cell.relative}: {metadata["pipeline_state"]}, task_success={metadata["task_success"]}', flush=True)
+                            failed |= metadata.get('task_success') is not True
+                    publish_cost266_report(config.root,report_output)
+                return int(failed)
             for cell,action,run in decisions:
                 if action == 'MISSING':
                     print(f'MISSING {cell.relative}')

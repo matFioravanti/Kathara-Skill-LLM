@@ -94,6 +94,8 @@ def test_full_synthetic_flow(synthetic, capsys):
         manifest = json.loads((run / 'manifest.json').read_text())
         assert manifest['pipeline_state'] == 'COMPLETED' and manifest['task_success'] is False
         assert (manifest['lab_id'], manifest['dns_tree_id'], manifest['task_level']) == ('lab_03','aurora','large')
+        assert manifest['execution_id'] == 'synthetic:lab_03:aurora:large:T1:no_skill:rep001:r001'
+        assert manifest['observation_id'] == 'synthetic:lab_03:aurora:large:T1:no_skill:rep001'
         assert not (labs['lab_03'].lab / 'agent.txt').exists()
         assert not (run / 'input/lab/agent.txt').exists()
         plan = compute_resume_plan(spec, analyse_existing_runs(root / 'runs', spec))
@@ -107,6 +109,7 @@ def test_full_synthetic_flow(synthetic, capsys):
     runs, _, summary = aggregate(root / 'runs', root / 'results')
     assert len(runs) == 1 and len(summary) == 1
     assert runs.iloc[0]['dns_tree_id'] == 'aurora' and summary.iloc[0]['task_level'] == 'large'
+    assert runs.iloc[0]['execution_id'] == manifest['execution_id']
     assert (root / 'results/benchmark.xlsx').is_file()
     assert main([str(experiment), '--config', str(config_path), '--dns-tree', 'aurora', '--task-level', 'large', '--prompt-type', 'T1', '--resume', '--dry-run']) == 0
     assert 'SKIP lab_03/aurora/large/T1/no_skill rep=1' in capsys.readouterr().out
@@ -188,6 +191,68 @@ def test_only_replicate_filters_without_resume_and_validates_range(synthetic, ca
         assert '--only-replicate deve essere compreso tra 1 e 2' in capsys.readouterr().err
     assert main(args + ['--only-replicate', '1', '--rerun-correction', '--dry-run']) == 1
     assert '--only-replicate non si applica alla rivalutazione' in capsys.readouterr().err
+
+
+def test_explicit_replicate_does_not_require_repetition_range(synthetic, capsys):
+    _, config_path, experiment = synthetic
+    assert main([str(experiment), '--config', str(config_path), '--replicate', '4',
+                 '--prompt-type', 'T1', '--dry-run']) == 0
+    out = capsys.readouterr().out
+    assert '3 osservazioni, 3 da eseguire' in out
+    assert out.count(' rep=4 ') == 3
+    assert ':rep004:r001' in out
+    assert 'Ripetizioni statistiche selezionate: 4' in out
+
+
+def test_next_replicate_uses_manifest_numbers_and_does_not_change_existing_runs(synthetic, capsys):
+    root, config_path, experiment = synthetic
+    run = root / 'runs/synthetic/lab_01/aurora/small/T1/no_skill/r003'
+    run.mkdir(parents=True)
+    manifest = run / 'manifest.json'
+    manifest.write_text(json.dumps({
+        'experiment_id': 'synthetic', 'lab_id': 'lab_01', 'dns_tree_id': 'aurora',
+        'task_level': 'small', 'prompt_type': 'T1', 'skill_mode': 'no_skill',
+        'replicate': 4, 'run_number': 3, 'pipeline_state': 'AUT_FAILED',
+    }))
+    before = manifest.read_bytes()
+    assert main([str(experiment), '--config', str(config_path), '--task-level', 'small', 'large',
+                 '--next-replicate', '--pipeline-mode', 'phased', '--sandbox-workers', '5',
+                 '--checker-workers', '4', '--checker-workers-large', '2', '--dry-run']) == 0
+    out = capsys.readouterr().out
+    assert 'Ripetizioni statistiche selezionate: 5' in out
+    assert 'limite 5, parallelismo utilizzabile 5' in out
+    assert 'checker small: limite 4' in out
+    assert 'checker large: limite 2' in out
+    assert 'synthetic:lab_01:aurora:small:T1:no_skill:rep005:r004' in out
+    assert 'Cartella prevista: runs/synthetic/lab_01/aurora/small/T1/no_skill/r004' in out
+    assert manifest.read_bytes() == before
+    assert not (run.parent / 'r004').exists()
+
+
+def test_ten_sandboxes_six_checkers_cli_and_yaml(synthetic, capsys):
+    _, config_path, experiment = synthetic
+    data = yaml.safe_load(config_path.read_text())
+    data['parallel_execution']['generation']['workers'] = 10
+    data['parallel_execution']['checker'].update(small_workers=6, medium_workers=6, large_workers=2)
+    config_path.write_text(yaml.safe_dump(data))
+    config = load_config(config_path)
+    assert config.data['parallel_execution']['generation']['workers'] == 10
+    args = [str(experiment), '--config', str(config_path), '--task-level', 'small',
+            '--replicate', '5', '--pipeline-mode', 'phased', '--sandbox-workers', '10',
+            '--checker-workers', '6', '--dry-run']
+    assert main(args) == 0
+    out = capsys.readouterr().out
+    assert 'sandbox Codex: limite 10, parallelismo utilizzabile 4' in out
+    assert 'checker small: limite 6, da valutare 4, parallelismo utilizzabile 4' in out
+    data['parallel_execution']['generation']['workers'] = 11
+    config_path.write_text(yaml.safe_dump(data))
+    with pytest.raises(ValueError, match='tra 1 e 10'):
+        load_config(config_path)
+    data['parallel_execution']['generation']['workers'] = 10
+    data['parallel_execution']['checker']['small_workers'] = 7
+    config_path.write_text(yaml.safe_dump(data))
+    with pytest.raises(ValueError, match='tra 1 e 6'):
+        load_config(config_path)
 
 
 def test_interrupted_finalization_is_not_completed(synthetic):

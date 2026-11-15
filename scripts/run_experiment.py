@@ -17,17 +17,19 @@ sys.path.insert(0, str(ROOT))
 
 from benchmark_core.aggregation import aggregate, validate_report_destination
 from benchmark_core.config import load_config
-from benchmark_core.correction_input import correction_path
 from benchmark_core.experiment import (analyse_existing_runs, build_run_matrix,
     compute_resume_plan, load_experiment, validate_experiment_prerequisites)
 from benchmark_core.pipeline import reevaluate_run
 from benchmark_core.standard_runtime import run_supervised as run_one, guarded_preflight, Policy, retry_reports
 from benchmark_core.preflight import preflight
-from benchmark_core.prompts import PROMPT_TYPES, resolve_prompt
+from benchmark_core.prompts import PROMPT_TYPES
 from benchmark_core.scenario_loader import discover_scenarios
 from benchmark_core.skill_modes import SKILL_MODE_CHOICES, validate_mode_sources
 from benchmark_core.task_catalog import TASK_LEVELS
 from benchmark_core.report_paths import general_experiment
+from benchmark_core.terminal_ui import execution_plan
+from benchmark_core.run_identity import cell_metadata, describe_run, observation_id
+from benchmark_core.parallel_limits import GENERATION_MAX_WORKERS, CHECKER_MAX_WORKERS
 
 
 def _notify_benchmark_finished():
@@ -52,12 +54,18 @@ def main(argv=None):
     parser.add_argument("--report-output", type=Path, help="directory per le nuove generazioni di report")
     parser.add_argument("--lab", "--filter-scenario", dest="lab")
     parser.add_argument("--dns-tree")
-    parser.add_argument("--task-level", choices=TASK_LEVELS)
+    parser.add_argument("--task-level", choices=TASK_LEVELS, nargs="+",
+                        help="uno o più livelli, ad esempio: small medium")
     parser.add_argument("--prompt-type", "--filter-prompt", dest="prompt_type", choices=PROMPT_TYPES)
     parser.add_argument("--skill-mode", "--filter-skill-mode", dest="skill_mode", choices=SKILL_MODE_CHOICES)
     parser.add_argument("--repetitions", type=int)
-    parser.add_argument("--only-replicate", type=int, metavar="N",
-                        help="seleziona soltanto la ripetizione logica N")
+    repetitions = parser.add_mutually_exclusive_group()
+    repetitions.add_argument("--replicate", type=int, metavar="N",
+                             help="esegui/riprendi la sola ripetizione statistica N; non è il numero rNNN")
+    repetitions.add_argument("--only-replicate", type=int, metavar="N",
+                             help="selettore storico, richiede N entro --repetitions; preferire --replicate")
+    repetitions.add_argument("--next-replicate", action="store_true",
+                             help="nuova ripetizione: massimo replicate presente nei livelli selezionati + 1")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--resume", action="store_true")
     modes.add_argument("--rerun-correction", action="store_true")
@@ -66,15 +74,21 @@ def main(argv=None):
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--pipeline-mode", choices=("sequential", "phased"), default="sequential",
                         help="phased: generate all labs before starting independent Kathara checks")
-    parser.add_argument("--generation-workers", type=int, choices=(1, 2, 3, 4, 5))
-    parser.add_argument("--checker-workers-small", type=int, choices=(1, 2, 3, 4))
-    parser.add_argument("--checker-workers-medium", type=int, choices=(1, 2, 3, 4))
-    parser.add_argument("--checker-workers-large", type=int, choices=(1, 2))
+    parser.add_argument("--generation-workers", "--sandbox-workers", dest="generation_workers",
+                        type=int, choices=range(1, GENERATION_MAX_WORKERS + 1))
+    parser.add_argument("--checker-workers", type=int, choices=range(1, max(CHECKER_MAX_WORKERS.values()) + 1),
+                        help="limite checker per ciascun livello selezionato (Large: massimo 2)")
+    for level, maximum in CHECKER_MAX_WORKERS.items():
+        parser.add_argument(f"--checker-workers-{level}", type=int, choices=range(1, maximum + 1))
     args = parser.parse_args(argv)
     benchmark_started = False
     experiment_lock = None
     try:
         config = load_config(args.config)
+        if args.replicate is not None:
+            args.only_replicate = args.replicate
+        if args.replicate is not None or args.next_replicate:
+            args.resume = True
         if not args.rerun_correction and Policy.from_config(config).auto_resume:
             args.resume = True
         spec = load_experiment(args.experiment)
@@ -94,7 +108,7 @@ def main(argv=None):
         assignments = tuple(a for a in spec.assignments if
             (not args.lab or a.lab_id == args.lab) and
             (not args.dns_tree or a.dns_tree_id == args.dns_tree) and
-            (not args.task_level or a.task_level == args.task_level))
+            (not args.task_level or a.task_level in args.task_level))
         prompts = tuple(p for p in spec.prompt_types if not args.prompt_type or p == args.prompt_type)
         skills = tuple(s for s in spec.skill_modes if not args.skill_mode or s == args.skill_mode)
         if not assignments or not prompts or not skills:
@@ -105,19 +119,36 @@ def main(argv=None):
             raise ValueError("--rerun-correction richiede la modalità sequenziale esistente")
         if args.pipeline_mode == "sequential" and any(v is not None for v in (
                 args.generation_workers, args.checker_workers_small,
-                args.checker_workers_medium, args.checker_workers_large)):
+                args.checker_workers_medium, args.checker_workers_large, args.checker_workers)):
             raise ValueError("Le opzioni worker richiedono --pipeline-mode phased")
         if args.rerun_correction and args.repetitions is not None:
             raise ValueError("--repetitions non si applica alla rivalutazione")
         if args.rerun_correction and args.only_replicate is not None:
             raise ValueError("--only-replicate non si applica alla rivalutazione")
+        if args.next_replicate and (args.repetitions is not None or args.rerun_correction):
+            raise ValueError("--next-replicate non si combina con --repetitions o --rerun-correction")
         if args.resume_allow_unverified and not args.resume:
             raise ValueError("--resume-allow-unverified richiede --resume")
         spec = replace(spec, assignments=assignments, scenarios=tuple(dict.fromkeys(a.lab_id for a in assignments)),
                        prompt_types=prompts, skill_modes=skills,
                        repetitions=args.repetitions or spec.repetitions)
-        if args.only_replicate is not None and not 1 <= args.only_replicate <= spec.repetitions:
-            raise ValueError(f"--only-replicate deve essere compreso tra 1 e {spec.repetitions}")
+        if args.only_replicate is not None:
+            if args.replicate is not None and args.repetitions is None:
+                spec = replace(spec, repetitions=max(spec.repetitions, args.replicate))
+            if not 1 <= args.only_replicate <= spec.repetitions:
+                raise ValueError(f"--only-replicate deve essere compreso tra 1 e {spec.repetitions}")
+        pc = config.data.get("parallel_execution", {})
+        generation_workers = args.generation_workers or pc.get("generation", {}).get("workers", 2)
+        checker_workers = {
+            level: (getattr(args, f"checker_workers_{level}") or
+                    (args.checker_workers if level in {a.task_level for a in assignments} else None) or
+                    pc.get("checker", {}).get(f"{level}_workers", default))
+            for level, default in (("small", 2), ("medium", 2), ("large", 1))
+        }
+        for level, maximum in CHECKER_MAX_WORKERS.items():
+            if checker_workers[level] > maximum:
+                raise ValueError(f"{level.title()} consente al massimo {maximum} checker; "
+                                 f"usare --checker-workers-{level} {maximum}")
         agent = config.data["aut"]["agent"]
         if agent != "codex" and any(mode != "no_skill" for mode in skills):
             raise ValueError("Antigravity usa solo no_skill nel protocollo esistente")
@@ -144,13 +175,20 @@ def main(argv=None):
             report_failed = not retry_reports(lambda: aggregate(runs_root, report_output, experiment_id=spec.experiment_id),config)
             print("Report da rigenerare: run conservate." if report_failed else "Report aggiornati.", flush=True)
         analyses = analyse_existing_runs(runs_root, spec)
+        if args.next_replicate:
+            args.only_replicate = max((r.replicate for analysis in analyses.values()
+                                       for r in analysis.all_runs if r.replicate is not None), default=0) + 1
+            spec = replace(spec, repetitions=args.only_replicate)
+            print(f"Nuova ripetizione statistica: {args.only_replicate}. "
+                  f"Per riprenderla dopo un'interruzione usare --replicate {args.only_replicate}; "
+                  "--next-replicate seleziona una nuova ripetizione a ogni avvio.")
         decisions = compute_resume_plan(spec, analyses)
         if args.rerun_correction:
             candidates = [r.run for analysis in analyses.values() for r in analysis.all_runs]
             if not candidates:
                 raise ValueError("Nessuna run corrispondente da rivalutare")
             for run in candidates:
-                print(f"RERUN {run.relative_to(config.root)}")
+                print(f"RERUN {run.relative_to(config.root)} | ID={describe_run(run)} | solo checker")
             if args.dry_run:
                 return 0
             validate_report_destination(report_output)
@@ -206,15 +244,10 @@ def main(argv=None):
             for cell, reason in conflicts.items():
                 print(f'CONFLICT {cell.lab_id}/{cell.dns_tree_id}/{cell.task_level}/{cell.prompt_type}/{cell.skill_mode} rep={cell.replicate}: {reason}', file=sys.stderr)
         selected = [d for d in decisions if d.should_run and d.cell not in conflicts]
-        print(f"Esperimento {spec.experiment_id}: {len(decisions)} osservazioni, {len(selected)} da eseguire, {len(conflicts)} conflitti")
+        execution_plan(config, spec, decisions, analyses, recoverable, conflicts,
+                       pipeline_mode=args.pipeline_mode, generation_workers=generation_workers,
+                       checker_workers=checker_workers, dry_run=args.dry_run)
         if args.dry_run:
-            for d in decisions:
-                c = d.cell
-                label = ('CONFLICT' if c in conflicts else
-                         'CHECK' if args.pipeline_mode == 'phased' and c in recoverable else
-                         'GENERATE' if args.pipeline_mode == 'phased' and d.should_run else
-                         'RUN' if d.should_run else 'SKIP')
-                print(f"{label} {c.lab_id}/{c.dns_tree_id}/{c.task_level}/{c.prompt_type}/{c.skill_mode} rep={c.replicate} prompt={resolve_prompt(config.root, c.dns_tree_id, c.prompt_type, c.task_level).relative_to(config.root)} correction={correction_path(config.root, c.assignment).relative_to(config.root)}")
             return int(bool(conflicts))
         if conflicts:
             return 1
@@ -227,17 +260,10 @@ def main(argv=None):
         benchmark_started = True
         if args.pipeline_mode == "phased":
             from benchmark_core.phased_execution import execute_phased
-            pc = config.data.get("parallel_execution", {})
-            generation_cfg = pc.get("generation", {})
-            checker_cfg = pc.get("checker", {})
             failed = execute_phased(
                 config, spec, labs, agent, selected, recoverable,
-                generation_workers=args.generation_workers or generation_cfg.get("workers", 2),
-                checker_workers={
-                    "small": args.checker_workers_small or checker_cfg.get("small_workers", 2),
-                    "medium": args.checker_workers_medium or checker_cfg.get("medium_workers", 2),
-                    "large": args.checker_workers_large or checker_cfg.get("large_workers", 1),
-                },
+                generation_workers=generation_workers,
+                checker_workers=checker_workers,
                 update_reports=update_reports,
                 continue_on_error=config.data["benchmark"]["continue_on_error"],
             )
@@ -254,12 +280,12 @@ def main(argv=None):
                                   experiment_id=c.experiment_id, replicate=c.replicate, assignment=c.assignment,
                                   **({"resume_run":recoverable[c]} if c in recoverable else {}))
                     state = json.loads((run / "manifest.json").read_text()).get("pipeline_state")
-                    print(f"{run.relative_to(config.root)}: {state}")
+                    print(f"ID={describe_run(run)} | stato={state} | cartella={run.relative_to(config.root)}")
                     if state != "COMPLETED":
                         failed = True
                         cell_failed = True
                 except Exception as exc:
-                    print(f"Errore esecuzione {c}: {exc}", file=sys.stderr)
+                    print(f"Errore esecuzione ID={observation_id(cell_metadata(c))}: {exc}", file=sys.stderr)
                     failed = True
                     cell_failed = True
                 needs_aggregation = False

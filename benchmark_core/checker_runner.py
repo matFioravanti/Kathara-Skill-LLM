@@ -10,6 +10,7 @@ import sys
 import tempfile
 import secrets
 import re
+import time
 
 from .workspace import copy_lab, write_json
 
@@ -125,7 +126,27 @@ def isolate_checker_copy(lab_conf: Path) -> str:
     return identity
 
 
-def run_checker(config, run: Path, correction: Path, *, isolated: bool = False) -> dict:
+class CheckerCancelled(RuntimeError):
+    pass
+
+
+def wait_checker(process, timeout, stop_event=None):
+    if stop_event is None:
+        return process.wait(timeout=timeout)
+    deadline = time.monotonic() + timeout
+    while True:
+        if stop_event.is_set():
+            raise CheckerCancelled("Stress test stopped")
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise subprocess.TimeoutExpired(process.args, timeout)
+        try:
+            return process.wait(timeout=min(.5, remaining))
+        except subprocess.TimeoutExpired:
+            pass
+
+
+def run_checker(config, run: Path, correction: Path, *, isolated: bool = False, stop_event=None, process_callback=None) -> dict:
     lab = run / "lab"
     results = run / "results"
     if not correction.is_file():
@@ -153,13 +174,17 @@ def run_checker(config, run: Path, correction: Path, *, isolated: bool = False) 
         write_json(run / "logs" / "checker_invocation.json", {"command": command})
         code = None
         timed_out = False
+        cancelled = False
         with (run / "logs" / "checker_stdout.log").open("w") as stdout, \
              (run / "logs" / "checker_stderr.log").open("w") as stderr:
             process = subprocess.Popen(command, stdout=stdout, stderr=stderr, start_new_session=True)
+            if process_callback:
+                process_callback('start', process.pid)
             try:
-                code = process.wait(timeout=config.data["benchmark"]["timeout_seconds"])
-            except (subprocess.TimeoutExpired, KeyboardInterrupt) as exc:
-                timed_out = True
+                code = wait_checker(process, config.data["benchmark"]["timeout_seconds"], stop_event)
+            except (subprocess.TimeoutExpired, KeyboardInterrupt, CheckerCancelled) as exc:
+                timed_out = not isinstance(exc, CheckerCancelled)
+                cancelled = isinstance(exc, CheckerCancelled)
                 # SIGINT richiama la pulizia del laboratorio corrente prevista dal checker.
                 os.killpg(process.pid, signal.SIGINT)
                 try:
@@ -170,6 +195,8 @@ def run_checker(config, run: Path, correction: Path, *, isolated: bool = False) 
                 if isinstance(exc, KeyboardInterrupt):
                     raise
             finally:
+                if process_callback:
+                    process_callback('end', process.pid)
                 # Copia i report dalla tempdir a results/ prima che la tempdir venga rimossa.
                 for relative in ("results.csv", "lab/lab_result_all.csv",
                                  "lab/lab_result_failed.csv", "lab/lab_result_summary.csv"):
@@ -179,7 +206,8 @@ def run_checker(config, run: Path, correction: Path, *, isolated: bool = False) 
                         target.parent.mkdir(parents=True, exist_ok=True)
                         shutil.copy2(source, target)
                 write_json(run / "logs" / "checker_execution.json",
-                           {"returncode": code, "timed_out": timed_out})
+                           {"returncode": code, "timed_out": timed_out,
+                            **({"cancelled": cancelled} if stop_event is not None else {})})
                 # Il checker può lasciare container attivi in caso di errore o interruzione.
                 # Pulisci il solo lab temporaneo, senza toccare gli altri Docker.
                 cleanup = subprocess.run(
@@ -196,6 +224,8 @@ def run_checker(config, run: Path, correction: Path, *, isolated: bool = False) 
                     )
         # tempdir rimossa automaticamente all'uscita del with
 
+    if cancelled:
+        raise CheckerCancelled("Checker stopped by stress-test guard")
     if timed_out or code != 0:
         raise RuntimeError(f"Checker fallito: returncode={code}, timeout={timed_out}; vedere checker_stderr.log.")
     result, _ = parse_reports(results)

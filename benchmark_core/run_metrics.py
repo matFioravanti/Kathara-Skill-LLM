@@ -418,7 +418,9 @@ def make_metrics(run: Path, metadata: dict, *, total_seconds: float | None,
                     entry.update(complete_read_verified=None, dedicated_read=None,
                                  read_before_modification=None, verification_status='unverified')
         skill_compliance.update(delivery)
+    from .run_identity import identity_fields
     return {
+        **identity_fields(metadata),
         **accounting_fields(accounting),
         **gate,
         **delivery,

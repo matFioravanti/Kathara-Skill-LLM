@@ -1,0 +1,16 @@
+{
+  "zone_count": 201,
+  "delegations": 200,
+  "tlds": [
+    "europa",
+    "infra",
+    "research",
+    "services",
+    "lab",
+    "test"
+  ],
+  "countries": 22,
+  "cities": 37,
+  "city_subzones": 111,
+  "additional_functional_zones": 24
+}

@@ -19,6 +19,7 @@ from .checker_runner import checker_test_rows, parse_reports
 from .check_classification import classify_rows, PRIMARY, SUBCATEGORIES
 from .skill_gate import FIELDS as SKILL_GATE_FIELDS
 from .report_paths import is_cost266_manifest
+from .run_identity import identity_fields
 
 RECOVERY_MEAN_FIELDS = (
     'skill_gate_initial_read_seconds', 'skill_gate_retry_seconds', 'skill_gate_fallback_seconds',
@@ -29,7 +30,7 @@ RECOVERY_MEAN_FIELDS = (
 
 RUN_COLUMNS = [
     # 1. IDENTIFICAZIONE
-    "ID", "run_directory", "observation_selection", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type",
+    "ID", "observation_id", "execution_id", "run_directory", "observation_selection", "Lab", "T", "lab_id", "dns_tree_id", "task_level", "prompt_type",
     "experiment_id", "replicate", "run_number", "skill_mode", "skill_protocol",
     "agent", "model", "reasoning_effort", "experimental_fingerprint", "conditions_status",
     "llm_temperature", "llm_top_p",
@@ -310,6 +311,7 @@ def _run_record(metrics: dict, manifest: dict) -> dict:
 
     return {
         **{field: (_skill_list_str(metrics.get(field)) if field in ("skill_gate_required_skills", "skill_gate_verified_skills", "skill_gate_fallback_skills") else json.dumps(metrics[field], ensure_ascii=False) if isinstance(metrics.get(field), (dict, list)) else metrics.get(field)) for field in SKILL_GATE_FIELDS},
+        **identity_fields({**manifest, **metrics}),
         "experiment_id": experiment_id,
         "lab_id": metrics.get("lab_id") or manifest.get("lab_id") or manifest.get("scenario_id") or metrics.get("scenario"),
         "dns_tree_id": metrics.get("dns_tree_id") or manifest.get("dns_tree_id"),

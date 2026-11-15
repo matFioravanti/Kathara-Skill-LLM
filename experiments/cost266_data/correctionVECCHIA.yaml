@@ -1,0 +1,2292 @@
+# COST266 / multitld_v2 — correction ottimizzata (una sola esecuzione Kathara)
+# Basata sulla correction fornita: topologia, IP, 3327 rotte, 201 zone, 200 deleghe,
+# 370 record A/MX e 740 risoluzioni client mantenuti.
+# 37 loopback /32 verificate nei comandi router (NON in ip_mapping: lo non e un ethN).
+# Omitted: 1332 ping full-mesh ridondanti, per ridurre tempi e falsi timeout.
+# I test DNS sono raggruppati in 25 batch con xargs -P8 e dig +time=2 +tries=1;
+# ogni batch fallisce se almeno una verifica prevista non e superata.
+# Richiede sh, awk, dig, xargs -P su kathara/base. Il checker usa exit_code/output.
+# I punteggi NON sono comparabili 1:1 con le precedenti correction per granularita.
+# Non inserisce file nel lab di origine: script temporaneo nei container del checker.
+lab_inline: |
+  r_amsterdam[0]="wan_00_07"
+  r_amsterdam[1]="wan_00_13"
+  r_amsterdam[2]="wan_00_14"
+  r_amsterdam[3]="wan_00_18"
+  r_athens[0]="wan_01_25"
+  r_athens[1]="wan_01_30"
+  r_athens[2]="wan_01_35"
+  r_barcelona[0]="wan_02_20"
+  r_barcelona[1]="wan_02_21"
+  r_barcelona[2]="wan_02_29"
+  r_belgrade[0]="wan_03_08"
+  r_belgrade[1]="wan_03_30"
+  r_belgrade[2]="wan_03_35"
+  r_berlin[0]="wan_04_09"
+  r_berlin[1]="wan_04_14"
+  r_berlin[2]="wan_04_23"
+  r_berlin[3]="wan_04_27"
+  r_berlin[4]="wan_04_34"
+  r_birmingham[0]="wan_05_13"
+  r_birmingham[1]="wan_05_18"
+  r_bordeaux[0]="wan_06_20"
+  r_bordeaux[1]="wan_06_21"
+  r_bordeaux[2]="wan_06_26"
+  r_brussels[0]="wan_00_07"
+  r_brussels[1]="wan_07_11"
+  r_brussels[2]="wan_07_26"
+  r_budapest[0]="wan_03_08"
+  r_budapest[1]="wan_08_16"
+  r_budapest[2]="wan_08_27"
+  r_copenhagen[0]="wan_04_09"
+  r_copenhagen[1]="wan_09_24"
+  r_copenhagen[2]="wan_09_31"
+  r_dublin[0]="wan_10_13"
+  r_dublin[1]="wan_10_18"
+  r_dusseldorf[0]="wan_07_11"
+  r_dusseldorf[1]="wan_11_12"
+  r_frankfurt[0]="wan_11_12"
+  r_frankfurt[1]="wan_12_14"
+  r_frankfurt[2]="wan_12_23"
+  r_frankfurt[3]="wan_12_32"
+  r_glasgow[0]="wan_00_13"
+  r_glasgow[1]="wan_05_13"
+  r_glasgow[2]="wan_10_13"
+  r_hamburg[0]="wan_00_14"
+  r_hamburg[1]="wan_04_14"
+  r_hamburg[2]="wan_12_14"
+  r_helsinki[0]="wan_15_24"
+  r_helsinki[1]="wan_15_31"
+  r_helsinki[2]="wan_15_34"
+  r_krakow[0]="wan_08_16"
+  r_krakow[1]="wan_16_34"
+  r_lisbon[0]="wan_17_18"
+  r_lisbon[1]="wan_17_20"
+  r_lisbon[2]="wan_17_29"
+  r_london[0]="wan_00_18"
+  r_london[1]="wan_05_18"
+  r_london[2]="wan_10_18"
+  r_london[3]="wan_17_18"
+  r_london[4]="wan_18_26"
+  r_lyon[0]="wan_19_21"
+  r_lyon[1]="wan_19_26"
+  r_lyon[2]="wan_19_36"
+  r_madrid[0]="wan_02_20"
+  r_madrid[1]="wan_06_20"
+  r_madrid[2]="wan_17_20"
+  r_marseille[0]="wan_02_21"
+  r_marseille[1]="wan_06_21"
+  r_marseille[2]="wan_19_21"
+  r_marseille[3]="wan_21_28"
+  r_milan[0]="wan_22_23"
+  r_milan[1]="wan_22_28"
+  r_milan[2]="wan_22_36"
+  r_munich[0]="wan_04_23"
+  r_munich[1]="wan_12_23"
+  r_munich[2]="wan_22_23"
+  r_munich[3]="wan_23_33"
+  r_oslo[0]="wan_09_24"
+  r_oslo[1]="wan_15_24"
+  r_palermo[0]="wan_01_25"
+  r_palermo[1]="wan_25_28"
+  r_paris[0]="wan_06_26"
+  r_paris[1]="wan_07_26"
+  r_paris[2]="wan_18_26"
+  r_paris[3]="wan_19_26"
+  r_paris[4]="wan_26_32"
+  r_prague[0]="wan_04_27"
+  r_prague[1]="wan_08_27"
+  r_prague[2]="wan_27_33"
+  r_rome[0]="wan_21_28"
+  r_rome[1]="wan_22_28"
+  r_rome[2]="wan_25_28"
+  r_rome[3]="wan_28_35"
+  r_seville[0]="wan_02_29"
+  r_seville[1]="wan_17_29"
+  r_sofia[0]="wan_01_30"
+  r_sofia[1]="wan_03_30"
+  r_stockholm[0]="wan_09_31"
+  r_stockholm[1]="wan_15_31"
+  r_strasbourg[0]="wan_12_32"
+  r_strasbourg[1]="wan_26_32"
+  r_strasbourg[2]="wan_32_36"
+  r_vienna[0]="wan_23_33"
+  r_vienna[1]="wan_27_33"
+  r_vienna[2]="wan_33_35"
+  r_warsaw[0]="wan_04_34"
+  r_warsaw[1]="wan_15_34"
+  r_warsaw[2]="wan_16_34"
+  r_zagreb[0]="wan_01_35"
+  r_zagreb[1]="wan_03_35"
+  r_zagreb[2]="wan_28_35"
+  r_zagreb[3]="wan_33_35"
+  r_zurich[0]="wan_19_36"
+  r_zurich[1]="wan_22_36"
+  r_zurich[2]="wan_32_36"
+  r_amsterdam[4]="access_00"
+  r_athens[3]="access_01"
+  r_frankfurt[4]="access_12"
+  r_helsinki[3]="access_15"
+  r_lisbon[3]="access_17"
+  r_london[5]="access_18"
+  r_paris[5]="access_26"
+  r_rome[4]="access_28"
+  r_warsaw[3]="access_34"
+  r_zurich[3]="access_36"
+  c266_cities[0]="access_28"
+  c266_client_1[0]="access_01"
+  c266_client_2[0]="access_17"
+  c266_countries[0]="access_12"
+  c266_functional_1[0]="access_18"
+  c266_functional_2[0]="access_15"
+  c266_resolver_1[0]="access_34"
+  c266_resolver_2[0]="access_36"
+  c266_root[0]="access_00"
+  c266_subzones[0]="access_26"
+  c266_tld_europa[0]="access_00"
+  c266_tld_infra[0]="access_12"
+  c266_tld_lab[0]="access_26"
+  c266_tld_research[0]="access_12"
+  c266_tld_services[0]="access_28"
+  c266_tld_test[0]="access_18"
+convergence_time: 60
+default_image: kathara/base
+test:
+  requiring_startup:
+  - c266_cities
+  - c266_client_1
+  - c266_client_2
+  - c266_countries
+  - c266_functional_1
+  - c266_functional_2
+  - c266_resolver_1
+  - c266_resolver_2
+  - c266_root
+  - c266_subzones
+  - c266_tld_europa
+  - c266_tld_infra
+  - c266_tld_lab
+  - c266_tld_research
+  - c266_tld_services
+  - c266_tld_test
+  - r_amsterdam
+  - r_athens
+  - r_barcelona
+  - r_belgrade
+  - r_berlin
+  - r_birmingham
+  - r_bordeaux
+  - r_brussels
+  - r_budapest
+  - r_copenhagen
+  - r_dublin
+  - r_dusseldorf
+  - r_frankfurt
+  - r_glasgow
+  - r_hamburg
+  - r_helsinki
+  - r_krakow
+  - r_lisbon
+  - r_london
+  - r_lyon
+  - r_madrid
+  - r_marseille
+  - r_milan
+  - r_munich
+  - r_oslo
+  - r_palermo
+  - r_paris
+  - r_prague
+  - r_rome
+  - r_seville
+  - r_sofia
+  - r_stockholm
+  - r_strasbourg
+  - r_vienna
+  - r_warsaw
+  - r_zagreb
+  - r_zurich
+  ip_mapping:
+    c266_cities:
+      '0': 10.210.28.10/24
+    c266_client_1:
+      '0': 10.210.1.10/24
+    c266_client_2:
+      '0': 10.210.17.10/24
+    c266_countries:
+      '0': 10.210.12.10/24
+    c266_functional_1:
+      '0': 10.210.18.10/24
+    c266_functional_2:
+      '0': 10.210.15.10/24
+    c266_resolver_1:
+      '0': 10.210.34.10/24
+    c266_resolver_2:
+      '0': 10.210.36.10/24
+    c266_root:
+      '0': 10.210.0.10/24
+    c266_subzones:
+      '0': 10.210.26.10/24
+    c266_tld_europa:
+      '0': 10.210.0.11/24
+    c266_tld_infra:
+      '0': 10.210.12.11/24
+    c266_tld_lab:
+      '0': 10.210.26.11/24
+    c266_tld_research:
+      '0': 10.210.12.12/24
+    c266_tld_services:
+      '0': 10.210.28.11/24
+    c266_tld_test:
+      '0': 10.210.18.11/24
+    r_amsterdam:
+      '0': 10.100.0.1/30
+      '1': 10.100.0.5/30
+      '2': 10.100.0.9/30
+      '3': 10.100.0.13/30
+    r_athens:
+      '0': 10.100.0.17/30
+      '1': 10.100.0.21/30
+      '2': 10.100.0.25/30
+    r_barcelona:
+      '0': 10.100.0.29/30
+      '1': 10.100.0.33/30
+      '2': 10.100.0.37/30
+    r_belgrade:
+      '0': 10.100.0.41/30
+      '1': 10.100.0.45/30
+      '2': 10.100.0.49/30
+    r_berlin:
+      '0': 10.100.0.53/30
+      '1': 10.100.0.57/30
+      '2': 10.100.0.61/30
+      '3': 10.100.0.65/30
+      '4': 10.100.0.69/30
+    r_birmingham:
+      '0': 10.100.0.73/30
+      '1': 10.100.0.77/30
+    r_bordeaux:
+      '0': 10.100.0.81/30
+      '1': 10.100.0.85/30
+      '2': 10.100.0.89/30
+    r_brussels:
+      '0': 10.100.0.2/30
+      '1': 10.100.0.93/30
+      '2': 10.100.0.97/30
+    r_budapest:
+      '0': 10.100.0.42/30
+      '1': 10.100.0.101/30
+      '2': 10.100.0.105/30
+    r_copenhagen:
+      '0': 10.100.0.54/30
+      '1': 10.100.0.109/30
+      '2': 10.100.0.113/30
+    r_dublin:
+      '0': 10.100.0.117/30
+      '1': 10.100.0.121/30
+    r_dusseldorf:
+      '0': 10.100.0.94/30
+      '1': 10.100.0.125/30
+    r_frankfurt:
+      '0': 10.100.0.126/30
+      '1': 10.100.0.129/30
+      '2': 10.100.0.133/30
+      '3': 10.100.0.137/30
+    r_glasgow:
+      '0': 10.100.0.6/30
+      '1': 10.100.0.74/30
+      '2': 10.100.0.118/30
+    r_hamburg:
+      '0': 10.100.0.10/30
+      '1': 10.100.0.58/30
+      '2': 10.100.0.130/30
+    r_helsinki:
+      '0': 10.100.0.141/30
+      '1': 10.100.0.145/30
+      '2': 10.100.0.149/30
+    r_krakow:
+      '0': 10.100.0.102/30
+      '1': 10.100.0.153/30
+    r_lisbon:
+      '0': 10.100.0.157/30
+      '1': 10.100.0.161/30
+      '2': 10.100.0.165/30
+    r_london:
+      '0': 10.100.0.14/30
+      '1': 10.100.0.78/30
+      '2': 10.100.0.122/30
+      '3': 10.100.0.158/30
+      '4': 10.100.0.169/30
+    r_lyon:
+      '0': 10.100.0.173/30
+      '1': 10.100.0.177/30
+      '2': 10.100.0.181/30
+    r_madrid:
+      '0': 10.100.0.30/30
+      '1': 10.100.0.82/30
+      '2': 10.100.0.162/30
+    r_marseille:
+      '0': 10.100.0.34/30
+      '1': 10.100.0.86/30
+      '2': 10.100.0.174/30
+      '3': 10.100.0.185/30
+    r_milan:
+      '0': 10.100.0.189/30
+      '1': 10.100.0.193/30
+      '2': 10.100.0.197/30
+    r_munich:
+      '0': 10.100.0.62/30
+      '1': 10.100.0.134/30
+      '2': 10.100.0.190/30
+      '3': 10.100.0.201/30
+    r_oslo:
+      '0': 10.100.0.110/30
+      '1': 10.100.0.142/30
+    r_palermo:
+      '0': 10.100.0.18/30
+      '1': 10.100.0.205/30
+    r_paris:
+      '0': 10.100.0.90/30
+      '1': 10.100.0.98/30
+      '2': 10.100.0.170/30
+      '3': 10.100.0.178/30
+      '4': 10.100.0.209/30
+    r_prague:
+      '0': 10.100.0.66/30
+      '1': 10.100.0.106/30
+      '2': 10.100.0.213/30
+    r_rome:
+      '0': 10.100.0.186/30
+      '1': 10.100.0.194/30
+      '2': 10.100.0.206/30
+      '3': 10.100.0.217/30
+    r_seville:
+      '0': 10.100.0.38/30
+      '1': 10.100.0.166/30
+    r_sofia:
+      '0': 10.100.0.22/30
+      '1': 10.100.0.46/30
+    r_stockholm:
+      '0': 10.100.0.114/30
+      '1': 10.100.0.146/30
+    r_strasbourg:
+      '0': 10.100.0.138/30
+      '1': 10.100.0.210/30
+      '2': 10.100.0.221/30
+    r_vienna:
+      '0': 10.100.0.202/30
+      '1': 10.100.0.214/30
+      '2': 10.100.0.225/30
+    r_warsaw:
+      '0': 10.100.0.70/30
+      '1': 10.100.0.150/30
+      '2': 10.100.0.154/30
+    r_zagreb:
+      '0': 10.100.0.26/30
+      '1': 10.100.0.50/30
+      '2': 10.100.0.218/30
+      '3': 10.100.0.226/30
+    r_zurich:
+      '0': 10.100.0.182/30
+      '1': 10.100.0.198/30
+      '2': 10.100.0.222/30
+  daemons:
+    c266_cities:
+    - named
+    c266_countries:
+    - named
+    c266_functional_1:
+    - named
+    c266_functional_2:
+    - named
+    c266_resolver_1:
+    - named
+    c266_resolver_2:
+    - named
+    c266_root:
+    - named
+    c266_subzones:
+    - named
+    c266_tld_europa:
+    - named
+    c266_tld_infra:
+    - named
+    c266_tld_lab:
+    - named
+    c266_tld_research:
+    - named
+    c266_tld_services:
+    - named
+    c266_tld_test:
+    - named
+  applications:
+    dns:
+      local_ns:
+        10.210.34.10:
+        - c266_client_1
+        10.210.36.10:
+        - c266_client_2
+  custom_commands:
+    r_amsterdam:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.1/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'2:w4,w7,w8,w9,w20,w21,w22,w23,w24,w31,w33,w34,w40,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w55,l3,l7,l8,l12,l13,l20,l21,l22,l23,l24,l26,l27,l29,l33,l37;6:w29,l14;10:w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w25,w26,w27,w28,w32,w35,w36,w37,w38,w53,w54,w56,l2,l4,l5,l9,l10,l15,l16,l17,l25,l28,l31,l32,l34,l35,l36;14:w18,w19,w30,w39,w41,w42,l6,l11,l18,l19,l30'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_athens:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.2/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'18:w7,w8,w9,w20,w21,w22,w40,w41,w42,w43,w44,w45,w46,w48,w49,w51,w52,w55,l3,l7,l18,l20,l21,l22,l23,l26,l27,l29,l30,l33,l37;22:w10,w11,w12,w17,w25,w26,w35,w36,w37,w38,l4,l9,l16,l17,l31,l35;26:w0,w1,w2,w3,w13,w14,w15,w16,w18,w19,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w39,w47,w50,w53,w54,w56,l1,l5,l6,l8,l10,l11,l12,l13,l14,l15,l19,l24,l25,l28,l32,l34,l36'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_barcelona:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.3/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'30:w20,w39,w40,l18,l21;34:w0,w1,w2,w3,w4,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l19,l20,l22,l23,l24,l25,l26,l27,l28,l29,l31,l32,l33,l34,l35,l36,l37;38:w41,l30'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_belgrade:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.4/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'42:w1,w2,w3,w13,w14,w16,w17,w18,w19,w25,w26,w27,w28,w29,w30,w35,w36,w37,w38,w39,l1,l5,l6,l9,l10,l11,l14,l15,l16,l17,l19,l25,l28,l32,l35;46:w4,w5,l2,l31;50:w0,w6,w7,w8,w9,w15,w20,w21,w22,w23,w24,w31,w32,w33,w34,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l3,l7,l8,l12,l13,l18,l20,l21,l22,l23,l24,l26,l27,l29,l30,l33,l34,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_berlin:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.5/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'54:w27,w28,w35,w36,l10,l16,l25,l32;58:w0,w1,w2,w3,w7,w8,w9,w18,w19,w20,w21,w22,w23,w24,w29,w30,w31,w32,w34,w39,w40,w41,w42,w43,w44,w45,w52,w55,l1,l3,l6,l7,l8,l11,l12,l13,l14,l15,l18,l19,l20,l21,l22,l27,l30,l33,l37;62:w33,w47,w48,w49,w50,l23,l24;66:w4,w5,w6,w10,w11,w12,w25,w26,w46,w51,w53,w54,w56,l2,l4,l9,l26,l28,l29,l31,l34,l36;70:w37,w38,l17,l35'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_birmingham:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.6/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'74:w1,w29,l14;78:w0,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w20,w21,w22,w23,w24,w25,w26,w27,w28,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l7,l8,l9,l10,l11,l12,l13,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27,l28,l29,l30,l31,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_bordeaux:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.7/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'82:w7,w40,w41,l18,l21,l30;86:w4,w5,w6,w8,w9,w10,w11,w12,w43,w45,w46,w48,w51,w54,w56,l2,l3,l4,l20,l22,l26,l29,l31,l36;90:w0,w1,w2,w3,w13,w14,w15,w16,w17,w18,w19,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w42,w44,w47,w49,w50,w52,w53,w55,l1,l5,l6,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l19,l23,l24,l25,l27,l28,l32,l33,l34,l35,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_brussels:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.8/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'1:w1,w2,w3,w10,w13,w14,w16,w17,w18,w19,w25,w26,w27,w28,w29,w30,w35,w36,w37,w38,w39,l1,l5,l6,l9,l10,l11,l14,l15,l16,l17,l19,l25,l28,l32,l35;94:w4,w5,w6,w11,w12,w15,w31,w32,w33,w34,w47,w48,w49,w50,w51,w53,w54,w55,w56,l2,l4,l12,l13,l23,l24,l26,l29,l31,l33,l34,l36,l37;98:w7,w8,w9,w20,w21,w22,w40,w41,w42,w43,w44,w45,w46,w52,l3,l7,l18,l20,l21,l22,l27,l30'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_budapest:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.9/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'41:w4,w5,w6,w7,w8,w9,w11,w12,w21,w40,w41,w43,w46,w48,w51,w54,w56,l2,l3,l4,l18,l21,l22,l26,l29,l30,l31,l36;102:w17,w35,w36,w37,w38,l16,l17,l35;106:w0,w1,w2,w3,w13,w14,w15,w16,w18,w19,w20,w22,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w39,w42,w44,w45,w47,w49,w50,w52,w53,w55,l1,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l19,l20,l23,l24,l25,l27,l28,l32,l33,l34,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_copenhagen:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.10/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'53:w0,w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w29,w30,w31,w32,w33,w34,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l6,l7,l8,l9,l11,l12,l13,l14,l15,l17,l18,l19,l20,l21,l22,l23,l24,l26,l27,l28,l29,l30,l31,l33,l34,l35,l36,l37;110:w35,l25;114:w36,l16,l32'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_dublin:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.11/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'118:w1,w18,l14;122:w0,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l12,l13,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27,l28,l29,l30,l31,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_dusseldorf:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.12/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'93:w0,w1,w2,w3,w7,w8,w9,w18,w19,w20,w21,w22,w24,w29,w30,w39,w40,w41,w42,w43,w44,w46,l1,l3,l6,l7,l8,l11,l14,l18,l19,l20,l21,l22,l27,l30;126:w4,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w25,w26,w27,w28,w32,w33,w34,w35,w36,w37,w38,w45,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l2,l4,l5,l9,l10,l13,l15,l16,l17,l23,l24,l25,l26,l28,l29,l31,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_frankfurt:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.13/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'125:w0,w1,w3,w18,w19,w23,w24,w29,w30,w39,l1,l6,l8,l11,l12,l14,l19;130:w2,w13,w14,w16,w17,w27,w28,w35,w36,w37,w38,l5,l10,l15,l16,l17,l25,l32,l35;134:w5,w6,w10,w11,w12,w15,w25,w26,w47,w50,w53,w54,w56,l2,l4,l9,l24,l28,l31,l34,l36;138:w4,w7,w8,w9,w20,w21,w22,w40,w41,w42,w43,w44,w45,w46,w48,w49,w51,w52,w55,l3,l7,l18,l20,l21,l22,l23,l26,l27,l29,l30,l33,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_glasgow:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.14/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'5:w0,w2,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w23,w24,w25,w26,w27,w28,w31,w32,w33,w34,w35,w36,w37,w38,w47,w50,w53,w54,w56,l1,l2,l4,l5,l8,l9,l10,l12,l13,l15,l16,l17,l24,l25,l28,l31,l32,l34,l35,l36;73:w3,w4,w7,w8,w9,w19,w20,w21,w22,w39,w40,w41,w42,w43,w44,w45,w46,w48,w49,w51,w52,w55,l3,l6,l7,l18,l19,l20,l21,l22,l23,l26,l27,l29,l30,l33,l37;117:w30,l11'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_hamburg:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.15/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'9:w0,w1,w3,w18,w19,w20,w21,w22,w23,w24,w29,w30,w39,w40,w41,w42,w44,l1,l6,l7,l8,l11,l14,l18,l19,l21,l27;57:w5,w6,w10,w11,w12,w13,w15,w16,w17,w25,w26,w27,w28,w35,w36,w37,w38,w53,w54,w56,l2,l4,l5,l9,l10,l16,l17,l25,l28,l31,l32,l34,l35,l36;129:w4,w7,w8,w9,w31,w33,w34,w43,w45,w46,w47,w48,w49,w50,w51,w52,w55,l3,l12,l13,l20,l22,l23,l24,l26,l29,l30,l33,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_helsinki:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.16/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'142:w27,l25;146:w0,w1,w2,w3,w6,w7,w8,w9,w13,w14,w15,w16,w18,w19,w20,w21,w22,w23,w24,w28,w29,w30,w31,w32,w33,w34,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l3,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l18,l19,l20,l21,l22,l23,l24,l26,l27,l28,l29,l30,l32,l33,l34,l36,l37;150:w4,w5,w10,w11,w12,w17,w25,w26,w38,l2,l4,l9,l17,l31,l35'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_krakow:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.17/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'101:w4,w5,w6,w7,w8,w9,w10,w11,w12,w16,w21,w26,w41,w46,w48,w50,w51,w53,w54,w56,l2,l3,l4,l9,l22,l26,l28,l29,l30,l31,l34,l36;154:w0,w1,w2,w3,w13,w14,w15,w17,w18,w19,w20,w22,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w39,w40,w42,w43,w44,w45,w47,w49,w52,w55,l1,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l16,l18,l19,l20,l21,l23,l24,l25,l27,l32,l33,l35,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_lisbon:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.18/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'158:w1,w2,w3,w13,w14,w16,w17,w18,w19,w26,w27,w28,w29,w30,w35,w36,w37,w38,l1,l5,l6,l10,l11,l14,l15,l16,l17,l19,l25,l28,l32,l35;162:w0,w4,w5,w6,w7,w8,w10,w11,w12,w15,w20,w21,w22,w23,w24,w25,w31,w32,w33,w34,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l2,l3,l4,l7,l8,l9,l12,l13,l20,l21,l22,l23,l24,l26,l27,l29,l31,l33,l34,l36,l37;166:w9,l30'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_london:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.19/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'13:w0,w1,w2,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w23,w25,w26,w27,w28,w31,w32,w33,w35,w36,w37,w38,w50,w53,w56,l1,l2,l4,l5,l8,l9,l10,l12,l13,l15,l16,l17,l24,l25,l28,l31,l32,l34,l35,l36;77:w18,l6,l14;121:w29,l11;157:w41,l18,l30;170:w4,w7,w8,w9,w20,w21,w22,w24,w34,w40,w43,w44,w45,w46,w47,w48,w49,w51,w52,w54,w55,l3,l7,l20,l21,l22,l23,l26,l27,l29,l33,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_lyon:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.20/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'174:w4,w5,w6,w7,w8,w9,w10,w11,w12,w20,w21,w40,w41,w46,w51,w54,l2,l3,l4,l7,l18,l21,l22,l26,l29,l30,l31,l36;178:w0,w1,w2,w3,w18,w19,w22,w23,w24,w29,w30,w39,w42,w52,l1,l6,l8,l11,l12,l14,l19,l27;182:w13,w14,w15,w16,w17,w25,w26,w27,w28,w31,w32,w33,w34,w35,w36,w37,w38,w47,w48,w49,w50,w53,w55,w56,l5,l9,l10,l13,l15,l16,l17,l23,l24,l25,l28,l32,l33,l34,l35,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_madrid:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.21/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'29:w4,w5,w6,w8,w9,w10,w11,w12,w25,w43,w45,w46,w47,w48,w49,w51,w53,w54,w56,l2,l3,l4,l9,l20,l22,l23,l26,l29,l31,l34,l36,l37;81:w0,w1,w2,w3,w13,w14,w15,w16,w17,w18,w19,w21,w22,w23,w24,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w42,w44,w50,w52,w55,l1,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l16,l17,l19,l24,l25,l27,l28,l32,l33,l35;161:w39,w41,l18,l30'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_marseille:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.22/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'33:w7,w9,w40,w41,l3,l18,l21,l30;85:w20,w22,l7;173:w0,w1,w2,w3,w13,w14,w15,w16,w17,w18,w19,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w39,w42,w44,w45,w47,w49,w50,w52,w55,l1,l5,l6,l8,l10,l11,l12,l13,l14,l15,l16,l19,l20,l23,l24,l25,l27,l32,l33,l35,l37;186:w4,w5,w6,w10,w11,w12,w25,w26,w38,w48,w51,w53,w54,w56,l2,l4,l9,l17,l26,l28,l29,l31,l34,l36'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_milan:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.23/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'190:w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w25,w26,w27,w28,w33,w35,w36,w37,w38,w50,w53,w56,l4,l5,l9,l10,l16,l17,l24,l25,l28,l31,l32,l34,l35,l36;194:w4,w46,w51,w54,l2,l26,l29;198:w0,w1,w2,w3,w7,w8,w9,w18,w19,w20,w21,w22,w23,w24,w29,w30,w31,w32,w34,w39,w40,w41,w42,w43,w44,w45,w52,w55,l1,l3,l6,l7,l8,l11,l12,l13,l14,l15,l18,l19,l20,l21,l22,l27,l30,l33,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_munich:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.24/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'61:w13,w14,w16,w17,w27,w28,w35,w36,w37,w38,l5,l10,l16,l17,l25,l32,l35;133:w0,w1,w2,w3,w18,w19,w20,w22,w23,w24,w29,w30,w31,w32,w34,w39,w40,w42,w44,w52,w55,l1,l6,l7,l8,l11,l12,l13,l14,l15,l18,l19,l21,l27,l33;189:w4,w7,w8,w9,w21,w41,w43,w45,w46,w48,w49,w51,l3,l20,l22,l23,l26,l29,l30,l37;202:w5,w6,w10,w11,w12,w25,w26,w53,w54,w56,l2,l4,l9,l28,l31,l34,l36'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_oslo:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.25/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'109:w0,w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w28,w29,w30,w31,w32,w33,w34,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l17,l18,l19,l20,l21,l22,l23,l24,l26,l27,l28,l29,l30,l31,l32,l33,l34,l35,l36,l37;141:w36,w37,l16'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_palermo:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.26/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'17:w5,w6,l2,l31;206:w0,w1,w2,w3,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w52,w53,w54,w55,w56,l1,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l27,l28,l29,l30,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_paris:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.27/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'89:w20,w21,w40,w41,l7,l18,l21;97:w0,w1,w2,w10,w13,w14,w16,w17,w23,w25,w26,w27,w28,w31,w35,w36,w37,w38,l1,l5,l8,l9,l10,l12,l15,l16,l17,l25,l28,l32,l35;169:w3,w18,w19,w29,w30,w39,l6,l11,l14,l19;177:w7,w8,w9,w43,w45,w46,l3,l20,l22,l30;210:w4,w5,w6,w11,w12,w15,w32,w33,w34,w47,w48,w49,w50,w51,w53,w54,w55,w56,l2,l4,l13,l23,l24,l26,l29,l31,l33,l34,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_prague:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.28/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'65:w0,w1,w2,w3,w13,w14,w15,w17,w18,w19,w20,w22,w23,w24,w27,w28,w29,w30,w32,w35,w36,w37,w39,w40,w42,w44,l1,l5,l6,l7,l8,l10,l11,l14,l15,l16,l18,l19,l21,l25,l27,l32,l35;105:w5,w10,w11,w25,w38,l4,l9,l17,l31;214:w4,w6,w7,w8,w9,w12,w21,w31,w33,w34,w41,w43,w45,w46,w47,w48,w49,w50,w51,w52,w54,w55,w56,l2,l3,l12,l13,l20,l22,l23,l24,l26,l29,l30,l33,l34,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_rome:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.29/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'185:w7,w8,w9,w20,w21,w22,w40,w41,w43,w44,l3,l7,l18,l20,l21,l22,l30;193:w0,w1,w2,w3,w15,w18,w19,w23,w24,w29,w30,w31,w32,w33,w34,w39,w42,w45,w47,w49,w52,w55,l1,l6,l8,l11,l12,l13,l14,l15,l19,l23,l24,l27,l33,l37;205:w4,l2,l26;218:w5,w6,w10,w11,w12,w13,w14,w16,w17,w25,w26,w27,w28,w35,w36,w37,w38,w50,w53,w56,l4,l5,l9,l10,l16,l17,l25,l28,l31,l32,l34,l35,l36'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_seville:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.30/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'37:w0,w4,w5,w6,w8,w10,w11,w12,w13,w14,w15,w16,w17,w21,w23,w24,w25,w26,w27,w28,w31,w32,w33,w34,w35,w36,w37,w38,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l2,l3,l4,l5,l8,l9,l10,l12,l13,l15,l16,l17,l20,l22,l23,l24,l25,l26,l27,l28,l29,l31,l32,l33,l34,l35,l36,l37;165:w1,w2,w3,w7,w18,w19,w20,w22,w29,w30,w39,w40,l1,l6,l7,l11,l14,l18,l19,l21'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_sofia:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.31/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'21:w4,w6,l2,l26;45:w0,w1,w2,w3,w7,w8,w9,w10,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l27,l28,l29,l30,l32,l33,l34,l35,l36,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_stockholm:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.32/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'113:w0,w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w26,w27,w29,w30,w31,w32,w33,w34,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48,w49,w50,w51,w52,w53,w54,w55,w56,l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27,l28,l29,l30,l31,l33,l34,l36,l37;145:w25,w35,w37,w38,l16,l17,l35'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_strasbourg:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.33/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'137:w0,w1,w2,w3,w5,w6,w10,w11,w12,w13,w14,w15,w16,w17,w23,w25,w26,w27,w28,w31,w32,w33,w35,w36,w37,w38,w50,w53,w56,l1,l4,l5,l8,l9,l10,l12,l13,l15,l16,l17,l24,l25,l28,l31,l32,l34,l35,l36;209:w18,w19,w20,w22,w24,w29,w30,w39,w40,w42,w44,l6,l7,l11,l14,l18,l19,l21,l27;222:w4,w7,w8,w9,w21,w41,w43,w45,w46,w47,w48,w49,w51,w54,l2,l3,l20,l22,l23,l26,l29,l30,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_vienna:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.34/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'201:w0,w15,w20,w22,w23,w24,w31,w32,w33,w34,w42,w43,w44,w45,w47,w48,w49,w52,w55,l7,l8,l12,l13,l20,l23,l24,l27,l33,l37;213:w1,w2,w3,w13,w14,w16,w17,w18,w19,w25,w26,w27,w28,w29,w30,w35,w36,w37,w38,w39,l1,l5,l6,l9,l10,l11,l14,l15,l16,l17,l19,l25,l28,l32,l35;226:w4,w5,w6,w7,w8,w9,w10,w11,w12,w21,w40,w41,w46,w51,w54,l2,l3,l4,l18,l21,l22,l26,l29,l30,l31,l36'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_warsaw:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.35/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'69:w0,w1,w2,w3,w7,w8,w9,w13,w14,w15,w16,w18,w19,w20,w21,w22,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w39,w40,w41,w42,w43,w44,w45,w47,w48,w49,w50,w52,w53,w55,w56,l1,l3,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l18,l19,l20,l21,l22,l23,l24,l25,l27,l28,l30,l33,l34,l37;149:w35,w36,l16,l32;153:w4,w5,w6,w10,w11,w12,w25,w26,w46,w51,w54,l2,l4,l9,l17,l26,l29,l31,l36'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_zagreb:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.36/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'25:l2;49:w5,w10,w11,w25,w37,w38,l4,l9,l17,l31,l35;217:w4,w7,w8,w9,w20,w21,w40,w41,w43,w44,w46,w48,w51,l3,l7,l18,l20,l21,l22,l26,l29,l30;225:w0,w1,w2,w3,w13,w14,w15,w16,w17,w18,w19,w22,w23,w24,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w39,w42,w45,w47,w49,w50,w52,w53,w55,l1,l5,l6,l8,l10,l11,l12,l13,l14,l15,l16,l19,l23,l24,l25,l27,l28,l32,l33,l34,l37'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    r_zurich:
+    - command: |-
+        sh -c 'test "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 || exit 1
+        ip -o -4 addr show dev lo | grep -Fq 10.200.0.37/32 || exit 1
+        ip -4 route show | awk -v spec='"'"'181:w7,w8,w9,w21,w40,w41,w43,w44,w46,l3,l18,l20,l21,l22,l30;197:w4,w5,w6,w10,w11,w12,w15,w25,w26,w47,w48,w50,w51,w53,w54,w56,l2,l4,l9,l23,l24,l26,l28,l29,l31,l34,l36;221:w0,w1,w2,w3,w13,w14,w16,w17,w18,w19,w20,w22,w23,w24,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w42,w52,l1,l5,l6,l7,l8,l10,l11,l12,l13,l14,l15,l16,l17,l19,l25,l27,l32,l33,l35'"'"' '"'"'BEGIN {
+            n = split(spec, groups, ";")
+            for (i = 1; i <= n; i++) {
+                split(groups[i], pair, ":")
+                hop = "10.100.0." pair[1]
+                m = split(pair[2], refs, ",")
+                for (j = 1; j <= m; j++) {
+                    ref = refs[j]
+                    if (ref ~ /^w[0-9]+$/)
+                        dest = "10.100.0." (substr(ref, 2) * 4) "/30"
+                    else if (ref ~ /^l[0-9]+$/)
+                        dest = "10.200.0." substr(ref, 2)
+                    else { invalid++; continue }
+                    want[dest] = hop
+                }
+            }
+        }
+        $2 == "via" { have[$1] = $3 }
+        END {
+            for (dest in want) if (have[dest] != want[dest]) {
+                printf "MISSING_ROUTE %s expected=%s actual=%s\\n", dest, want[dest], have[dest] > "/dev/stderr"
+                missing++
+            }
+            if (missing) printf "MISSING_TOTAL %d\\n", missing > "/dev/stderr"
+            exit (missing > 0 || invalid > 0)
+        }'"'"''
+      exit_code: 0
+    c266_client_1:
+    - &id001
+      command: |
+        sh -c 'umask 077
+        cat > /tmp/c266-check.sh <<'"'"'C266_SCRIPT'"'"'
+        #!/bin/sh
+        # Checker injected by the official correction, executed only inside a checker-created lab.
+        # All queries have bounded retry/timeout; parallel requests reduce slow-path runtime.
+        Z=/tmp/c266-zones.tsv
+        R=/tmp/c266-records.tsv
+        PAR=8
+
+        dig_check() {
+            server=$1; q=$2; typ=$3; section=$4; owner=$5; value=$6; flags=$7
+            # The authoritative queries never recurse; client queries use resolv.conf.
+            if [ "$server" = '"'"'-'"'"' ]; then
+                dig "$q" "$typ" +time=2 +tries=1 +noall +comments +answer +authority +additional 2>/dev/null
+            else
+                dig "@$server" "$q" "$typ" +norecurse +time=2 +tries=1 +noall +comments +answer +authority +additional 2>/dev/null
+            fi | awk -v sec="$section" -v owner="$owner" -v typ="$typ" -v val="$value" -v flags="$flags" '"'"'
+              /status: NOERROR/ {status=1}
+              /^;; flags:/ {if (flags=="aa" && / aa[; ]/) f=1; if (flags=="ra" && / ra[; ]/) f=1; if (flags=="-") f=1}
+              /^;; ANSWER SECTION:/ {block="answer";next}
+              /^;; AUTHORITY SECTION:/ {block="authority";next}
+              /^;; ADDITIONAL SECTION:/ {block="additional";next}
+              /^;;/ {next}
+              block==sec && $1==owner && $4==typ {
+                  if (typ=="MX" && ($5 "," $6)==val) ok=1
+                  if (typ!="MX" && $5==val) ok=1
+              }
+              END {exit !(status && f && ok)}'"'"'
+        }
+
+        case "$1" in
+         __zone)
+            zone=$2; ip=$3
+            if [ "$zone" = '"'"'.'"'"' ]; then ns='"'"'a.root-servers.'"'"'; else ns="ns1.$zone"; fi
+            dig_check "$ip" "$zone" SOA answer "$zone" "$ns" aa &&
+            dig_check "$ip" "$zone" NS answer "$zone" "$ns" aa &&
+            dig_check "$ip" "$ns" A answer "$ns" "$ip" aa || { echo "FAILED_ZONE $zone @$ip" >&2; exit 1; }
+            echo ok
+            ;;
+         __deleg)
+            zone=$2; ip=$3; ns="ns1.$zone"
+            parent=${zone#*.}; [ -n "$parent" ] || parent='"'"'.'"'"'
+            parent_ip=$(awk -v p="$parent" '"'"'$1==p {print $2;exit}'"'"' "$Z")
+            [ -n "$parent_ip" ] || exit 1
+            # A non-existent descendant triggers a referral at the delegation cut.
+            out=$(dig "@$parent_ip" "__delegation_probe.$zone" A +norecurse +time=2 +tries=1 +noall +comments +authority +additional 2>/dev/null) || exit 1
+            printf '"'"'%s\n'"'"' "$out" | awk -v zone="$zone" -v ns="$ns" -v ip="$ip" '"'"'
+              /status: NOERROR/ {status=1}
+              /^;; AUTHORITY SECTION:/ {b="auth";next}
+              /^;; ADDITIONAL SECTION:/ {b="glue";next}
+              /^;;/ {next}
+              b=="auth" && $1==zone && $4=="NS" && $5==ns {a=1}
+              b=="glue" && $1==ns && $4=="A" && $5==ip {g=1}
+              END {exit !(status && a && g)}'"'"' || { echo "FAILED_DELEGATION $zone via $parent_ip" >&2; exit 1; }
+            echo ok
+            ;;
+         __record)
+            ip=$2; q=$3; typ=$4; val=$5
+            dig_check "$ip" "$q" "$typ" answer "$q" "$val" aa || { echo "FAILED_RECORD $q $typ @$ip" >&2; exit 1; }
+            echo ok
+            ;;
+         __client)
+            ip=$2; q=$3; typ=$4; val=$5
+            dig_check - "$q" "$typ" answer "$q" "$val" ra || { echo "FAILED_RESOLUTION $q $typ" >&2; exit 1; }
+            echo ok
+            ;;
+         zone|deleg|record|client)
+            mode=$1; start=$2; end=$3
+            case "$mode" in zone|deleg) src=$Z; arity=2;; *) src=$R; arity=4;; esac
+            count=$((end-start+1))
+            # Skip the root entry: the 200 delegations are the 200 remaining zones.
+            if [ "$mode" = deleg ]; then start=$((start+1)); end=$((end+1)); fi
+            tmp=$(mktemp -d /tmp/c266-check.XXXXXX) || exit 1
+            trap '"'"'rm -rf "$tmp"'"'"' EXIT HUP INT TERM
+            # xargs -P is available in kathara/base (findutils); every worker prints one '"'"'ok'"'"'.
+            sed -n "${start},${end}p" "$src" | xargs -P "$PAR" -n "$arity" sh "$0" "__$mode" > "$tmp/ok" 2> "$tmp/err"
+            got=$(wc -l < "$tmp/ok" | tr -d '"'"' '"'"')
+            printf '"'"'%s/%s\n'"'"' "$got" "$count"
+            if [ "$got" -ne "$count" ]; then cat "$tmp/err" >&2; fi
+            [ "$got" -eq "$count" ]
+            ;;
+         *) echo bad-mode >&2; exit 2;;
+        esac
+        C266_SCRIPT
+        cat > /tmp/c266-zones.tsv <<'"'"'C266_ZONES'"'"'
+        . 10.210.0.10
+        europa. 10.210.0.11
+        infra. 10.210.12.11
+        lab. 10.210.26.11
+        research. 10.210.12.12
+        services. 10.210.28.11
+        test. 10.210.18.11
+        api.services. 10.210.18.10
+        at.europa. 10.210.12.10
+        be.europa. 10.210.12.10
+        benchmark.lab. 10.210.18.10
+        bg.europa. 10.210.12.10
+        ch.europa. 10.210.12.10
+        checker.lab. 10.210.18.10
+        clients.lab. 10.210.18.10
+        cz.europa. 10.210.12.10
+        datasets.research. 10.210.18.10
+        de.europa. 10.210.12.10
+        dk.europa. 10.210.12.10
+        dns.infra. 10.210.18.10
+        dnssec.test. 10.210.18.10
+        es.europa. 10.210.12.10
+        experiments.research. 10.210.18.10
+        fi.europa. 10.210.12.10
+        fr.europa. 10.210.12.10
+        gr.europa. 10.210.12.10
+        hr.europa. 10.210.12.10
+        hu.europa. 10.210.12.10
+        ie.europa. 10.210.12.10
+        it.europa. 10.210.12.10
+        mail.services. 10.210.18.10
+        monitoring.infra. 10.210.18.10
+        negative.test. 10.210.18.10
+        nl.europa. 10.210.12.10
+        no.europa. 10.210.12.10
+        pl.europa. 10.210.12.10
+        positive.test. 10.210.18.10
+        pt.europa. 10.210.12.10
+        routing.infra. 10.210.18.10
+        rs.europa. 10.210.12.10
+        se.europa. 10.210.12.10
+        uk.europa. 10.210.12.10
+        universities.research. 10.210.18.10
+        web.services. 10.210.18.10
+        amsterdam.nl.europa. 10.210.28.10
+        athens.gr.europa. 10.210.28.10
+        barcelona.es.europa. 10.210.28.10
+        belgrade.rs.europa. 10.210.28.10
+        berlin.de.europa. 10.210.28.10
+        birmingham.uk.europa. 10.210.28.10
+        bordeaux.fr.europa. 10.210.28.10
+        brussels.be.europa. 10.210.28.10
+        budapest.hu.europa. 10.210.28.10
+        copenhagen.dk.europa. 10.210.28.10
+        delegation.negative.test. 10.210.15.10
+        dublin.ie.europa. 10.210.28.10
+        dusseldorf.de.europa. 10.210.28.10
+        failures.experiments.research. 10.210.15.10
+        frankfurt.de.europa. 10.210.28.10
+        glasgow.uk.europa. 10.210.28.10
+        hamburg.de.europa. 10.210.28.10
+        helsinki.fi.europa. 10.210.28.10
+        krakow.pl.europa. 10.210.28.10
+        latency.experiments.research. 10.210.15.10
+        lisbon.pt.europa. 10.210.28.10
+        london.uk.europa. 10.210.28.10
+        lyon.fr.europa. 10.210.28.10
+        madrid.es.europa. 10.210.28.10
+        marseille.fr.europa. 10.210.28.10
+        milan.it.europa. 10.210.28.10
+        munich.de.europa. 10.210.28.10
+        nxdomain.negative.test. 10.210.15.10
+        oslo.no.europa. 10.210.28.10
+        palermo.it.europa. 10.210.28.10
+        paris.fr.europa. 10.210.28.10
+        portals.web.services. 10.210.15.10
+        prague.cz.europa. 10.210.28.10
+        resolvers.dns.infra. 10.210.15.10
+        rome.it.europa. 10.210.28.10
+        root.dns.infra. 10.210.15.10
+        scenarios.benchmark.lab. 10.210.15.10
+        seville.es.europa. 10.210.28.10
+        sofia.bg.europa. 10.210.28.10
+        stockholm.se.europa. 10.210.28.10
+        strasbourg.fr.europa. 10.210.28.10
+        tld.dns.infra. 10.210.15.10
+        vienna.at.europa. 10.210.28.10
+        warsaw.pl.europa. 10.210.28.10
+        zagreb.hr.europa. 10.210.28.10
+        zurich.ch.europa. 10.210.28.10
+        admin.amsterdam.nl.europa. 10.210.26.10
+        admin.athens.gr.europa. 10.210.26.10
+        admin.barcelona.es.europa. 10.210.26.10
+        admin.belgrade.rs.europa. 10.210.26.10
+        admin.berlin.de.europa. 10.210.26.10
+        admin.birmingham.uk.europa. 10.210.26.10
+        admin.bordeaux.fr.europa. 10.210.26.10
+        admin.brussels.be.europa. 10.210.26.10
+        admin.budapest.hu.europa. 10.210.26.10
+        admin.copenhagen.dk.europa. 10.210.26.10
+        admin.dublin.ie.europa. 10.210.26.10
+        admin.dusseldorf.de.europa. 10.210.26.10
+        admin.frankfurt.de.europa. 10.210.26.10
+        admin.glasgow.uk.europa. 10.210.26.10
+        admin.hamburg.de.europa. 10.210.26.10
+        admin.helsinki.fi.europa. 10.210.26.10
+        admin.krakow.pl.europa. 10.210.26.10
+        admin.lisbon.pt.europa. 10.210.26.10
+        admin.london.uk.europa. 10.210.26.10
+        admin.lyon.fr.europa. 10.210.26.10
+        admin.madrid.es.europa. 10.210.26.10
+        admin.marseille.fr.europa. 10.210.26.10
+        admin.milan.it.europa. 10.210.26.10
+        admin.munich.de.europa. 10.210.26.10
+        admin.oslo.no.europa. 10.210.26.10
+        admin.palermo.it.europa. 10.210.26.10
+        admin.paris.fr.europa. 10.210.26.10
+        admin.prague.cz.europa. 10.210.26.10
+        admin.rome.it.europa. 10.210.26.10
+        admin.seville.es.europa. 10.210.26.10
+        admin.sofia.bg.europa. 10.210.26.10
+        admin.stockholm.se.europa. 10.210.26.10
+        admin.strasbourg.fr.europa. 10.210.26.10
+        admin.vienna.at.europa. 10.210.26.10
+        admin.warsaw.pl.europa. 10.210.26.10
+        admin.zagreb.hr.europa. 10.210.26.10
+        admin.zurich.ch.europa. 10.210.26.10
+        research.amsterdam.nl.europa. 10.210.26.10
+        research.athens.gr.europa. 10.210.26.10
+        research.barcelona.es.europa. 10.210.26.10
+        research.belgrade.rs.europa. 10.210.26.10
+        research.berlin.de.europa. 10.210.26.10
+        research.birmingham.uk.europa. 10.210.26.10
+        research.bordeaux.fr.europa. 10.210.26.10
+        research.brussels.be.europa. 10.210.26.10
+        research.budapest.hu.europa. 10.210.26.10
+        research.copenhagen.dk.europa. 10.210.26.10
+        research.dublin.ie.europa. 10.210.26.10
+        research.dusseldorf.de.europa. 10.210.26.10
+        research.frankfurt.de.europa. 10.210.26.10
+        research.glasgow.uk.europa. 10.210.26.10
+        research.hamburg.de.europa. 10.210.26.10
+        research.helsinki.fi.europa. 10.210.26.10
+        research.krakow.pl.europa. 10.210.26.10
+        research.lisbon.pt.europa. 10.210.26.10
+        research.london.uk.europa. 10.210.26.10
+        research.lyon.fr.europa. 10.210.26.10
+        research.madrid.es.europa. 10.210.26.10
+        research.marseille.fr.europa. 10.210.26.10
+        research.milan.it.europa. 10.210.26.10
+        research.munich.de.europa. 10.210.26.10
+        research.oslo.no.europa. 10.210.26.10
+        research.palermo.it.europa. 10.210.26.10
+        research.paris.fr.europa. 10.210.26.10
+        research.prague.cz.europa. 10.210.26.10
+        research.rome.it.europa. 10.210.26.10
+        research.seville.es.europa. 10.210.26.10
+        research.sofia.bg.europa. 10.210.26.10
+        research.stockholm.se.europa. 10.210.26.10
+        research.strasbourg.fr.europa. 10.210.26.10
+        research.vienna.at.europa. 10.210.26.10
+        research.warsaw.pl.europa. 10.210.26.10
+        research.zagreb.hr.europa. 10.210.26.10
+        research.zurich.ch.europa. 10.210.26.10
+        services.amsterdam.nl.europa. 10.210.26.10
+        services.athens.gr.europa. 10.210.26.10
+        services.barcelona.es.europa. 10.210.26.10
+        services.belgrade.rs.europa. 10.210.26.10
+        services.berlin.de.europa. 10.210.26.10
+        services.birmingham.uk.europa. 10.210.26.10
+        services.bordeaux.fr.europa. 10.210.26.10
+        services.brussels.be.europa. 10.210.26.10
+        services.budapest.hu.europa. 10.210.26.10
+        services.copenhagen.dk.europa. 10.210.26.10
+        services.dublin.ie.europa. 10.210.26.10
+        services.dusseldorf.de.europa. 10.210.26.10
+        services.frankfurt.de.europa. 10.210.26.10
+        services.glasgow.uk.europa. 10.210.26.10
+        services.hamburg.de.europa. 10.210.26.10
+        services.helsinki.fi.europa. 10.210.26.10
+        services.krakow.pl.europa. 10.210.26.10
+        services.lisbon.pt.europa. 10.210.26.10
+        services.london.uk.europa. 10.210.26.10
+        services.lyon.fr.europa. 10.210.26.10
+        services.madrid.es.europa. 10.210.26.10
+        services.marseille.fr.europa. 10.210.26.10
+        services.milan.it.europa. 10.210.26.10
+        services.munich.de.europa. 10.210.26.10
+        services.oslo.no.europa. 10.210.26.10
+        services.palermo.it.europa. 10.210.26.10
+        services.paris.fr.europa. 10.210.26.10
+        services.prague.cz.europa. 10.210.26.10
+        services.rome.it.europa. 10.210.26.10
+        services.seville.es.europa. 10.210.26.10
+        services.sofia.bg.europa. 10.210.26.10
+        services.stockholm.se.europa. 10.210.26.10
+        services.strasbourg.fr.europa. 10.210.26.10
+        services.vienna.at.europa. 10.210.26.10
+        services.warsaw.pl.europa. 10.210.26.10
+        services.zagreb.hr.europa. 10.210.26.10
+        services.zurich.ch.europa. 10.210.26.10
+        C266_ZONES
+        cat > /tmp/c266-records.tsv <<'"'"'C266_RECORDS'"'"'
+        10.210.28.10 amsterdam.nl.europa. MX 10,mail.amsterdam.nl.europa.
+        10.210.28.10 www.amsterdam.nl.europa. A 10.210.28.10
+        10.210.28.10 api.amsterdam.nl.europa. A 10.210.28.10
+        10.210.28.10 mail.amsterdam.nl.europa. A 10.210.28.10
+        10.210.28.10 athens.gr.europa. MX 10,mail.athens.gr.europa.
+        10.210.28.10 www.athens.gr.europa. A 10.210.28.10
+        10.210.28.10 api.athens.gr.europa. A 10.210.28.10
+        10.210.28.10 mail.athens.gr.europa. A 10.210.28.10
+        10.210.28.10 barcelona.es.europa. MX 10,mail.barcelona.es.europa.
+        10.210.28.10 www.barcelona.es.europa. A 10.210.28.10
+        10.210.28.10 api.barcelona.es.europa. A 10.210.28.10
+        10.210.28.10 mail.barcelona.es.europa. A 10.210.28.10
+        10.210.28.10 belgrade.rs.europa. MX 10,mail.belgrade.rs.europa.
+        10.210.28.10 www.belgrade.rs.europa. A 10.210.28.10
+        10.210.28.10 api.belgrade.rs.europa. A 10.210.28.10
+        10.210.28.10 mail.belgrade.rs.europa. A 10.210.28.10
+        10.210.28.10 berlin.de.europa. MX 10,mail.berlin.de.europa.
+        10.210.28.10 www.berlin.de.europa. A 10.210.28.10
+        10.210.28.10 api.berlin.de.europa. A 10.210.28.10
+        10.210.28.10 mail.berlin.de.europa. A 10.210.28.10
+        10.210.28.10 birmingham.uk.europa. MX 10,mail.birmingham.uk.europa.
+        10.210.28.10 www.birmingham.uk.europa. A 10.210.28.10
+        10.210.28.10 api.birmingham.uk.europa. A 10.210.28.10
+        10.210.28.10 mail.birmingham.uk.europa. A 10.210.28.10
+        10.210.28.10 bordeaux.fr.europa. MX 10,mail.bordeaux.fr.europa.
+        10.210.28.10 www.bordeaux.fr.europa. A 10.210.28.10
+        10.210.28.10 api.bordeaux.fr.europa. A 10.210.28.10
+        10.210.28.10 mail.bordeaux.fr.europa. A 10.210.28.10
+        10.210.28.10 brussels.be.europa. MX 10,mail.brussels.be.europa.
+        10.210.28.10 www.brussels.be.europa. A 10.210.28.10
+        10.210.28.10 api.brussels.be.europa. A 10.210.28.10
+        10.210.28.10 mail.brussels.be.europa. A 10.210.28.10
+        10.210.28.10 budapest.hu.europa. MX 10,mail.budapest.hu.europa.
+        10.210.28.10 www.budapest.hu.europa. A 10.210.28.10
+        10.210.28.10 api.budapest.hu.europa. A 10.210.28.10
+        10.210.28.10 mail.budapest.hu.europa. A 10.210.28.10
+        10.210.28.10 copenhagen.dk.europa. MX 10,mail.copenhagen.dk.europa.
+        10.210.28.10 www.copenhagen.dk.europa. A 10.210.28.10
+        10.210.28.10 api.copenhagen.dk.europa. A 10.210.28.10
+        10.210.28.10 mail.copenhagen.dk.europa. A 10.210.28.10
+        10.210.28.10 dublin.ie.europa. MX 10,mail.dublin.ie.europa.
+        10.210.28.10 www.dublin.ie.europa. A 10.210.28.10
+        10.210.28.10 api.dublin.ie.europa. A 10.210.28.10
+        10.210.28.10 mail.dublin.ie.europa. A 10.210.28.10
+        10.210.28.10 dusseldorf.de.europa. MX 10,mail.dusseldorf.de.europa.
+        10.210.28.10 www.dusseldorf.de.europa. A 10.210.28.10
+        10.210.28.10 api.dusseldorf.de.europa. A 10.210.28.10
+        10.210.28.10 mail.dusseldorf.de.europa. A 10.210.28.10
+        10.210.28.10 frankfurt.de.europa. MX 10,mail.frankfurt.de.europa.
+        10.210.28.10 www.frankfurt.de.europa. A 10.210.28.10
+        10.210.28.10 api.frankfurt.de.europa. A 10.210.28.10
+        10.210.28.10 mail.frankfurt.de.europa. A 10.210.28.10
+        10.210.28.10 glasgow.uk.europa. MX 10,mail.glasgow.uk.europa.
+        10.210.28.10 www.glasgow.uk.europa. A 10.210.28.10
+        10.210.28.10 api.glasgow.uk.europa. A 10.210.28.10
+        10.210.28.10 mail.glasgow.uk.europa. A 10.210.28.10
+        10.210.28.10 hamburg.de.europa. MX 10,mail.hamburg.de.europa.
+        10.210.28.10 www.hamburg.de.europa. A 10.210.28.10
+        10.210.28.10 api.hamburg.de.europa. A 10.210.28.10
+        10.210.28.10 mail.hamburg.de.europa. A 10.210.28.10
+        10.210.28.10 helsinki.fi.europa. MX 10,mail.helsinki.fi.europa.
+        10.210.28.10 www.helsinki.fi.europa. A 10.210.28.10
+        10.210.28.10 api.helsinki.fi.europa. A 10.210.28.10
+        10.210.28.10 mail.helsinki.fi.europa. A 10.210.28.10
+        10.210.28.10 krakow.pl.europa. MX 10,mail.krakow.pl.europa.
+        10.210.28.10 www.krakow.pl.europa. A 10.210.28.10
+        10.210.28.10 api.krakow.pl.europa. A 10.210.28.10
+        10.210.28.10 mail.krakow.pl.europa. A 10.210.28.10
+        10.210.28.10 lisbon.pt.europa. MX 10,mail.lisbon.pt.europa.
+        10.210.28.10 www.lisbon.pt.europa. A 10.210.28.10
+        10.210.28.10 api.lisbon.pt.europa. A 10.210.28.10
+        10.210.28.10 mail.lisbon.pt.europa. A 10.210.28.10
+        10.210.28.10 london.uk.europa. MX 10,mail.london.uk.europa.
+        10.210.28.10 www.london.uk.europa. A 10.210.28.10
+        10.210.28.10 api.london.uk.europa. A 10.210.28.10
+        10.210.28.10 mail.london.uk.europa. A 10.210.28.10
+        10.210.28.10 lyon.fr.europa. MX 10,mail.lyon.fr.europa.
+        10.210.28.10 www.lyon.fr.europa. A 10.210.28.10
+        10.210.28.10 api.lyon.fr.europa. A 10.210.28.10
+        10.210.28.10 mail.lyon.fr.europa. A 10.210.28.10
+        10.210.28.10 madrid.es.europa. MX 10,mail.madrid.es.europa.
+        10.210.28.10 www.madrid.es.europa. A 10.210.28.10
+        10.210.28.10 api.madrid.es.europa. A 10.210.28.10
+        10.210.28.10 mail.madrid.es.europa. A 10.210.28.10
+        10.210.28.10 marseille.fr.europa. MX 10,mail.marseille.fr.europa.
+        10.210.28.10 www.marseille.fr.europa. A 10.210.28.10
+        10.210.28.10 api.marseille.fr.europa. A 10.210.28.10
+        10.210.28.10 mail.marseille.fr.europa. A 10.210.28.10
+        10.210.28.10 milan.it.europa. MX 10,mail.milan.it.europa.
+        10.210.28.10 www.milan.it.europa. A 10.210.28.10
+        10.210.28.10 api.milan.it.europa. A 10.210.28.10
+        10.210.28.10 mail.milan.it.europa. A 10.210.28.10
+        10.210.28.10 munich.de.europa. MX 10,mail.munich.de.europa.
+        10.210.28.10 www.munich.de.europa. A 10.210.28.10
+        10.210.28.10 api.munich.de.europa. A 10.210.28.10
+        10.210.28.10 mail.munich.de.europa. A 10.210.28.10
+        10.210.28.10 oslo.no.europa. MX 10,mail.oslo.no.europa.
+        10.210.28.10 www.oslo.no.europa. A 10.210.28.10
+        10.210.28.10 api.oslo.no.europa. A 10.210.28.10
+        10.210.28.10 mail.oslo.no.europa. A 10.210.28.10
+        10.210.28.10 palermo.it.europa. MX 10,mail.palermo.it.europa.
+        10.210.28.10 www.palermo.it.europa. A 10.210.28.10
+        10.210.28.10 api.palermo.it.europa. A 10.210.28.10
+        10.210.28.10 mail.palermo.it.europa. A 10.210.28.10
+        10.210.28.10 paris.fr.europa. MX 10,mail.paris.fr.europa.
+        10.210.28.10 www.paris.fr.europa. A 10.210.28.10
+        10.210.28.10 api.paris.fr.europa. A 10.210.28.10
+        10.210.28.10 mail.paris.fr.europa. A 10.210.28.10
+        10.210.28.10 prague.cz.europa. MX 10,mail.prague.cz.europa.
+        10.210.28.10 www.prague.cz.europa. A 10.210.28.10
+        10.210.28.10 api.prague.cz.europa. A 10.210.28.10
+        10.210.28.10 mail.prague.cz.europa. A 10.210.28.10
+        10.210.28.10 rome.it.europa. MX 10,mail.rome.it.europa.
+        10.210.28.10 www.rome.it.europa. A 10.210.28.10
+        10.210.28.10 api.rome.it.europa. A 10.210.28.10
+        10.210.28.10 mail.rome.it.europa. A 10.210.28.10
+        10.210.28.10 seville.es.europa. MX 10,mail.seville.es.europa.
+        10.210.28.10 www.seville.es.europa. A 10.210.28.10
+        10.210.28.10 api.seville.es.europa. A 10.210.28.10
+        10.210.28.10 mail.seville.es.europa. A 10.210.28.10
+        10.210.28.10 sofia.bg.europa. MX 10,mail.sofia.bg.europa.
+        10.210.28.10 www.sofia.bg.europa. A 10.210.28.10
+        10.210.28.10 api.sofia.bg.europa. A 10.210.28.10
+        10.210.28.10 mail.sofia.bg.europa. A 10.210.28.10
+        10.210.28.10 stockholm.se.europa. MX 10,mail.stockholm.se.europa.
+        10.210.28.10 www.stockholm.se.europa. A 10.210.28.10
+        10.210.28.10 api.stockholm.se.europa. A 10.210.28.10
+        10.210.28.10 mail.stockholm.se.europa. A 10.210.28.10
+        10.210.28.10 strasbourg.fr.europa. MX 10,mail.strasbourg.fr.europa.
+        10.210.28.10 www.strasbourg.fr.europa. A 10.210.28.10
+        10.210.28.10 api.strasbourg.fr.europa. A 10.210.28.10
+        10.210.28.10 mail.strasbourg.fr.europa. A 10.210.28.10
+        10.210.28.10 vienna.at.europa. MX 10,mail.vienna.at.europa.
+        10.210.28.10 www.vienna.at.europa. A 10.210.28.10
+        10.210.28.10 api.vienna.at.europa. A 10.210.28.10
+        10.210.28.10 mail.vienna.at.europa. A 10.210.28.10
+        10.210.28.10 warsaw.pl.europa. MX 10,mail.warsaw.pl.europa.
+        10.210.28.10 www.warsaw.pl.europa. A 10.210.28.10
+        10.210.28.10 api.warsaw.pl.europa. A 10.210.28.10
+        10.210.28.10 mail.warsaw.pl.europa. A 10.210.28.10
+        10.210.28.10 zagreb.hr.europa. MX 10,mail.zagreb.hr.europa.
+        10.210.28.10 www.zagreb.hr.europa. A 10.210.28.10
+        10.210.28.10 api.zagreb.hr.europa. A 10.210.28.10
+        10.210.28.10 mail.zagreb.hr.europa. A 10.210.28.10
+        10.210.28.10 zurich.ch.europa. MX 10,mail.zurich.ch.europa.
+        10.210.28.10 www.zurich.ch.europa. A 10.210.28.10
+        10.210.28.10 api.zurich.ch.europa. A 10.210.28.10
+        10.210.28.10 mail.zurich.ch.europa. A 10.210.28.10
+        10.210.26.10 monitor.admin.amsterdam.nl.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.amsterdam.nl.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.athens.gr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.athens.gr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.barcelona.es.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.barcelona.es.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.belgrade.rs.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.belgrade.rs.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.berlin.de.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.berlin.de.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.birmingham.uk.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.birmingham.uk.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.bordeaux.fr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.bordeaux.fr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.brussels.be.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.brussels.be.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.budapest.hu.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.budapest.hu.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.copenhagen.dk.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.copenhagen.dk.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.dublin.ie.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.dublin.ie.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.dusseldorf.de.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.dusseldorf.de.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.frankfurt.de.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.frankfurt.de.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.glasgow.uk.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.glasgow.uk.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.hamburg.de.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.hamburg.de.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.helsinki.fi.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.helsinki.fi.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.krakow.pl.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.krakow.pl.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.lisbon.pt.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.lisbon.pt.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.london.uk.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.london.uk.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.lyon.fr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.lyon.fr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.madrid.es.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.madrid.es.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.marseille.fr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.marseille.fr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.milan.it.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.milan.it.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.munich.de.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.munich.de.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.oslo.no.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.oslo.no.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.palermo.it.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.palermo.it.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.paris.fr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.paris.fr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.prague.cz.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.prague.cz.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.rome.it.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.rome.it.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.seville.es.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.seville.es.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.sofia.bg.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.sofia.bg.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.stockholm.se.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.stockholm.se.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.strasbourg.fr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.strasbourg.fr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.vienna.at.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.vienna.at.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.warsaw.pl.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.warsaw.pl.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.zagreb.hr.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.zagreb.hr.europa. A 10.210.26.10
+        10.210.26.10 monitor.admin.zurich.ch.europa. A 10.210.26.10
+        10.210.26.10 logs.admin.zurich.ch.europa. A 10.210.26.10
+        10.210.26.10 git.research.amsterdam.nl.europa. A 10.210.26.10
+        10.210.26.10 data.research.amsterdam.nl.europa. A 10.210.26.10
+        10.210.26.10 git.research.athens.gr.europa. A 10.210.26.10
+        10.210.26.10 data.research.athens.gr.europa. A 10.210.26.10
+        10.210.26.10 git.research.barcelona.es.europa. A 10.210.26.10
+        10.210.26.10 data.research.barcelona.es.europa. A 10.210.26.10
+        10.210.26.10 git.research.belgrade.rs.europa. A 10.210.26.10
+        10.210.26.10 data.research.belgrade.rs.europa. A 10.210.26.10
+        10.210.26.10 git.research.berlin.de.europa. A 10.210.26.10
+        10.210.26.10 data.research.berlin.de.europa. A 10.210.26.10
+        10.210.26.10 git.research.birmingham.uk.europa. A 10.210.26.10
+        10.210.26.10 data.research.birmingham.uk.europa. A 10.210.26.10
+        10.210.26.10 git.research.bordeaux.fr.europa. A 10.210.26.10
+        10.210.26.10 data.research.bordeaux.fr.europa. A 10.210.26.10
+        10.210.26.10 git.research.brussels.be.europa. A 10.210.26.10
+        10.210.26.10 data.research.brussels.be.europa. A 10.210.26.10
+        10.210.26.10 git.research.budapest.hu.europa. A 10.210.26.10
+        10.210.26.10 data.research.budapest.hu.europa. A 10.210.26.10
+        10.210.26.10 git.research.copenhagen.dk.europa. A 10.210.26.10
+        10.210.26.10 data.research.copenhagen.dk.europa. A 10.210.26.10
+        10.210.26.10 git.research.dublin.ie.europa. A 10.210.26.10
+        10.210.26.10 data.research.dublin.ie.europa. A 10.210.26.10
+        10.210.26.10 git.research.dusseldorf.de.europa. A 10.210.26.10
+        10.210.26.10 data.research.dusseldorf.de.europa. A 10.210.26.10
+        10.210.26.10 git.research.frankfurt.de.europa. A 10.210.26.10
+        10.210.26.10 data.research.frankfurt.de.europa. A 10.210.26.10
+        10.210.26.10 git.research.glasgow.uk.europa. A 10.210.26.10
+        10.210.26.10 data.research.glasgow.uk.europa. A 10.210.26.10
+        10.210.26.10 git.research.hamburg.de.europa. A 10.210.26.10
+        10.210.26.10 data.research.hamburg.de.europa. A 10.210.26.10
+        10.210.26.10 git.research.helsinki.fi.europa. A 10.210.26.10
+        10.210.26.10 data.research.helsinki.fi.europa. A 10.210.26.10
+        10.210.26.10 git.research.krakow.pl.europa. A 10.210.26.10
+        10.210.26.10 data.research.krakow.pl.europa. A 10.210.26.10
+        10.210.26.10 git.research.lisbon.pt.europa. A 10.210.26.10
+        10.210.26.10 data.research.lisbon.pt.europa. A 10.210.26.10
+        10.210.26.10 git.research.london.uk.europa. A 10.210.26.10
+        10.210.26.10 data.research.london.uk.europa. A 10.210.26.10
+        10.210.26.10 git.research.lyon.fr.europa. A 10.210.26.10
+        10.210.26.10 data.research.lyon.fr.europa. A 10.210.26.10
+        10.210.26.10 git.research.madrid.es.europa. A 10.210.26.10
+        10.210.26.10 data.research.madrid.es.europa. A 10.210.26.10
+        10.210.26.10 git.research.marseille.fr.europa. A 10.210.26.10
+        10.210.26.10 data.research.marseille.fr.europa. A 10.210.26.10
+        10.210.26.10 git.research.milan.it.europa. A 10.210.26.10
+        10.210.26.10 data.research.milan.it.europa. A 10.210.26.10
+        10.210.26.10 git.research.munich.de.europa. A 10.210.26.10
+        10.210.26.10 data.research.munich.de.europa. A 10.210.26.10
+        10.210.26.10 git.research.oslo.no.europa. A 10.210.26.10
+        10.210.26.10 data.research.oslo.no.europa. A 10.210.26.10
+        10.210.26.10 git.research.palermo.it.europa. A 10.210.26.10
+        10.210.26.10 data.research.palermo.it.europa. A 10.210.26.10
+        10.210.26.10 git.research.paris.fr.europa. A 10.210.26.10
+        10.210.26.10 data.research.paris.fr.europa. A 10.210.26.10
+        10.210.26.10 git.research.prague.cz.europa. A 10.210.26.10
+        10.210.26.10 data.research.prague.cz.europa. A 10.210.26.10
+        10.210.26.10 git.research.rome.it.europa. A 10.210.26.10
+        10.210.26.10 data.research.rome.it.europa. A 10.210.26.10
+        10.210.26.10 git.research.seville.es.europa. A 10.210.26.10
+        10.210.26.10 data.research.seville.es.europa. A 10.210.26.10
+        10.210.26.10 git.research.sofia.bg.europa. A 10.210.26.10
+        10.210.26.10 data.research.sofia.bg.europa. A 10.210.26.10
+        10.210.26.10 git.research.stockholm.se.europa. A 10.210.26.10
+        10.210.26.10 data.research.stockholm.se.europa. A 10.210.26.10
+        10.210.26.10 git.research.strasbourg.fr.europa. A 10.210.26.10
+        10.210.26.10 data.research.strasbourg.fr.europa. A 10.210.26.10
+        10.210.26.10 git.research.vienna.at.europa. A 10.210.26.10
+        10.210.26.10 data.research.vienna.at.europa. A 10.210.26.10
+        10.210.26.10 git.research.warsaw.pl.europa. A 10.210.26.10
+        10.210.26.10 data.research.warsaw.pl.europa. A 10.210.26.10
+        10.210.26.10 git.research.zagreb.hr.europa. A 10.210.26.10
+        10.210.26.10 data.research.zagreb.hr.europa. A 10.210.26.10
+        10.210.26.10 git.research.zurich.ch.europa. A 10.210.26.10
+        10.210.26.10 data.research.zurich.ch.europa. A 10.210.26.10
+        10.210.26.10 portal.services.amsterdam.nl.europa. A 10.210.26.10
+        10.210.26.10 api.services.amsterdam.nl.europa. A 10.210.26.10
+        10.210.26.10 portal.services.athens.gr.europa. A 10.210.26.10
+        10.210.26.10 api.services.athens.gr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.barcelona.es.europa. A 10.210.26.10
+        10.210.26.10 api.services.barcelona.es.europa. A 10.210.26.10
+        10.210.26.10 portal.services.belgrade.rs.europa. A 10.210.26.10
+        10.210.26.10 api.services.belgrade.rs.europa. A 10.210.26.10
+        10.210.26.10 portal.services.berlin.de.europa. A 10.210.26.10
+        10.210.26.10 api.services.berlin.de.europa. A 10.210.26.10
+        10.210.26.10 portal.services.birmingham.uk.europa. A 10.210.26.10
+        10.210.26.10 api.services.birmingham.uk.europa. A 10.210.26.10
+        10.210.26.10 portal.services.bordeaux.fr.europa. A 10.210.26.10
+        10.210.26.10 api.services.bordeaux.fr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.brussels.be.europa. A 10.210.26.10
+        10.210.26.10 api.services.brussels.be.europa. A 10.210.26.10
+        10.210.26.10 portal.services.budapest.hu.europa. A 10.210.26.10
+        10.210.26.10 api.services.budapest.hu.europa. A 10.210.26.10
+        10.210.26.10 portal.services.copenhagen.dk.europa. A 10.210.26.10
+        10.210.26.10 api.services.copenhagen.dk.europa. A 10.210.26.10
+        10.210.26.10 portal.services.dublin.ie.europa. A 10.210.26.10
+        10.210.26.10 api.services.dublin.ie.europa. A 10.210.26.10
+        10.210.26.10 portal.services.dusseldorf.de.europa. A 10.210.26.10
+        10.210.26.10 api.services.dusseldorf.de.europa. A 10.210.26.10
+        10.210.26.10 portal.services.frankfurt.de.europa. A 10.210.26.10
+        10.210.26.10 api.services.frankfurt.de.europa. A 10.210.26.10
+        10.210.26.10 portal.services.glasgow.uk.europa. A 10.210.26.10
+        10.210.26.10 api.services.glasgow.uk.europa. A 10.210.26.10
+        10.210.26.10 portal.services.hamburg.de.europa. A 10.210.26.10
+        10.210.26.10 api.services.hamburg.de.europa. A 10.210.26.10
+        10.210.26.10 portal.services.helsinki.fi.europa. A 10.210.26.10
+        10.210.26.10 api.services.helsinki.fi.europa. A 10.210.26.10
+        10.210.26.10 portal.services.krakow.pl.europa. A 10.210.26.10
+        10.210.26.10 api.services.krakow.pl.europa. A 10.210.26.10
+        10.210.26.10 portal.services.lisbon.pt.europa. A 10.210.26.10
+        10.210.26.10 api.services.lisbon.pt.europa. A 10.210.26.10
+        10.210.26.10 portal.services.london.uk.europa. A 10.210.26.10
+        10.210.26.10 api.services.london.uk.europa. A 10.210.26.10
+        10.210.26.10 portal.services.lyon.fr.europa. A 10.210.26.10
+        10.210.26.10 api.services.lyon.fr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.madrid.es.europa. A 10.210.26.10
+        10.210.26.10 api.services.madrid.es.europa. A 10.210.26.10
+        10.210.26.10 portal.services.marseille.fr.europa. A 10.210.26.10
+        10.210.26.10 api.services.marseille.fr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.milan.it.europa. A 10.210.26.10
+        10.210.26.10 api.services.milan.it.europa. A 10.210.26.10
+        10.210.26.10 portal.services.munich.de.europa. A 10.210.26.10
+        10.210.26.10 api.services.munich.de.europa. A 10.210.26.10
+        10.210.26.10 portal.services.oslo.no.europa. A 10.210.26.10
+        10.210.26.10 api.services.oslo.no.europa. A 10.210.26.10
+        10.210.26.10 portal.services.palermo.it.europa. A 10.210.26.10
+        10.210.26.10 api.services.palermo.it.europa. A 10.210.26.10
+        10.210.26.10 portal.services.paris.fr.europa. A 10.210.26.10
+        10.210.26.10 api.services.paris.fr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.prague.cz.europa. A 10.210.26.10
+        10.210.26.10 api.services.prague.cz.europa. A 10.210.26.10
+        10.210.26.10 portal.services.rome.it.europa. A 10.210.26.10
+        10.210.26.10 api.services.rome.it.europa. A 10.210.26.10
+        10.210.26.10 portal.services.seville.es.europa. A 10.210.26.10
+        10.210.26.10 api.services.seville.es.europa. A 10.210.26.10
+        10.210.26.10 portal.services.sofia.bg.europa. A 10.210.26.10
+        10.210.26.10 api.services.sofia.bg.europa. A 10.210.26.10
+        10.210.26.10 portal.services.stockholm.se.europa. A 10.210.26.10
+        10.210.26.10 api.services.stockholm.se.europa. A 10.210.26.10
+        10.210.26.10 portal.services.strasbourg.fr.europa. A 10.210.26.10
+        10.210.26.10 api.services.strasbourg.fr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.vienna.at.europa. A 10.210.26.10
+        10.210.26.10 api.services.vienna.at.europa. A 10.210.26.10
+        10.210.26.10 portal.services.warsaw.pl.europa. A 10.210.26.10
+        10.210.26.10 api.services.warsaw.pl.europa. A 10.210.26.10
+        10.210.26.10 portal.services.zagreb.hr.europa. A 10.210.26.10
+        10.210.26.10 api.services.zagreb.hr.europa. A 10.210.26.10
+        10.210.26.10 portal.services.zurich.ch.europa. A 10.210.26.10
+        10.210.26.10 api.services.zurich.ch.europa. A 10.210.26.10
+        C266_RECORDS
+        sh -n /tmp/c266-check.sh && [ "$(wc -l < /tmp/c266-zones.tsv)" -eq 201 ] && [ "$(wc -l < /tmp/c266-records.tsv)" -eq 370 ]'
+      exit_code: 0
+    - command: sh /tmp/c266-check.sh zone 1 41
+      output: 41/41
+    - command: sh /tmp/c266-check.sh zone 42 81
+      output: 40/40
+    - command: sh /tmp/c266-check.sh zone 82 121
+      output: 40/40
+    - command: sh /tmp/c266-check.sh zone 122 161
+      output: 40/40
+    - command: sh /tmp/c266-check.sh zone 162 201
+      output: 40/40
+    - command: sh /tmp/c266-check.sh deleg 1 40
+      output: 40/40
+    - command: sh /tmp/c266-check.sh deleg 41 80
+      output: 40/40
+    - command: sh /tmp/c266-check.sh deleg 81 120
+      output: 40/40
+    - command: sh /tmp/c266-check.sh deleg 121 160
+      output: 40/40
+    - command: sh /tmp/c266-check.sh deleg 161 200
+      output: 40/40
+    - command: sh /tmp/c266-check.sh record 1 74
+      output: 74/74
+    - command: sh /tmp/c266-check.sh record 75 148
+      output: 74/74
+    - command: sh /tmp/c266-check.sh record 149 222
+      output: 74/74
+    - command: sh /tmp/c266-check.sh record 223 296
+      output: 74/74
+    - command: sh /tmp/c266-check.sh record 297 370
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 1 74
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 75 148
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 149 222
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 223 296
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 297 370
+      output: 74/74
+    c266_client_2:
+    - *id001
+    - command: sh /tmp/c266-check.sh client 1 74
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 75 148
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 149 222
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 223 296
+      output: 74/74
+    - command: sh /tmp/c266-check.sh client 297 370
+      output: 74/74

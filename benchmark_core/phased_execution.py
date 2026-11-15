@@ -14,6 +14,8 @@ import sys
 
 from .fingerprint import conditions
 from .standard_runtime import validate_artifacts
+from .run_identity import cell_metadata, describe_run, observation_id
+from .parallel_limits import GENERATION_MAX_WORKERS, CHECKER_MAX_WORKERS
 
 
 def _manifest(run: Path) -> dict:
@@ -24,10 +26,11 @@ def _manifest(run: Path) -> dict:
 def _generate(config, scenario, agent, cell):
     """Executed in a fresh spawned process, not a thread that forks."""
     from .standard_runtime import run_supervised
-    from dataclasses import replace
+    from .config import Config
     # Enable resource bounds only for phased AUT; source config stays unchanged.
     parallel = {**config.data.get("parallel_execution", {}), "enabled": True}
-    config = replace(config, data={**config.data, "parallel_execution": parallel})
+    config = Config(config.root, {**config.data, "parallel_execution": parallel})
+    print(f"[AUT START] ID={observation_id(cell_metadata(cell))} | nuova generazione Codex", flush=True)
     run = run_supervised(
         config, scenario, agent, cell.prompt_type,
         skill_mode=cell.skill_mode, experiment_id=cell.experiment_id,
@@ -45,6 +48,8 @@ def _evaluate(config, run_name: str):
     metadata = _manifest(run)
     initial = (metadata.get("pipeline_state") == "AUT_COMPLETED"
                and metadata.get("evaluation_revision", 0) == 0)
+    print(f"[CHECK START] ID={describe_run(run)} | cartella={run.relative_to(config.root)} | "
+          f"{'prima valutazione' if initial else 'rivalutazione, AUT preservato'}", flush=True)
     reevaluate_run(config, run, isolated_checker=True, initial_evaluation=initial)
     return str(run), _manifest(run)["pipeline_state"]
 
@@ -63,15 +68,23 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
     if config.data.get("docker_sandbox", {}).get("execution_backend") != "docker_sandbox":
         raise ValueError("Parallel phased mode requires Docker Sandboxes")
     # Match the limits in the CLI and configuration validator.
-    if type(generation_workers) is not int or not 1 <= generation_workers <= 5:
-        raise ValueError("generation_workers must be between 1 and 5")
-    checker_limits = {"small": 4, "medium": 4, "large": 2}
-    for level, maximum in checker_limits.items():
+    if type(generation_workers) is not int or not 1 <= generation_workers <= GENERATION_MAX_WORKERS:
+        raise ValueError(f"generation_workers must be between 1 and {GENERATION_MAX_WORKERS}")
+    for level, maximum in CHECKER_MAX_WORKERS.items():
         count = checker_workers[level]
         if type(count) is not int or not 1 <= count <= maximum:
             raise ValueError(
                 f"checker_workers[{level}] must be between 1 and {maximum}"
             )
+    # Persist the effective CLI limits in worker manifests, not YAML defaults.
+    from .config import Config
+    parallel = config.data.get("parallel_execution", {})
+    config = Config(config.root, {**config.data, "parallel_execution": {
+        **parallel, "enabled": True,
+        "generation": {**parallel.get("generation", {}), "workers": generation_workers},
+        "checker": {**parallel.get("checker", {}),
+                    **{f"{level}_workers": value for level, value in checker_workers.items()}},
+    }})
     mp = get_context("spawn")
     generated = {}
     failures = []
@@ -89,7 +102,8 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
             if m.get("aut_execution_success") is not True:
                 raise ValueError("AUT was not completed")
             generated[c] = prior
-            print(f"[AUT-RESUME] {prior.relative_to(config.root)}", flush=True)
+            print(f"[AUT-RESUME] ID={describe_run(prior)} | cartella={prior.relative_to(config.root)} | "
+                  "generazione già riuscita: si ripete soltanto il checker", flush=True)
         except Exception as exc:
             # Do not silently duplicate a run with an unverified AUT.
             failures.append((c, str(exc)))
@@ -101,20 +115,19 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
         return True
 
     print(f"[PHASE 1] {len(queued)} new generations, {len(generated)} recovered; "
-          f"{generation_workers} Codex workers", flush=True)
+          f"limite sandbox={generation_workers}, parallelismo utilizzabile={min(generation_workers, len(queued))}", flush=True)
     with ProcessPoolExecutor(max_workers=generation_workers, mp_context=mp) as pool:
         futures = {pool.submit(_generate, config, labs[c.lab_id], agent, c): c
                    for c in queued}
         for future in as_completed(futures):
             cell = futures[future]
-            label = (f"{cell.lab_id}/{cell.dns_tree_id}/{cell.task_level}/"
-                     f"{cell.prompt_type}/{cell.skill_mode}/rep={cell.replicate}")
+            label = f"ID={observation_id(cell_metadata(cell))}"
             try:
                 path, state = future.result()
                 run = Path(path)
                 if state == "AUT_COMPLETED":
                     generated[cell] = run
-                    print(f"[AUT OK] {label}: {run.relative_to(config.root)}", flush=True)
+                    print(f"[AUT OK] ID={describe_run(run)} | cartella={run.relative_to(config.root)} | stato={state}", flush=True)
                 else:
                     failures.append((cell, state))
                     print(f"[AUT FAILED] {label}: {state}", file=sys.stderr, flush=True)
@@ -139,7 +152,8 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
         candidates = [(cell, path) for cell, path in generated.items()
                       if cell.task_level == level]
         print(f"[PHASE 2] {level}: {len(candidates)} checks, "
-              f"{checker_workers[level]} workers", flush=True)
+              f"limite checker={checker_workers[level]}, "
+              f"parallelismo utilizzabile={min(checker_workers[level], len(candidates))}", flush=True)
         if not candidates:
             continue
         workers = checker_workers[level]
@@ -156,10 +170,11 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
                         if state != "COMPLETED":
                             failures.append((cell, state))
                         checked += 1
-                        print(f"[CHECK {level}] {checked}: {path} = {state}", flush=True)
+                        print(f"[CHECK {level}] {checked}: ID={describe_run(Path(path))} | "
+                              f"stato={state} | cartella={path}", flush=True)
                     except Exception as exc:
                         failures.append((cell, f"{type(exc).__name__}: {exc}"))
-                        print(f"[CHECK ERROR] {cell}: {exc}",
+                        print(f"[CHECK ERROR] ID={describe_run(generated[cell])}: {exc}",
                               file=sys.stderr, flush=True)
             # Each individual run has already saved metrics and reports. Avoid
             # reading a partly written checker report while its peer is active.

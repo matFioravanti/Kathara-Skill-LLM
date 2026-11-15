@@ -14,6 +14,7 @@ from .diff_metrics import compute_diff
 from .inspect_runner import run_aut
 from .skill_modes import mode_details
 from .run_metrics import make_metrics, print_run_summary
+from .run_identity import identity_fields
 from .workspace import (check_lab_integrity, component_versions, create_workspace, logical_run_id,
                         manifest as lab_manifest, manifest_hash, tree_hash, utc_now)
 
@@ -48,6 +49,14 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
     run = create_workspace(config.root / "runs", scenario, prompt_type, skill_mode, prompt_text, experiment_id=experiment_id, assignment=assignment)
     run_number = int(run.name[1:])
     run_id = logical_run_id(scenario.scenario_id, prompt_type, skill_mode, run_number, experiment_id=experiment_id, assignment=assignment)
+    readable_identity = identity_fields({
+        "experiment_id": experiment_id, "lab_id": scenario.scenario_id,
+        "dns_tree_id": assignment.dns_tree_id if assignment else None,
+        "task_level": assignment.task_level if assignment else None,
+        "prompt_type": prompt_type, "skill_mode": skill_mode,
+        "replicate": replicate if replicate is not None else run_number,
+        "run_number": run_number,
+    })
     # Only load paths for skills actually used by this mode (avoids requiring creation_skill
     # when running Antigravity or a mode that doesn't use kathara-creation).
     mode_skills = skill_selection.available_skills
@@ -60,9 +69,11 @@ def run_one(config, scenario, agent: str, prompt_type: str, skill_mode: str | No
             run_path=run.relative_to(config.root).as_posix(),
             replicate=replicate if replicate is not None else run_number,
             task_level=assignment.task_level if assignment else None,
-            dns_tree_id=assignment.dns_tree_id if assignment else None, **context,
+            dns_tree_id=assignment.dns_tree_id if assignment else None,
+            execution_id=readable_identity["execution_id"], **context,
         )
     manifest = {
+        **readable_identity,
         "run_id": run_id, "run_number": run_number,
         "experiment_id": experiment_id,
         "replicate": replicate if replicate is not None else run_number,
@@ -312,6 +323,7 @@ def reevaluate_run(config, run: Path, *, isolated_checker: bool = False,
     if not manifest_path.is_file() or not (run / "lab").is_dir() or not (run / "input/lab").is_dir():
         raise ValueError(f"Run incompleta: attesi manifest.json, lab/ e input/lab/: {run}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest.update(identity_fields(manifest))
     if manifest.get("aut_execution_success") is not True or manifest.get("pipeline_state") not in (
         "AUT_COMPLETED", "CHECKER_RUNNING", "FINALIZING", "COMPLETED", "CHECKER_FAILED", "CORRECTION_MISSING", "CORRECTION_INVALID"
     ):
@@ -394,6 +406,10 @@ def reevaluate_run(config, run: Path, *, isolated_checker: bool = False,
         (run / "logs" / name).unlink(missing_ok=True)
     manifest["pipeline_state"] = "CHECKER_RUNNING"
     manifest["checker_started_at"] = utc_now()
+    if isolated_checker:
+        manifest.setdefault("orchestration", {})["checker_workers"] = (
+            config.data.get("parallel_execution", {}).get("checker", {}).get(f"{level}_workers")
+        )
     write_json(manifest_path, manifest)
     started = time.monotonic()
     outcome = None
