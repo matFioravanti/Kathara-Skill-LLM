@@ -164,10 +164,14 @@ def test_six_turns_one_workspace_sandbox_thread_and_checkpoints(v2,monkeypatch):
 
 def test_only_current_prompt_is_sent_and_future_prompts_stay_on_host(v2,monkeypatch):
     messages=[f'ONLY_STAGE_{i}_PRIVATE_REQUIREMENT' for i in range(1,7)]
-    monkeypatch.setattr(runner,'prompts',lambda *args:messages)
+    for path, message in zip(sorted((v2.root/'prompt/cost266/incremental').glob('*.md')), messages):
+        path.write_text(message)
     original=ScriptedSession.turn
     def inspect(self,**kwargs):
         index=len(self.received)
+        if index:
+            previous=v2.root/'runs'
+            assert len(list(previous.glob('**/steps/*/completed.json'))) == index
         assert kwargs['prompt'].decode()==messages[index]
         for source in (self.workspace,self.state):
             if source.exists():
@@ -219,7 +223,7 @@ def test_gate_retry_and_fallback_are_preserved(v2,schedule,attempts,fallback):
     assert metrics['tokens']['input']==210+11*metrics['gate_turns']
 
 
-@pytest.mark.parametrize('fault', ['failure','timeout','lost_thread','missing_thread','missing_completion','blocking_event','routing','symlink','skill_mutation'])
+@pytest.mark.parametrize('fault', ['failure','timeout','lost_thread','missing_thread','missing_completion','blocking_event','symlink','skill_mutation'])
 def test_error_stage_three_stops_without_checkpoint_or_checker(v2,monkeypatch,fault):
     ScriptedSession.fault=fault
     monkeypatch.setattr(runner,'run_checker',lambda *a:pytest.fail('checker after failed stage'))
@@ -235,6 +239,44 @@ def test_error_stage_three_stops_without_checkpoint_or_checker(v2,monkeypatch,fa
     assert metadata['pipeline_error']
     with pytest.raises(ValueError,match='stessa sandbox/thread'):run(v2,resume=True)
     assert len(ScriptedSession.instances)==1
+
+
+def test_network_violation_is_observed_without_repair_and_checker_runs(v2):
+    ScriptedSession.fault='routing'
+    path=run(v2)
+    metadata=json.loads((path/'manifest.json').read_text())
+    assert metadata['pipeline_state']=='COMPLETED'
+    assert metadata['completed_stages']==6
+    for stage in (3,4,5,6):
+        assert 'ip route add default' in (path/f'steps/{stage:02d}/checkpoint/root.startup').read_text()
+    metrics=json.loads((path/'evaluation/metrics.json').read_text())
+    assert metrics['turns_completed']==metrics['checkpoints_saved']==metrics['prompts_sent']==6
+    assert metrics['incremental_sequence_completed'] is True
+    assert metrics['lab_protocol_violations']
+    assert metadata['conditions']['continuous_validation_policy']=='observe_lab_violations_v3'
+    from benchmark_core.cost266.reports import aggregate_cost266
+    output=v2.root/'results/test_cost266'
+    frames=aggregate_cost266(v2.root,output)
+    assert frames[0].iloc[0]['checkpoints_saved']==6
+    import pandas as pd
+    assert pd.read_csv(output/'runs.csv').iloc[0]['turns_completed']==6
+    assert pd.read_excel(output/'benchmark.xlsx',sheet_name='Runs').iloc[0]['prompts_sent']==6
+
+
+def test_bad_dns_is_preserved_through_six_turns_and_evaluated(v2, monkeypatch):
+    original=ScriptedSession.turn
+    def turn(self, **kwargs):
+        result=original(self, **kwargs)
+        if not self.readonly:
+            (self.workspace/'root/etc/bind/named.conf').write_text('invalid DNS configuration')
+        return result
+    monkeypatch.setattr(ScriptedSession,'turn',turn)
+    monkeypatch.setattr(runner,'run_checker',fake_checker(False))
+    path=run(v2)
+    metadata=json.loads((path/'manifest.json').read_text())
+    assert metadata['pipeline_state']=='COMPLETED' and metadata['task_success'] is False
+    assert len(list(path.glob('steps/*/checkpoint')))==6
+    assert (path/'lab/root/etc/bind/named.conf').read_text()=='invalid DNS configuration'
 
 
 @pytest.mark.parametrize('fault',['stdin','create','cleanup','gate_mutation'])

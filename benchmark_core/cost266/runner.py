@@ -36,7 +36,7 @@ def _selected_prompts(config, spec, cell, inventory):
     if spec.protocol != CONTINUOUS_VERSION or cell.strategy != 'incremental':
         return prompts(inventory, cell)
     if cell.prompt_type != 'T1':
-        raise ValueError('I prompt incrementali da file sono disponibili solo per T1')
+        return prompts(inventory, cell)
     folder = safe_path(config.root/'prompt/cost266/incremental')
     files = sorted(folder.glob('*.md'))
     import re
@@ -106,7 +106,7 @@ def conditions(config, spec: Spec, cell: Cell, inventory: dict, preparation: dic
     # Antigravity usa la Skill DNS anche in no_skill: mantiene la semantica standard.
     if config.data['aut']['agent'] == 'antigravity':
         paths = skill_paths(config, ('kathara-dns',))
-    return {**({'correction_files': preparation['correction_files']} if preparation.get('correction_files') else {}), 'protocol': spec.protocol, 'identity': cell.relative.as_posix(),
+    return {**({'continuous_validation_policy': 'observe_lab_violations_v3'} if spec.protocol == CONTINUOUS_VERSION and cell.strategy == 'incremental' else {}), **({'correction_files': preparation['correction_files']} if preparation.get('correction_files') else {}), 'protocol': spec.protocol, 'identity': cell.relative.as_posix(),
             'component_versions': component_versions(), 'repository_revision': _revision(config.root),
             'implementation_sha256': fingerprint({p.name:digest(p.read_bytes()) for p in sorted(Path(__file__).parent.glob('*.py'))}),
             'baseline_sha256': preparation['baseline_sha256'], 'correction_sha256': preparation['correction_sha256'],
@@ -293,6 +293,17 @@ def collect_metrics(run: Path, metadata: dict, *, checker_outcome=None) -> dict:
     stage_metrics = [read_json(path) for path in attempts]
     metrics = make_metrics(run, metadata, total_seconds=metadata.get('active_seconds',0),
                            checker_seconds=metadata.get('checker_seconds'), checker_outcome=checker_outcome)
+    if metadata.get('conditions', {}).get('continuous_validation_policy'):
+        metrics.update(
+            continuous_validation_policy=metadata['conditions']['continuous_validation_policy'],
+            prompts_sent=sum(m.get('aut_call_observed') is True for m in stage_metrics),
+            turns_completed=sum(m.get('turn_completed') is True for m in stage_metrics),
+            checkpoints_saved=metadata.get('completed_stages', 0),
+            incremental_sequence_completed=metadata.get('completed_stages', 0) == metadata['stage_count'],
+            lab_protocol_violations=[{'stage_index':m['stage_index'], 'violations':m['lab_protocol_violations']}
+                for m in stage_metrics if m.get('lab_protocol_violations')],
+            static_regressions=[{'stage_index':m['stage_index'], 'regressions':m['static_regressions']}
+                for m in stage_metrics if m.get('static_regressions')])
     from ..token_usage import load_accounting, aggregate_accounting
     from ..run_metrics import accounting_fields
     if load_accounting(run/'logs/aut') is None:
@@ -686,6 +697,7 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
                             attempt,config.data['aut']['agent'],sent[index],skill_mode=cell.skill_mode,run_id=stage_id)
                 else:
                     continuous.turn(attempt,stage_id,sent[index],index+1,timeout)
+                stage_metadata['turn_completed'] = True
                 emit(f'Generazione agente terminata: fase {index+1}/{len(sent)}; durata: {_duration(time.monotonic()-stage_started)}; verifica checkpoint in corso')
                 phase_name = f'validazione fase {index+1}/{len(sent)}'
                 if not (attempt/'logs/aut'/f'{stage_id}.eval').is_file():
@@ -701,8 +713,15 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
                     raise TimeoutError('Budget totale superato dopo AUT (cleanup incluso)')
                 if tree_hash(attempt/'input/lab') != manifest_hash(initial):
                     raise RuntimeError('Input fase alterato')
-                invariant_checks(run/'input/lab',attempt/'lab',inventory)
                 after = clean_lab(attempt/'lab')
+                stage_metadata['lab_protocol_violations'] = []
+                try:
+                    invariant_checks(run/'input/lab',attempt/'lab',inventory)
+                except (RuntimeError, ValueError, FileNotFoundError) as exc:
+                    if continuous is None:
+                        raise
+                    stage_metadata['lab_protocol_violations'] = [f'{type(exc).__name__}: {exc}']
+                    emit(f'Violazione laboratorio registrata, sequenza continua: {exc}')
                 write_json(attempt/'logs/diff.json',manifest_changes(initial,after))
                 phase = 6 if cell.strategy == 'one_shot' else index+1
                 static_started = time.monotonic()
@@ -737,7 +756,9 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
                 for field in ('checkpoint_sha256','checkpoint_bytes'):
                     metrics[field] = stage_metadata.get(field)
                 metrics.update(static_validation_seconds=stage_metadata.get('static_validation_seconds'),
-                               static_regressions=stage_metadata.get('static_regressions'))
+                               static_regressions=stage_metadata.get('static_regressions'),
+                               turn_completed=stage_metadata.get('turn_completed', False),
+                               lab_protocol_violations=stage_metadata.get('lab_protocol_violations', []))
                 invocation = read_json(attempt/'logs/aut/invocation.json') if (attempt/'logs/aut/invocation.json').is_file() else {}
                 events = attempt/'logs/aut/events.jsonl'
                 metrics['aut_call_observed'] = bool(invocation.get('command') or (events.is_file() and events.read_bytes().strip()))
@@ -794,6 +815,11 @@ def _execute(config, spec: Spec, cell: Cell, inventory: dict, preparation: dict,
         if len(completed) > initial_completed:
             emit(f'Generazione completata: {len(completed)}/{len(sent)} fasi promosse; durata: {_duration(time.monotonic()-generation_started)}')
         metadata.update(aut_execution_success=True,pipeline_state='AUT_COMPLETED',final_lab_sha256=tree_hash(run/'lab'))
+        if continuous is not None:
+            write_json(run/'manifest.json', metadata)
+            _, verified = verify_run(run, expected)
+            if len(verified) != len(sent):
+                raise RuntimeError('Checkpoint finali incompleti')
         if remaining() < 1 and not rerun:
             raise TimeoutError('Budget totale esaurito prima del checker finale')
         # Rivalutazione ha un budget checker esplicito e non riapre il budget AUT.

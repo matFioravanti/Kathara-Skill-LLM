@@ -1,5 +1,37 @@
 # COST266: selezione one-shot, incrementale isolato o continuo
 
+## Politica di validazione incrementale `observe_lab_violations_v3`
+
+La sessione continua mantiene una sola sandbox scrivibile, thread e workspace
+per i sei turni funzionali. Solo il prompt corrente viene consegnato via stdin;
+i prompt successivi e le correction rimangono sull'host. Ogni turno deve
+completarsi prima dello snapshot e del checkpoint che precedono il successivo.
+Le modalità forzate possono usare anche un ambiente protetto per il gate Skill:
+questo non crea ulteriori sandbox scrivibili per i prompt funzionali.
+
+Le modifiche non autorizzate alla configurazione del laboratorio sono registrate
+come `lab_protocol_violations`, senza riparare i file e senza fermare la sequenza.
+DNS errato, dichiarazioni mancanti e regressioni statiche non sono criteri di
+interruzione. Restano bloccanti perdita del thread o dell'identità sandbox,
+timeout, completamento non verificabile, mutazione delle Skill, link simbolici,
+artefatti vietati e snapshot non integri. Il checker parte dopo verifica dei
+sei checkpoint e cleanup della sandbox, usando le correction originali del dataset.
+
+La politica è registrata nelle condizioni e nella loro fingerprint. Il protocollo
+di trasporto v2 resta leggibile per i risultati storici; la nuova politica cambia
+esplicitamente le condizioni e impedisce di riprendere con semantica diversa una
+run precedente. Usare un nuovo identificativo di esperimento:
+
+```bash
+.venv/bin/python scripts/run_cost266.py --execution-mode incremental_continuous --model gpt-6.1-terra --reasoning-effort low --generation-workers 5 --experiment-id cost266_incremental_observe_v3
+```
+
+`Runs` e `runs.csv` aggiungono `prompts_sent`, `turns_completed`,
+`checkpoints_saved`, `incremental_sequence_completed`, `lab_protocol_violations`
+e `static_regressions`. `Stages` conserva violazioni, completamento del turno,
+token, tempi e hash di ciascuna fase. Il completamento dei sei turni è separato
+dall'esito del checker; i dati storici privi di queste metriche restano vuoti.
+
 I report COST266 sono pubblicati in `results/cost266/experiments/<experiment_id>/`;
 i confronti usano `results/cost266/comparisons/<comparison_id>/`. Le run non
 cambiano percorso. Per rigenerazione e sicurezza vedere `RESULTS_LAYOUT.md`.
@@ -197,7 +229,10 @@ di sessione. Le receipt e gli hash già esistenti restano verificati.
 I controlli intermedi verificano invarianti e dichiarazioni di zona: non sono
 test semantici BIND. Restano fuori dal contesto dell'agente e non riparano file.
 Errori infrastrutturali, perdita di thread/ID, modifica di Skill, stdin alterato,
-timeout e violazioni della rete fermano l'esecuzione. Nessuna fase successiva
+timeout fermano l'esecuzione. Nelle run continue con politica
+`observe_lab_violations_v3`, le violazioni della rete vengono registrate e la
+sequenza prosegue sul laboratorio prodotto; nelle altre modalità resta il
+comportamento storico. Nessuna fase successiva
 viene inviata, nessuno stato parziale è promosso e il checker finale non parte.
 Il cleanup è eseguito anche per KeyboardInterrupt. I checkpoint precedenti e
 i log del tentativo fallito rimangono disponibili sull'host.

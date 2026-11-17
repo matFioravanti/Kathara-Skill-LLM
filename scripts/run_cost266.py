@@ -42,6 +42,8 @@ def main(argv=None):
     parser.add_argument('--only-replicate',type=int, help='Seleziona una ripetizione positiva, anche oltre repetitions nello YAML')
     parser.add_argument('--generation-workers',type=int,default=5,
                         help='Generazioni parallele one-shot o incrementali continue (predefinito: 5)')
+    parser.add_argument('--checker-workers',type=int,choices=range(1,6),default=5,
+                        help='Checker paralleli (da 1 a 5; predefinito: 5)')
     parser.add_argument('--dry-run',action='store_true')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--resume',action='store_true')
@@ -116,7 +118,7 @@ def main(argv=None):
                     progress(config.root,spec.experiment_id,cell,
                              f'Report salvati: {report_output}; durata: {_duration(time.monotonic()-started)}')
             if args.execution_mode in ('one_shot', 'incremental_continuous'):
-                checker_lock = threading.BoundedSemaphore(5)
+                checker_lock = threading.BoundedSemaphore(args.checker_workers)
                 generation_lock = threading.BoundedSemaphore(args.generation_workers)
                 active = [(cell,action,run) for cell,action,run in decisions if action not in ('SKIP','MISSING')]
                 for cell,action,run in decisions:
@@ -128,7 +130,7 @@ def main(argv=None):
                         failed |= metadata.get('task_success') is not True
                 if active:
                     for cell,_,_ in active:
-                        progress(config.root,spec.experiment_id,cell,f'Pianificata: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; fino a 5 checker paralleli')
+                        progress(config.root,spec.experiment_id,cell,f'Pianificata: {len(active)} run, fino a {min(args.generation_workers,len(active))} generazioni parallele; fino a {args.checker_workers} checker paralleli')
                     with ThreadPoolExecutor(max_workers=len(active)) as pool:
                         futures = {pool.submit(execute,config,spec,cell,inventory,preparation,
                                                resume=args.resume,rerun=args.rerun_correction,checker_lock=checker_lock,
@@ -157,14 +159,13 @@ def main(argv=None):
                     break
             return int(failed)
     except (ValueError,RuntimeError,OSError,KeyError,TypeError) as exc:
+        print(f'Errore COST266: {exc}',file=sys.stderr,flush=True)
         if not args.dry_run and 'selected' in locals() and selected and 'spec' in locals() and 'config' in locals():
             for cell in selected:
                 try:
                     progress(config.root,spec.experiment_id,cell,f'ERRORE CLI/preparazione o report: {type(exc).__name__}: {exc}')
                 except OSError:
                     print(f'Errore COST266 durante la scrittura del log: {exc}',file=sys.stderr,flush=True)
-        else:
-            print(f'Errore COST266: {exc}',file=sys.stderr,flush=True)
         return 1
 
 

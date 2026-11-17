@@ -1,5 +1,8 @@
 # Oracolo RETE+DNS da 01_technical_structured_small(3).md: 13 zone, 12 deleghe, 4 MX.
 # ATTENZIONE: questa correction deve fallire sulla baseline DNS-free; applicare DOPO l'agente.
+# --- Topologia di riferimento ---
+# Definisce le interfacce attese e i rispettivi domini di collisione.
+# A1-A6 sono LAN di accesso; B12, B23 e B34 collegano i router.
 lab_inline: 'r1[0]="A1"
 
   r1[1]="A2"
@@ -65,9 +68,14 @@ lab_inline: 'r1[0]="A1"
   pc20[0]="A6"
 
   '
+# --- Avvio e convergenza ---
+# Tempo di attesa impostato a 60 secondi prima dei controlli.
 convergence_time: 60
+# Immagine Kathara predefinita indicata per la valutazione.
 default_image: kathara/base
 test:
+  # --- Script di avvio ---
+  # Elenca i router e i PC per i quali è richiesto uno script di startup.
   requiring_startup:
   - r1
   - r2
@@ -93,129 +101,186 @@ test:
   - pc18
   - pc19
   - pc20
+  # --- Indirizzi delle interfacce ---
+  # Per ogni dispositivo associa il numero di interfaccia (0 = eth0) all’IPv4/prefisso atteso.
   ip_mapping:
+    # Interfacce e indirizzi attesi per r1.
     r1:
       '0': 10.14.1.1/24
       '1': 10.14.2.1/24
       '2': 172.24.1.1/30
+    # Interfacce e indirizzi attesi per r2.
     r2:
       '0': 10.14.3.1/24
       '1': 172.24.1.2/30
       '2': 172.24.1.5/30
+    # Interfacce e indirizzi attesi per r3.
     r3:
       '0': 10.14.4.1/24
       '1': 10.14.5.1/24
       '2': 172.24.1.6/30
       '3': 172.24.1.9/30
+    # Interfacce e indirizzi attesi per r4.
     r4:
       '0': 10.14.6.1/24
       '1': 172.24.1.10/30
+    # Interfacce e indirizzi attesi per pc1.
     pc1:
       '0': 10.14.1.11/24
+    # Interfacce e indirizzi attesi per pc2.
     pc2:
       '0': 10.14.1.12/24
+    # Interfacce e indirizzi attesi per pc3.
     pc3:
       '0': 10.14.1.13/24
+    # Interfacce e indirizzi attesi per pc4.
     pc4:
       '0': 10.14.1.14/24
+    # Interfacce e indirizzi attesi per pc5.
     pc5:
       '0': 10.14.2.11/24
+    # Interfacce e indirizzi attesi per pc6.
     pc6:
       '0': 10.14.2.12/24
+    # Interfacce e indirizzi attesi per pc7.
     pc7:
       '0': 10.14.2.13/24
+    # Interfacce e indirizzi attesi per pc8.
     pc8:
       '0': 10.14.3.11/24
+    # Interfacce e indirizzi attesi per pc9.
     pc9:
       '0': 10.14.3.12/24
+    # Interfacce e indirizzi attesi per pc10.
     pc10:
       '0': 10.14.3.13/24
+    # Interfacce e indirizzi attesi per pc11.
     pc11:
       '0': 10.14.4.11/24
+    # Interfacce e indirizzi attesi per pc12.
     pc12:
       '0': 10.14.4.12/24
+    # Interfacce e indirizzi attesi per pc13.
     pc13:
       '0': 10.14.4.13/24
+    # Interfacce e indirizzi attesi per pc14.
     pc14:
       '0': 10.14.4.14/24
+    # Interfacce e indirizzi attesi per pc15.
     pc15:
       '0': 10.14.5.11/24
+    # Interfacce e indirizzi attesi per pc16.
     pc16:
       '0': 10.14.5.12/24
+    # Interfacce e indirizzi attesi per pc17.
     pc17:
       '0': 10.14.5.13/24
+    # Interfacce e indirizzi attesi per pc18.
     pc18:
       '0': 10.14.6.11/24
+    # Interfacce e indirizzi attesi per pc19.
     pc19:
       '0': 10.14.6.12/24
+    # Interfacce e indirizzi attesi per pc20.
     pc20:
       '0': 10.14.6.13/24
+  # --- Processi richiesti e vietati ---
+  # named deve essere presente sui server DNS pc1-pc14; il prefisso ! indica assenza richiesta.
+  # Sui router sono inoltre vietati i demoni di routing dinamico elencati.
   daemons:
+    # Processi richiesti o vietati su r1.
     r1:
     - '!named'
     - '!ripd'
     - '!ospfd'
     - '!bgpd'
     - '!zebra'
+    # Processi richiesti o vietati su r2.
     r2:
     - '!named'
     - '!ripd'
     - '!ospfd'
     - '!bgpd'
     - '!zebra'
+    # Processi richiesti o vietati su r3.
     r3:
     - '!named'
     - '!ripd'
     - '!ospfd'
     - '!bgpd'
     - '!zebra'
+    # Processi richiesti o vietati su r4.
     r4:
     - '!named'
     - '!ripd'
     - '!ospfd'
     - '!bgpd'
     - '!zebra'
+    # Processi richiesti o vietati su pc1.
     pc1:
     - named
+    # Processi richiesti o vietati su pc2.
     pc2:
     - named
+    # Processi richiesti o vietati su pc3.
     pc3:
     - named
+    # Processi richiesti o vietati su pc4.
     pc4:
     - named
+    # Processi richiesti o vietati su pc5.
     pc5:
     - named
+    # Processi richiesti o vietati su pc6.
     pc6:
     - named
+    # Processi richiesti o vietati su pc7.
     pc7:
     - named
+    # Processi richiesti o vietati su pc8.
     pc8:
     - named
+    # Processi richiesti o vietati su pc9.
     pc9:
     - named
+    # Processi richiesti o vietati su pc10.
     pc10:
     - named
+    # Processi richiesti o vietati su pc11.
     pc11:
     - named
+    # Processi richiesti o vietati su pc12.
     pc12:
     - named
+    # Processi richiesti o vietati su pc13.
     pc13:
     - named
+    # Processi richiesti o vietati su pc14.
     pc14:
     - named
+    # Processi richiesti o vietati su pc15.
     pc15:
     - '!named'
+    # Processi richiesti o vietati su pc16.
     pc16:
     - '!named'
+    # Processi richiesti o vietati su pc17.
     pc17:
     - '!named'
+    # Processi richiesti o vietati su pc18.
     pc18:
     - '!named'
+    # Processi richiesti o vietati su pc19.
     pc19:
     - '!named'
+    # Processi richiesti o vietati su pc20.
     pc20:
     - '!named'
+  # --- Rotte presenti nel kernel ---
+  # Elenca le destinazioni IPv4 attese per ciascun dispositivo; 0.0.0.0/0 indica la rotta predefinita.
+  # I custom command specificano anche next hop e interfaccia delle rotte controllate.
   kernel_routes:
+    # Destinazioni di rotta attese su r1.
     r1:
     - 10.14.3.0/24
     - 10.14.4.0/24
@@ -223,6 +288,7 @@ test:
     - 10.14.6.0/24
     - 172.24.1.4/30
     - 172.24.1.8/30
+    # Destinazioni di rotta attese su r2.
     r2:
     - 10.14.1.0/24
     - 10.14.2.0/24
@@ -230,12 +296,14 @@ test:
     - 10.14.5.0/24
     - 10.14.6.0/24
     - 172.24.1.8/30
+    # Destinazioni di rotta attese su r3.
     r3:
     - 10.14.1.0/24
     - 10.14.2.0/24
     - 10.14.3.0/24
     - 10.14.6.0/24
     - 172.24.1.0/30
+    # Destinazioni di rotta attese su r4.
     r4:
     - 10.14.1.0/24
     - 10.14.2.0/24
@@ -244,47 +312,71 @@ test:
     - 10.14.5.0/24
     - 172.24.1.0/30
     - 172.24.1.4/30
+    # Destinazioni di rotta attese su pc1.
     pc1:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc2.
     pc2:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc3.
     pc3:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc4.
     pc4:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc5.
     pc5:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc6.
     pc6:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc7.
     pc7:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc8.
     pc8:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc9.
     pc9:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc10.
     pc10:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc11.
     pc11:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc12.
     pc12:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc13.
     pc13:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc14.
     pc14:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc15.
     pc15:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc16.
     pc16:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc17.
     pc17:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc18.
     pc18:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc19.
     pc19:
     - 0.0.0.0/0
+    # Destinazioni di rotta attese su pc20.
     pc20:
     - 0.0.0.0/0
+  # --- Raggiungibilità IP ---
+  # Per ogni dispositivo sono elencati gli indirizzi da raggiungere:
+  # gli altri PC e il gateway locale per i PC, i vicini direttamente collegati per i router.
   reachability:
+    # Destinazioni IP da verificare a partire da pc1.
     pc1:
     - 10.14.1.12
     - 10.14.1.13
@@ -306,6 +398,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.1.1
+    # Destinazioni IP da verificare a partire da pc2.
     pc2:
     - 10.14.1.11
     - 10.14.1.13
@@ -327,6 +420,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.1.1
+    # Destinazioni IP da verificare a partire da pc3.
     pc3:
     - 10.14.1.11
     - 10.14.1.12
@@ -348,6 +442,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.1.1
+    # Destinazioni IP da verificare a partire da pc4.
     pc4:
     - 10.14.1.11
     - 10.14.1.12
@@ -369,6 +464,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.1.1
+    # Destinazioni IP da verificare a partire da pc5.
     pc5:
     - 10.14.1.11
     - 10.14.1.12
@@ -390,6 +486,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.2.1
+    # Destinazioni IP da verificare a partire da pc6.
     pc6:
     - 10.14.1.11
     - 10.14.1.12
@@ -411,6 +508,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.2.1
+    # Destinazioni IP da verificare a partire da pc7.
     pc7:
     - 10.14.1.11
     - 10.14.1.12
@@ -432,6 +530,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.2.1
+    # Destinazioni IP da verificare a partire da pc8.
     pc8:
     - 10.14.1.11
     - 10.14.1.12
@@ -453,6 +552,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.3.1
+    # Destinazioni IP da verificare a partire da pc9.
     pc9:
     - 10.14.1.11
     - 10.14.1.12
@@ -474,6 +574,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.3.1
+    # Destinazioni IP da verificare a partire da pc10.
     pc10:
     - 10.14.1.11
     - 10.14.1.12
@@ -495,6 +596,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.3.1
+    # Destinazioni IP da verificare a partire da pc11.
     pc11:
     - 10.14.1.11
     - 10.14.1.12
@@ -516,6 +618,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.4.1
+    # Destinazioni IP da verificare a partire da pc12.
     pc12:
     - 10.14.1.11
     - 10.14.1.12
@@ -537,6 +640,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.4.1
+    # Destinazioni IP da verificare a partire da pc13.
     pc13:
     - 10.14.1.11
     - 10.14.1.12
@@ -558,6 +662,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.4.1
+    # Destinazioni IP da verificare a partire da pc14.
     pc14:
     - 10.14.1.11
     - 10.14.1.12
@@ -579,6 +684,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.4.1
+    # Destinazioni IP da verificare a partire da pc15.
     pc15:
     - 10.14.1.11
     - 10.14.1.12
@@ -600,6 +706,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.5.1
+    # Destinazioni IP da verificare a partire da pc16.
     pc16:
     - 10.14.1.11
     - 10.14.1.12
@@ -621,6 +728,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.5.1
+    # Destinazioni IP da verificare a partire da pc17.
     pc17:
     - 10.14.1.11
     - 10.14.1.12
@@ -642,6 +750,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.5.1
+    # Destinazioni IP da verificare a partire da pc18.
     pc18:
     - 10.14.1.11
     - 10.14.1.12
@@ -663,6 +772,7 @@ test:
     - 10.14.6.12
     - 10.14.6.13
     - 10.14.6.1
+    # Destinazioni IP da verificare a partire da pc19.
     pc19:
     - 10.14.1.11
     - 10.14.1.12
@@ -684,6 +794,7 @@ test:
     - 10.14.6.11
     - 10.14.6.13
     - 10.14.6.1
+    # Destinazioni IP da verificare a partire da pc20.
     pc20:
     - 10.14.1.11
     - 10.14.1.12
@@ -705,18 +816,27 @@ test:
     - 10.14.6.11
     - 10.14.6.12
     - 10.14.6.1
+    # Destinazioni IP da verificare a partire da r1.
     r1:
     - 172.24.1.2
+    # Destinazioni IP da verificare a partire da r2.
     r2:
     - 172.24.1.1
     - 172.24.1.6
+    # Destinazioni IP da verificare a partire da r3.
     r3:
     - 172.24.1.5
     - 172.24.1.10
+    # Destinazioni IP da verificare a partire da r4.
     r4:
     - 172.24.1.9
+  # --- Controlli applicativi ---
+  # Raggruppa le aspettative relative al servizio DNS.
   applications:
+    # Il checker usa le mappature seguenti per controllare server, resolver e record DNS.
     dns:
+      # --- Server autorevoli ---
+      # Associa ogni zona al relativo indirizzo del server autorevole atteso; . indica la radice DNS.
       authoritative:
         .:
         - 10.14.1.11
@@ -744,6 +864,8 @@ test:
         - 10.14.4.12
         data.research.lab.net:
         - 10.14.4.13
+      # --- Resolver locale e client ---
+      # Associa il resolver 10.14.4.14 (pc14) ai client pc16-pc20 che devono utilizzarlo.
       local_ns:
         10.14.4.14:
         - pc16
@@ -751,7 +873,10 @@ test:
         - pc18
         - pc19
         - pc20
+      # --- Record DNS attesi ---
+      # Specifica i valori delle risposte DNS da verificare per i nomi indicati.
       records:
+        # Record A: associano ciascun nome all’indirizzo IPv4 riportato.
         A:
           shop.example.com:
           - 10.14.3.11
@@ -771,6 +896,7 @@ test:
           - 10.14.2.12
           mail.tools.net:
           - 10.14.2.13
+        # Record MX: indicano priorità 10 e nome del server di posta atteso.
         MX:
           example.com:
           - 10 mail.example.com.
@@ -780,200 +906,184 @@ test:
           - 10 mail.lab.net.
           tools.net:
           - 10 mail.tools.net.
+  # Sezione custom commands: controlli eseguiti nei dispositivi indicati.
+  # Salvo dove indicato dalla regex, exit_code 0 significa che il controllo è riuscito.
   custom_commands:
-    r1:
-    - command: sysctl -n net.ipv4.ip_forward
-      regex_match: ^1\s*$
-    - command: sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '"'"'^10\.14\.3\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '"'"'^10\.14\.4\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.5.0/24 | grep -Eq '"'"'^10\.14\.5\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.6.0/24 | grep -Eq '"'"'^10\.14\.6\.0/24 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 172.24.1.4/30 | grep -Eq '"'"'^172\.24\.1\.4/30 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 172.24.1.8/30 | grep -Eq '"'"'^172\.24\.1\.8/30 via 172\.24\.1\.2 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    r2:
-    - command: sysctl -n net.ipv4.ip_forward
-      regex_match: ^1\s*$
-    - command: sh -c 'ip -4 route show 10.14.1.0/24 | grep -Eq '"'"'^10\.14\.1\.0/24 via 172\.24\.1\.1 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.2.0/24 | grep -Eq '"'"'^10\.14\.2\.0/24 via 172\.24\.1\.1 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '"'"'^10\.14\.4\.0/24 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.5.0/24 | grep -Eq '"'"'^10\.14\.5\.0/24 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.6.0/24 | grep -Eq '"'"'^10\.14\.6\.0/24 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 172.24.1.8/30 | grep -Eq '"'"'^172\.24\.1\.8/30 via 172\.24\.1\.6 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    r3:
-    - command: sysctl -n net.ipv4.ip_forward
-      regex_match: ^1\s*$
-    - command: sh -c 'ip -4 route show 10.14.1.0/24 | grep -Eq '"'"'^10\.14\.1\.0/24 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.2.0/24 | grep -Eq '"'"'^10\.14\.2\.0/24 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '"'"'^10\.14\.3\.0/24 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.6.0/24 | grep -Eq '"'"'^10\.14\.6\.0/24 via 172\.24\.1\.10 dev eth3([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 172.24.1.0/30 | grep -Eq '"'"'^172\.24\.1\.0/30 via 172\.24\.1\.5 dev eth2([[:space:]]|$)'"'"''
-      exit_code: 0
-    r4:
-    - command: sysctl -n net.ipv4.ip_forward
-      regex_match: ^1\s*$
-    - command: sh -c 'ip -4 route show 10.14.1.0/24 | grep -Eq '"'"'^10\.14\.1\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.2.0/24 | grep -Eq '"'"'^10\.14\.2\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.3.0/24 | grep -Eq '"'"'^10\.14\.3\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.4.0/24 | grep -Eq '"'"'^10\.14\.4\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 10.14.5.0/24 | grep -Eq '"'"'^10\.14\.5\.0/24 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 172.24.1.0/30 | grep -Eq '"'"'^172\.24\.1\.0/30 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'ip -4 route show 172.24.1.4/30 | grep -Eq '"'"'^172\.24\.1\.4/30 via 172\.24\.1\.9 dev eth1([[:space:]]|$)'"'"''
-      exit_code: 0
     pc1:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc1: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.1.11 da pc1 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.1.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc2:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc2: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.1.12 da pc2 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.1.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc3:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc3: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.1.13 da pc3 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.1.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc4:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.1\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc4: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.1.14 da pc4 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.1.14 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc5:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.2\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc5: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.2.11 da pc5 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.2.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc6:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.2\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc6: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.2.12 da pc6 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.2.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc7:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.2\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc7: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.2.13 da pc7 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.2.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc8:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.3\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc8: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.3.11 da pc8 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.3.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc9:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.3\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc9: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.3.12 da pc9 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.3.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc10:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.3\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc10: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.3.13 da pc10 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.3.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc11:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc11: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.4.11 da pc11 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.4.11 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc12:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc12: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.4.12 da pc12 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.4.12 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc13:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc13: Ricorsione sui server autoritativi ---
+    # Interroga il server 10.14.4.13 da pc13 su un nome di prova, per controllare la ricorsione.
+    # Richiede una risposta con flags e l’assenza del flag RA; non verifica lo stato DNS restituito.
     - command: sh -c 'out=$(dig @10.14.4.13 nonexistent-test-for-recursion.invalid. A +time=3 +tries=1 +noall +comments); printf "%s\n" "$out" | grep -q "flags:"
         && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
       exit_code: 0
     pc14:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.4\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
+    # --- pc14: Autorità delle zone DNS ---
+    # Interroga senza ricorsione 10.14.1.11 per il SOA della zona ., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.1.11 . SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR" &&
         printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="." && $4=="SOA" {ok=1}
         END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.1.12 per il SOA della zona com., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.1.12 com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
         && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="com." && $4=="SOA"
         {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.1.13 per il SOA della zona net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.1.13 net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
         && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="net." && $4=="SOA"
         {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.1.14 per il SOA della zona example.com., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.1.14 example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="example.com."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.11 per il SOA della zona service.com., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.2.11 service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="service.com."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.12 per il SOA della zona lab.net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.2.12 lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
         && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="lab.net." && $4=="SOA"
         {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.13 per il SOA della zona tools.net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.2.13 tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
         && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="tools.net." && $4=="SOA"
         {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.3.11 per il SOA della zona shop.example.com., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.3.11 shop.example.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="shop.example.com."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.3.12 per il SOA della zona api.service.com., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.3.12 api.service.com. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="api.service.com."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.3.13 per il SOA della zona research.lab.net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.3.13 research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="research.lab.net."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.4.11 per il SOA della zona ci.tools.net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.4.11 ci.tools.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="ci.tools.net."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.4.12 per il SOA della zona ai.research.lab.net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.4.12 ai.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q
         "status: NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="ai.research.lab.net."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.4.13 per il SOA della zona data.research.lab.net., da pc14.
+    # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.4.13 data.research.lab.net. SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q
         "status: NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # --- pc14: Deleghe DNS, server NS e glue ---
+    # Controlla la delega di com. dal server padre 10.14.1.11 al figlio 10.14.1.12.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.1.12 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="com." && $4=="NS" {print
         tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.1.12 com. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="com." && $4=="NS"
         {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1 +noall
@@ -981,6 +1091,9 @@ test:
         "com."|*."com.") b=$(dig @10.14.1.11 com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns) && $4=="A"
         {print $5}''"''"'' | sort -u); [ "$b" = "10.14.1.12" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di net. dal server padre 10.14.1.11 al figlio 10.14.1.13.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.1.13 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.11 net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="net." && $4=="NS" {print
         tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.1.13 net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="net." && $4=="NS"
         {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1 +noall
@@ -988,6 +1101,9 @@ test:
         "net."|*."net.") b=$(dig @10.14.1.11 net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns) && $4=="A"
         {print $5}''"''"'' | sort -u); [ "$b" = "10.14.1.13" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di example.com. dal server padre 10.14.1.12 al figlio 10.14.1.14.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.1.14 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="example.com." &&
         $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.1.14 example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="example.com."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -995,6 +1111,9 @@ test:
         in "example.com."|*."example.com.") b=$(dig @10.14.1.12 example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns)
         && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.1.14" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di service.com. dal server padre 10.14.1.12 al figlio 10.14.2.11.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.2.11 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="service.com." &&
         $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.2.11 service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="service.com."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1002,6 +1121,9 @@ test:
         in "service.com."|*."service.com.") b=$(dig @10.14.1.12 service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns)
         && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.2.11" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di lab.net. dal server padre 10.14.1.13 al figlio 10.14.2.12.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.2.12 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="lab.net." && $4=="NS"
         {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.2.12 lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1009,6 +1131,9 @@ test:
         in "lab.net."|*."lab.net.") b=$(dig @10.14.1.13 lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns)
         && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.2.12" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di tools.net. dal server padre 10.14.1.13 al figlio 10.14.2.13.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.2.13 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="tools.net." && $4=="NS"
         {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.2.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="tools.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1016,6 +1141,9 @@ test:
         in "tools.net."|*."tools.net.") b=$(dig @10.14.1.13 tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns)
         && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.2.13" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di shop.example.com. dal server padre 10.14.1.14 al figlio 10.14.3.11.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.3.11 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.1.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="shop.example.com."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.3.11 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="shop.example.com."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1023,6 +1151,9 @@ test:
         in "shop.example.com."|*."shop.example.com.") b=$(dig @10.14.1.14 shop.example.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns"
         ''"''"''tolower($1)==tolower(ns) && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.3.11" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di api.service.com. dal server padre 10.14.2.11 al figlio 10.14.3.12.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.3.12 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.2.11 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="api.service.com."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.3.12 api.service.com. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="api.service.com."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1030,6 +1161,9 @@ test:
         in "api.service.com."|*."api.service.com.") b=$(dig @10.14.2.11 api.service.com. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns"
         ''"''"''tolower($1)==tolower(ns) && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.3.12" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di research.lab.net. dal server padre 10.14.2.12 al figlio 10.14.3.13.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.3.13 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.2.12 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="research.lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.3.13 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="research.lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1037,6 +1171,9 @@ test:
         in "research.lab.net."|*."research.lab.net.") b=$(dig @10.14.2.12 research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns"
         ''"''"''tolower($1)==tolower(ns) && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.3.13" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di ci.tools.net. dal server padre 10.14.2.13 al figlio 10.14.4.11.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.4.11 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.2.13 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="ci.tools.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.4.11 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="ci.tools.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1044,6 +1181,9 @@ test:
         in "ci.tools.net."|*."ci.tools.net.") b=$(dig @10.14.2.13 ci.tools.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns)
         && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.4.11" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di ai.research.lab.net. dal server padre 10.14.3.13 al figlio 10.14.4.12.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.4.12 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.3.13 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="ai.research.lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.4.12 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="ai.research.lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1051,6 +1191,9 @@ test:
         in "ai.research.lab.net."|*."ai.research.lab.net.") b=$(dig @10.14.3.13 ai.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional | awk
         -v ns="$ns" ''"''"''tolower($1)==tolower(ns) && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.4.12" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # Controlla la delega di data.research.lab.net. dal server padre 10.14.3.13 al figlio 10.14.4.13.
+    # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.4.13 tramite il resolver
+    # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
     - command: 'sh -c ''p=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer +authority | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); c=$(dig @10.14.4.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="NS" {print tolower($5)}''"''"'' | sort -u); [ -n "$p" ] && [ "$p" = "$c" ] || exit 1; for ns in $p; do a=$(dig @10.14.4.14 "$ns" A +time=5 +tries=1
@@ -1058,58 +1201,90 @@ test:
         in "data.research.lab.net."|*."data.research.lab.net.") b=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional
         | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns) && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.4.13" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
+    # --- pc14: Record A autorevoli ---
+    # Interroga senza ricorsione 10.14.3.11 per il record A di shop.example.com., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.3.11.
     - command: 'sh -c ''ans=$(dig @10.14.3.11 shop.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="shop.example.com."
         && $4=="A" && $5=="10.14.3.11" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.3.12 per il record A di api.service.com., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.3.12.
     - command: 'sh -c ''ans=$(dig @10.14.3.12 api.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="api.service.com."
         && $4=="A" && $5=="10.14.3.12" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.4.11 per il record A di ci.tools.net., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.4.11.
     - command: 'sh -c ''ans=$(dig @10.14.4.11 ci.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="ci.tools.net."
         && $4=="A" && $5=="10.14.4.11" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.4.12 per il record A di ai.research.lab.net., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.4.12.
     - command: 'sh -c ''ans=$(dig @10.14.4.12 ai.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="ai.research.lab.net."
         && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.4.13 per il record A di data.research.lab.net., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.4.13.
     - command: 'sh -c ''ans=$(dig @10.14.4.13 data.research.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q
         "status: NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # --- pc14: Record di posta autorevoli ---
+    # Interroga senza ricorsione 10.14.1.14 per il record MX di example.com..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.example.com.; non prova la posta.
     - command: 'sh -c ''ans=$(dig @10.14.1.14 example.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="example.com."
         && $4=="MX" && $5=="10" && tolower($6)=="mail.example.com." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.1.14 per il record A di mail.example.com., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.1.14.
     - command: 'sh -c ''ans=$(dig @10.14.1.14 mail.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.example.com."
         && $4=="A" && $5=="10.14.1.14" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.11 per il record MX di service.com..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.service.com.; non prova la posta.
     - command: 'sh -c ''ans=$(dig @10.14.2.11 service.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="service.com."
         && $4=="MX" && $5=="10" && tolower($6)=="mail.service.com." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.11 per il record A di mail.service.com., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.2.11.
     - command: 'sh -c ''ans=$(dig @10.14.2.11 mail.service.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.service.com."
         && $4=="A" && $5=="10.14.2.11" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.12 per il record MX di lab.net..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.lab.net.; non prova la posta.
     - command: 'sh -c ''ans=$(dig @10.14.2.12 lab.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
         && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="lab.net." && $4=="MX"
         && $5=="10" && tolower($6)=="mail.lab.net." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.12 per il record A di mail.lab.net., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.2.12.
     - command: 'sh -c ''ans=$(dig @10.14.2.12 mail.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.lab.net."
         && $4=="A" && $5=="10.14.2.12" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.13 per il record MX di tools.net..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.tools.net.; non prova la posta.
     - command: 'sh -c ''ans=$(dig @10.14.2.13 tools.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
         && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="tools.net." && $4=="MX"
         && $5=="10" && tolower($6)=="mail.tools.net." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga senza ricorsione 10.14.2.13 per il record A di mail.tools.net., da pc14.
+    # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.2.13.
     - command: 'sh -c ''ans=$(dig @10.14.2.13 mail.tools.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.tools.net."
         && $4=="A" && $5=="10.14.2.13" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # --- pc14: Record web e coerenza con il resolver ---
+    # Interroga senza ricorsione 10.14.1.14 per il record A di www.example.com..
+    # Verifica NOERROR e AA, almeno un indirizzo tra quelli ammessi del lab e la corrispondenza
+    # con la risposta A ottenuta dal resolver 10.14.4.14; non verifica il servizio HTTP.
     - command: 'sh -c ''x=$(dig @10.14.1.14 www.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$x" | grep -q "status: NOERROR"
         && printf "%s\n" "$x" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && a=$(printf "%s\n" "$x" | awk ''"''"''tolower($1)=="www.example.com." &&
         $4=="A" {print $5}''"''"''); [ -n "$a" ] || exit 1; for ip in $a; do case " 10.14.1.11 10.14.1.12 10.14.1.13 10.14.1.14 10.14.2.11 10.14.2.12 10.14.2.13
@@ -1117,116 +1292,34 @@ test:
         $ip "*) ;; *) exit 1 ;; esac; done; y=$(dig @10.14.4.14 www.example.com. A +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="www.example.com."
         && $4=="A" {print $5}''"''"''); [ "$y" = "$a" ]'''
       exit_code: 0
+    # --- pc14: Risoluzione ricorsiva sul resolver ---
+    # Interroga il resolver 10.14.4.14 per il record A di shop.example.com., da pc14.
+    # Verifica NOERROR, il flag RA e la presenza dell’indirizzo 10.14.3.11.
     - command: 'sh -c ''out=$(dig @10.14.4.14 shop.example.com. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n" "$out" | grep -q "status: NOERROR"
         && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="shop.example.com."
         && $4=="A" && $5=="10.14.3.11" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga il resolver 10.14.4.14 per il record A di api.service.com., da pc14.
+    # Verifica NOERROR, il flag RA e la presenza dell’indirizzo 10.14.3.12.
     - command: 'sh -c ''out=$(dig @10.14.4.14 api.service.com. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n" "$out" | grep -q "status: NOERROR"
         && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="api.service.com." &&
         $4=="A" && $5=="10.14.3.12" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga il resolver 10.14.4.14 per il record A di ci.tools.net., da pc14.
+    # Verifica NOERROR, il flag RA e la presenza dell’indirizzo 10.14.4.11.
     - command: 'sh -c ''out=$(dig @10.14.4.14 ci.tools.net. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n" "$out" | grep -q "status: NOERROR" &&
         printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="ci.tools.net." && $4=="A"
         && $5=="10.14.4.11" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga il resolver 10.14.4.14 per il record A di ai.research.lab.net., da pc14.
+    # Verifica NOERROR, il flag RA e la presenza dell’indirizzo 10.14.4.12.
     - command: 'sh -c ''out=$(dig @10.14.4.14 ai.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n" "$out" | grep -q "status: NOERROR"
         && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="ai.research.lab.net."
         && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
+    # Interroga il resolver 10.14.4.14 per il record A di data.research.lab.net., da pc14.
+    # Verifica NOERROR, il flag RA e la presenza dell’indirizzo 10.14.4.13.
     - command: 'sh -c ''out=$(dig @10.14.4.14 data.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n" "$out" | grep -q "status: NOERROR"
         && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}''"''"'''''
-      exit_code: 0
-    pc15:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.5\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    pc16:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.5\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="shop.example.com." && $4=="A"
-        && $5=="10.14.3.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="api.service.com." && $4=="A"
-        && $5=="10.14.3.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ci.tools.net." && $4=="A" &&
-        $5=="10.14.4.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ai.research.lab.net."
-        && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="data.research.lab.net."
-        && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    pc17:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.5\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="shop.example.com." && $4=="A"
-        && $5=="10.14.3.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="api.service.com." && $4=="A"
-        && $5=="10.14.3.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ci.tools.net." && $4=="A" &&
-        $5=="10.14.4.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ai.research.lab.net."
-        && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="data.research.lab.net."
-        && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    pc18:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.6\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="shop.example.com." && $4=="A"
-        && $5=="10.14.3.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="api.service.com." && $4=="A"
-        && $5=="10.14.3.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ci.tools.net." && $4=="A" &&
-        $5=="10.14.4.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ai.research.lab.net."
-        && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="data.research.lab.net."
-        && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    pc19:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.6\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="shop.example.com." && $4=="A"
-        && $5=="10.14.3.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="api.service.com." && $4=="A"
-        && $5=="10.14.3.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ci.tools.net." && $4=="A" &&
-        $5=="10.14.4.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ai.research.lab.net."
-        && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="data.research.lab.net."
-        && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    pc20:
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.14\.6\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig shop.example.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="shop.example.com." && $4=="A"
-        && $5=="10.14.3.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig api.service.com. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="api.service.com." && $4=="A"
-        && $5=="10.14.3.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ci.tools.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ci.tools.net." && $4=="A" &&
-        $5=="10.14.4.11" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig ai.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="ai.research.lab.net."
-        && $4=="A" && $5=="10.14.4.12" {ok=1} END {exit !ok}'"'"''
-      exit_code: 0
-    - command: sh -c 'out=$(dig data.research.lab.net. A +time=6 +tries=1 +noall +answer); printf "%s\n" "$out" | awk '"'"'tolower($1)=="data.research.lab.net."
-        && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}'"'"''
       exit_code: 0

@@ -18,7 +18,9 @@ EXTRA = ['strategy','stage_count','completed_stages','aut_calls','sandbox_count'
          'protected_sandbox_count','context_continuity_verified','session_cleanup_ok','session_wall_seconds',
          'functional_turns','gate_turns','gate_agent_seconds','gate_input_tokens','gate_output_tokens',
          'functional_input_tokens','functional_output_tokens','functional_agent_seconds','execution_mode',
-         'usage_semantics','usage_verified']
+         'usage_semantics','usage_verified', 'continuous_validation_policy','prompts_sent',
+         'turns_completed','checkpoints_saved','incremental_sequence_completed',
+         'lab_protocol_violations','static_regressions']
 PROPERTY_TYPES = ('soa','authority','apex_ns','ns_address','delegation_glue','record','client_resolver','client_resolution')
 PROPERTY_COLUMNS = [f'{kind}_{field}' for kind in PROPERTY_TYPES for field in ('passed','observed','expected','pass_rate','coverage_complete')]
 
@@ -85,6 +87,8 @@ def aggregate_cost266(root: Path, output: Path):
                 'skill_gate_status':item.get('skill_gate_status'),'prompt_sent_sha256':stage.get('prompt_sent_sha256'),
                 'static_validation_seconds':item.get('static_validation_seconds'),
                 'static_regressions':';'.join(item.get('static_regressions') or []),
+                'turn_completed':item.get('turn_completed'),
+                'lab_protocol_violations':json.dumps(item.get('lab_protocol_violations', []), ensure_ascii=False),
                 'thread_id':stage.get('thread_id'),'sandbox_id':stage.get('sandbox_id'),
                 'sandbox_name':stage.get('sandbox_name'),'context_continuity_verified':stage.get('context_continuity_verified'),
                 'stage_completed':stage.get('stage_completed'),'stage_prompt_sha256':stage.get('stage_prompt_sha256'),

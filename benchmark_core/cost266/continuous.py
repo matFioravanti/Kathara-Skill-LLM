@@ -125,6 +125,9 @@ class ContinuousAutSession:
         shutil.copytree(self.workspace, target, dirs_exist_ok=True, symlinks=True,
                         ignore=lambda directory,names: ['.codex'] if Path(directory)==self.workspace else [])
         clean_lab(target)
+        expected = {key:value for key,value in before.items() if Path(key).parts[0] != '.codex'}
+        if manifest(target) != expected:
+            raise SandboxExecutionError('Integrità dello snapshot non verificabile')
         if before != manifest(self.workspace):
             raise SandboxExecutionError('Workspace mutato durante lo snapshot')
         self._verify_skills()
@@ -169,6 +172,7 @@ class ContinuousAutSession:
             if (logs/'turn/prompt_sent.md').read_bytes()!=actual.encode():
                 raise SandboxExecutionError('Prompt stdin alterato')
             self.thread_id = ids[0]
+            self.stage_state['turn_completed'] = True
             self._verify_identity()
             self._verify_skills()
             if self.gated and index==1:

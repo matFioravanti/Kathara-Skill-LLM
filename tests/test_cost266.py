@@ -361,6 +361,11 @@ def test_real_assets_prepare_deterministic_offline(tmp_path):
     for key in ('validation','baseline_sha256','inventory_sha256','correction_sha256'):
         assert a[key]==reference[key]
     for name in ('inventory.json','correction.yaml','oracle_coverage.json'):
+        if name == 'correction.yaml' and not (assets.DEFAULT_INPUTS/name).exists():
+            # Il dataset operativo può usare le nove correction manuali;
+            # prepare continua a produrre la correction canonica deterministica.
+            assert digest((first/name).read_bytes()) == reference['correction_sha256']
+            continue
         assert (first/name).read_bytes()==(assets.DEFAULT_INPUTS/name).read_bytes()
     inventory,report=assets.load_dataset(first)
     assert len(inventory['zones'])==201 and len(inventory['roles'])==16

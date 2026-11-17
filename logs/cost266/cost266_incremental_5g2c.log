@@ -1,0 +1,212 @@
+[01:12:34] [COST266/incremental/T1/no_skill/r001] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 2 checker paralleli
+[01:12:34] [COST266/incremental/T1/auto/r001] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 2 checker paralleli
+[01:12:34] [COST266/incremental/T1/dns_only/r001] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 2 checker paralleli
+[01:12:34] [COST266/incremental/T1/creation_only/r001] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 2 checker paralleli
+[01:12:34] [COST266/incremental/T1/both_forced/r001] Pianificata: 5 run, fino a 5 generazioni parallele; fino a 2 checker paralleli
+[01:12:34] [COST266/incremental/T1/no_skill/r001] START RUN
+[01:12:34] [COST266/incremental/T1/auto/r001] START RUN
+[01:12:34] [COST266/incremental/T1/creation_only/r001] START RUN
+[01:12:34] [COST266/incremental/T1/both_forced/r001] START RUN
+[01:12:34] [COST266/incremental/T1/dns_only/r001] START RUN
+[01:13:21] [COST266/incremental/T1/no_skill/r001] Generazione avviata: fase 1/6, tentativo 001
+[01:13:22] [COST266/incremental/T1/auto/r001] Generazione avviata: fase 1/6, tentativo 001
+[01:13:50] [COST266/incremental/T1/both_forced/r001] Generazione avviata: fase 1/6, tentativo 001
+[01:13:54] [COST266/incremental/T1/creation_only/r001] Generazione avviata: fase 1/6, tentativo 001
+[01:13:55] [COST266/incremental/T1/dns_only/r001] Generazione avviata: fase 1/6, tentativo 001
+[01:13:59] [COST266/incremental/T1/auto/r001] Generazione agente terminata: fase 1/6; durata: 0m 37s; verifica checkpoint in corso
+[01:13:59] [COST266/incremental/T1/auto/r001] Validazione statica fase 1/6: 1/1 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:13:59] [COST266/incremental/T1/auto/r001] Fase 1/6 completata; durata: 0m 37s
+[01:13:59] [COST266/incremental/T1/auto/r001] Generazione avviata: fase 2/6, tentativo 001
+[01:14:04] [COST266/incremental/T1/no_skill/r001] Generazione agente terminata: fase 1/6; durata: 0m 43s; verifica checkpoint in corso
+[01:14:04] [COST266/incremental/T1/no_skill/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:14:04] [COST266/incremental/T1/no_skill/r001] Validazione statica fase 1/6: 1/1 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:14:04] [COST266/incremental/T1/no_skill/r001] Fase 1/6 completata; durata: 0m 43s
+[01:14:04] [COST266/incremental/T1/no_skill/r001] Generazione avviata: fase 2/6, tentativo 001
+[01:14:37] [COST266/incremental/T1/both_forced/r001] Generazione agente terminata: fase 1/6; durata: 0m 47s; verifica checkpoint in corso
+[01:14:37] [COST266/incremental/T1/both_forced/r001] Validazione statica fase 1/6: 1/1 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:14:37] [COST266/incremental/T1/both_forced/r001] Fase 1/6 completata; durata: 0m 47s
+[01:14:37] [COST266/incremental/T1/both_forced/r001] Generazione avviata: fase 2/6, tentativo 001
+[01:14:37] [COST266/incremental/T1/auto/r001] Generazione agente terminata: fase 2/6; durata: 0m 38s; verifica checkpoint in corso
+[01:14:37] [COST266/incremental/T1/auto/r001] Validazione statica fase 2/6: 4/7 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:14:37] [COST266/incremental/T1/auto/r001] Fase 2/6 completata; durata: 0m 38s
+[01:14:37] [COST266/incremental/T1/auto/r001] Generazione avviata: fase 3/6, tentativo 001
+[01:14:40] [COST266/incremental/T1/no_skill/r001] Generazione agente terminata: fase 2/6; durata: 0m 35s; verifica checkpoint in corso
+[01:14:40] [COST266/incremental/T1/no_skill/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:14:40] [COST266/incremental/T1/no_skill/r001] Validazione statica fase 2/6: 4/7 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:14:40] [COST266/incremental/T1/no_skill/r001] Fase 2/6 completata; durata: 0m 35s
+[01:14:40] [COST266/incremental/T1/no_skill/r001] Generazione avviata: fase 3/6, tentativo 001
+[01:14:40] [COST266/incremental/T1/creation_only/r001] Generazione agente terminata: fase 1/6; durata: 0m 46s; verifica checkpoint in corso
+[01:14:40] [COST266/incremental/T1/creation_only/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:14:40] [COST266/incremental/T1/creation_only/r001] Validazione statica fase 1/6: 1/1 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:14:41] [COST266/incremental/T1/creation_only/r001] Fase 1/6 completata; durata: 0m 46s
+[01:14:41] [COST266/incremental/T1/creation_only/r001] Generazione avviata: fase 2/6, tentativo 001
+[01:14:45] [COST266/incremental/T1/dns_only/r001] Generazione agente terminata: fase 1/6; durata: 0m 50s; verifica checkpoint in corso
+[01:14:45] [COST266/incremental/T1/dns_only/r001] Validazione statica fase 1/6: 1/1 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:14:45] [COST266/incremental/T1/dns_only/r001] Fase 1/6 completata; durata: 0m 50s
+[01:14:45] [COST266/incremental/T1/dns_only/r001] Generazione avviata: fase 2/6, tentativo 001
+[01:15:12] [COST266/incremental/T1/no_skill/r001] Generazione agente terminata: fase 3/6; durata: 0m 32s; verifica checkpoint in corso
+[01:15:12] [COST266/incremental/T1/no_skill/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:15:12] [COST266/incremental/T1/no_skill/r001] Validazione statica fase 3/6: 26/29 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:12] [COST266/incremental/T1/no_skill/r001] Fase 3/6 completata; durata: 0m 32s
+[01:15:12] [COST266/incremental/T1/no_skill/r001] Generazione avviata: fase 4/6, tentativo 001
+[01:15:15] [COST266/incremental/T1/auto/r001] Generazione agente terminata: fase 3/6; durata: 0m 38s; verifica checkpoint in corso
+[01:15:16] [COST266/incremental/T1/auto/r001] Validazione statica fase 3/6: 26/29 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:16] [COST266/incremental/T1/auto/r001] Fase 3/6 completata; durata: 0m 38s
+[01:15:16] [COST266/incremental/T1/auto/r001] Generazione avviata: fase 4/6, tentativo 001
+[01:15:24] [COST266/incremental/T1/creation_only/r001] Generazione agente terminata: fase 2/6; durata: 0m 43s; verifica checkpoint in corso
+[01:15:24] [COST266/incremental/T1/creation_only/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:15:24] [COST266/incremental/T1/creation_only/r001] Validazione statica fase 2/6: 4/7 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:24] [COST266/incremental/T1/creation_only/r001] Fase 2/6 completata; durata: 0m 43s
+[01:15:24] [COST266/incremental/T1/creation_only/r001] Generazione avviata: fase 3/6, tentativo 001
+[01:15:25] [COST266/incremental/T1/both_forced/r001] Generazione agente terminata: fase 2/6; durata: 0m 48s; verifica checkpoint in corso
+[01:15:25] [COST266/incremental/T1/both_forced/r001] Validazione statica fase 2/6: 4/7 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:25] [COST266/incremental/T1/both_forced/r001] Fase 2/6 completata; durata: 0m 48s
+[01:15:25] [COST266/incremental/T1/both_forced/r001] Generazione avviata: fase 3/6, tentativo 001
+[01:15:47] [COST266/incremental/T1/no_skill/r001] Generazione agente terminata: fase 4/6; durata: 0m 34s; verifica checkpoint in corso
+[01:15:47] [COST266/incremental/T1/no_skill/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:15:47] [COST266/incremental/T1/no_skill/r001] Validazione statica fase 4/6: 63/66 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:47] [COST266/incremental/T1/no_skill/r001] Fase 4/6 completata; durata: 0m 34s
+[01:15:47] [COST266/incremental/T1/no_skill/r001] Generazione avviata: fase 5/6, tentativo 001
+[01:15:49] [COST266/incremental/T1/dns_only/r001] Generazione agente terminata: fase 2/6; durata: 1m 3s; verifica checkpoint in corso
+[01:15:49] [COST266/incremental/T1/dns_only/r001] Validazione statica fase 2/6: 4/7 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:50] [COST266/incremental/T1/dns_only/r001] Fase 2/6 completata; durata: 1m 4s
+[01:15:50] [COST266/incremental/T1/dns_only/r001] Generazione avviata: fase 3/6, tentativo 001
+[01:15:53] [COST266/incremental/T1/auto/r001] Generazione agente terminata: fase 4/6; durata: 0m 37s; verifica checkpoint in corso
+[01:15:53] [COST266/incremental/T1/auto/r001] Validazione statica fase 4/6: 63/66 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:15:53] [COST266/incremental/T1/auto/r001] Fase 4/6 completata; durata: 0m 37s
+[01:15:53] [COST266/incremental/T1/auto/r001] Generazione avviata: fase 5/6, tentativo 001
+[01:16:09] [COST266/incremental/T1/creation_only/r001] Generazione agente terminata: fase 3/6; durata: 0m 44s; verifica checkpoint in corso
+[01:16:09] [COST266/incremental/T1/creation_only/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:16:09] [COST266/incremental/T1/creation_only/r001] Validazione statica fase 3/6: 26/29 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:09] [COST266/incremental/T1/creation_only/r001] Fase 3/6 completata; durata: 0m 44s
+[01:16:09] [COST266/incremental/T1/creation_only/r001] Generazione avviata: fase 4/6, tentativo 001
+[01:16:20] [COST266/incremental/T1/no_skill/r001] Generazione agente terminata: fase 5/6; durata: 0m 33s; verifica checkpoint in corso
+[01:16:20] [COST266/incremental/T1/no_skill/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:16:20] [COST266/incremental/T1/no_skill/r001] Validazione statica fase 5/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:20] [COST266/incremental/T1/no_skill/r001] Fase 5/6 completata; durata: 0m 33s
+[01:16:20] [COST266/incremental/T1/no_skill/r001] Generazione avviata: fase 6/6, tentativo 001
+[01:16:21] [COST266/incremental/T1/both_forced/r001] Generazione agente terminata: fase 3/6; durata: 0m 55s; verifica checkpoint in corso
+[01:16:21] [COST266/incremental/T1/both_forced/r001] Validazione statica fase 3/6: 26/29 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:21] [COST266/incremental/T1/both_forced/r001] Fase 3/6 completata; durata: 0m 55s
+[01:16:21] [COST266/incremental/T1/both_forced/r001] Generazione avviata: fase 4/6, tentativo 001
+[01:16:33] [COST266/incremental/T1/auto/r001] Generazione agente terminata: fase 5/6; durata: 0m 39s; verifica checkpoint in corso
+[01:16:33] [COST266/incremental/T1/auto/r001] Validazione statica fase 5/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:33] [COST266/incremental/T1/auto/r001] Fase 5/6 completata; durata: 0m 39s
+[01:16:33] [COST266/incremental/T1/auto/r001] Generazione avviata: fase 6/6, tentativo 001
+[01:16:46] [COST266/incremental/T1/dns_only/r001] Generazione agente terminata: fase 3/6; durata: 0m 56s; verifica checkpoint in corso
+[01:16:46] [COST266/incremental/T1/dns_only/r001] Validazione statica fase 3/6: 26/29 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:47] [COST266/incremental/T1/dns_only/r001] Fase 3/6 completata; durata: 0m 57s
+[01:16:47] [COST266/incremental/T1/dns_only/r001] Generazione avviata: fase 4/6, tentativo 001
+[01:16:51] [COST266/incremental/T1/creation_only/r001] Generazione agente terminata: fase 4/6; durata: 0m 42s; verifica checkpoint in corso
+[01:16:51] [COST266/incremental/T1/creation_only/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:16:51] [COST266/incremental/T1/creation_only/r001] Validazione statica fase 4/6: 63/66 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:51] [COST266/incremental/T1/creation_only/r001] Fase 4/6 completata; durata: 0m 42s
+[01:16:51] [COST266/incremental/T1/creation_only/r001] Generazione avviata: fase 5/6, tentativo 001
+[01:16:59] [COST266/incremental/T1/no_skill/r001] Generazione agente terminata: fase 6/6; durata: 0m 38s; verifica checkpoint in corso
+[01:16:59] [COST266/incremental/T1/no_skill/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:16:59] [COST266/incremental/T1/no_skill/r001] Validazione statica fase 6/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:16:59] [COST266/incremental/T1/no_skill/r001] Fase 6/6 completata; durata: 0m 38s
+[01:17:00] [COST266/incremental/T1/no_skill/r001] Generazione completata: 6/6 fasi promosse; durata: 4m 25s
+[01:17:00] [COST266/incremental/T1/no_skill/r001] Avvio Kathara Lab Checker...
+[01:17:11] [COST266/incremental/T1/both_forced/r001] Generazione agente terminata: fase 4/6; durata: 0m 49s; verifica checkpoint in corso
+[01:17:11] [COST266/incremental/T1/both_forced/r001] Validazione statica fase 4/6: 63/66 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:17:11] [COST266/incremental/T1/both_forced/r001] Fase 4/6 completata; durata: 0m 50s
+[01:17:11] [COST266/incremental/T1/both_forced/r001] Generazione avviata: fase 5/6, tentativo 001
+[01:17:15] [COST266/incremental/T1/auto/r001] Generazione agente terminata: fase 6/6; durata: 0m 42s; verifica checkpoint in corso
+[01:17:15] [COST266/incremental/T1/auto/r001] Validazione statica fase 6/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:17:16] [COST266/incremental/T1/auto/r001] Fase 6/6 completata; durata: 0m 42s
+[01:17:17] [COST266/incremental/T1/auto/r001] Generazione completata: 6/6 fasi promosse; durata: 4m 42s
+[01:17:17] [COST266/incremental/T1/auto/r001] Avvio Kathara Lab Checker...
+[01:17:28] [COST266/incremental/T1/creation_only/r001] Generazione agente terminata: fase 5/6; durata: 0m 36s; verifica checkpoint in corso
+[01:17:28] [COST266/incremental/T1/creation_only/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:17:28] [COST266/incremental/T1/creation_only/r001] Validazione statica fase 5/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:17:29] [COST266/incremental/T1/creation_only/r001] Fase 5/6 completata; durata: 0m 37s
+[01:17:29] [COST266/incremental/T1/creation_only/r001] Generazione avviata: fase 6/6, tentativo 001
+[01:17:34] [COST266/incremental/T1/dns_only/r001] Generazione agente terminata: fase 4/6; durata: 0m 47s; verifica checkpoint in corso
+[01:17:34] [COST266/incremental/T1/dns_only/r001] Validazione statica fase 4/6: 63/66 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:17:34] [COST266/incremental/T1/dns_only/r001] Fase 4/6 completata; durata: 0m 47s
+[01:17:34] [COST266/incremental/T1/dns_only/r001] Generazione avviata: fase 5/6, tentativo 001
+[01:17:55] [COST266/incremental/T1/both_forced/r001] Generazione agente terminata: fase 5/6; durata: 0m 43s; verifica checkpoint in corso
+[01:17:55] [COST266/incremental/T1/both_forced/r001] Validazione statica fase 5/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:17:56] [COST266/incremental/T1/both_forced/r001] Fase 5/6 completata; durata: 0m 44s
+[01:17:56] [COST266/incremental/T1/both_forced/r001] Generazione avviata: fase 6/6, tentativo 001
+[01:18:21] [COST266/incremental/T1/creation_only/r001] Generazione agente terminata: fase 6/6; durata: 0m 52s; verifica checkpoint in corso
+[01:18:21] [COST266/incremental/T1/creation_only/r001] Violazione laboratorio registrata, sequenza continua: Violazione protocollo: startup di rete modificato: c266_root
+[01:18:21] [COST266/incremental/T1/creation_only/r001] Validazione statica fase 6/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:18:21] [COST266/incremental/T1/creation_only/r001] Fase 6/6 completata; durata: 0m 52s
+[01:18:22] [COST266/incremental/T1/creation_only/r001] Generazione completata: 6/6 fasi promosse; durata: 5m 47s
+[01:18:23] [COST266/incremental/T1/creation_only/r001] In attesa del checker...
+[01:18:24] [COST266/incremental/T1/dns_only/r001] Generazione agente terminata: fase 5/6; durata: 0m 49s; verifica checkpoint in corso
+[01:18:24] [COST266/incremental/T1/dns_only/r001] Validazione statica fase 5/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:18:25] [COST266/incremental/T1/dns_only/r001] Fase 5/6 completata; durata: 0m 50s
+[01:18:25] [COST266/incremental/T1/dns_only/r001] Generazione avviata: fase 6/6, tentativo 001
+[01:18:25] [COST266/incremental/T1/no_skill/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 24s
+[01:18:39] [COST266/incremental/T1/auto/r001] Checker terminato: CHECKER_FAILED; durata: 1m 21s; causa: RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log.
+[01:18:39] [COST266/incremental/T1/auto/r001] ERRORE checker: RuntimeError: Checker fallito: returncode=1, timeout=False; vedere checker_stderr.log.
+[01:18:39] [COST266/incremental/T1/creation_only/r001] Avvio Kathara Lab Checker...
+[01:18:39] [COST266/incremental/T1/auto/r001] RUN TERMINATA: CHECKER_FAILED, task_success=None; durata invocazione: 6m 5s
+[01:19:10] [COST266/incremental/T1/both_forced/r001] Generazione agente terminata: fase 6/6; durata: 1m 14s; verifica checkpoint in corso
+[01:19:10] [COST266/incremental/T1/both_forced/r001] Validazione statica fase 6/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:19:10] [COST266/incremental/T1/both_forced/r001] Fase 6/6 completata; durata: 1m 14s
+[01:19:12] [COST266/incremental/T1/both_forced/r001] Generazione completata: 6/6 fasi promosse; durata: 6m 37s
+[01:19:12] [COST266/incremental/T1/both_forced/r001] In attesa del checker...
+[01:19:33] [COST266/incremental/T1/dns_only/r001] Generazione agente terminata: fase 6/6; durata: 1m 8s; verifica checkpoint in corso
+[01:19:33] [COST266/incremental/T1/dns_only/r001] Validazione statica fase 6/6: 67/201 dichiarazioni presenti; regressioni: 0 (non verifica DNS funzionale)
+[01:19:33] [COST266/incremental/T1/dns_only/r001] Fase 6/6 completata; durata: 1m 8s
+[01:19:35] [COST266/incremental/T1/dns_only/r001] Generazione completata: 6/6 fasi promosse; durata: 7m 0s
+[01:19:35] [COST266/incremental/T1/dns_only/r001] In attesa del checker...
+[01:19:45] [COST266/incremental/T1/no_skill/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 20s
+[01:20:28] [COST266/incremental/T1/creation_only/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 49s
+[01:21:02] [COST266/incremental/T1/no_skill/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 16s
+[01:21:45] [COST266/incremental/T1/creation_only/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 16s
+[01:22:19] [COST266/incremental/T1/no_skill/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 16s
+[01:23:02] [COST266/incremental/T1/creation_only/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 16s
+[01:23:36] [COST266/incremental/T1/no_skill/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=213/215, falliti=2; durata: 1m 16s
+[01:24:19] [COST266/incremental/T1/creation_only/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 17s
+[01:25:30] [COST266/incremental/T1/no_skill/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 1m 54s
+[01:26:05] [COST266/incremental/T1/creation_only/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=213/215, falliti=2; durata: 1m 46s
+[01:27:30] [COST266/incremental/T1/no_skill/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:28:01] [COST266/incremental/T1/creation_only/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 1m 55s
+[01:29:29] [COST266/incremental/T1/no_skill/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:30:00] [COST266/incremental/T1/creation_only/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 1m 58s
+[01:31:29] [COST266/incremental/T1/no_skill/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:31:29] [COST266/incremental/T1/no_skill/r001] Checker terminato: COMPLETED; durata: 14m 28s; task_success=False
+[01:31:29] [COST266/incremental/T1/both_forced/r001] Avvio Kathara Lab Checker...
+[01:31:29] [COST266/incremental/T1/no_skill/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 18m 55s
+[01:31:58] [COST266/incremental/T1/creation_only/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 1m 58s
+[01:32:48] [COST266/incremental/T1/both_forced/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 19s
+[01:33:57] [COST266/incremental/T1/creation_only/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 1m 58s
+[01:33:57] [COST266/incremental/T1/creation_only/r001] Checker terminato: COMPLETED; durata: 15m 17s; task_success=False
+[01:33:57] [COST266/incremental/T1/dns_only/r001] Avvio Kathara Lab Checker...
+[01:33:57] [COST266/incremental/T1/creation_only/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 21m 23s
+[01:34:05] [COST266/incremental/T1/both_forced/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 16s
+[01:35:16] [COST266/incremental/T1/dns_only/r001] Correction 1/9 completata: correction_1.yaml; controlli superati=262/376, falliti=114; durata: 1m 18s
+[01:35:23] [COST266/incremental/T1/both_forced/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 17s
+[01:36:33] [COST266/incremental/T1/dns_only/r001] Correction 2/9 completata: correction_2.yaml; controlli superati=193/209, falliti=16; durata: 1m 17s
+[01:36:41] [COST266/incremental/T1/both_forced/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 18s
+[01:37:50] [COST266/incremental/T1/dns_only/r001] Correction 3/9 completata: correction_3.yaml; controlli superati=193/209, falliti=16; durata: 1m 17s
+[01:37:59] [COST266/incremental/T1/both_forced/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 18s
+[01:39:08] [COST266/incremental/T1/dns_only/r001] Correction 4/9 completata: correction_4.yaml; controlli superati=193/208, falliti=15; durata: 1m 17s
+[01:39:55] [COST266/incremental/T1/both_forced/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 1m 55s
+[01:40:25] [COST266/incremental/T1/dns_only/r001] Correction 5/9 completata: correction_5.yaml; controlli superati=206/215, falliti=9; durata: 1m 17s
+[01:41:54] [COST266/incremental/T1/both_forced/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:42:20] [COST266/incremental/T1/dns_only/r001] Correction 6/9 completata: correction_6.yaml; controlli superati=194/201, falliti=7; durata: 1m 55s
+[01:43:54] [COST266/incremental/T1/both_forced/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 2m 0s
+[01:44:20] [COST266/incremental/T1/dns_only/r001] Correction 7/9 completata: correction_7.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:45:54] [COST266/incremental/T1/both_forced/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 2m 0s
+[01:45:54] [COST266/incremental/T1/both_forced/r001] Checker terminato: COMPLETED; durata: 14m 25s; task_success=False
+[01:45:55] [COST266/incremental/T1/both_forced/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 33m 20s
+[01:46:19] [COST266/incremental/T1/dns_only/r001] Correction 8/9 completata: correction_8.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:48:19] [COST266/incremental/T1/dns_only/r001] Correction 9/9 completata: correction_9.yaml; controlli superati=194/199, falliti=5; durata: 1m 59s
+[01:48:19] [COST266/incremental/T1/dns_only/r001] Checker terminato: COMPLETED; durata: 14m 21s; task_success=False
+[01:48:19] [COST266/incremental/T1/dns_only/r001] RUN TERMINATA: COMPLETED, task_success=False; durata invocazione: 35m 44s
+[01:48:19] [COST266/incremental/T1/no_skill/r001] Generazione report XLSX/CSV avviata...
+[01:48:19] [COST266/incremental/T1/auto/r001] Generazione report XLSX/CSV avviata...
+[01:48:19] [COST266/incremental/T1/dns_only/r001] Generazione report XLSX/CSV avviata...
+[01:48:19] [COST266/incremental/T1/creation_only/r001] Generazione report XLSX/CSV avviata...
+[01:48:19] [COST266/incremental/T1/both_forced/r001] Generazione report XLSX/CSV avviata...
+[01:48:23] [COST266/incremental/T1/no_skill/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_incremental_5g2c; durata: 0m 4s
+[01:48:23] [COST266/incremental/T1/auto/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_incremental_5g2c; durata: 0m 4s
+[01:48:23] [COST266/incremental/T1/dns_only/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_incremental_5g2c; durata: 0m 4s
+[01:48:23] [COST266/incremental/T1/creation_only/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_incremental_5g2c; durata: 0m 4s
+[01:48:23] [COST266/incremental/T1/both_forced/r001] Report salvati: /Users/matthew/Desktop/Tesi-Skill/results/cost266/experiments/cost266_incremental_5g2c; durata: 0m 4s

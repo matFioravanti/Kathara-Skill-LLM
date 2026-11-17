@@ -82,7 +82,8 @@ def test_cli_model_effort_and_experiment_override_are_recorded(selection, capsys
     assert selection.config.reasoning_effort() != 'xhigh'
 
 
-def test_one_shot_generations_overlap_and_five_checkers_run(selection,monkeypatch):
+@pytest.mark.parametrize('checker_limit', [2, 5])
+def test_one_shot_generations_overlap_and_five_checkers_run(selection,monkeypatch,checker_limit):
     path=selection.root/'experiments/cost266_one_shot.yaml'
     data=yaml.safe_load(path.read_text())
     data.update(prompt_types=['T1'],skill_modes=['no_skill'],repetitions=6)
@@ -109,11 +110,11 @@ def test_one_shot_generations_overlap_and_five_checkers_run(selection,monkeypatc
             with guard: counters['active']-=1
     monkeypatch.setattr(runner,'run_aut',concurrent_aut)
     monkeypatch.setattr(runner,'run_checker',monitored_checker)
-    assert cli.main(['--execution-mode','one_shot','--generation-workers','5'])==0
+    assert cli.main(['--execution-mode','one_shot','--generation-workers','5','--checker-workers',str(checker_limit)])==0
     manifests=list((selection.root/'runs/cost266/test_one_shot').glob('**/manifest.json'))
     top=[json.loads(p.read_text()) for p in manifests if p.parent.name.startswith('r')]
     assert len(top)==6 and all(m['pipeline_state']=='COMPLETED' for m in top)
-    assert counters['calls']==6 and counters['peak']==5
+    assert counters['calls']==6 and counters['peak']==checker_limit
     assert max(m['checker_queue_seconds'] for m in top)>.05
 
 
