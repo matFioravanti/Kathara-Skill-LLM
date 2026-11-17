@@ -5189,485 +5189,7 @@ test:
   # --- Custom command ---
   # Ogni comando viene eseguito sul dispositivo indicato; exit_code 0 indica verifica riuscita.
   custom_commands:
-    pc1:
-    # --- pc1: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.1.11 da pc1 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.1.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc2:
-    # --- pc2: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.1.12 da pc2 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.1.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc3:
-    # --- pc3: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.1.13 da pc3 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.1.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc4:
-    # --- pc4: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.1.14 da pc4 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.1.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc5:
-    # --- pc5: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.2.11 da pc5 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.2.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc6:
-    # --- pc6: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.2.12 da pc6 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.2.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc7:
-    # --- pc7: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.2.13 da pc7 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.2.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc8:
-    # --- pc8: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.2.14 da pc8 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.2.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc9:
-    # --- pc9: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.3.11 da pc9 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.3.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc10:
-    # --- pc10: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.3.12 da pc10 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.3.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc11:
-    # --- pc11: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.3.13 da pc11 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.3.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc12:
-    # --- pc12: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.3.14 da pc12 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.3.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc13:
-    # --- pc13: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.4.11 da pc13 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.4.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc14:
-    # --- pc14: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.4.12 da pc14 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.4.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc15:
-    # --- pc15: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.4.13 da pc15 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.4.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc16:
-    # --- pc16: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.4.14 da pc16 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.4.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc17:
-    # --- pc17: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.5.11 da pc17 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.5.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc18:
-    # --- pc18: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.5.12 da pc18 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.5.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc19:
-    # --- pc19: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.5.13 da pc19 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.5.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc20:
-    # --- pc20: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.5.14 da pc20 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.5.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc21:
-    # --- pc21: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.6.11 da pc21 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.6.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc22:
-    # --- pc22: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.6.12 da pc22 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.6.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc23:
-    # --- pc23: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.6.13 da pc23 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.6.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc24:
-    # --- pc24: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc24.
-    # Richiede gateway 10.16.6.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.6\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc24: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.6.14 da pc24 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.6.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc25:
-    # --- pc25: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc25.
-    # Richiede gateway 10.16.7.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.7\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc25: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.7.11 da pc25 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.7.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc26:
-    # --- pc26: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc26.
-    # Richiede gateway 10.16.7.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.7\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc26: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.7.12 da pc26 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.7.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc27:
-    # --- pc27: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc27.
-    # Richiede gateway 10.16.7.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.7\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc27: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.7.13 da pc27 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.7.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc28:
-    # --- pc28: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc28.
-    # Richiede gateway 10.16.7.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.7\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc28: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.7.14 da pc28 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.7.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc29:
-    # --- pc29: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc29.
-    # Richiede gateway 10.16.8.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.8\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc29: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.8.11 da pc29 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.8.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc30:
-    # --- pc30: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc30.
-    # Richiede gateway 10.16.8.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.8\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc30: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.8.12 da pc30 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.8.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc31:
-    # --- pc31: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc31.
-    # Richiede gateway 10.16.8.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.8\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc31: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.8.13 da pc31 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.8.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc32:
-    # --- pc32: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc32.
-    # Richiede gateway 10.16.8.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.8\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc32: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.8.14 da pc32 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.8.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc33:
-    # --- pc33: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc33.
-    # Richiede gateway 10.16.9.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.9\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc33: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.9.11 da pc33 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.9.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc34:
-    # --- pc34: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc34.
-    # Richiede gateway 10.16.9.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.9\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc34: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.9.12 da pc34 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.9.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc35:
-    # --- pc35: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc35.
-    # Richiede gateway 10.16.9.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.9\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc35: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.9.13 da pc35 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.9.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc36:
-    # --- pc36: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc36.
-    # Richiede gateway 10.16.9.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.9\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc36: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.9.14 da pc36 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.9.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc37:
-    # --- pc37: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc37.
-    # Richiede gateway 10.16.10.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.10\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc37: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.10.11 da pc37 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.10.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc38:
-    # --- pc38: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc38.
-    # Richiede gateway 10.16.10.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.10\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc38: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.10.12 da pc38 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.10.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc39:
-    # --- pc39: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc39.
-    # Richiede gateway 10.16.10.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.10\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc39: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.10.13 da pc39 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.10.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc40:
-    # --- pc40: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc40.
-    # Richiede gateway 10.16.10.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.10\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc40: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.10.14 da pc40 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.10.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc41:
-    # --- pc41: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc41.
-    # Richiede gateway 10.16.11.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.11\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc41: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.11.11 da pc41 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.11.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc42:
-    # --- pc42: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc42.
-    # Richiede gateway 10.16.11.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.11\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc42: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.11.12 da pc42 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.11.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc43:
-    # --- pc43: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc43.
-    # Richiede gateway 10.16.11.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.11\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc43: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.11.13 da pc43 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.11.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc44:
-    # --- pc44: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc44.
-    # Richiede gateway 10.16.11.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.11\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc44: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.11.14 da pc44 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.11.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc45:
-    # --- pc45: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc45.
-    # Richiede gateway 10.16.12.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.12\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc45: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.12.11 da pc45 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.12.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc46:
-    # --- pc46: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc46.
-    # Richiede gateway 10.16.12.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.12\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc46: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.12.12 da pc46 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.12.12 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc47:
-    # --- pc47: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc47.
-    # Richiede gateway 10.16.12.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.12\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc47: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.12.13 da pc47 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.12.13 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc48:
-    # --- pc48: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc48.
-    # Richiede gateway 10.16.12.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.12\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc48: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.12.14 da pc48 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.12.14 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
-    pc49:
-    # --- pc49: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc49.
-    # Richiede gateway 10.16.13.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.13\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
-    # --- pc49: Ricorsione sui server autoritativi ---
-    # Interroga 10.16.13.11 da pc49 su un nome di prova esterno.
-    # Richiede una risposta con flags e senza flag RA; non verifica lo stato DNS restituito.
-    - command: sh -c 'out=$(dig @10.16.13.11 non-existent-zone-for-recursion-check.invalid. A +time=3 +tries=1 +noall +comments);
-        printf "%s\n" "$out" | grep -q "flags:" && ! printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"'
-      exit_code: 0
     pc50:
-    # --- pc50: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc50.
-    # Richiede gateway 10.16.13.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.13\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc50: Autorità delle zone DNS ---
     # Interroga senza ricorsione 10.16.1.11 da pc50 per il SOA di ..
     # Verifica NOERROR, il flag AA e la presenza del SOA per la zona.
@@ -6881,69 +6403,7 @@ test:
         && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="mail.servizi.ministero.gov." && $4=="A" && $5=="10.16.12.13" {found=1}
         END {exit !found}''"''"'''''
       exit_code: 0
-    # --- pc50: Risoluzione ricorsiva sul resolver ---
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di shop.example.com..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.4.14.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 shop.example.com. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n"
-        "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" &&
-        printf "%s\n" "$out" | awk ''"''"''tolower($1)=="shop.example.com." && $4=="A" && $5=="10.16.4.14" {found=1} END {exit
-        !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di data.research.lab.net..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.6.13.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 data.research.lab.net. A +time=6 +tries=1 +noall +comments +answer); printf
-        "%s\n" "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"
-        && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="data.research.lab.net." && $4=="A" && $5=="10.16.6.13" {found=1}
-        END {exit !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di courses.university.edu..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.7.13.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 courses.university.edu. A +time=6 +tries=1 +noall +comments +answer); printf
-        "%s\n" "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"
-        && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="courses.university.edu." && $4=="A" && $5=="10.16.7.13" {found=1}
-        END {exit !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di studenti.unibo.it..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.8.11.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 studenti.unibo.it. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n"
-        "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" &&
-        printf "%s\n" "$out" | awk ''"''"''tolower($1)=="studenti.unibo.it." && $4=="A" && $5=="10.16.8.11" {found=1} END
-        {exit !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di archive.foundation.org..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.11.12.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 archive.foundation.org. A +time=6 +tries=1 +noall +comments +answer); printf
-        "%s\n" "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"
-        && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="archive.foundation.org." && $4=="A" && $5=="10.16.11.12" {found=1}
-        END {exit !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di api.startup.io..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.11.14.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 api.startup.io. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n"
-        "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" &&
-        printf "%s\n" "$out" | awk ''"''"''tolower($1)=="api.startup.io." && $4=="A" && $5=="10.16.11.14" {found=1} END {exit
-        !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di servizi.ministero.gov..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.12.13.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 servizi.ministero.gov. A +time=6 +tries=1 +noall +comments +answer); printf
-        "%s\n" "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)"
-        && printf "%s\n" "$out" | awk ''"''"''tolower($1)=="servizi.ministero.gov." && $4=="A" && $5=="10.16.12.13" {found=1}
-        END {exit !found}''"''"'''''
-      exit_code: 0
-    # Interroga il resolver 10.16.13.12 da pc50 per il record A di media.news.info..
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.16.13.11.
-    - command: 'sh -c ''out=$(dig @10.16.13.12 media.news.info. A +time=6 +tries=1 +noall +comments +answer); printf "%s\n"
-        "$out" | grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" &&
-        printf "%s\n" "$out" | awk ''"''"''tolower($1)=="media.news.info." && $4=="A" && $5=="10.16.13.11" {found=1} END {exit
-        !found}''"''"'''''
-      exit_code: 0
     pc51:
-    # --- pc51: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc51.
-    # Richiede gateway 10.16.13.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.13\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc51: Record A dai client ---
     # Da pc51 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -6986,11 +6446,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc52:
-    # --- pc52: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc52.
-    # Richiede gateway 10.16.13.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.13\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc52: Record A dai client ---
     # Da pc52 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7033,11 +6488,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc53:
-    # --- pc53: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc53.
-    # Richiede gateway 10.16.14.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.14\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc53: Record A dai client ---
     # Da pc53 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7080,11 +6530,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc54:
-    # --- pc54: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc54.
-    # Richiede gateway 10.16.14.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.14\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc54: Record A dai client ---
     # Da pc54 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7127,11 +6572,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc55:
-    # --- pc55: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc55.
-    # Richiede gateway 10.16.14.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.14\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc55: Record A dai client ---
     # Da pc55 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7174,11 +6614,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc56:
-    # --- pc56: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc56.
-    # Richiede gateway 10.16.14.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.14\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc56: Record A dai client ---
     # Da pc56 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7221,11 +6656,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc57:
-    # --- pc57: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc57.
-    # Richiede gateway 10.16.15.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.15\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc57: Record A dai client ---
     # Da pc57 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7268,11 +6698,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc58:
-    # --- pc58: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc58.
-    # Richiede gateway 10.16.15.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.15\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc58: Record A dai client ---
     # Da pc58 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7315,11 +6740,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc59:
-    # --- pc59: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc59.
-    # Richiede gateway 10.16.15.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.15\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc59: Record A dai client ---
     # Da pc59 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
@@ -7362,11 +6782,6 @@ test:
         && $4=="A" && $5=="10.16.13.11" {found=1} END {exit !found}'"'"''
       exit_code: 0
     pc60:
-    # --- pc60: Rotta predefinita ---
-    # Controlla la rotta IPv4 predefinita su pc60.
-    # Richiede gateway 10.16.15.1 su eth0; non prova il transito dei pacchetti.
-    - command: sh -c 'ip -4 route show default | grep -Eq '"'"'^default via 10\.16\.15\.1 dev eth0([[:space:]]|$)'"'"''
-      exit_code: 0
     # --- pc60: Record A dai client ---
     # Da pc60 interroga il resolver locale per il record A di shop.example.com..
     # Richiede nella risposta l’indirizzo 10.16.4.14; non controlla stato o flag DNS.
