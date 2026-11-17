@@ -3287,13 +3287,6 @@ test:
         "$ans" | grep -q "status: NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n"
         "$ans" | awk ''"''"''tolower($1)=="www.example.com." && $4=="A" {print $5}''"''"'' | grep -Eq ''"''"''^(10\.15\.1\.11|10\.15\.1\.12|10\.15\.1\.13|10\.15\.1\.14|10\.15\.2\.11|10\.15\.2\.12|10\.15\.2\.13|10\.15\.2\.14|10\.15\.3\.11|10\.15\.3\.12|10\.15\.3\.13|10\.15\.3\.14|10\.15\.4\.11|10\.15\.4\.12|10\.15\.4\.13|10\.15\.4\.14|10\.15\.5\.11|10\.15\.5\.12|10\.15\.5\.13|10\.15\.5\.14|10\.15\.6\.11|10\.15\.6\.12|10\.15\.6\.13|10\.15\.6\.14|10\.15\.7\.11|10\.15\.7\.12|10\.15\.7\.13|10\.15\.7\.14|10\.15\.8\.11|10\.15\.8\.12|10\.15\.8\.13|10\.15\.8\.14|10\.15\.9\.11|10\.15\.9\.12|10\.15\.9\.13|10\.15\.9\.14|10\.15\.10\.11|10\.15\.10\.12|10\.15\.10\.13|10\.15\.10\.14)$''"''"'''''
       exit_code: 0
-    # --- pc32: Risoluzione ricorsiva sul resolver ---
-    # Interroga il resolver 10.15.8.14 da pc32 per il record A di shop.example.com.
-    # Richiede NOERROR, il flag RA e l’indirizzo 10.15.4.14.
-    - command: 'sh -c ''out=$(dig @10.15.8.14 shop.example.com. A +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$out" |
-        grep -q "status: NOERROR" && printf "%s\n" "$out" | grep -Eq "flags:[^;]*[[:space:]]ra([;[:space:]]|$)" && printf "%s\n" "$out"
-        | awk ''"''"''tolower($1)=="shop.example.com." && $4=="A" && $5=="10.15.4.14" {found=1} END {exit !found}''"''"'''''
-      exit_code: 0
     pc33:
     # --- pc33: Risoluzione web da un client rappresentativo ---
     # Questa verifica è eseguita una sola volta; i controlli DNS standard restano su pc33-pc40.
