@@ -1,3 +1,4 @@
+
 {
   "task": "modify_existing_kathara_lab",
   "service": "dns",
@@ -123,10 +124,19 @@
     }
   },
   "resolver_configuration": {
-    "local_nameserver": "select_existing_non_authoritative_host",
+    "local_nameserver": "[pc32]",
     "recursive_resolution": true,
     "root_hints": "existing_root_server_[pc1]",
-    "clients": "all_existing_client_hosts"
+    "clients": [
+      "[pc33]",
+      "[pc34]",
+      "[pc35]",
+      "[pc36]",
+      "[pc37]",
+      "[pc38]",
+      "[pc39]",
+      "[pc40]"
+    ]
   },
   "zone_records": {
     "A": {
@@ -135,6 +145,7 @@
       "dept.company.com": "existing_ipv4_of_pc18",
       "intranet.company.com": "existing_ipv4_of_pc19",
       "api.service.com": "existing_ipv4_of_pc20",
+      "research.lab.net": "existing_ipv4_of_pc21",
       "ai.research.lab.net": "existing_ipv4_of_pc22",
       "data.research.lab.net": "existing_ipv4_of_pc23",
       "dev.lab.net": "existing_ipv4_of_pc24",

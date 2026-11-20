@@ -1,3 +1,4 @@
+
 {
   "task": "modify_existing_kathara_lab",
   "service": "dns",
@@ -179,18 +180,40 @@
     }
   },
   "resolver_configuration": {
-    "local_nameserver": "select_existing_non_authoritative_host",
+    "local_nameserver": "[pc50]",
     "recursive_resolution": true,
     "root_hints": "existing_root_server_[pc1]",
-    "clients": "all_existing_client_hosts"
+    "clients": [
+      "[pc51]",
+      "[pc52]",
+      "[pc53]",
+      "[pc54]",
+      "[pc55]",
+      "[pc56]",
+      "[pc57]",
+      "[pc58]",
+      "[pc59]",
+      "[pc60]"
+    ]
   },
   "zone_records": {
     "A": {
+      "example.com": "existing_ipv4_of_pc6",
+      "company.com": "existing_ipv4_of_pc7",
+      "service.com": "existing_ipv4_of_pc8",
+      "lab.net": "existing_ipv4_of_pc9",
+      "tools.net": "existing_ipv4_of_pc10",
+      "university.edu": "existing_ipv4_of_pc11",
+      "campus.edu": "existing_ipv4_of_pc12",
+      "unibo.it": "existing_ipv4_of_pc13",
+      "comune.it": "existing_ipv4_of_pc14",
+      "regione.it": "existing_ipv4_of_pc15",
       "shop.example.com": "existing_ipv4_of_pc16",
       "blog.example.com": "existing_ipv4_of_pc17",
       "dept.company.com": "existing_ipv4_of_pc18",
       "intranet.company.com": "existing_ipv4_of_pc19",
       "api.service.com": "existing_ipv4_of_pc20",
+      "research.lab.net": "existing_ipv4_of_pc21",
       "ai.research.lab.net": "existing_ipv4_of_pc22",
       "data.research.lab.net": "existing_ipv4_of_pc23",
       "dev.lab.net": "existing_ipv4_of_pc24",
@@ -201,6 +224,12 @@
       "studenti.unibo.it": "existing_ipv4_of_pc29",
       "servizi.comune.it": "existing_ipv4_of_pc30",
       "dati.regione.it": "existing_ipv4_of_pc31",
+      "foundation.org": "existing_ipv4_of_pc36",
+      "project.org": "existing_ipv4_of_pc37",
+      "startup.io": "existing_ipv4_of_pc38",
+      "platform.io": "existing_ipv4_of_pc39",
+      "ministero.gov": "existing_ipv4_of_pc40",
+      "news.info": "existing_ipv4_of_pc41",
       "archive.foundation.org": "existing_ipv4_of_pc42",
       "docs.project.org": "existing_ipv4_of_pc43",
       "api.startup.io": "existing_ipv4_of_pc44",
