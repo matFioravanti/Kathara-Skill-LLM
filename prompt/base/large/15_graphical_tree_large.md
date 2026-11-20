@@ -23,6 +23,9 @@
 │            │            │        └── [ blog.example.com ]
 │            │            │            └── A → IP of pc17
 │            │            │
+│            │            ├── www.example.com
+│            │            │   └──> [ Web service: A record ]
+│            │            │
 │            │            └── A → IP of pc6
 │            │
 │            ├── delegates "company.com"
