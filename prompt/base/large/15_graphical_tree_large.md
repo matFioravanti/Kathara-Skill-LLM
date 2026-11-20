@@ -344,3 +344,5 @@
                                      └── Follows the delegations
                                          of the DNS tree
 ```
+
+Each authoritative zone must contain SOA and NS records; each delegation must contain NS records and any necessary glue records.
