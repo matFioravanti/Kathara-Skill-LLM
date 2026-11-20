@@ -1,7 +1,7 @@
 # Lab 05 - benchmark DNS: rete invariata + requisiti da 02_technical_structured_medium.md.
 # La baseline lab/ NON contiene alcuna configurazione DNS.
 # 31 zone / 30 deleghe; pc1..pc31 auth; pc32 resolver; pc33..pc40 client.
-# www.example.com: IP di uno dei PC esistenti, poiché non assegnato nel prompt.
+# www.example.com: record A verso pc6 (10.15.2.12), come richiesto da tutti i prompt Medium.
 # --- CS01 — Presenza dei dispositivi ---
 # Verifica che tutti i dispositivi del modello lab_inline esistano nel laboratorio valutato.
 # --- CS02 — Collegamenti e domini di collisione ---
