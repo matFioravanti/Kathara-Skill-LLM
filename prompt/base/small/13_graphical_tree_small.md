@@ -18,7 +18,7 @@
 │            │            │            └── A → IP of pc8
 │            │            │
 │            │            ├── www.example.com
-│            │            │   └──> [ Web service: A record ]
+│            │            │   └──> [ Web service: A → IP of pc4 ]
 │            │            │
 │            │            ├── MX example.com
 │            │            │   └──> [ 10 mail.example.com ]

@@ -24,7 +24,7 @@
 │            │            │            └── A → IP of pc17
 │            │            │
 │            │            ├── www.example.com
-│            │            │   └──> [ Web service: A record ]
+│            │            │   └──> [ Web service: A → IP of pc6 ]
 │            │            │
 │            │            └── A → IP of pc6
 │            │

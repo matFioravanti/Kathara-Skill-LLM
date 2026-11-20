@@ -28,7 +28,7 @@ Generate the DNS configuration for the existing Kathara laboratory, consisting o
 
 - **Local resolution:** Configure a local name server on [pc14] to receive DNS queries from the five clients [pc16], [pc17], [pc18], [pc19], and [pc20], and to query the other name servers in the hierarchy when needed.
 
-- **Services:** Configure DNS records so that `shop.example.com`, `api.service.com`, `ci.tools.net`, `ai.research.lab.net` and `data.research.lab.net` resolve to the IP addresses of their respective machines. Configure `www.example.com` for the web service in the `example.com` zone. Also provide DNS references for email at the four main domains `example.com`, `service.com`, `lab.net`, and `tools.net`.
+- **Services:** Configure DNS records so that `shop.example.com`, `api.service.com`, `ci.tools.net`, `ai.research.lab.net` and `data.research.lab.net` resolve to the IP addresses of their respective machines. Configure `www.example.com` for the web service in the `example.com` zone, with an A record pointing to the existing IP address of [pc4]. Also provide DNS references for email at the four main domains `example.com`, `service.com`, `lab.net`, and `tools.net`.
 
 - **Mail records:** Configure the following MX records:
   - `example.com` → MX priority 10, mail server `mail.example.com`, with an A record pointing to the existing IP address of [pc4].

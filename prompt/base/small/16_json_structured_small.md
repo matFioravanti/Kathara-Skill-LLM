@@ -90,7 +90,7 @@
       "ci.tools.net": "existing_ipv4_of_pc11",
       "ai.research.lab.net": "existing_ipv4_of_pc12",
       "data.research.lab.net": "existing_ipv4_of_pc13",
-      "www.example.com": "existing_ipv4_of_web_service_host",
+      "www.example.com": "existing_ipv4_of_pc4",
       "mail.example.com": "existing_ipv4_of_pc4",
       "mail.service.com": "existing_ipv4_of_pc5",
       "mail.lab.net": "existing_ipv4_of_pc6",

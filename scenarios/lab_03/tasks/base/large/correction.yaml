@@ -5242,6 +5242,9 @@ test:
         # Esegue dig +short A sui client di local_ns e confronta l’output con i valori attesi.
         # Verifica la risoluzione dal client senza richiedere esplicitamente il flag AA.
         A:
+          # Servizio web example.com su pc6, IP 10.16.2.12.
+          www.example.com:
+          - 10.16.2.12
           example.com:
           - 10.16.2.12
           company.com:

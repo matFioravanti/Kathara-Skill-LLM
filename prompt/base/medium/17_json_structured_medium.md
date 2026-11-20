@@ -156,7 +156,7 @@
       "studenti.unibo.it": "existing_ipv4_of_pc29",
       "servizi.comune.it": "existing_ipv4_of_pc30",
       "dati.regione.it": "existing_ipv4_of_pc31",
-      "www.example.com": "existing_ipv4_of_web_service_host",
+      "www.example.com": "existing_ipv4_of_pc6",
       "mail.company.com": "existing_ipv4_of_pc7",
       "mail.university.edu": "existing_ipv4_of_pc11"
     },

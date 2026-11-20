@@ -199,7 +199,7 @@
   "zone_records": {
     "A": {
       "example.com": "existing_ipv4_of_pc6",
-      "www.example.com": "existing_ipv4_of_web_service_host",
+      "www.example.com": "existing_ipv4_of_pc6",
       "company.com": "existing_ipv4_of_pc7",
       "service.com": "existing_ipv4_of_pc8",
       "lab.net": "existing_ipv4_of_pc9",
