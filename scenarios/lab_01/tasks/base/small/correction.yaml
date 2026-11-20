@@ -1,6 +1,9 @@
 # Oracolo RETE+DNS da 01_technical_structured_small(3).md: 13 zone, 12 deleghe, 4 MX.
 # ATTENZIONE: questa correction deve fallire sulla baseline DNS-free; applicare DOPO l'agente.
-# --- Topologia di riferimento ---
+# --- CS01 — Presenza dei dispositivi ---
+# Verifica che tutti i dispositivi del modello lab_inline esistano nel laboratorio valutato.
+# --- CS02 — Collegamenti e domini di collisione ---
+# Confronta il dominio di collisione di ogni interfaccia con quello del modello lab_inline.
 # Definisce le interfacce attese e i rispettivi domini di collisione.
 # A1-A6 sono LAN di accesso; B12, B23 e B34 collegano i router.
 lab_inline: 'r1[0]="A1"
@@ -74,7 +77,8 @@ convergence_time: 60
 # Immagine Kathara predefinita indicata per la valutazione.
 default_image: kathara/base
 test:
-  # --- Script di avvio ---
+  # --- CS03 — Presenza degli script di avvio ---
+  # Verifica l’esistenza dei file .startup richiesti, non la correttezza del loro contenuto.
   # Elenca i router e i PC per i quali è richiesto uno script di startup.
   requiring_startup:
   - r1
@@ -101,7 +105,8 @@ test:
   - pc18
   - pc19
   - pc20
-  # --- Indirizzi delle interfacce ---
+  # --- CS04 — Indirizzi IP e prefissi delle interfacce ---
+  # Legge gli indirizzi effettivi con ip -j address e confronta IP, prefisso e interfaccia.
   # Per ogni dispositivo associa il numero di interfaccia (0 = eth0) all’IPv4/prefisso atteso.
   ip_mapping:
     # Interfacce e indirizzi attesi per r1.
@@ -184,38 +189,11 @@ test:
     # Interfacce e indirizzi attesi per pc20.
     pc20:
       '0': 10.14.6.13/24
-  # --- Processi richiesti e vietati ---
+  # --- CS05 — Processi richiesti e vietati ---
+  # Usa pgrep per controllare la presenza dei processi; ! richiede che siano assenti.
   # named deve essere presente sui server DNS pc1-pc14; il prefisso ! indica assenza richiesta.
   # Sui router sono inoltre vietati i demoni di routing dinamico elencati.
   daemons:
-    # Processi richiesti o vietati su r1.
-    r1:
-    - '!named'
-    - '!ripd'
-    - '!ospfd'
-    - '!bgpd'
-    - '!zebra'
-    # Processi richiesti o vietati su r2.
-    r2:
-    - '!named'
-    - '!ripd'
-    - '!ospfd'
-    - '!bgpd'
-    - '!zebra'
-    # Processi richiesti o vietati su r3.
-    r3:
-    - '!named'
-    - '!ripd'
-    - '!ospfd'
-    - '!bgpd'
-    - '!zebra'
-    # Processi richiesti o vietati su r4.
-    r4:
-    - '!named'
-    - '!ripd'
-    - '!ospfd'
-    - '!bgpd'
-    - '!zebra'
     # Processi richiesti o vietati su pc1.
     pc1:
     - named
@@ -276,9 +254,10 @@ test:
     # Processi richiesti o vietati su pc20.
     pc20:
     - '!named'
-  # --- Rotte presenti nel kernel ---
+  # --- CS06 — Tabella di instradamento ---
+  # Confronta le destinazioni attese con ip -j route, escludendo le rotte direttamente connesse.
+  # Segnala rotte mancanti o aggiuntive; qui next hop e interfaccia non sono vincolati.
   # Elenca le destinazioni IPv4 attese per ciascun dispositivo; 0.0.0.0/0 indica la rotta predefinita.
-  # I custom command specificano anche next hop e interfaccia delle rotte controllate.
   kernel_routes:
     # Destinazioni di rotta attese su r1.
     r1:
@@ -372,7 +351,8 @@ test:
     # Destinazioni di rotta attese su pc20.
     pc20:
     - 0.0.0.0/0
-  # --- Raggiungibilità IP ---
+  # --- CS07 — Raggiungibilità IP ---
+  # Invia un ping per ogni coppia sorgente-destinazione e verifica la ricezione della risposta.
   # Per ogni dispositivo sono elencati gli indirizzi da raggiungere:
   # gli altri PC e il gateway locale per i PC, i vicini direttamente collegati per i router.
   reachability:
@@ -835,7 +815,9 @@ test:
   applications:
     # Il checker usa le mappature seguenti per controllare server, resolver e record DNS.
     dns:
-      # --- Server autorevoli ---
+      # --- CS08 — Server DNS autorevoli attesi ---
+      # Interroga gli NS e risolve i loro nomi per cercare l’IP autorevole atteso.
+      # Per la radice controlla anche il resolver locale; non richiede esplicitamente il flag AA.
       # Associa ogni zona al relativo indirizzo del server autorevole atteso; . indica la radice DNS.
       authoritative:
         .:
@@ -864,7 +846,8 @@ test:
         - 10.14.4.12
         data.research.lab.net:
         - 10.14.4.13
-      # --- Resolver locale e client ---
+      # --- CS09 — Resolver DNS configurato sui client ---
+      # Cerca il nameserver atteso in /etc/resolv.conf dei client; non ne verifica da solo il funzionamento.
       # Associa il resolver 10.14.4.14 (pc14) ai client pc16-pc20 che devono utilizzarlo.
       local_ns:
         10.14.4.14:
@@ -877,6 +860,9 @@ test:
       # Specifica i valori delle risposte DNS da verificare per i nomi indicati.
       records:
         # Record A: associano ciascun nome all’indirizzo IPv4 riportato.
+        # --- CS10 — Risoluzione dei record A dai client ---
+        # Esegue dig +short A sui client di local_ns e confronta l’output con i valori attesi.
+        # Verifica la risoluzione dal client senza richiedere esplicitamente il flag AA.
         A:
           shop.example.com:
           - 10.14.3.11
@@ -897,6 +883,9 @@ test:
           mail.tools.net:
           - 10.14.2.13
         # Record MX: indicano priorità 10 e nome del server di posta atteso.
+        # --- CS11 — Risoluzione dei record MX dai client ---
+        # Esegue dig +short MX sui client e confronta preferenza e destinazione attese.
+        # Controlla i dati DNS, non l’invio o la ricezione della posta via SMTP.
         MX:
           example.com:
           - 10 mail.example.com.
@@ -910,7 +899,7 @@ test:
   # Salvo dove indicato dalla regex, exit_code 0 significa che il controllo è riuscito.
   custom_commands:
     pc14:
-    # --- pc14: Autorità delle zone DNS ---
+    # --- CC01 — Autorità delle zone: controlli SOA (pc14) ---
     # Interroga senza ricorsione 10.14.1.11 per il SOA della zona ., da pc14.
     # Verifica NOERROR, il flag autoritativo AA e la presenza del SOA per la zona richiesta.
     - command: 'sh -c ''ans=$(dig @10.14.1.11 . SOA +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR" &&
@@ -989,7 +978,8 @@ test:
         "status: NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="SOA" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
-    # --- pc14: Deleghe DNS, server NS e glue ---
+
+    # --- CC02 — Deleghe DNS: controlli NS e glue (pc14) ---
     # Controlla la delega di com. dal server padre 10.14.1.11 al figlio 10.14.1.12.
     # Confronta gli NS di padre e figlio; risolve ogni NS a 10.14.1.12 tramite il resolver
     # e controlla il glue nel padre quando il nome NS appartiene alla zona delegata.
@@ -1110,7 +1100,8 @@ test:
         in "data.research.lab.net."|*."data.research.lab.net.") b=$(dig @10.14.3.13 data.research.lab.net. NS +norecurse +time=5 +tries=1 +noall +additional
         | awk -v ns="$ns" ''"''"''tolower($1)==tolower(ns) && $4=="A" {print $5}''"''"'' | sort -u); [ "$b" = "10.14.4.13" ] || exit 1 ;; *) : ;; esac; done'''
       exit_code: 0
-    # --- pc14: Record A autorevoli ---
+
+    # --- CC03 — Record A autorevoli (pc14) ---
     # Interroga senza ricorsione 10.14.3.11 per il record A di shop.example.com., da pc14.
     # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.3.11.
     - command: 'sh -c ''ans=$(dig @10.14.3.11 shop.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
@@ -1141,24 +1132,11 @@ test:
         "status: NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="data.research.lab.net."
         && $4=="A" && $5=="10.14.4.13" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
-    # --- pc14: Record di posta autorevoli ---
-    # Interroga senza ricorsione 10.14.1.14 per il record MX di example.com..
-    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.example.com.; non prova la posta.
-    - command: 'sh -c ''ans=$(dig @10.14.1.14 example.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
-        NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="example.com."
-        && $4=="MX" && $5=="10" && tolower($6)=="mail.example.com." {ok=1} END {exit !ok}''"''"'''''
-      exit_code: 0
     # Interroga senza ricorsione 10.14.1.14 per il record A di mail.example.com., da pc14.
     # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.1.14.
     - command: 'sh -c ''ans=$(dig @10.14.1.14 mail.example.com. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.example.com."
         && $4=="A" && $5=="10.14.1.14" {ok=1} END {exit !ok}''"''"'''''
-      exit_code: 0
-    # Interroga senza ricorsione 10.14.2.11 per il record MX di service.com..
-    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.service.com.; non prova la posta.
-    - command: 'sh -c ''ans=$(dig @10.14.2.11 service.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
-        NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="service.com."
-        && $4=="MX" && $5=="10" && tolower($6)=="mail.service.com." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
     # Interroga senza ricorsione 10.14.2.11 per il record A di mail.service.com., da pc14.
     # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.2.11.
@@ -1166,23 +1144,11 @@ test:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.service.com."
         && $4=="A" && $5=="10.14.2.11" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
-    # Interroga senza ricorsione 10.14.2.12 per il record MX di lab.net..
-    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.lab.net.; non prova la posta.
-    - command: 'sh -c ''ans=$(dig @10.14.2.12 lab.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
-        && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="lab.net." && $4=="MX"
-        && $5=="10" && tolower($6)=="mail.lab.net." {ok=1} END {exit !ok}''"''"'''''
-      exit_code: 0
     # Interroga senza ricorsione 10.14.2.12 per il record A di mail.lab.net., da pc14.
     # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.2.12.
     - command: 'sh -c ''ans=$(dig @10.14.2.12 mail.lab.net. A +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.lab.net."
         && $4=="A" && $5=="10.14.2.12" {ok=1} END {exit !ok}''"''"'''''
-      exit_code: 0
-    # Interroga senza ricorsione 10.14.2.13 per il record MX di tools.net..
-    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.tools.net.; non prova la posta.
-    - command: 'sh -c ''ans=$(dig @10.14.2.13 tools.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
-        && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="tools.net." && $4=="MX"
-        && $5=="10" && tolower($6)=="mail.tools.net." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
     # Interroga senza ricorsione 10.14.2.13 per il record A di mail.tools.net., da pc14.
     # Verifica NOERROR, il flag AA e la presenza dell’indirizzo 10.14.2.13.
@@ -1190,7 +1156,7 @@ test:
         NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="mail.tools.net."
         && $4=="A" && $5=="10.14.2.13" {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
-    # --- pc14: Record web e coerenza con il resolver ---
+    # Record web e coerenza con il resolver.
     # Interroga senza ricorsione 10.14.1.14 per il record A di www.example.com..
     # Verifica NOERROR e AA, almeno un indirizzo tra quelli ammessi del lab e la corrispondenza
     # con la risposta A ottenuta dal resolver 10.14.4.14; non verifica il servizio HTTP.
@@ -1200,4 +1166,30 @@ test:
         10.14.3.11 10.14.3.12 10.14.3.13 10.14.4.11 10.14.4.12 10.14.4.13 10.14.4.14 10.14.5.11 10.14.5.12 10.14.5.13 10.14.6.11 10.14.6.12 10.14.6.13 " in *"
         $ip "*) ;; *) exit 1 ;; esac; done; y=$(dig @10.14.4.14 www.example.com. A +time=5 +tries=1 +noall +answer | awk ''"''"''tolower($1)=="www.example.com."
         && $4=="A" {print $5}''"''"''); [ "$y" = "$a" ]'''
+      exit_code: 0
+
+    # --- CC04 — Record MX autorevoli (pc14) ---
+    # Interroga senza ricorsione 10.14.1.14 per il record MX di example.com..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.example.com.; non prova la posta.
+    - command: 'sh -c ''ans=$(dig @10.14.1.14 example.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
+        NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="example.com."
+        && $4=="MX" && $5=="10" && tolower($6)=="mail.example.com." {ok=1} END {exit !ok}''"''"'''''
+      exit_code: 0
+    # Interroga senza ricorsione 10.14.2.11 per il record MX di service.com..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.service.com.; non prova la posta.
+    - command: 'sh -c ''ans=$(dig @10.14.2.11 service.com. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status:
+        NOERROR" && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="service.com."
+        && $4=="MX" && $5=="10" && tolower($6)=="mail.service.com." {ok=1} END {exit !ok}''"''"'''''
+      exit_code: 0
+    # Interroga senza ricorsione 10.14.2.12 per il record MX di lab.net..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.lab.net.; non prova la posta.
+    - command: 'sh -c ''ans=$(dig @10.14.2.12 lab.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
+        && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="lab.net." && $4=="MX"
+        && $5=="10" && tolower($6)=="mail.lab.net." {ok=1} END {exit !ok}''"''"'''''
+      exit_code: 0
+    # Interroga senza ricorsione 10.14.2.13 per il record MX di tools.net..
+    # Verifica NOERROR, AA e un MX con priorità 10 e destinazione mail.tools.net.; non prova la posta.
+    - command: 'sh -c ''ans=$(dig @10.14.2.13 tools.net. MX +norecurse +time=5 +tries=1 +noall +comments +answer); printf "%s\n" "$ans" | grep -q "status: NOERROR"
+        && printf "%s\n" "$ans" | grep -Eq "flags:[^;]*[[:space:]]aa([;[:space:]]|$)" && printf "%s\n" "$ans" | awk ''"''"''tolower($1)=="tools.net." && $4=="MX"
+        && $5=="10" && tolower($6)=="mail.tools.net." {ok=1} END {exit !ok}''"''"'''''
       exit_code: 0
