@@ -81,11 +81,13 @@
 │            │            │            │        └── [ ai.research.lab.net ]
 │            │            │            │            └── A → IP of pc22
 │            │            │            │
-│            │            │            └── delegates "data.research.lab.net"
-│            │            │                └──> [ Authoritative NS: pc23 ]
-│            │            │                     │
-│            │            │                     └── [ data.research.lab.net ]
-│            │            │                         └── A → IP of pc23
+│            │            │            ├── delegates "data.research.lab.net"
+│            │            │            │   └──> [ Authoritative NS: pc23 ]
+│            │            │            │        │
+│            │            │            │        └── [ data.research.lab.net ]
+│            │            │            │            └── A → IP of pc23
+│            │            │            │
+│            │            │            └── A → IP of pc21
 │            │            │
 │            │            └── delegates "dev.lab.net"
 │            │                └──> [ Authoritative NS: pc24 ]
@@ -181,23 +183,25 @@
                                    └── [ dati.regione.it ]
                                        └── A → IP of pc31
 
-[ Laboratory clients ]
-             │
-             └── [ Client resolvers ]
-                         │
-                         └── DNS query
-                                   │
-                                   ▼
-                    [ Local name server ]
-                    [ Existing non-authoritative host ]
-                                   │
-                         Recursive resolution
-                                   │
-                                   └── Root hints: pc1
-                                           │
-                                           ▼
-                        [ Root authoritative NS ]
-                                   │
-                                   └── Follows the delegations
-                                       of the DNS tree
+[ Client: pc33, pc34, pc35, pc36, pc37, pc38, pc39, pc40 ]
+               │
+               └── [ Client resolvers ]
+                           │
+                           └── DNS query
+                                     │
+                                     ▼
+                        [ Local NS: pc32 ]
+                        [ Non-authoritative host ]
+                                     │
+                           Recursive resolution
+                                     │
+                                     └── Root hints: pc1
+                                             │
+                                             ▼
+                          [ Root authoritative NS ]
+                                     │
+                                     └── Follows the delegations
+                                         of the DNS tree
 ```
+
+Configure this hierarchy in the existing Kathara laboratory without changing network links, IP addresses, or routing. Every authoritative zone must have SOA and NS records; every delegation must include NS records and any necessary glue. Use only the IP addresses already assigned to the corresponding machines.

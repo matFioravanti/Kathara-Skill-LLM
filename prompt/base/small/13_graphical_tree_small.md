@@ -112,3 +112,5 @@
                                      └── Follows the delegations
                                          of the DNS tree
 ```
+
+Configure this hierarchy in the existing Kathara laboratory without changing network links, IP addresses, or routing. Every authoritative zone must have SOA and NS records; every delegation must include NS records and any necessary glue. Use only the IP addresses already assigned to the corresponding machines.
