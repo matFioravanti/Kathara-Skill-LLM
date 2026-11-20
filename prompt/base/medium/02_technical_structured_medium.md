@@ -52,7 +52,7 @@ Generate the DNS configuration for the existing Kathara laboratory without chang
   - `regione.it` delegates `dati.regione.it`.
   - Configure all required NS records and any necessary glue records to enable correct name resolution throughout the hierarchy.
 
-- **Local resolution:** Configure a local name server on an existing machine not assigned to any authoritative zone. Client resolvers must send DNS queries to this server; it must be able to query the name servers of the hierarchy when necessary, starting at the root and following delegations until the target zone is reached. All existing clients must be able to use this resolution service.
+- **Local resolution:** Configure the local name server on [pc32], which is not assigned to an authoritative zone. Clients [pc33], [pc34], [pc35], [pc36], [pc37], [pc38], [pc39], and [pc40] must send DNS queries to this server; it must be able to query the name servers of the hierarchy when necessary, starting at the root and following delegations until the target zone is reached. All these clients must be able to use this resolution service.
 
 - **Services:** Configure the necessary DNS records so that `shop.example.com`, `blog.example.com`, `dept.company.com`, `intranet.company.com`, `api.service.com`, `research.lab.net`, `ai.research.lab.net`, `data.research.lab.net`, `dev.lab.net`, `ci.tools.net`, `vpn.university.edu`, `courses.university.edu`, `portal.campus.edu`, `studenti.unibo.it`, `servizi.comune.it` and `dati.regione.it` resolve to the IP addresses of their respective machines. In the `example.com` zone, configure `www.example.com` for the web service. Provide DNS references for the email service of the specified business and academic domains, including `company.com` and `university.edu`.
 
@@ -61,4 +61,4 @@ Generate the DNS configuration for the existing Kathara laboratory without chang
   - `university.edu` → MX priority 10, mail server `mail.university.edu`, with an A record pointing to the existing IP address of [pc11].
   - Each MX record must refer to the full name of its mail server, and that name must resolve through its corresponding A record. Use only IP addresses already present in the laboratory; do not introduce dedicated mail machines.
 
-- **Machine assignments:** Preserve the correspondence between each DNS zone and the machine listed in square brackets. Machines [pc1] through [pc31] must act as their assigned authoritative servers. Select the local name server and clients from the other existing machines. Do not add devices or alter network links, IP addresses, or existing routing.
+- **Machine assignments:** Preserve the correspondence between each DNS zone and the machine listed in square brackets. Machines [pc1] through [pc31] must act as their assigned authoritative servers, [pc32] as the local name server, and [pc33] through [pc40] as clients. Do not add devices or alter network links, IP addresses, or existing routing.
