@@ -1,0 +1,14 @@
+experiment:
+  id: dns_skill_pilot_v2
+
+assignments:
+  - lab_id: lab_01
+    dns_tree_id: base
+    task_levels: [small]
+  - lab_id: lab_02
+    dns_tree_id: base
+    task_levels: [medium]
+
+prompt_types: [T2, T4, T5]
+skill_modes: [both_forced, auto]
+repetitions: 5
