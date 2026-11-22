@@ -1,0 +1,30 @@
+{
+  "physical_source_attempts": 391,
+  "source_completed": 381,
+  "source_manifests_unchanged": true,
+  "target_observations": 225,
+  "unique_target_observations": true,
+  "target_level_counts": {
+    "small": 75,
+    "medium": 75,
+    "large": 75
+  },
+  "actions": {
+    "regenerate": 180,
+    "generate_missing": 45
+  },
+  "new_runs_started": 0,
+  "dry_run_generate_counts": {
+    "small": 75,
+    "medium": 75,
+    "large": 75
+  },
+  "selected_original_condition_differences_only": [
+    "correction_sha256",
+    "effective_prompt_sha256",
+    "prompt_sha256",
+    "rendered_prompt_sha256"
+  ],
+  "scope_choice_pending": false,
+  "superseded_by": "thesis_base_full_v2"
+}

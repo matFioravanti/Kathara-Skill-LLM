@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "generate_per_level": {
+    "small": 150,
+    "medium": 150,
+    "large": 150
+  },
+  "total_generate": 450,
+  "conflicts": 0,
+  "log": "results/general/thesis_base_full_v2/logs/preparation_dry_run.txt"
+}

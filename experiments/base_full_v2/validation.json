@@ -1,0 +1,18 @@
+{
+  "experiment_id": "thesis_base_full_v2",
+  "planned_observations": 450,
+  "per_level": 150,
+  "per_prompt": 75,
+  "per_skill_mode": 90,
+  "per_replicate": 90,
+  "measured_observations": 0,
+  "dry_run_generate": 450,
+  "dry_run_conflicts": 0,
+  "old_source_manifests_preserved": true,
+  "workbooks_verified": [
+    "benchmark.xlsx",
+    "planning/planning.xlsx"
+  ],
+  "workbook_visual_previews": 6,
+  "frozen_input_guard_verified": true
+}

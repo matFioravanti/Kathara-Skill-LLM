@@ -1,0 +1,26 @@
+{
+  "candidate": "Kathara DNS Skill v2 final client and persistence check",
+  "skill_sha256": "e36fd0d3afb31f9f90add65c85aa264fd9a9663414ef295ce5bd8ee7d7db7e0d",
+  "bundle_sha256": "b9e4d48dbd7219f945d76e237bbdc76e5f5ed8a834124fb166c45e7a35ce3ed4",
+  "files": {
+    "skills/dns-v2/SKILL.md": "e36fd0d3afb31f9f90add65c85aa264fd9a9663414ef295ce5bd8ee7d7db7e0d",
+    "skills/dns-v2/references/bind-templates.md": "22a153591f6406869f0e7b848aa56ed547b9f06f229a6892e3241dac6ff74417",
+    "skills/dns-v2/references/static-audit.md": "312588a0700c84bc01461fa1f413dd1d0539d9da1aea1c363e03a2b60c66b7ba",
+    "skills/dns-v2/scripts/static_audit.py": "66446f7d91a911c5e334955246baadfc2cc17d44fbb2585122dd2f09d9003906"
+  },
+  "words_before": 1761,
+  "words_after": 1813,
+  "word_count_method": "whitespace split, including frontmatter and Markdown",
+  "protected_files_verified": 2061,
+  "protected_manifest_sha256": "f2cd12e9489fa672e814a8c5d55b1aede6092a29a13922c1ca15b878ae91cbb8",
+  "protected_skills": {
+    "skills/dns/SKILL.md": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+    "skills/kathara-creation/SKILL.md": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362"
+  },
+  "tests": {
+    "passed": 148,
+    "skipped": 1,
+    "failed_legacy_base_experiments": 4
+  },
+  "benchmark_executed": false
+}

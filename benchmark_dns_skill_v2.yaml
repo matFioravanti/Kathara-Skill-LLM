@@ -1,0 +1,44 @@
+benchmark:
+  repetitions: 5
+  continue_on_error: true
+  timeout_seconds: 900
+aut:
+  agent: codex
+  skill_protocol: enforced_read_v1
+  skill_gate_recovery_policy: recovery_v1
+  skill_gate_max_retries: 2
+  model: gpt-6.1-terra
+  reasoning_effort: low
+  version: 0.157.1
+  dns_skill: skills/dns-v2/SKILL.md
+  creation_skill: skills/kathara-creation/SKILL.md
+  sampling_telemetry:
+    enabled: true
+    mode: http_trace
+sandbox:
+  image: python:3.14.6-bookworm
+docker_sandbox:
+  execution_backend: docker_sandbox
+  sbx_version: 0.48.0
+  codex_version: 0.165.0
+  auto_start_daemon: true
+  auto_start_docker: true
+  daemon_wait_seconds: 30
+  docker_wait_seconds: 45
+  cleanup_on_error: true
+  verify_sandbox_codex: true
+parallel_execution:
+  enabled: false
+  generation:
+    workers: 2
+    sandbox_memory: 3g
+    sandbox_cpus: 2
+  checker:
+    small_workers: 2
+    medium_workers: 2
+    large_workers: 1
+checker:
+  no_cache: true
+  report_type: csv
+results:
+  directory: results

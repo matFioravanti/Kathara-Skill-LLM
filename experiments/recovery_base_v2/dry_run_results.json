@@ -1,0 +1,17 @@
+[
+  {
+    "level": "small",
+    "exit_code": 0,
+    "log": "experiments/recovery_base_v2/dry_run_small.txt"
+  },
+  {
+    "level": "medium",
+    "exit_code": 0,
+    "log": "experiments/recovery_base_v2/dry_run_medium.txt"
+  },
+  {
+    "level": "large",
+    "exit_code": 0,
+    "log": "experiments/recovery_base_v2/dry_run_large.txt"
+  }
+]

@@ -1,0 +1,18 @@
+experiment:
+  id: thesis_base_recovery_v2
+assignments:
+- lab_id: lab_03
+  dns_tree_id: base
+  task_levels:
+  - large
+prompt_types:
+- T1
+- T2
+- T5
+skill_modes:
+- no_skill
+- creation_only
+- dns_only
+- both_forced
+- auto
+repetitions: 5

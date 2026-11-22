@@ -1,0 +1,2758 @@
+{
+  "repository_commit": "74c29f45f9668b263384ef1615963f54895c3bd4",
+  "file_sha256": {
+    "prompt/base/small/07_nontechnical_discursive_small.md": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+    "scenarios/lab_01/tasks/base/small/correction.yaml": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+    "prompt/base/small/10_nontechnical_unstructured_small.md": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+    "prompt/base/small/13_graphical_tree_small.md": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+    "prompt/base/medium/02_technical_structured_medium.md": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+    "scenarios/lab_02/tasks/base/medium/correction.yaml": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+    "prompt/base/medium/05_technical_discursive_medium.md": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+    "prompt/base/medium/14_graphical_tree_medium.md": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+    "prompt/base/large/03_technical_structured_large.md": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+    "scenarios/lab_03/tasks/base/large/correction.yaml": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+    "prompt/base/large/06_technical_discursive_large.md": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+    "prompt/base/large/15_graphical_tree_large.md": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+    "benchmark_recovery_base_v2.yaml": "a8e58ab6400b57dd40f2d44de1c33d9e0f18b5e1497caae60df85baf4cb863c4",
+    "skills/dns/SKILL.md": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+    "skills/kathara-creation/SKILL.md": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+    "experiments/recovery_base_v2/small.yaml": "c016c00bde61191cebd9d1c228ad580112c8ab40bee24d2169d76de516e85b8a",
+    "experiments/recovery_base_v2/medium.yaml": "e0370e3e5113de3bfcff5546721fe6fae7763d6cbe78b0575029cbf7873a62bb",
+    "experiments/recovery_base_v2/large.yaml": "0a6ce0b2549a7749d5fa1a4bd01c9d08c2e2f82fb0f21ce7d6623e3d6acb7728"
+  },
+  "source_lab_tree_sha256": {
+    "small": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+    "medium": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+    "large": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b"
+  },
+  "conditions_by_cell_without_replicate": {
+    "lab_01/base/small/T3/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "rendered_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "effective_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {}
+    },
+    "lab_01/base/small/T3/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "rendered_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "effective_prompt_sha256": "c613d9ef29a70e7acff9eb5456cad4d2ce1e70d6232c3cb304db1308f403ddf6",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_01/base/small/T3/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "rendered_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "effective_prompt_sha256": "8a1918b0109e269fb83b55ea1324c303432bec94b2cb38dc8ec864554b4e84fa",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T3/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "rendered_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "effective_prompt_sha256": "85973312459c5851d33f005da96c42469efc010dab10c8e68035cbc2f23b4f57",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T3/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "rendered_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "effective_prompt_sha256": "bf3444bbe00d329927ae646d4bc843186d3313e59f6e1057da1e48c2baab1c14",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T4/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "rendered_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "effective_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {}
+    },
+    "lab_01/base/small/T4/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "rendered_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "effective_prompt_sha256": "1111db2d852892d15e89a502cf72ef0997afa4534de80790d7c64bf9cbd431d8",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_01/base/small/T4/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "rendered_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "effective_prompt_sha256": "d49f08962e5e0f94bb4bb1105ca389f5de2d5fbabef752131f35c86d11b54a9d",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T4/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "rendered_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "effective_prompt_sha256": "9a5edf680b4d394f581960ec3839a92db2d522526e2e0a9f829bb3eaec375ee9",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T4/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "rendered_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "effective_prompt_sha256": "f47652fbbd830707dc511e60f523916b03078c957f4cf333ad1161a6b6ac8011",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T5/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "rendered_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "effective_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {}
+    },
+    "lab_01/base/small/T5/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "rendered_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "effective_prompt_sha256": "74c6020f93f76e57f496b17ad4bd6f98fa56cbfdba3dd3e4621ef183d8c50050",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_01/base/small/T5/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "rendered_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "effective_prompt_sha256": "a1d790d1dddddab893d9c31d5ea7651990e96264a5b76e2fa3daa71ebbeb8abd",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T5/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "rendered_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "effective_prompt_sha256": "8462e12e426267fb623bc406512d5fe147ba492db3dd57ffc3ff93895e81d8fd",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_01/base/small/T5/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "rendered_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "effective_prompt_sha256": "270efa0f1a6a0d85fb7c71a71eca6b0b7f49e324be51a1e3b2868514f523c0a2",
+      "correction_sha256": "9475ad9dc22ade4db9c911e486f42f06e729503efcef869f9c8809b2fc427dab",
+      "source_lab_sha256": "fd6b33e4f452b6f5dddf9951d2c5e08e9e2d7ff1363b8528561aed1d789dce8c",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T1/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "rendered_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "effective_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {}
+    },
+    "lab_02/base/medium/T1/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "rendered_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "effective_prompt_sha256": "b92bb7bcada8517feb91b4d7f3ac6d32a124dc8281a15bb29c2dda35dfd144d5",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_02/base/medium/T1/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "rendered_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "effective_prompt_sha256": "7280d5f09ec9aabecee33c59b4928d9d2217b0cd1aab2e89285e0528dc0fb6a7",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T1/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "rendered_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "effective_prompt_sha256": "60fa6252ba91a33185392d0589e7785122c2f5b4ba471f8cefc7acc59b65045d",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T1/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "rendered_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "effective_prompt_sha256": "6187725ea9eb8ea6cb4ac2c39a4c967d5cc1afa3f9a89f7b534c28853c715d8a",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T2/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "rendered_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "effective_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {}
+    },
+    "lab_02/base/medium/T2/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "rendered_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "effective_prompt_sha256": "6825d2c93fa9c29fbb0af9ca44f581faccf8e4b74e1d572da5fed5dbdd6ba333",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_02/base/medium/T2/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "rendered_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "effective_prompt_sha256": "08afcac2f736fb8ce564da655355bdf38948af4997530ef58b7c48daea2400f5",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T2/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "rendered_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "effective_prompt_sha256": "92378c18f02718b23f59456f493cfa76ac3c74f953bfc2e8879f01456dc5f4e9",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T2/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "rendered_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "effective_prompt_sha256": "cdda6906b48b6b6d5df10b8356c869f5f228af41e8d4cf7d0e870816cb2f5a57",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T5/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "rendered_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "effective_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {}
+    },
+    "lab_02/base/medium/T5/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "rendered_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "effective_prompt_sha256": "496b6e2300608c1e9c8718c141a5c496faf3b13bd02deab2607b0253e57db4c1",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_02/base/medium/T5/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "rendered_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "effective_prompt_sha256": "05379ecd7d0aca1b0b44da9ee6ec19ebd11e8ab74b051b0a3fbc6b86f793039c",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T5/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "rendered_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "effective_prompt_sha256": "a80fafcda49ae5a8b1575fde210e68a2144128e293342f4beb1815002fb7986c",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_02/base/medium/T5/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "rendered_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "effective_prompt_sha256": "e5e1c2173f70985bf5d7b8fc5a3bed56072aaf201b3dbe81bbca6c97d5e13518",
+      "correction_sha256": "9dddd763ad0c09f72487fd395d53bc28eb41e74e154298521fbf438fd740e80d",
+      "source_lab_sha256": "985aaa3fd3b97c6315e358b9407872d1560cbc6ac7579c7b50d8a5a8e8f534de",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T1/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "rendered_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "effective_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {}
+    },
+    "lab_03/base/large/T1/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "rendered_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "effective_prompt_sha256": "360903f21ec65225b7bf2b4c42a924e908724ea4dbf258a5ffacf850f4dff217",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_03/base/large/T1/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "rendered_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "effective_prompt_sha256": "9db3f07c9fe52fd38bc321d03a2e4cf83effd7222c16e2fdb129e8ed5a033030",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T1/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "rendered_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "effective_prompt_sha256": "34350ee7d88df0a99ba22185426db8524a23563553652c52c1ba9ca0c67fad1a",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T1/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "rendered_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "effective_prompt_sha256": "7b56b0c8e4fb8c6fc9d1ce647110f1699870b28cd43ddb6a331f390503a428f2",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T2/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "rendered_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "effective_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {}
+    },
+    "lab_03/base/large/T2/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "rendered_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "effective_prompt_sha256": "aee55184db015baca12796371bfee55636ec862f5283b2e8cac74ffeefbeea8f",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_03/base/large/T2/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "rendered_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "effective_prompt_sha256": "f4eb27cbf02d95e005427ea0947c260b16d7c0bb3572cd5019c6d936edf755e5",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T2/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "rendered_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "effective_prompt_sha256": "ff3cd143c33a218eedf2adab7827ea07b563a38000ed19361f01c0e9bea20897",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T2/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "rendered_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "effective_prompt_sha256": "23bb47541eeaebd62e79694de46d55324d91d3f1efffd8bb2ea50add3a411de4",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T5/no_skill": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "no_skill",
+      "prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "rendered_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "effective_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {}
+    },
+    "lab_03/base/large/T5/creation_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "creation_only",
+      "prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "rendered_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "effective_prompt_sha256": "8f6ef459f473936f4652ba4f1a08c757d54b9cda68e56c3ef981a87990ae97cf",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        }
+      }
+    },
+    "lab_03/base/large/T5/dns_only": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "dns_only",
+      "prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "rendered_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "effective_prompt_sha256": "3944831050773d25ebd3629acf2134bd67bee760fac9d5c8bd6fd7533d0d8e81",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T5/both_forced": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "both_forced",
+      "prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "rendered_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "effective_prompt_sha256": "8cee54752ed9f18ab70b5bd1c125927cb66e56480bff54e9598b89ee1af64100",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    },
+    "lab_03/base/large/T5/auto": {
+      "version": 1,
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "low",
+      "aut": {
+        "agent": "codex",
+        "skill_protocol": "enforced_read_v1",
+        "skill_gate_recovery_policy": "recovery_v1",
+        "skill_gate_max_retries": 2,
+        "model": "gpt-6.1-terra",
+        "reasoning_effort": "low",
+        "version": "0.157.1",
+        "dns_skill": "skills/dns/SKILL.md",
+        "creation_skill": "skills/kathara-creation/SKILL.md",
+        "sampling_telemetry": {
+          "enabled": true,
+          "mode": "http_trace"
+        }
+      },
+      "sandbox": {
+        "image": "python:3.14.6-bookworm"
+      },
+      "docker_sandbox": {
+        "execution_backend": "docker_sandbox",
+        "sbx_version": "0.48.0",
+        "codex_version": "0.165.0",
+        "auto_start_daemon": true,
+        "auto_start_docker": true,
+        "daemon_wait_seconds": 30,
+        "docker_wait_seconds": 45,
+        "cleanup_on_error": true,
+        "verify_sandbox_codex": true
+      },
+      "checker": {
+        "no_cache": true,
+        "report_type": "csv"
+      },
+      "python_version": "3.14.6 (v3.14.6:c63aec69bd5, Jun 10 2026, 08:07:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "component_versions": {
+        "kathara": "3.8.3",
+        "kathara-lab-checker": "0.1.14",
+        "inspect-ai": "0.3.266",
+        "inspect-swe": "0.2.71",
+        "PyYAML": "6.0.3"
+      },
+      "timeout_seconds": 900,
+      "skill_mode": "auto",
+      "prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "rendered_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "effective_prompt_sha256": "8b9c9302d539d4f239c1223feca0f19534dd805ef2a07f42a8487cfae8bf9e2d",
+      "correction_sha256": "a7dd5d3f26601b6753aa9ab4f921358a808b0c21f44d480d624a1c205323d891",
+      "source_lab_sha256": "f2648d30d54f1d97b46be280db8e845ee0f5197705ffee93983587067fd9e36b",
+      "skills": {
+        "kathara-creation": {
+          "sha256": "549a416f2e2ba952632856e31af78ebde353947ce7ed07e09fa57101de03b362",
+          "bundle_sha256": "ae927a60d6779b3b57594b94ce4ca0809bba837eb3d24759df68b12dd73c409e"
+        },
+        "kathara-dns": {
+          "sha256": "241b4b6f0c8c72d30761bf5c237cfdc37aa23b5ef450845e7d4f23ca14f7aaf0",
+          "bundle_sha256": "cd46a65c018502f403006c09c98c8a851958f978de5058202a4d8c9187284c02"
+        }
+      }
+    }
+  },
+  "selection_registry_sha256": "622e28366490cc8427cf6f727cca496c932d6f02804dc6addb1d0ad0bb7cfc06"
+}

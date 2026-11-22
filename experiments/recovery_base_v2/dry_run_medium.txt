@@ -1,0 +1,311 @@
+
+────────────────────────── ANTEPRIMA ───────────────────────────
+Esperimento thesis_base_recovery_v2: 75 osservazioni, 75 da eseguire, 0 conflitti
+Laboratori: lab_02/base/medium
+Ripetizioni statistiche selezionate: 1, 2, 3, 4, 5
+Già completate: 0 | Nuove generazioni Codex: 75 | AUT da recuperare, solo checker: 0
+Fase 1 — sandbox Codex: limite 2, parallelismo utilizzabile 2
+Fase 2 — checker medium: limite 2, da valutare 75, parallelismo utilizzabile 2
+I checker iniziano dopo la conclusione delle generazioni Codex.
+rep = ripetizione statistica; rNNN = contatore fisico nella combinazione laboratorio/prompt/skill.
+GENERATE lab_02/base/medium/T1/no_skill rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:no_skill:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/no_skill/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/no_skill rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:no_skill:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/no_skill/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/no_skill rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:no_skill:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/no_skill/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/no_skill rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:no_skill:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/no_skill/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/no_skill rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:no_skill:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/no_skill/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/creation_only rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:creation_only:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/creation_only/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/creation_only rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:creation_only:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/creation_only/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/creation_only rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:creation_only:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/creation_only/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/creation_only rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:creation_only:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/creation_only/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/creation_only rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:creation_only:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/creation_only/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/dns_only rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:dns_only:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/dns_only/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/dns_only rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:dns_only:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/dns_only/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/dns_only rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:dns_only:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/dns_only/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/dns_only rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:dns_only:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/dns_only/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/dns_only rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:dns_only:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/dns_only/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/both_forced rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:both_forced:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/both_forced/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/both_forced rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:both_forced:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/both_forced/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/both_forced rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:both_forced:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/both_forced/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/both_forced rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:both_forced:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/both_forced/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/both_forced rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:both_forced:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/both_forced/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/auto rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:auto:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/auto/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/auto rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:auto:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/auto/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/auto rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:auto:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/auto/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/auto rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:auto:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/auto/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T1/auto rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T1:auto:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T1/auto/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/02_technical_structured_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/no_skill rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:no_skill:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/no_skill/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/no_skill rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:no_skill:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/no_skill/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/no_skill rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:no_skill:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/no_skill/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/no_skill rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:no_skill:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/no_skill/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/no_skill rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:no_skill:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/no_skill/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/creation_only rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:creation_only:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/creation_only/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/creation_only rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:creation_only:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/creation_only/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/creation_only rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:creation_only:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/creation_only/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/creation_only rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:creation_only:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/creation_only/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/creation_only rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:creation_only:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/creation_only/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/dns_only rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:dns_only:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/dns_only/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/dns_only rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:dns_only:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/dns_only/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/dns_only rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:dns_only:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/dns_only/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/dns_only rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:dns_only:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/dns_only/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/dns_only rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:dns_only:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/dns_only/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/both_forced rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:both_forced:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/both_forced/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/both_forced rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:both_forced:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/both_forced/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/both_forced rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:both_forced:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/both_forced/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/both_forced rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:both_forced:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/both_forced/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/both_forced rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:both_forced:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/both_forced/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/auto rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:auto:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/auto/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/auto rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:auto:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/auto/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/auto rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:auto:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/auto/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/auto rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:auto:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/auto/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T2/auto rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T2:auto:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T2/auto/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/05_technical_discursive_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/no_skill rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:no_skill:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/no_skill/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/no_skill rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:no_skill:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/no_skill/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/no_skill rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:no_skill:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/no_skill/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/no_skill rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:no_skill:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/no_skill/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/no_skill rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:no_skill:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/no_skill/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/creation_only rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:creation_only:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/creation_only/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/creation_only rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:creation_only:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/creation_only/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/creation_only rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:creation_only:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/creation_only/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/creation_only rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:creation_only:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/creation_only/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/creation_only rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:creation_only:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/creation_only/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/dns_only rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:dns_only:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/dns_only/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/dns_only rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:dns_only:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/dns_only/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/dns_only rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:dns_only:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/dns_only/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/dns_only rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:dns_only:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/dns_only/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/dns_only rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:dns_only:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/dns_only/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/both_forced rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:both_forced:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/both_forced/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/both_forced rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:both_forced:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/both_forced/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/both_forced rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:both_forced:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/both_forced/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/both_forced rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:both_forced:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/both_forced/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/both_forced rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:both_forced:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/both_forced/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/auto rep=1 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:auto:rep001:r001
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/auto/r001 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/auto rep=2 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:auto:rep002:r002
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/auto/r002 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/auto rep=3 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:auto:rep003:r003
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/auto/r003 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/auto rep=4 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:auto:rep004:r004
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/auto/r004 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+GENERATE lab_02/base/medium/T5/auto rep=5 | ID=thesis_base_recovery_v2:lab_02:base:medium:T5:auto:rep005:r005
+  nuova generazione AUT e successiva valutazione
+  Cartella prevista: runs/thesis_base_recovery_v2/lab_02/base/medium/T5/auto/r005 (assegnata all'avvio)
+  Prompt: prompt/base/medium/14_graphical_tree_medium.md | Correction: scenarios/lab_02/tasks/base/medium/correction.yaml
+
