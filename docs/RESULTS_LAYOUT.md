@@ -58,6 +58,36 @@ checker falliscono tecnicamente; un task valutato ma fallito non è un errore
 tecnico. Un'esecuzione interrotta può lasciare una cartella parziale con
 manifest `running`; usare una nuova destinazione per riprovare.
 
+Per large V3, `caffeinate -i bash scripts/evaluate_large_v3.sh` valuta le
+quattro modalità in sequenza con due checker e cartelle separate. Si possono
+selezionare modalità specifiche aggiungendole come argomenti, ad esempio
+`caffeinate -i bash scripts/evaluate_large_v3.sh no_skill dns_only`. Le
+cartelle complete con la stessa correction sono preservate; una cartella
+parziale o incompatibile blocca l'esecuzione. Una modalità completata con
+errori tecnici viene segnalata e non è rivalutata automaticamente.
+
+Nei report delle correction alternative, `checks.csv` e il foglio Excel
+`checks` includono `test_code`, `device`, `primary_category`, `subcategory`,
+`record_type` e `classification_source`. I codici `DNS_...` dei commenti YAML
+sono associati al risultato solo quando dispositivo e comando coincidono
+esattamente con lo snapshot della correction. I controlli nativi conservano
+la classificazione standard; i comandi senza un codice riconoscibile non
+ricevono codici dedotti. `error_summary.csv` e il foglio `error_summary`
+raggruppano i controlli falliti per codice, dispositivo, livello, prompt e
+modalità, indicando il numero di controlli e di run coinvolte. Gli errori
+tecnici del checker restano nel riepilogo delle run.
+
+Per aggiornare offline i report V3 già completati:
+
+```bash
+.venv/bin/python -B scripts/classify_v3_reports.py --all-v3 --dry-run
+.venv/bin/python -B scripts/classify_v3_reports.py --all-v3
+```
+
+Il comando verifica hash della correction e conteggi, preserva una copia dei
+report precedenti in `classification_history/` e ricostruisce CSV ed Excel.
+Non esegue checker o modelli. I report incompleti vengono saltati.
+
 La prima istruzione pubblica separatamente ogni esperimento generale e, se
 presenti, le run legacy. Il nome `_legacy` è riservato alla sezione legacy:
 per un esperimento generale già denominato così è necessario un `--output`

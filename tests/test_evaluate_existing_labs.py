@@ -102,3 +102,28 @@ def test_two_checkers_execute_concurrently_with_isolated_results(tmp_path, monke
     assert len(seen) == 2 and seen[0][0] != seen[1][0] and seen[0][1] != seen[1][1]
     assert json.loads((output / 'manifest.json').read_text())['checker_workers'] == 2
     assert len(list(csv.DictReader((output / 'runs.csv').open()))) == 2
+
+
+def test_reports_classify_and_count_errors_by_code(tmp_path):
+    (tmp_path / 'correction.yaml').write_text('''test:
+  custom_commands:
+    pc1:
+      # DNS_AUTH_A_RECORD - record check
+      - command: echo check
+        exit_code: 0
+''')
+    rows = [dict(execution_id='one', task_level='small', prompt_type='T1', skill_mode='auto',
+                 status='COMPLETED', task_success=False, checks_passed=0, checks_failed=1)]
+    checks = [dict(execution_id='one', source_run='source',
+                   test_description="Checking the exit code of the command 'echo check' on 'pc1'",
+                   passed=False, reason='FAIL')]
+    module.write_reports(tmp_path, rows, checks)
+    classified = list(csv.DictReader((tmp_path / 'checks.csv').open()))[0]
+    assert (classified['test_code'], classified['primary_category'], classified['record_type']) == ('DNS_AUTH_A_RECORD', 'dns', 'A')
+    summary = list(csv.DictReader((tmp_path / 'error_summary.csv').open()))[0]
+    assert (summary['test_code'], summary['failed_checks'], summary['affected_runs']) == ('DNS_AUTH_A_RECORD', '1', '1')
+    from openpyxl import load_workbook
+    workbook = load_workbook(tmp_path / 'benchmark.xlsx', read_only=True)
+    assert 'error_summary' in workbook.sheetnames
+    assert 'test_code' in next(workbook['checks'].values)
+    workbook.close()

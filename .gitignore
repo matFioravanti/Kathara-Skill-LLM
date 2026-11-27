@@ -6,6 +6,7 @@ __pycache__/
 ~$*.xlsx
 
 # Generated benchmark runs and evaluation outputs
+/outputs/
 /runs/*
 !/runs/.gitkeep
 /results/*

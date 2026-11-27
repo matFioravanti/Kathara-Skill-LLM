@@ -18,12 +18,14 @@ from benchmark_core.checker_runner import parse_reports, run_checker
 from benchmark_core.config import load_config
 from benchmark_core.correction_input import read_correction, validate_correction_lab
 from benchmark_core.workspace import copy_lab, tree_hash, utc_now, write_json
+from benchmark_core.v3_classification import CLASS_FIELDS, classify_checks
 
 RUN_FIELDS = ['source_run', 'observation_id', 'execution_id', 'experiment_id', 'lab_id',
               'dns_tree_id', 'task_level', 'prompt_type', 'skill_mode', 'replicate',
               'status', 'task_success', 'checks_passed', 'checks_failed', 'checks_total',
               'checker_seconds', 'error', 'detail_directory']
-CHECK_FIELDS = ['execution_id', 'source_run', 'test_description', 'passed', 'reason']
+CHECK_FIELDS = ['execution_id', 'source_run', *CLASS_FIELDS, 'test_description', 'passed', 'reason']
+ERROR_FIELDS = ['task_level', 'prompt_type', 'skill_mode', *CLASS_FIELDS, 'failed_checks', 'affected_runs']
 SUMMARY_FIELDS = ['task_level', 'prompt_type', 'skill_mode', 'runs', 'evaluated',
                   'passed', 'failed', 'technical_errors', 'checks_passed', 'checks_failed']
 
@@ -67,6 +69,9 @@ def write_csv(path, fields, rows):
 
 
 def write_reports(output, rows, checks):
+    snapshot = output / 'correction.yaml'
+    if snapshot.exists():
+        checks = classify_checks(checks, snapshot.read_bytes())
     groups = defaultdict(lambda: dict(runs=0, evaluated=0, passed=0, failed=0,
                                        technical_errors=0, checks_passed=0, checks_failed=0))
     for row in rows:
@@ -81,13 +86,28 @@ def write_reports(output, rows, checks):
             group['technical_errors'] += 1
     summary = [dict(zip(('task_level', 'prompt_type', 'skill_mode'), key), **value)
                for key, value in sorted(groups.items())]
+    by_run = {r['execution_id']: r for r in rows}
+    errors = {}
+    for check in checks:
+        if check['passed']:
+            continue
+        run = by_run[check['execution_id']]
+        labels = {key: run.get(key) for key in ('task_level', 'prompt_type', 'skill_mode')}
+        labels.update({key: check.get(key) for key in CLASS_FIELDS})
+        key = tuple(labels.items())
+        group = errors.setdefault(key, {**labels, 'failed_checks': 0, 'run_ids': set()})
+        group['failed_checks'] += 1
+        group['run_ids'].add(check['execution_id'])
+    error_summary = [{k: v for k, v in group.items() if k != 'run_ids'} |
+                     {'affected_runs': len(group['run_ids'])} for group in errors.values()]
     write_csv(output / 'runs.csv', RUN_FIELDS, rows)
     write_csv(output / 'checks.csv', CHECK_FIELDS, checks)
     write_csv(output / 'summary.csv', SUMMARY_FIELDS, summary)
+    write_csv(output / 'error_summary.csv', ERROR_FIELDS, error_summary)
     from openpyxl import Workbook
     workbook = Workbook(write_only=True)
     for name, fields, entries in [('runs', RUN_FIELDS, rows), ('checks', CHECK_FIELDS, checks),
-                                  ('summary', SUMMARY_FIELDS, summary)]:
+                                  ('summary', SUMMARY_FIELDS, summary), ('error_summary', ERROR_FIELDS, error_summary)]:
         sheet = workbook.create_sheet(name)
         sheet.append(fields)
         for row in entries:
