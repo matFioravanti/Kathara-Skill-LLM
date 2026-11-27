@@ -25,6 +25,39 @@ Per rigenerare offline i report generali dalle run esistenti:
 .venv/bin/python -B scripts/analyze_results.py --results results/general/thesis_final
 ```
 
+## Valutazione separata con una correction alternativa
+
+`scripts/evaluate_existing_labs.py` applica una correction scelta a lab già
+generati, senza chiamate al modello e senza modificare run o report originali.
+La directory di destinazione deve essere nuova e trovarsi sotto
+`results/general/`. L'anteprima valida la correction e la compatibilità con
+le baseline e mostra tutte le run fisiche selezionate, comprese eventuali
+ripetizioni tecniche; controllare l'elenco prima di eseguire.
+
+```bash
+caffeinate -i .venv/bin/python -B -u scripts/evaluate_existing_labs.py \
+  --correction scenarios/lab_01/tasks/base/small/correction_small_custom_v2.yaml \
+  --runs runs/dns_skill_pilot_v2/lab_01/base/small \
+  --skill-mode dns_only \
+  --output results/general/dns_skill_pilot_v2_custom_v2 \
+  --dry-run
+```
+
+Rimuovere `--dry-run` per avviare il checker. Sono disponibili anche
+`--prompt-type`, `--replicate` (ripetizione statistica) e `--config`. Si può
+indicare una singola directory `rNNN` come `--runs`. Per ogni laboratorio il
+checker opera su una copia temporanea con identità Kathara isolata. Aggiungere
+`--checker-workers 2` per usare fino a due checker contemporaneamente; senza
+l'opzione ne viene usato uno. La
+cartella di output contiene snapshot e hash della correction, manifest,
+`runs.csv`, `checks.csv`, `summary.csv`, `benchmark.xlsx`, log e report grezzi
+per run in `dettagli/`. I CSV sono specifici di questa valutazione e non sono
+il formato completo del report generale. Gli errori tecnici sono distinti
+dai controlli funzionali falliti. Il processo ritorna codice 1 se uno o più
+checker falliscono tecnicamente; un task valutato ma fallito non è un errore
+tecnico. Un'esecuzione interrotta può lasciare una cartella parziale con
+manifest `running`; usare una nuova destinazione per riprovare.
+
 La prima istruzione pubblica separatamente ogni esperimento generale e, se
 presenti, le run legacy. Il nome `_legacy` è riservato alla sezione legacy:
 per un esperimento generale già denominato così è necessario un `--output`

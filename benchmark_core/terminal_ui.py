@@ -192,7 +192,7 @@ def render_run_event(event: str, **data) -> None:
 # ---------------------------------------------------------------------------
 
 def execution_plan(config, spec, decisions, analyses, recoverable, conflicts, *,
-                   pipeline_mode, generation_workers, checker_workers, dry_run):
+                   pipeline_mode, generation_workers, checker_workers, dry_run, generation_only=False):
     """Explain the selected statistical observations before any live work."""
     selected = [d for d in decisions if d.should_run and d.cell not in conflicts]
     generation = [d for d in selected if d.cell not in recoverable]
@@ -208,11 +208,14 @@ def execution_plan(config, spec, decisions, analyses, recoverable, conflicts, *,
     if pipeline_mode == "phased":
         print(f"Fase 1 — sandbox Codex: limite {generation_workers}, "
               f"parallelismo utilizzabile {min(generation_workers, len(generation))}")
-        for level in dict.fromkeys(a.task_level for a in spec.assignments):
-            pending = sum(d.cell.task_level == level for d in selected)
-            print(f"Fase 2 — checker {level}: limite {checker_workers[level]}, "
-                  f"da valutare {pending}, parallelismo utilizzabile {min(checker_workers[level], pending)}")
-        print("I checker iniziano dopo la conclusione delle generazioni Codex.")
+        if generation_only:
+            print("Solo generazione: nessun checker verrà avviato; i lab già generati saranno conservati.")
+        else:
+            for level in dict.fromkeys(a.task_level for a in spec.assignments):
+                pending = sum(d.cell.task_level == level for d in selected)
+                print(f"Fase 2 — checker {level}: limite {checker_workers[level]}, "
+                      f"da valutare {pending}, parallelismo utilizzabile {min(checker_workers[level], pending)}")
+            print("I checker iniziano dopo la conclusione delle generazioni Codex.")
     print("rep = ripetizione statistica; rNNN = contatore fisico nella combinazione laboratorio/prompt/skill.")
     next_numbers = {}
     for decision in decisions:
@@ -228,11 +231,12 @@ def execution_plan(config, spec, decisions, analyses, recoverable, conflicts, *,
         elif not decision.should_run:
             action, reason = "SKIP", "già COMPLETED: nessuna nuova generazione né valutazione"
         elif prior:
-            action = "CHECK" if pipeline_mode == "phased" else "RUN"
-            reason = "AUT-RESUME: laboratorio AUT preservato; si ripete soltanto il checker"
+            action = "HOLD" if generation_only else ("CHECK" if pipeline_mode == "phased" else "RUN")
+            reason = ("AUT già generato: checker rinviato" if generation_only else
+                      "AUT-RESUME: laboratorio AUT preservato; si ripete soltanto il checker")
         else:
             action = "GENERATE" if pipeline_mode == "phased" else "RUN"
-            reason = "nuova generazione AUT e successiva valutazione"
+            reason = "nuova generazione AUT; checker rinviato" if generation_only else "nuova generazione AUT e successiva valutazione"
         if path:
             number = next((r.run_number for r in existing if r.run == path), None)
         else:

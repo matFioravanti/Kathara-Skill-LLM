@@ -59,6 +59,34 @@ def test_isolation_adds_one_identity(tmp_path):
     assert conf.read_text().splitlines()[0] == f'LAB_NAME="{identity}"'
 
 
+def test_generation_only_skips_checker_and_reuses_generated_lab(tmp_path):
+    assignment = TaskAssignment('lab_03', 'base', 'large')
+    cells = [RunCell('pilot', 'lab_03', 'T1', 'no_skill', n, assignment) for n in (1, 2)]
+    decisions = [ResumeDecision(cell, True, 'missing') for cell in cells]
+    config = SimpleNamespace(root=tmp_path, data={'docker_sandbox': {'execution_backend': 'docker_sandbox'}})
+    existing = tmp_path / 'existing'
+    calls = []
+
+    def generated(cfg, scenario, agent, cell):
+        calls.append(('generate', cell.replicate))
+        return str(tmp_path / 'new'), 'AUT_COMPLETED'
+
+    with (patch('benchmark_core.phased_execution.ProcessPoolExecutor', InlinePool),
+          patch('benchmark_core.phased_execution.get_context', return_value=None),
+          patch('benchmark_core.phased_execution.conditions', return_value={}),
+          patch('benchmark_core.phased_execution.validate_artifacts', return_value={'aut_execution_success': True}),
+          patch('benchmark_core.phased_execution.describe_run', return_value='existing'),
+          patch('benchmark_core.phased_execution._generate', generated),
+          patch('benchmark_core.phased_execution._evaluate', side_effect=AssertionError('checker must not run'))):
+        failed = execute_phased(config, None, {'lab_03': object()}, 'codex', decisions,
+                                {cells[0]: existing}, generation_workers=2,
+                                checker_workers={'small': 1, 'medium': 1, 'large': 1},
+                                update_reports=lambda: calls.append(('report', None)),
+                                generation_only=True)
+    assert not failed
+    assert calls == [('generate', 2), ('report', None)]
+
+
 def test_phased_order_with_two_workers(tmp_path):
     InlinePool.starts = []
     assignment = {

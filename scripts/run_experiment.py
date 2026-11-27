@@ -74,6 +74,8 @@ def main(argv=None):
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--pipeline-mode", choices=("sequential", "phased"), default="sequential",
                         help="phased: generate all labs before starting independent Kathara checks")
+    parser.add_argument("--generation-only", action="store_true",
+                        help="solo generazioni AUT in modalità phased; non avvia i checker")
     parser.add_argument("--generation-workers", "--sandbox-workers", dest="generation_workers",
                         type=int, choices=range(1, GENERATION_MAX_WORKERS + 1))
     parser.add_argument("--checker-workers", type=int, choices=range(1, max(CHECKER_MAX_WORKERS.values()) + 1),
@@ -117,6 +119,8 @@ def main(argv=None):
             raise ValueError("repetitions deve essere positivo")
         if args.pipeline_mode == "phased" and args.rerun_correction:
             raise ValueError("--rerun-correction richiede la modalità sequenziale esistente")
+        if args.generation_only and (args.pipeline_mode != "phased" or args.rerun_correction):
+            raise ValueError("--generation-only richiede --pipeline-mode phased e non ammette --rerun-correction")
         if args.pipeline_mode == "sequential" and any(v is not None for v in (
                 args.generation_workers, args.checker_workers_small,
                 args.checker_workers_medium, args.checker_workers_large, args.checker_workers)):
@@ -246,7 +250,8 @@ def main(argv=None):
         selected = [d for d in decisions if d.should_run and d.cell not in conflicts]
         execution_plan(config, spec, decisions, analyses, recoverable, conflicts,
                        pipeline_mode=args.pipeline_mode, generation_workers=generation_workers,
-                       checker_workers=checker_workers, dry_run=args.dry_run)
+                       checker_workers=checker_workers, dry_run=args.dry_run,
+                       generation_only=args.generation_only)
         if args.dry_run:
             return int(bool(conflicts))
         if conflicts:
@@ -266,6 +271,7 @@ def main(argv=None):
                 checker_workers=checker_workers,
                 update_reports=update_reports,
                 continue_on_error=config.data["benchmark"]["continue_on_error"],
+                generation_only=args.generation_only,
             )
             return int(failed or report_failed)
         failed = False

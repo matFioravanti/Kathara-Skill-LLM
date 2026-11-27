@@ -56,7 +56,8 @@ def _evaluate(config, run_name: str):
 
 def execute_phased(config, spec, labs, agent, selected, recoverable, *,
                    generation_workers: int, checker_workers: dict,
-                   update_reports, continue_on_error: bool = True):
+                   update_reports, continue_on_error: bool = True,
+                   generation_only: bool = False):
     """Generate selected observations; only then run checker for each level.
 
     Existing AUT checkpoints are reused, never regenerated. Persist raw run
@@ -142,6 +143,10 @@ def execute_phased(config, spec, labs, agent, selected, recoverable, *,
     update_reports()
     print(f"[PHASE 1 DONE] {len(generated)} available labs, {len(failures)} failures",
           flush=True)
+
+    if generation_only:
+        print('[GENERATION ONLY] Nessun checker avviato; i lab completati sono conservati.', flush=True)
+        return bool(failures)
 
     if failures and not continue_on_error:
         return True
